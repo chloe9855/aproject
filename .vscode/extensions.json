@@ -1,0 +1,8 @@
+{
+  "recommendations": [
+    "stylelint.vscode-stylelint",
+    "dbaeumer.vscode-eslint",
+    "octref.vetur",
+    "aaron-bond.better-comments"
+  ]
+}
