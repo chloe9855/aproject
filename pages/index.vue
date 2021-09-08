@@ -1,7 +1,10 @@
 <template>
-  <Tutorial/>
+  <div>
+    <p>我是首頁</p>
+    <nuxt-link to="/map">去地圖頁</nuxt-link>
+  </div>
 </template>
 
 <script>
-export default {}
+export default {};
 </script>

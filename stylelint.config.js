@@ -5,5 +5,11 @@ module.exports = {
   ],
   // add your custom config here
   // https://stylelint.io/user-guide/configuration
-  rules: {}
-}
+  rules: {
+    'at-rule-no-unknown': null,
+    'font-family-no-missing-generic-family-keyword': null,
+    'declaration-block-no-shorthand-property-overrides': null,
+    'no-descending-specificity': null,
+    'no-empty-source': null
+  }
+};

@@ -1,0 +1,83 @@
+@charset "UTF-8";
+
+$font-family: 'Noto Sans TC', sans-serif;
+
+// Typographies
+@mixin noto-sans-tc-10-regular {
+  font-family: $font-family;
+  font-size: 10px;
+  font-weight: 400;
+  line-height: normal;
+}
+@mixin noto-sans-tc-12-regular {
+  font-family: $font-family;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: normal;
+}
+@mixin noto-sans-tc-14-medium {
+  font-family: $font-family;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: normal;
+}
+@mixin noto-sans-tc-14-regular {
+  font-family: $font-family;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: normal;
+}
+@mixin noto-sans-tc-16-bold {
+  font-family: $font-family;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: normal;
+}
+@mixin noto-sans-tc-16-medium {
+  font-family: $font-family;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: normal;
+}
+@mixin noto-sans-tc-16-medium-line19 {
+  font-family: $font-family;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 19px;
+}
+@mixin noto-sans-tc-16-regular {
+  font-family: $font-family;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: normal;
+}
+@mixin noto-sans-tc-16-regular-line16 {
+  font-family: $font-family;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 16px;
+}
+@mixin noto-sans-tc-17-medium {
+  font-family: $font-family;
+  font-size: 17px;
+  font-weight: 500;
+  line-height: normal;
+}
+@mixin noto-sans-tc-18-medium {
+  font-family: $font-family;
+  font-size: 18px;
+  font-weight: 500;
+  line-height: normal;
+}
+@mixin noto-sans-tc-20-medium {
+  font-family: $font-family;
+  font-size: 20px;
+  font-weight: 500;
+  line-height: normal;
+}
+@mixin noto-sans-tc-24-bold {
+  font-family: $font-family;
+  font-size: 24px;
+  font-weight: 700;
+  line-height: normal;
+}
