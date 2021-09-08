@@ -15,6 +15,12 @@
       <br>
       <br>
       <Marker-component />
+      <br>
+      <br>
+      <AlertBox-component />
+      <br>
+      <br>
+      <Buttons-component />
     </div>
     <Footer-component />
   </div>
@@ -28,6 +34,8 @@ import Feature from '~/components/Feature.vue';
 import SwitchTabs from '~/components/tools/SwitchTabs.vue';
 import SliderBar from '~/components/tools/SliderBar.vue';
 import Marker from '~/components/tools/Marker.vue';
+import AlertBox from '~/components/tools/AlertBox.vue';
+import Buttons from '~/components/tools/Buttons.vue';
 
 export default {
   components: {
@@ -37,7 +45,9 @@ export default {
     'Feature-component': Feature,
     'SwitchTabs-component': SwitchTabs,
     'SliderBar-component': SliderBar,
-    'Marker-component': Marker
+    'Marker-component': Marker,
+    'AlertBox-component': AlertBox,
+    'Buttons-component': Buttons
   },
   data () {
     return {
