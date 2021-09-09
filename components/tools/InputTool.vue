@@ -44,7 +44,7 @@ export default {
       type: String,
       default: '輸入文字格式錯誤'
     },
-    inputError: {
+    isWarn: {
       type: Boolean,
       default: false
     }
