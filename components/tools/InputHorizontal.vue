@@ -1,0 +1,96 @@
+<template>
+  <div class="input-error-horizontal">
+    <div class="error-hinit">
+      <div class="error-circle">
+        <img
+          alt=""
+          class="vector"
+          src="https://static.overlay-tech.com/assets/865a3600-f89e-4d3d-b02a-cc77fa01eefb.svg"
+        >
+      </div>
+      <p class="error-hint-text">
+        {{ errorTip }}
+      </p>
+    </div>
+    <div class="inputtitle-horizontal-error">
+      <p class="input-title">
+        {{ title }}
+      </p>
+      <input
+        v-model="message"
+        class="inputType"
+        :class="{inputError:isError}"
+        placeholder="錯誤文字"
+      >
+    </div>
+  </div>
+</template>
+
+<script>
+export default {
+  name: 'InputHorizontal',
+  props: {
+    name: {
+      type: String,
+      default: 'test'
+    },
+    title: {
+      type: String,
+      default: '輸入框標題'
+    },
+    errorText: {
+      type: String,
+      default: '錯誤文字'
+    },
+    errorTip: {
+      type: String,
+      default: '輸入文字格式錯誤'
+    },
+    inputError: {
+      type: Boolean,
+      default: false
+    }
+  },
+  data: () => {
+    return {
+      message: '',
+      isError: true
+    };
+  }
+};
+</script>
+
+<style lang="scss" scoped>
+@import '~/assets/scss/input.scss';
+.input-error-horizontal {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+.error-hinit {
+  margin-bottom: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+.inputtitle-horizontal-error {
+  display: flex;
+  align-items: center;
+  align-self: stretch;
+}
+.input-title {
+  color: $header-black;
+  margin-right: 10px;
+  @include noto-sans-tc-16-medium;
+}
+.input-error {
+  background-color: $white;
+  border-radius: 5px;
+  padding: 5px 9px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  border: 1px solid $caution-red;
+}
+</style>
