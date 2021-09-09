@@ -22,7 +22,8 @@
     "postcss-scss": "^4.0.0",
     "sass-loader": "^10.1.1",
     "vue-slider-component": "^3.2.14",
-    "vue-sweetalert2": "^5.0.2"
+    "vue-sweetalert2": "^5.0.2",
+    "vue2-datepicker": "^3.10.1"
   },
   "devDependencies": {
     "@babel/eslint-parser": "^7.14.7",
