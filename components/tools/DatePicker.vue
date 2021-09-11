@@ -40,12 +40,11 @@ export default {
 
 <style lang="scss" scoped>
 .datepicker {
-  background-color: $white;
   border-radius: 5px;
-  padding: 5px 9px;
   display: flex;
   align-items: center;
   justify-content: center;
+  margin-top: 5px;
   .datepickerTool{
     flex:1
   }
