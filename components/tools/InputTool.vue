@@ -1,5 +1,5 @@
 <template>
-  <div class="input-error-two">
+  <div class="input-box">
     <div
       v-show="isError"
       class="error-hinit"

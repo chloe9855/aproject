@@ -1,6 +1,6 @@
 <template>
-  <div class="input-error-two">
-    <div class="input-title-and-error-hint">
+  <div class="input-box">
+    <div class="input-title-box">
       <p class="input-title">
         {{ title }}
       </p>
@@ -65,7 +65,7 @@ export default {
 
 <style lang="scss" scoped>
 @import '~/assets/scss/input.scss';
-.input-title-and-error-hint {
+.input-title-box {
     margin-bottom: 2px;
     display: flex;
     align-items: flex-end;

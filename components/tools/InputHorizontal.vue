@@ -1,5 +1,5 @@
 <template>
-  <div class="input-error-horizontal">
+  <div class="input-box">
     <div class="error-hinit">
       <div class="error-circle">
         <img
@@ -62,11 +62,6 @@ export default {
 
 <style lang="scss" scoped>
 @import '~/assets/scss/input.scss';
-.input-error-horizontal {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-}
 .error-hinit {
   margin-bottom: 2px;
   display: flex;
