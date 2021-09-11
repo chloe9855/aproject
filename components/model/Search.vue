@@ -1,10 +1,20 @@
 <template>
-  <div class="searchBox">
+  <div
+    class="searchBox"
+    :class="toggleBox"
+  >
     <PageHeader
       icon="slider"
-      :title="title"
+      :title="searchTitle"
     />
     <component :is="componentInstance" />
+    <div
+      class="toggleBtn"
+      @click="toggleSearthBox"
+    >
+      收合查詢列
+      <span :class="arrow" />
+    </div>
   </div>
 </template>
 
@@ -34,7 +44,11 @@ export default {
     }
   },
   data: () => {
-    return {};
+    return {
+      toggleState: false,
+      toggleBox: '',
+      arrow: 'arrowLeft'
+    };
   },
   computed: {
     componentInstance () {
@@ -64,8 +78,19 @@ export default {
       return title;
     }
   },
-  created: function () {
-
+  methods: {
+    toggleSearthBox () {
+      const isOpen = this.toggleState;
+      if (isOpen) {
+        this.toggleBox = 'hideBox';
+        this.arrow = 'arrowLeft';
+        this.toggleState = false;
+      } else {
+        this.toggleBox = 'showBox';
+        this.arrow = 'arrowRight';
+        this.toggleState = true;
+      }
+    }
   }
 };
 </script>
@@ -76,8 +101,56 @@ export default {
   position: absolute;
   width: 320px;
   height: 810px;
-  left: 0;
   top: 0;
+  left:-350px;
   background: #EFF4F3;
+}
+.toggleBtn{
+  position: absolute;
+  background: #3E9F88;
+  border-radius: 0 22px 22px 0;
+  line-height: 20px;
+  color: white;
+  left: 350px;
+  width: 16px;
+  padding: 30px 8px;
+  height: 108px;
+  cursor: pointer;
+}
+.showBox{
+  left:0;
+  animation: on 0.5s
+}
+.hideBox{
+  left:-350px;
+  animation: off 0.5s
+}
+.arrowLeft{
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 5px 0 5px 8.7px;
+  border-color: transparent transparent transparent #fff;
+  position: absolute;
+  bottom: 20px;
+  right: 12px;
+}
+.arrowRight{
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 5px 8.7px 5px 0;
+  border-color: transparent #fff transparent transparent;
+  position: absolute;
+  bottom: 20px;
+  right: 12px;
+}
+@keyframes on{
+  from{ left: -350px;}
+  to{ left: 0;}
+}
+@keyframes off{
+  from{ left: 0;}
+  to{ left: -350px;}
 }
 </style>
