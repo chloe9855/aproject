@@ -30,6 +30,10 @@ export default {
     icon: {
       type: String,
       default: 'file'
+    },
+    title: {
+      type: String,
+      default: '請設定查詢作業標題'
     }
   },
   data () {
@@ -76,6 +80,9 @@ export default {
         case 'news':
           title = '最新消息';
           break;
+        case 'slider':
+          title = this.title;
+          break;
       }
       return title;
     },
@@ -94,11 +101,12 @@ export default {
 }
 .arrow {
   margin-right: 5px;
-  padding: 4.05px 8.1px;
+  margin-top: 8px;
+  padding: 4px 8px;
   display: flex;
   align-items: center;
-  width: 10.8px;
-  height: 18.9px;
+  width: 12px;
+  height: 21px;
 }
 .vector {
   width: 100%;
@@ -115,8 +123,8 @@ export default {
 .title-icon {
   margin-right: 5px;
   padding: 2.59px 4.83px 0 2.31px;
-  width: 21px;
-  height: 25px;
+  width: 24px;
+  height: 24px;
   position: relative;
 }
 </style>
