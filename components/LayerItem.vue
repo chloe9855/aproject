@@ -31,14 +31,28 @@
       <div v-if="item.type.length === 1">
         <img :src="require('~/assets/img/yellow-block.svg')">
       </div>
+
       <div v-if="item.type.length > 1">
         <div class="allshow">
           <span>全部顯示</span>
-          <ViewCheckBox-component
-            :id="item.id"
-            :visible="item.visible"
-            @change="($event, id) => { $emit('changeVisible', $event, id) }"
-          />
+          <!-- <ViewCheckBox-component
+            :visible="true"
+            @change="($event) => { $emit('setAllVisible', $event) }"
+          /> -->
+        </div>
+        <div class="branch_block">
+          <div
+            v-for="lis in item.type"
+            :key="lis.id"
+            class="branch_item"
+          >
+            <span>{{ lis.name }}</span>
+            <ViewCheckBox-component
+              :id="lis.id"
+              :visible="lis.visible"
+              @change="($event) => { $emit('changeVisible', $event, id) }"
+            />
+          </div>
         </div>
       </div>
     </div>
@@ -103,6 +117,17 @@ export default {
       justify-content: space-between;
       margin-left: -23px;
       padding-right: 22px;
+    }
+
+    .branch_item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 0;
+
+      .view-checkbox {
+        margin-right: 21px;
+      }
     }
   }
 
