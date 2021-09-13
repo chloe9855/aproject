@@ -1,0 +1,111 @@
+<template>
+  <div class="page-header">
+    <div
+      v-show="isArrow"
+      class="arrow"
+    >
+      <img
+        alt=""
+        class="vector"
+        :src="require('~/assets/img/pageHeader/arrow-left.svg')"
+      >
+    </div>
+    <div class="title-icon">
+      <img
+        alt=""
+        class="vector"
+        :src="mainIcon"
+      >
+    </div>
+    <h3 class="title">
+      {{ mainTitle }}
+    </h3>
+  </div>
+</template>
+
+<script>
+export default {
+  name: 'PageHeader',
+  props: {
+    icon: {
+      type: String,
+      default: 'file'
+    },
+    title: {
+      type: String,
+      default: '請設定查詢作業標題'
+    }
+  },
+  data () {
+    return {
+      titleList: {
+        farmer: '使用者帳號管理',
+        land: '作業基金土地管理',
+        system: '系統使用量統計',
+        bungalow: '灌溉地管理',
+        edit: '灌溉地編輯',
+        layer: '案件審核',
+        download: '下載專區',
+        file: '統計報表',
+        password: '設定密碼',
+        news: '最新消息'
+      }
+    };
+  },
+  computed: {
+    mainIcon () {
+      const icon = this.icon;
+      return require(`~/assets/img/pageHeader/${icon}.svg`);
+    },
+    mainTitle () {
+      const icon = this.icon;
+      let title;
+      if (icon === 'slider') {
+        title = this.title;
+      } else {
+        title = this.titleList[icon];
+      }
+      return title;
+    },
+    isArrow () {
+      const icon = this.icon;
+      return !!(icon === 'edit' || icon === 'file');
+    }
+  }
+};
+</script>
+
+<style lang="scss" scoped>
+.page-header {
+  display: flex;
+  align-items: center;
+}
+.arrow {
+  margin-right: 5px;
+  margin-top: 8px;
+  padding: 4px 8px;
+  display: flex;
+  align-items: center;
+  width: 12px;
+  height: 21px;
+}
+.vector {
+  width: 100%;
+  align-self: stretch;
+  object-fit: cover;
+}
+.title {
+  color: $header-black;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  @include noto-sans-tc-24-medium;
+}
+.title-icon {
+  margin-right: 5px;
+  padding: 2.59px 4.83px 0 2.31px;
+  width: 24px;
+  height: 24px;
+  position: relative;
+}
+</style>
