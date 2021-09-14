@@ -62,7 +62,6 @@
 
 <script>
 export default {
-  name: 'Table',
   props: {
     tableColumn: {
       type: Object,
@@ -74,6 +73,7 @@ export default {
       }
     }
   },
+  name: 'Table',
   computed: {
     isShowBg: function () {
       const data = this.tableColumn.body;
@@ -83,9 +83,6 @@ export default {
         return false;
       }
     }
-  },
-  created: function () {
-    // `this` 指向 vm 例項
   }
 };
 </script>
