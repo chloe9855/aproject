@@ -14,7 +14,6 @@
 
 <script>
 export default {
-  name: 'Dropdown',
   props: {
     options: {
       type: Object,
@@ -25,7 +24,8 @@ export default {
   },
   data: () => {
     return {};
-  }
+  },
+  name: 'Dropdown'
 };
 </script>
 

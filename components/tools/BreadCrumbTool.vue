@@ -19,7 +19,6 @@
 
 <script>
 export default {
-  name: 'BreadCrumb',
   props: {
     options: {
       type: Array,
@@ -30,7 +29,8 @@ export default {
   },
   data () {
     return {};
-  }
+  },
+  name: 'BreadCrumb'
 };
 </script>
 <style lang="scss" scoped>

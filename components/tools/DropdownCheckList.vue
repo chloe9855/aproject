@@ -28,7 +28,6 @@
 
 <script>
 export default {
-  name: 'DropdownCheckList',
   props: {
     options: {
       type: Object,
@@ -43,6 +42,12 @@ export default {
       istoggle: false
     };
   },
+  name: 'DropdownCheckList',
+  methods: {
+    toggleList: function () {
+      this.istoggle = !this.istoggle;
+    }
+  },
   computed: {
     toggle: function () {
       const status = this.istoggle;
@@ -51,11 +56,6 @@ export default {
       } else {
         return 'hideBox';
       }
-    }
-  },
-  methods: {
-    toggleList: function () {
-      this.istoggle = !this.istoggle;
     }
   }
 };

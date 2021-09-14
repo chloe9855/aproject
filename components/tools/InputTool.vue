@@ -27,7 +27,6 @@
 
 <script>
 export default {
-  name: 'InputTool',
   props: {
     name: {
       type: String,
@@ -54,6 +53,7 @@ export default {
       }
     };
   },
+  name: 'InputTool',
   computed: {
     isError: function () {
       const defaultStatus = this.isWarn;

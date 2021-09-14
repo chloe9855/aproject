@@ -9,7 +9,6 @@
 
 <script>
 export default {
-  name: 'Fragment',
   props: {
     type: {
       type: String,
@@ -20,6 +19,7 @@ export default {
       default: '啟用中'
     }
   },
+  name: 'Fragment',
   computed: {
     tagColor: function () {
       const propsType = this.type;

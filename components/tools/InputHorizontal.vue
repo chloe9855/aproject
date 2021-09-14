@@ -32,7 +32,6 @@
 
 <script>
 export default {
-  name: 'InputHorizontal',
   props: {
     name: {
       type: String,
@@ -63,6 +62,7 @@ export default {
       }
     };
   },
+  name: 'InputHorizontal',
   computed: {
     isError: function () {
       const defaultStatus = this.isWarn;
