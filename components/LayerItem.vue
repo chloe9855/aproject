@@ -29,28 +29,32 @@
       class="info_block"
     >
       <div v-if="item.type.length === 1">
-        <img :src="require('~/assets/img/yellow-block.svg')">
+        <img :src="require(`~/assets/img/${item.pic[0]}.svg`)">
       </div>
 
       <div v-if="item.type.length > 1">
         <div class="allshow">
           <span>全部顯示</span>
-          <!-- <ViewCheckBox-component
+          <ViewCheckBox-component
             :visible="true"
-            @change="($event) => { $emit('setAllVisible', $event) }"
-          /> -->
+            @change="($event) => { $emit('setAllVisible', $event, item.id) }"
+          />
         </div>
         <div class="branch_block">
           <div
-            v-for="lis in item.type"
-            :key="lis.id"
+            v-for="typeItem in item.type"
+            :key="typeItem.id"
             class="branch_item"
           >
-            <span>{{ lis.name }}</span>
+            <div class="twrap">
+              <span>{{ typeItem.name }}</span>
+              <img :src="require(`~/assets/img/water-${typeItem.pic}.svg`)">
+            </div>
+
             <ViewCheckBox-component
-              :id="lis.id"
-              :visible="lis.visible"
-              @change="($event) => { $emit('changeVisible', $event, id) }"
+              :id="typeItem.id"
+              :visible="typeItem.visible"
+              @change="($event, id) => { $emit('changeVisible', $event, id) }"
             />
           </div>
         </div>
@@ -116,6 +120,7 @@ export default {
       display: flex;
       justify-content: space-between;
       margin-left: -23px;
+      padding: 10px 0;
       padding-right: 22px;
     }
 
@@ -127,6 +132,14 @@ export default {
 
       .view-checkbox {
         margin-right: 21px;
+      }
+
+      .twrap {
+        display: flex;
+        align-items: center;
+        img {
+          margin-left: 10px;
+        }
       }
     }
   }

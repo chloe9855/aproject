@@ -27,6 +27,15 @@
       <br>
       <br>
       <SwitchOn-component />
+      <br>
+      <br>
+      <AreaNote-component />
+      <br>
+      <br>
+      <CalNote-component />
+      <br>
+      <br>
+      <TreeSelect-component />
     </div>
     <Footer-component />
   </div>
@@ -44,6 +53,9 @@ import AlertBox from '~/components/tools/AlertBox.vue';
 import Buttons from '~/components/tools/Buttons.vue';
 import Paginate from '~/components/tools/Paginate.vue';
 import SwitchOn from '~/components/tools/SwitchOn.vue';
+import AreaNote from '~/components/tools/AreaNote.vue';
+import CalNote from '~/components/tools/CalNote.vue';
+import TreeSelect from '~/components/tools/TreeSelect.vue';
 
 export default {
   components: {
@@ -57,7 +69,10 @@ export default {
     'AlertBox-component': AlertBox,
     'Buttons-component': Buttons,
     'Paginate-component': Paginate,
-    'SwitchOn-component': SwitchOn
+    'SwitchOn-component': SwitchOn,
+    'AreaNote-component': AreaNote,
+    'CalNote-component': CalNote,
+    'TreeSelect-component': TreeSelect
   },
   data () {
     return {
