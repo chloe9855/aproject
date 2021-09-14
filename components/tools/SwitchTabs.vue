@@ -1,36 +1,25 @@
 <template>
-  <div style="display: inline-block;">
-    <div class="btn_group">
-      <div
-        v-for="typeItem of options.typeList"
-        :key="typeItem.id"
-        class="btn"
-        :class="{ 'current': options.current === typeItem.id }"
-        @click.stop="options.current = typeItem.id"
-      >
-        {{ typeItem.name }}
-      </div>
+  <div class="btn_group">
+    <div
+      v-for="typeItem of typeList"
+      :key="typeItem.id"
+      class="btn"
+      :class="{ 'current': current === typeItem.id }"
+      @click.stop="current = typeItem.id, $emit('current',typeItem.id)"
+    >
+      {{ typeItem.name }}
     </div>
   </div>
 </template>
 
 <script>
 export default {
+  props: {
+    typeList: Array
+  },
   data () {
     return {
-      options: {
-        current: 0,
-        typeList: [
-          {
-            name: 'wms',
-            id: 0
-          },
-          {
-            name: 'wmts',
-            id: 1
-          }
-        ]
-      }
+      current: 0
 
     };
   }

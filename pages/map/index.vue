@@ -2,26 +2,42 @@
   <div class="wrapper">
     <Header-component />
     <div class="main">
-      <div class="side_bar">
-        <Feature-component />
-      </div>
+      <Feature-component
+        :current="activeWindow"
+        @select="payload => activeWindow = payload"
+      />
+
+      <!--     圖層工具     -->
       <DragBox-component
+        v-if="ctrlDragBoxVisible('switchLayersWindow')"
         :name="'圖層工具'"
         :icon-name="'icon-layer-ctrl'"
+        @close="activeWindow = ''"
       >
         <template #content>
-          <div class="navtabs__header">
+          <NavTabs-component
+            :type-list="layerOptions.typeList"
+            @current="payload => layerOptions.current = payload"
+          />
+
+          <div class="navtabs__content layerwindow">
             <div
-              v-for="typeItem of layerOptions.typeList"
-              :key="typeItem.id"
-              class="navtabs__btn"
-              :class="{ 'current': layerOptions.current === typeItem.id }"
-              @click.stop="layerOptions.current = typeItem.id"
+              v-if="layerOptions.current === 0"
+              class="layer__list"
             >
-              {{ typeItem.name }}
+              <div
+                v-for="item in layerOptions.surfaceList"
+                :key="item.id"
+                class="layer__item"
+              >
+                <LayerItem-component
+                  :item="item"
+                  :drop-down="true"
+                  @changeVisible="layerVisibleCtrl"
+                  @setAllVisible="allLayerVisibleCtrl"
+                />
+              </div>
             </div>
-          </div>
-          <div class="navtabs__content">
             <div
               v-if="layerOptions.current === 1"
               class="layer__list"
@@ -33,6 +49,41 @@
               >
                 <LayerItem-component
                   :item="item"
+                  :drop-down="true"
+                  @changeVisible="layerVisibleCtrl"
+                  @setAllVisible="allLayerVisibleCtrl"
+                />
+              </div>
+            </div>
+            <div
+              v-if="layerOptions.current === 2"
+              class="layer__list"
+            >
+              <div
+                v-for="item in layerOptions.surfaceList"
+                :key="item.id"
+                class="layer__item"
+              >
+                <LayerItem-component
+                  :item="item"
+                  :drop-down="true"
+                  @changeVisible="layerVisibleCtrl"
+                  @setAllVisible="allLayerVisibleCtrl"
+                />
+              </div>
+            </div>
+            <div
+              v-if="layerOptions.current === 3"
+              class="layer__list"
+            >
+              <div
+                v-for="item in layerOptions.surfaceList"
+                :key="item.id"
+                class="layer__item"
+              >
+                <LayerItem-component
+                  :item="item"
+                  :drop-down="false"
                   @changeVisible="layerVisibleCtrl"
                   @setAllVisible="allLayerVisibleCtrl"
                 />
@@ -43,16 +94,44 @@
               v-if="layerOptions.current === 4"
               class="shp__list"
             >
-              <div class="btn_group_wms">
+              <SwitchTabs-component
+                :type-list="shpOptions.typeList"
+                @current="payload => shpOptions.current = payload"
+              />
+              <p class="tit">
+                請以 .zip 封存檔案，.zip檔案內需含有.shp .shx .dbf .prj 四種檔案類型
+              </p>
+              <div class="bt_wrap">
                 <div
-                  v-for="typeItem of shpOptions.typeList"
-                  :key="typeItem.id"
-                  class="btn"
-                  :class="{ 'current': shpOptions.current === typeItem.id }"
-                  @click.stop="shpOptions.current = typeItem.id"
+                  class="button-add"
+                  @click="addShpLayer"
                 >
-                  {{ typeItem.name }}
+                  <div class="add">
+                    <div class="ellipse-9" />
+                    <img
+                      class="vector"
+                      :src="require('~/assets/img/add-icon.svg')"
+                    >
+                  </div>
+                  <p class="button-text">
+                    新增圖層
+                  </p>
                 </div>
+              </div>
+
+              <div v-if="shpOptions.layerList.length >= 1">
+                <ShpItem-component
+                  :item="shpOptions.layerList[0]"
+                  @changeVisible="layerVisibleCtrl"
+                  @delete="deleteShpLayer"
+                />
+              </div>
+              <div
+                v-if="shpOptions.layerList.length < 1"
+                class="no_file"
+              >
+                <img :src="require('~/assets/img/no-file.svg')">
+                <p>尚未取得服務</p>
               </div>
             </div>
 
@@ -61,15 +140,10 @@
               class="ogc__list"
             >
               <div class="btn_group_wms">
-                <div
-                  v-for="typeItem of ogcOptions.typeList"
-                  :key="typeItem.id"
-                  class="btn"
-                  :class="{ 'current': ogcOptions.current === typeItem.id }"
-                  @click.stop="ogcOptions.current = typeItem.id"
-                >
-                  {{ typeItem.name }}
-                </div>
+                <SwitchTabs-component
+                  :type-list="ogcOptions.typeList"
+                  @current="payload => ogcOptions.current = payload"
+                />
               </div>
               <p class="title_name">
                 服務路徑
@@ -146,9 +220,19 @@
           </div>
         </template>
       </DragBox-component>
-      <NavTabs-component />
+
+      <!--     定位工具      -->
+      <DragBox-component
+        v-if="ctrlDragBoxVisible('setPositionWindow')"
+        :name="'定位工具'"
+        :icon-name="'icon-set-position'"
+        @close="activeWindow = ''"
+      >
+        <template #content>
+          <PositionNav-component />
+        </template>
+      </DragBox-component>
     </div>
-    <!-- <Footer-component /> -->
   </div>
 </template>
 
@@ -159,6 +243,9 @@ import NavTabs from '~/components/tools/NavTabs.vue';
 import Feature from '~/components/Feature.vue';
 import DragBox from '~/components/DragBox.vue';
 import LayerItem from '~/components/LayerItem.vue';
+import ShpItem from '~/components/ShpItem.vue';
+import SwitchTabs from '~/components/tools/SwitchTabs.vue';
+import PositionNav from '~/components/PositionNav.vue';
 
 export default {
   components: {
@@ -167,10 +254,15 @@ export default {
     'NavTabs-component': NavTabs,
     'Feature-component': Feature,
     'DragBox-component': DragBox,
-    'LayerItem-component': LayerItem
+    'LayerItem-component': LayerItem,
+    'ShpItem-component': ShpItem,
+    'SwitchTabs-component': SwitchTabs,
+    'PositionNav-component': PositionNav
   },
   data () {
     return {
+      // * 目前所選取的功能視窗
+      activeWindow: '',
       layerOptions: {
         current: 0,
         typeList: [
@@ -259,6 +351,11 @@ export default {
     this.layerOptions.surfaceList = [...surface.data];
   },
   methods: {
+    // * 控制視窗顯示
+    ctrlDragBoxVisible (payload) {
+      // @DragBox：電腦版可以在畫面上任意移動的 component
+      return this.activeWindow === payload;
+    },
     // * @ 圖層工具：切換圖層顯示
     layerVisibleCtrl ($event, id) {
       console.log(id);
@@ -273,6 +370,20 @@ export default {
       this.layerOptions.surfaceList[index].type.forEach((item) => {
         item.visible = $event;
       });
+    },
+    // * @ 圖層工具：臨時展繪 新增圖層
+    addShpLayer () {
+      const result = {
+        id: '5623355',
+        name: '縣市界',
+        visible: true,
+        opacity: 50
+      };
+      this.shpOptions.layerList.push(result);
+    },
+    // * @ 圖層工具：臨時展繪 刪除圖層
+    deleteShpLayer () {
+      this.shpOptions.layerList = [];
     },
     // * @ 圖層工具：OGC介接 取得服務
     getOgcHandler () {
@@ -294,13 +405,7 @@ export default {
     // height: calc(100vw - 106px);
   }
 
-  .side_bar {
-    position: absolute;
-    right: 10px;
-    top: 12px;
-  }
-
-  .navtabs__header {
+  .layerwindow {
     width: 420px;
   }
 
@@ -438,6 +543,20 @@ export default {
     color: #3E9F88;
     padding: 10px 0;
     @include noto-sans-tc-16-regular;
+  }
+
+  .shp__list {
+
+    @include noto-sans-tc-16-regular;
+    .tit {
+      width: 386px;
+      color:  #595959;
+      margin-top: 7px;
+    }
+
+    .bt_wrap {
+      border: none;
+    }
   }
 
 </style>
