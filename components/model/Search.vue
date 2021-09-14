@@ -116,6 +116,7 @@ export default {
   padding: 30px 8px;
   height: 108px;
   cursor: pointer;
+  top: 33vh;
 }
 .showBox{
   left:0;
