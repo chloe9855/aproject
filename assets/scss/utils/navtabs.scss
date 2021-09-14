@@ -5,16 +5,22 @@
   display: flex;
   width: 352px;
   height: 32px;
+  padding: 10px 0;
 }
 
 .navtabs__btn {
   flex-grow: 1;
   text-align: center;
   border-bottom: 5px solid rgba(226, 228, 228, 1);
+  width: 100%;
   cursor: pointer;
   @include noto-sans-tc-16-medium;
   
   &.current {
     border-bottom: 5px solid rgba(232, 180, 103, 1);
   }
+}
+
+.navtabs__content {
+  padding: 0 20px;
 }

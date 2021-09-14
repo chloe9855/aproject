@@ -1,8 +1,8 @@
 <template>
-  <div>
+  <div class="sliderbar">
     <client-only>
       <vue-slider
-        v-model="value"
+        v-model="opacity"
         v-bind="options"
       />
     </client-only>
@@ -11,9 +11,13 @@
 
 <script>
 export default {
+  props: {
+    id: String,
+    value: Number
+  },
   data () {
     return {
-      value: 50,
+      opacity: 0,
       options: {
         dotSize: 14,
         width: '74px',
@@ -27,6 +31,14 @@ export default {
         tooltip: 'none'
       }
     };
+  },
+  created () {
+    this.opacity = this.value;
+  },
+  watch: {
+    opacity (value) {
+      this.$emit('update', this.id, value);
+    }
   }
 };
 </script>
