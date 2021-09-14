@@ -1,5 +1,5 @@
 <template>
-  <div class="dropdown">
+  <div class="input-box dropdown">
     <select>
       <option
         v-for="(item, index) in options.option"
@@ -14,7 +14,6 @@
 
 <script>
 export default {
-  name: 'Dropdown',
   props: {
     options: {
       type: Object,
@@ -25,30 +24,11 @@ export default {
   },
   data: () => {
     return {};
-  }
+  },
+  name: 'Dropdown'
 };
 </script>
 
 <style lang="scss" scoped>
-.dropdown {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    align-self: stretch;
-    select{
-        background-color: white;
-        border-radius: 5px;
-        padding: 10px 9px;
-        align-items: center;
-        justify-content: center;
-        border: 1px solid $input-gray;
-        align-self: stretch;
-        flex: 1;
-        &:active,&:focus,&:visited {
-            outline:none;
-            border: 1px solid $main-green !important;
-            box-shadow: 0 0 4px 0 $dark-sea-green;
-        }
-    }
-}
+@import '~/assets/scss/input.scss';
 </style>
