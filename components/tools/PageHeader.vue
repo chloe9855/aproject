@@ -1,7 +1,7 @@
 <template>
   <div class="page-header">
     <div
-      v-show="isActive"
+      v-show="isArrow"
       class="arrow"
     >
       <img
@@ -25,7 +25,6 @@
 
 <script>
 export default {
-  name: 'PageHeader',
   props: {
     icon: {
       type: String,
@@ -38,9 +37,21 @@ export default {
   },
   data () {
     return {
-
+      titleList: {
+        farmer: '使用者帳號管理',
+        land: '作業基金土地管理',
+        system: '系統使用量統計',
+        bungalow: '灌溉地管理',
+        edit: '灌溉地編輯',
+        layer: '案件審核',
+        download: '下載專區',
+        file: '統計報表',
+        password: '設定密碼',
+        news: '最新消息'
+      }
     };
   },
+  name: 'PageHeader',
   computed: {
     mainIcon () {
       const icon = this.icon;
@@ -48,45 +59,15 @@ export default {
     },
     mainTitle () {
       const icon = this.icon;
-      let title = '';
-      switch (icon) {
-        case 'farmer':
-          title = '使用者帳號管理';
-          break;
-        case 'land':
-          title = '作業基金土地管理';
-          break;
-        case 'system':
-          title = '系統使用量統計';
-          break;
-        case 'bungalow':
-          title = '灌溉地管理';
-          break;
-        case 'edit':
-          title = '灌溉地編輯';
-          break;
-        case 'layer':
-          title = '案件審核';
-          break;
-        case 'download':
-          title = '下載專區';
-          break;
-        case 'file':
-          title = '統計報表';
-          break;
-        case 'password':
-          title = '設定密碼';
-          break;
-        case 'news':
-          title = '最新消息';
-          break;
-        case 'slider':
-          title = this.title;
-          break;
+      let title;
+      if (icon === 'slider') {
+        title = this.title;
+      } else {
+        title = this.titleList[icon];
       }
       return title;
     },
-    isActive () {
+    isArrow () {
       const icon = this.icon;
       return !!(icon === 'edit' || icon === 'file');
     }

@@ -12,48 +12,59 @@
         >
       </div>
       <p class="error-hint-text">
-        輸入文字格式錯誤
+        {{ errorTip }}
       </p>
     </div>
     <input
       v-model="message"
       class="inputType"
       :class="{inputError:isError}"
-      placeholder="錯誤文字"
+      :placeholder="inputText"
+      :name="name"
     >
   </div>
 </template>
 
 <script>
 export default {
-  name: 'InputTool',
   props: {
     name: {
       type: String,
       default: 'test'
     },
-    title: {
+    inputText: {
       type: String,
-      default: '輸入框標題'
-    },
-    errorText: {
-      type: String,
-      default: '錯誤文字'
+      default: '輸入文字'
     },
     errorTip: {
       type: String,
       default: '輸入文字格式錯誤'
     },
     isWarn: {
-      type: Boolean,
-      default: false
+      type: String,
+      default: ''
     }
   },
   data: () => {
     return {
       message: '',
-      isError: true
+      RegExpType: {
+        code8: '^.{8}$'
+      }
     };
+  },
+  name: 'InputTool',
+  computed: {
+    isError: function () {
+      const defaultStatus = this.isWarn;
+      const regtype = this.RegExpType[defaultStatus];
+      const rules = new RegExp(regtype);
+      if (defaultStatus === '' || this.message === '' || !regtype) {
+        return false;
+      } else {
+        return !rules.test(this.message);
+      }
+    }
   }
 };
 </script>
