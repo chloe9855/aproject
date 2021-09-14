@@ -21,7 +21,6 @@
 <script>
 import PageHeader from '~/components/tools/PageHeader';
 export default {
-  name: 'Table',
   components: {
     PageHeader: PageHeader
   },
@@ -50,6 +49,21 @@ export default {
       arrow: 'arrowLeft'
     };
   },
+  name: 'SearchBox',
+  methods: {
+    toggleSearthBox () {
+      const isOpen = this.toggleState;
+      if (isOpen) {
+        this.toggleBox = 'hideBox';
+        this.arrow = 'arrowLeft';
+        this.toggleState = false;
+      } else {
+        this.toggleBox = 'showBox';
+        this.arrow = 'arrowRight';
+        this.toggleState = true;
+      }
+    }
+  },
   computed: {
     componentInstance () {
       const searchType = this.type;
@@ -76,20 +90,6 @@ export default {
           break;
       }
       return title;
-    }
-  },
-  methods: {
-    toggleSearthBox () {
-      const isOpen = this.toggleState;
-      if (isOpen) {
-        this.toggleBox = 'hideBox';
-        this.arrow = 'arrowLeft';
-        this.toggleState = false;
-      } else {
-        this.toggleBox = 'showBox';
-        this.arrow = 'arrowRight';
-        this.toggleState = true;
-      }
     }
   }
 };
