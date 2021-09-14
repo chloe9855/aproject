@@ -1,0 +1,93 @@
+.input-box {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: center;
+}
+.input-title-box {
+    margin-bottom: 2px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    align-self: stretch;
+}
+.error-circle {
+    margin-right: 4px;
+    padding: 1.58px 1.59px 1.59px 1.58px;
+    display: flex;
+    align-items: center;
+    width: 15.83px;
+    height: 15.83px;
+}
+.vector {
+    width: 100%;
+    align-self: stretch;
+    object-fit: cover;
+}
+.error-hint-text {
+    color: $caution-red;
+    @include noto-sans-tc-12-regular;
+}
+.inputType {
+    background-color: $white;
+    border-radius: 5px;
+    padding: 10px 9px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+    border: 1px solid $input-gray;
+    align-self: stretch;
+    &.inputError{
+        border: 1px solid $caution-red;
+        &::placeholder {
+        color: $caution-red;
+        }
+    }
+    &:hover {
+        border: 1px solid $main-green;
+    }
+    &:active,&:focus,&:visited {
+        outline:none;
+        border: 1px solid $main-green !important;
+        box-shadow: 0 0 4px 0 $dark-sea-green;
+    }
+    &::placeholder {
+        line-height: 16px;
+        height: 16px;
+        font-size: 16px;
+        font-weight: bold;
+    }
+}
+.dropdown {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    align-self: stretch;
+    margin: 5px 0;
+    select{
+        border-radius: 5px;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid $input-gray;
+        align-self: stretch;
+        flex: 1;
+        font-family: Noto Sans TC;
+        font-style: normal;
+        font-weight: normal;
+        font-size: 16px;
+        line-height: 23px;
+        padding: 5px;
+        color: #959595;
+        &:active,&:focus,&:visited {
+            outline:none;
+            border: 1px solid $main-green !important;
+            box-shadow: 0 0 4px 0 $dark-sea-green;
+        }
+    }
+}
+.input-text {
+    color: $caution-red;
+    flex: 1;
+    @include noto-sans-tc-16-regular;
+}
