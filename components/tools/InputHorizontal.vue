@@ -25,6 +25,8 @@
         :class="{inputError:isError}"
         :placeholder="inputText"
         :name="name"
+        :type="inputType"
+        :disabled="isDisable === true"
       >
     </div>
   </div>
@@ -53,6 +55,14 @@ export default {
     isWarn: {
       type: String,
       default: ''
+    },
+    isDisable: {
+      type: Boolean,
+      default: false
+    },
+    inputType: {
+      type: String,
+      default: 'text'
     }
   },
   data: () => {
