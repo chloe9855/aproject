@@ -40,8 +40,9 @@
     align-self: stretch;
     &.inputError{
         border: 1px solid $caution-red;
-        &::placeholder {
         color: $caution-red;
+        &::placeholder {
+            color: $caution-red;
         }
     }
     &:hover {
@@ -51,6 +52,7 @@
         outline:none;
         border: 1px solid $main-green !important;
         box-shadow: 0 0 4px 0 $dark-sea-green;
+        color: #000;
     }
     &::placeholder {
         line-height: 16px;
