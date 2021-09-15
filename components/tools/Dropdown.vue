@@ -1,11 +1,5 @@
 <template>
   <div class="input-box dropdown">
-    <div class="input-title-box">
-      <p class="input-title">
-        {{ title }}
-      </p>
-    </div>
-
     <select>
       <option
         v-for="(item, index) in options.option"
@@ -21,10 +15,7 @@
 <script>
 export default {
   props: {
-    title: {
-      type: String,
-      default: ''
-    },
+
     options: {
       type: Object,
       default: () => {

@@ -27,7 +27,8 @@ export default {
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
     { src: '~/plugins/sliderbar.js', mode: 'client' },
-    { src: '~/plugins/paginate.js', mode: 'client' }
+    { src: '~/plugins/paginate.js', mode: 'client' },
+    { src: '~/plugins/dragbox.js', mode: 'client' }
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components

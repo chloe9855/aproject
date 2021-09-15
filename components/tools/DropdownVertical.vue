@@ -5,7 +5,7 @@
         {{ title }}
       </p>
     </div>
-    <select>
+    <select :class="{'add_bg': bgColor}">
       <option
         v-for="(item, index) in options.option"
         :key="index"
@@ -29,6 +29,10 @@ export default {
     title: {
       type: String,
       default: '輸入框標題'
+    },
+    bgColor: {
+      type: Boolean,
+      default: false
     }
   },
   data: () => {
@@ -46,4 +50,10 @@ export default {
     margin-right: 2px;
     @include noto-sans-tc-16-medium;
 }
+
+.add_bg {
+  background-color: #DBE4E2;
+  border: none !important;
+}
+
 </style>
