@@ -104,21 +104,12 @@
                 請以 .zip 封存檔案，.zip檔案內需含有.shp .shx .dbf .prj 四種檔案類型
               </p>
               <div class="bt_wrap">
-                <div
-                  class="button-add"
+                <Buttons-component
+                  :name="'button-add'"
+                  :text="'新增圖層'"
+                  :add="true"
                   @click="addShpLayer"
-                >
-                  <div class="add">
-                    <div class="ellipse-9" />
-                    <img
-                      class="vector"
-                      :src="require('~/assets/img/add-icon.svg')"
-                    >
-                  </div>
-                  <p class="button-text">
-                    新增圖層
-                  </p>
-                </div>
+                />
               </div>
 
               <div v-if="shpOptions.layerList.length >= 1">
@@ -156,14 +147,10 @@
                 :placeholder="ogcOptions.holder"
               />
               <div class="bt_wrap">
-                <div
-                  class="button-primary"
+                <Buttons-component
+                  :text="'取得服務'"
                   @click="getOgcHandler"
-                >
-                  <p class="button-text">
-                    取得服務
-                  </p>
-                </div>
+                />
               </div>
 
               <div
@@ -204,19 +191,14 @@
               </div>
 
               <div class="ogc_allbtn">
-                <div
-                  class="button-default"
+                <Buttons-component
+                  :name="'button-default'"
+                  :text="'清除全部'"
                   @click="clearOgcLayer"
-                >
-                  <p class="button-text">
-                    清除全部
-                  </p>
-                </div>
-                <div class="button-primary right">
-                  <p class="button-text">
-                    加入圖層
-                  </p>
-                </div>
+                />
+                <Buttons-component
+                  :text="'加入圖層'"
+                />
               </div>
               <div />
             </div>
@@ -235,6 +217,46 @@
           <PositionNav-component />
         </template>
       </DragBox-component>
+
+      <!--     測量工具      -->
+      <DragBox-component
+        v-if="ctrlDragBoxVisible('geoMeasureWindow')"
+        :name="'測量工具'"
+        :icon-name="'icon-geo-measure'"
+        @close="activeWindow = ''"
+      >
+        <template #content>
+          <GeoMeasure-component />
+        </template>
+      </DragBox-component>
+
+      <!--     截圖工具      -->
+      <DragBox-component
+        v-if="ctrlDragBoxVisible('screenShotWindow')"
+        :name="'截圖工具'"
+        :icon-name="'icon-screen-shot'"
+        @close="activeWindow = ''"
+      >
+        <template #content>
+          <ScreenShot-component />
+        </template>
+      </DragBox-component>
+
+      <!--     街景工具      -->
+      <DragBox-component
+        v-if="ctrlDragBoxVisible('streetMapWindow')"
+        :name="'街景工具'"
+        :icon-name="'icon-street-map'"
+        @close="activeWindow = ''"
+      >
+        <template #content>
+          <div class="street_wrap">
+            請於地圖圖面上，任一處「街道」點擊，
+            即以另開啟視窗，展示Google街景影像！
+            若要使用其他功能，將此視窗關閉即可！
+          </div>
+        </template>
+      </DragBox-component>
     </div>
   </div>
 </template>
@@ -249,6 +271,9 @@ import LayerItem from '~/components/LayerItem.vue';
 import ShpItem from '~/components/ShpItem.vue';
 import SwitchTabs from '~/components/tools/SwitchTabs.vue';
 import PositionNav from '~/components/PositionNav.vue';
+import Buttons from '~/components/tools/Buttons.vue';
+import GeoMeasure from '~/components/GeoMeasure.vue';
+import ScreenShot from '~/components/ScreenShot.vue';
 
 export default {
   components: {
@@ -260,7 +285,10 @@ export default {
     'LayerItem-component': LayerItem,
     'ShpItem-component': ShpItem,
     'SwitchTabs-component': SwitchTabs,
-    'PositionNav-component': PositionNav
+    'PositionNav-component': PositionNav,
+    'Buttons-component': Buttons,
+    'GeoMeasure-component': GeoMeasure,
+    'ScreenShot-component': ScreenShot
   },
   data () {
     return {
@@ -517,7 +545,8 @@ export default {
       display: flex;
       justify-content: flex-end;
       margin-top: 10px;
-      .right {
+
+      div:nth-child(2) {
         margin-left: 10px;
       }
     }
@@ -560,6 +589,13 @@ export default {
     .bt_wrap {
       border: none;
     }
+  }
+
+  .street_wrap {
+    width: 310px;
+    padding: 10px 20px 0 20px;
+    color: #595959;
+    @include noto-sans-tc-16-regular;
   }
 
 </style>

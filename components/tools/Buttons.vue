@@ -1,5 +1,8 @@
 <template>
-  <div :class="name">
+  <div
+    :class="name"
+    @click="$emit('click', true)"
+  >
     <img
       v-if="round"
       class="arrow"

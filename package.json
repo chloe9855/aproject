@@ -21,6 +21,7 @@
     "postcss-loader": "^3.0.0",
     "postcss-scss": "^4.0.0",
     "sass-loader": "^10.1.1",
+    "vue-draggable-resizable": "^2.3.0",
     "vue-plain-pagination": "^0.3.0",
     "vue-slider-component": "^3.2.14",
     "vue-sweetalert2": "^5.0.2",

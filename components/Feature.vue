@@ -9,7 +9,11 @@
         <div class="icon_layer" />
         <span>圖層</span>
       </div>
-      <div class="feature__btn">
+      <div
+        class="feature__btn"
+        :class="currentClassHandler('streetMapWindow')"
+        @click.stop="setDragboxHandler('streetMapWindow')"
+      >
         <div class="icon_streetview" />
         <span>街景</span>
       </div>
@@ -21,11 +25,19 @@
         <div class="icon_location" />
         <span>定位</span>
       </div>
-      <div class="feature__btn">
+      <div
+        class="feature__btn"
+        :class="currentClassHandler('geoMeasureWindow')"
+        @click.stop="setDragboxHandler('geoMeasureWindow')"
+      >
         <div class="icon_measure" />
         <span>測量</span>
       </div>
-      <div class="feature__btn">
+      <div
+        class="feature__btn"
+        :class="currentClassHandler('screenShotWindow')"
+        @click.stop="setDragboxHandler('screenShotWindow')"
+      >
         <div class="icon_print" />
         <span>截圖</span>
       </div>

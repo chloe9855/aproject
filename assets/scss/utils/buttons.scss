@@ -5,13 +5,13 @@
   background-color: $main-green;
   border-radius: 39px;
   padding: 6px 15px;
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
   color: $white;
   text-align: center;
   cursor: pointer;
-  @include noto-sans-tc-16-medium;
+  @include noto-sans-tc-16-regular;
 
   .arrow {
     width: 11.08px;
@@ -25,7 +25,7 @@
   background-color: $main-green;
   border-radius: 5px;
   padding: 6px 15px;
-  display: flex;
+  display: inline-flex;
   align-items: flex-start;
   justify-content: center;
   // width: 32px;
@@ -34,7 +34,7 @@
   .button-text {
     color: $white;
     text-align: center;
-    @include noto-sans-tc-16-medium;
+    @include noto-sans-tc-16-regular;
   }
 
   &:hover {
@@ -47,7 +47,7 @@
   background-color: $main-green;
   border-radius: 5px;
   padding: 6px 15px;
-  display: flex;
+  display: inline-flex;
   align-items: flex-start;
   justify-content: center;
   // width: 32px;
@@ -57,7 +57,7 @@
   .button-text {
     color: $white;
     text-align: center;
-    @include noto-sans-tc-16-medium;
+    @include noto-sans-tc-16-regular;
   }
 }
 
@@ -65,7 +65,7 @@
   background-color: $light-green;
   border-radius: 5px;
   padding: 6px 15px;
-  display: flex;
+  display: inline-flex;
   align-items: flex-start;
   justify-content: center;
   // width: 32px;
@@ -74,7 +74,7 @@
   .button-text {
     color: $dark-green;
     text-align: center;
-    @include noto-sans-tc-16-medium;
+    @include noto-sans-tc-16-regular;
   }
 
   &:hover {
@@ -87,7 +87,7 @@
   background-color: $light-green;
   border-radius: 5px;
   padding: 6px 15px;
-  display: flex;
+  display: inline-flex;
   align-items: flex-start;
   justify-content: center;
   opacity: 0.5;
@@ -96,14 +96,14 @@
   .button-text {
     color: $dark-green;
     text-align: center;
-    @include noto-sans-tc-16-medium;
+    @include noto-sans-tc-16-regular;
   }
 }
 
 .button-link {
   border-radius: 5px;
   padding: 6px 0;
-  display: flex;
+  display: inline-flex;
   align-items: flex-start;
   justify-content: center;
   cursor: pointer;
@@ -112,7 +112,7 @@
     color: $dark-green;
     text-align: center;
     text-decoration: underline;
-    @include noto-sans-tc-16-medium;
+    @include noto-sans-tc-16-regular;
 
     &:hover {
       color: $main-green;
@@ -123,7 +123,7 @@
 .button-link-disable {
   border-radius: 5px;
   padding: 6px 0;
-  display: flex;
+  display: inline-flex;
   align-items: flex-start;
   justify-content: center;
   opacity: 0.5;
@@ -133,7 +133,7 @@
     color: $dark-green;
     text-align: center;
     text-decoration: underline;
-    @include noto-sans-tc-16-medium;
+    @include noto-sans-tc-16-regular;
   }
 }
 
@@ -141,7 +141,7 @@
   background-color: $caution-red;
   border-radius: 5px;
   padding: 6px 15px;
-  display: flex;
+  display: inline-flex;
   align-items: flex-start;
   justify-content: center;
   // width: 32px;
@@ -150,7 +150,7 @@
   .button-text {
     color: $white;
     text-align: center;
-    @include noto-sans-tc-16-medium;
+    @include noto-sans-tc-16-regular;
   }
 
   &:hover {
@@ -162,7 +162,7 @@
   background-color: $caution-red;
   border-radius: 5px;
   padding: 6px 15px;
-  display: flex;
+  display: inline-flex;
   align-items: flex-start;
   justify-content: center;
   // width: 32px;
@@ -172,7 +172,7 @@
   .button-text {
     color: $white;
     text-align: center;
-    @include noto-sans-tc-16-medium;
+    @include noto-sans-tc-16-regular;
   }
 }
 
@@ -180,7 +180,7 @@
   background-color: $button-orange;
   border-radius: 5px;
   padding: 6px 15px;
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
@@ -216,7 +216,7 @@
   .button-text {
     color: $white;
     text-align: center;
-    @include noto-sans-tc-16-medium;
+    @include noto-sans-tc-16-regular;
   }
 }
 
@@ -224,7 +224,7 @@
   background-color: $button-orange;
   border-radius: 5px;
   padding: 6px 15px;
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
   cursor: default;
@@ -257,6 +257,6 @@
   .button-text {
     color: $white;
     text-align: center;
-    @include noto-sans-tc-16-medium;
+    @include noto-sans-tc-16-regular;
   }
 }
