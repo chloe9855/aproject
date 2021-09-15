@@ -30,7 +30,6 @@
 
 <script>
 export default {
-  name: 'DropdownCheckList',
   props: {
     options: {
       type: Object,
@@ -50,6 +49,11 @@ export default {
       dataArr: []
     };
   },
+  methods: {
+    toggleList: function () {
+      this.istoggle = !this.istoggle;
+    }
+  },
   computed: {
     getType: function () {
       const type = this.dropType;
@@ -61,13 +65,8 @@ export default {
     }
   },
   watch: {
-    dataArr: function (n, o) {
+    dataArr: function (n) {
       this.$emit('DropdownVal', n);
-    }
-  },
-  methods: {
-    toggleList: function () {
-      this.istoggle = !this.istoggle;
     }
   }
 };

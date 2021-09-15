@@ -15,13 +15,24 @@
         <p class="name">
           王大明
         </p>
-        <div class="account-icon">
+        <div
+          class="account-icon"
+          @click="showBox = !showBox"
+        >
           <img
             alt=""
             class="vector"
             :src="require('~/assets/img/account-icon.svg')"
           >
         </div>
+      </div>
+
+      <div
+        v-if="showBox"
+        class="login-box"
+      >
+        <p>帳號設定</p>
+        <p>登出</p>
       </div>
     </div>
 
@@ -83,45 +94,6 @@
         </div>
       </div>
     </div>
-
-    <!-- <ul
-      v-if="listOne"
-      class="list-one"
-    >
-      <li
-        v-for="side of sideList1"
-        :key="side.name"
-      >
-        <nuxt-link
-          :to="side.path"
-          :title="side.name"
-        >
-          <p class="title-two">
-            {{ side.name }}
-          </p>
-        </nuxt-link>
-      </li>
-    </ul> -->
-
-    <!-- <ul
-      v-if="listTwo"
-      @mouseover="listTwo = true"
-      @mouseleave="listTwo = false"
-    >
-      <li
-        v-for="side of sideList2"
-        :key="side.name"
-      >
-        <nuxt-link
-          :to="side.path"
-          :title="side.name"
-        >
-          <p class="title-two">
-            {{ side.name }}
-          </p>
-        </nuxt-link>
-      </li>
-    </ul> -->
   </header>
 </template>
 
@@ -190,7 +162,9 @@ export default {
       ],
       listOne: false,
       listOnee: false,
-      listTwo: false
+      listTwo: false,
+      showBox: false
+
     };
   },
   methods: {
@@ -215,6 +189,24 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+
+.login-box {
+  position: absolute;
+  top: 32px;
+  right: 16px;
+  background: white;
+  box-shadow: 0 0 14px 0 #a8a7a7;
+  border-radius: 5px;
+  color: #494949;
+  width: 217px;
+  padding: 0 10px;
+  @include noto-sans-tc-16-regular;
+
+  p {
+    cursor: pointer;
+    padding: 10px 0;
+  }
+}
 
 .list-one {
   background-color: $main-green;
@@ -279,10 +271,7 @@ export default {
   // padding: 8.82px 5.81px 7.54px 5.89px;
   display: flex;
   align-items: center;
-}
-.vector {
-  // width: 11.3px;
-  // height: 6.64px;
+  cursor: pointer;
 }
 
 // ****** navbar

@@ -25,6 +25,8 @@
         :class="{inputError:isError}"
         :placeholder="inputText"
         :name="name"
+        :type="inputType"
+        :disabled="isDisable === true"
       >
     </div>
   </div>
@@ -32,7 +34,6 @@
 
 <script>
 export default {
-  name: 'InputHorizontal',
   props: {
     name: {
       type: String,
@@ -53,6 +54,14 @@ export default {
     isWarn: {
       type: String,
       default: ''
+    },
+    isDisable: {
+      type: Boolean,
+      default: false
+    },
+    inputType: {
+      type: String,
+      default: 'text'
     }
   },
   data: () => {
@@ -63,6 +72,7 @@ export default {
       }
     };
   },
+  name: 'InputHorizontal',
   computed: {
     isError: function () {
       const defaultStatus = this.isWarn;
@@ -73,6 +83,11 @@ export default {
       } else {
         return !rules.test(this.message);
       }
+    }
+  },
+  watch: {
+    message (n, o) {
+      this.$emit('inputValue', n);
     }
   }
 };

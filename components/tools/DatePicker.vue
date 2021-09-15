@@ -14,7 +14,6 @@
 import DatePicker from 'vue2-datepicker';
 import 'vue2-datepicker/index.css';
 export default {
-  name: 'Datepicker',
   components: { DatePicker },
   props: {
     isRange: {
@@ -34,6 +33,12 @@ export default {
     return {
       time: null
     };
+  },
+  name: 'Datepicker',
+  watch: {
+    time (n, o) {
+      this.$emit('DateValue', n);
+    }
   }
 };
 </script>

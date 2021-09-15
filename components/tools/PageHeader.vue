@@ -25,7 +25,6 @@
 
 <script>
 export default {
-  name: 'PageHeader',
   props: {
     icon: {
       type: String,
@@ -52,6 +51,7 @@ export default {
       }
     };
   },
+  name: 'PageHeader',
   computed: {
     mainIcon () {
       const icon = this.icon;

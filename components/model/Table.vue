@@ -17,6 +17,7 @@
           >
             {{ item.title }}
           </th>
+          <th colspan="2" />
         </tr>
       </thead>
       <tbody>
@@ -62,7 +63,6 @@
 
 <script>
 export default {
-  name: 'Table',
   props: {
     tableColumn: {
       type: Object,
@@ -74,6 +74,7 @@ export default {
       }
     }
   },
+  name: 'Table',
   computed: {
     isShowBg: function () {
       const data = this.tableColumn.body;
@@ -83,9 +84,6 @@ export default {
         return false;
       }
     }
-  },
-  created: function () {
-    // `this` 指向 vm 例項
   }
 };
 </script>
@@ -102,6 +100,7 @@ export default {
             line-height: 33px;
             height: 33px;
             padding: 0 10px;
+            border: 1px solid $light-green;
         }
     }
     tbody{
@@ -109,6 +108,7 @@ export default {
             line-height: 33px;
             height: 33px;
             padding: 0 10px;
+            border: 1px solid $light-green;
         }
     }
   }

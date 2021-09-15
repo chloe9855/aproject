@@ -5,7 +5,10 @@
         {{ title }}
       </p>
     </div>
-    <select>
+    <select
+      v-model="selected"
+      :class="{'add_bg': bgColor}"
+    >
       <option
         v-for="(item, index) in options.option"
         :key="index"
@@ -19,7 +22,6 @@
 
 <script>
 export default {
-  name: 'Dropdown',
   props: {
     options: {
       type: Object,
@@ -30,10 +32,22 @@ export default {
     title: {
       type: String,
       default: '輸入框標題'
+    },
+    bgColor: {
+      type: Boolean,
+      default: false
     }
   },
   data: () => {
-    return {};
+    return {
+      selected: ''
+    };
+  },
+  name: 'DropdownVertical',
+  watch: {
+    selected (n, o) {
+      this.$emit('DropdownVal', n);
+    }
   }
 };
 </script>
@@ -46,4 +60,10 @@ export default {
     margin-right: 2px;
     @include noto-sans-tc-16-medium;
 }
+
+.add_bg {
+  background-color: #DBE4E2;
+  border: none !important;
+}
+
 </style>

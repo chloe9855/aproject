@@ -64,7 +64,6 @@
 </template>
 <script>
 export default {
-  name: 'Pagination',
   props: {
     tableCount: {
       type: Number,
@@ -77,27 +76,7 @@ export default {
       pageNum: 1
     };
   },
-  computed: {
-    isDot () {
-      const a = this.tableCount;
-      const b = this.page[3];
-      let result;
-      if (a - b <= 1) {
-        result = false;
-      } else {
-        result = true;
-      }
-      return result;
-    },
-    isActive () {
-      return function (o) {
-        const num = this.pageNum;
-        const obj = o;
-        const result = num === obj ? 'active' : '';
-        return result;
-      };
-    }
-  },
+  name: 'Pagination',
   methods: {
     changePage (evt) {
       let arr;
@@ -135,6 +114,27 @@ export default {
         arr = this.page.map(x => x + a);
         this.page = arr;
       }
+    }
+  },
+  computed: {
+    isDot () {
+      const a = this.tableCount;
+      const b = this.page[3];
+      let result;
+      if (a - b <= 1) {
+        result = false;
+      } else {
+        result = true;
+      }
+      return result;
+    },
+    isActive () {
+      return function (o) {
+        const num = this.pageNum;
+        const obj = o;
+        const result = num === obj ? 'active' : '';
+        return result;
+      };
     }
   }
 };
