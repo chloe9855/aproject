@@ -2,13 +2,19 @@
   <div class="wrapper">
     <Header-component />
     <div class="main">
-      <NavTabs-component />
+      <NavTabs-component
+        :type-list="options.typeList"
+        @current="payload => options.current = payload"
+      />
       <br>
       <br>
       <Feature-component />
       <br>
       <br>
-      <SwitchTabs-component />
+      <SwitchTabs-component
+        :type-list="options2.typeList"
+        @current="payload => options2.current = payload"
+      />
       <br>
       <br>
       <SliderBar-component />
@@ -21,6 +27,49 @@
       <br>
       <br>
       <Buttons-component />
+      <Buttons-component
+        :name="'button-primary-disable'"
+        :text="'新增圖層'"
+      />
+      <Buttons-component
+        :name="'button-default'"
+        :text="'新增圖層'"
+      />
+      <Buttons-component
+        :name="'button-default-disable'"
+        :text="'新增圖層'"
+      />
+      <Buttons-component
+        :name="'button-link'"
+        :text="'新增圖層'"
+      />
+      <Buttons-component
+        :name="'button-link-disable'"
+        :text="'新增圖層'"
+      />
+      <Buttons-component
+        :name="'button-red'"
+        :text="'新增圖層'"
+      />
+      <Buttons-component
+        :name="'button-red-disable'"
+        :text="'新增圖層'"
+      />
+      <Buttons-component
+        :name="'button-add'"
+        :text="'新增圖層'"
+        :add="true"
+      />
+      <Buttons-component
+        :name="'button-add-disable'"
+        :text="'新增圖層'"
+        :add="true"
+      />
+      <Buttons-component
+        :name="'button-round'"
+        :text="'新增圖層'"
+        :round="true"
+      />
       <br>
       <br>
       <Paginate-component />
@@ -76,7 +125,40 @@ export default {
   },
   data () {
     return {
-
+      options: {
+        current: 0,
+        typeList: [
+          {
+            name: '關鍵字查詢',
+            id: 0
+          },
+          {
+            name: '渠道查詢',
+            id: 1
+          },
+          {
+            name: '樁號查詢',
+            id: 2
+          },
+          {
+            name: '點擊查詢',
+            id: 3
+          }
+        ]
+      },
+      options2: {
+        current: 0,
+        typeList: [
+          {
+            name: 'wms',
+            id: 0
+          },
+          {
+            name: 'wmts',
+            id: 1
+          }
+        ]
+      }
     };
   }
 };

@@ -3,6 +3,7 @@
     <div class="title_wrap">
       <div class="wrap1">
         <img
+          v-if="dropDown === true"
           :id="`pic-${item.id}`"
           :src="arrowPicHandler"
           class="arrow_pic"
@@ -73,7 +74,8 @@ export default {
     'SliderBar-component': SliderBar
   },
   props: {
-    item: Object
+    item: Object,
+    dropDown: Boolean
   },
   data () {
     return {

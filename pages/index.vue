@@ -4,6 +4,10 @@
     <nuxt-link to="/map">
       去地圖頁
     </nuxt-link>
+    <nuxt-link to="/allComponents">
+      組件頁
+    </nuxt-link>
+
     <InputTool />
     <InputHorizontal
       name="inputName"
