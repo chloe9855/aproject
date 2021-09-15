@@ -75,6 +75,11 @@ export default {
         return !rules.test(this.message);
       }
     }
+  },
+  watch: {
+    message (n, o) {
+      this.$emit('inputValue', n);
+    }
   }
 };
 </script>
