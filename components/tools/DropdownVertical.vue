@@ -5,7 +5,7 @@
         {{ title }}
       </p>
     </div>
-    <select>
+    <select v-model="selected">
       <option
         v-for="(item, index) in options.option"
         :key="index"
@@ -33,7 +33,14 @@ export default {
     }
   },
   data: () => {
-    return {};
+    return {
+      selected: ''
+    };
+  },
+  watch: {
+    selected (n, o) {
+      this.$emit('DropdownVal', n);
+    }
   }
 };
 </script>
