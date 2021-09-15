@@ -34,7 +34,12 @@ export default {
       time: null
     };
   },
-  name: 'Datepicker'
+  name: 'Datepicker',
+  watch: {
+    time (n, o) {
+      this.$emit('DateValue', n);
+    }
+  }
 };
 </script>
 
