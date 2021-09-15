@@ -3,16 +3,26 @@
     <Dropdown :options="member" />
     <DatePicker />
     <DatePicker />
+    <Button
+      :name="'button-primary'"
+      :text="'清除全部'"
+    />
+    <Button
+      :name="'button-default-disable'"
+      :text="'查詢'"
+    />
   </div>
 </template>
 
 <script>
 import Dropdown from '~/components/tools/Dropdown.vue';
 import DatePicker from '~/components/tools/DatePicker.vue';
+import Button from '~/components/tools/Buttons';
 export default {
   components: {
     Dropdown: Dropdown,
-    DatePicker: DatePicker
+    DatePicker: DatePicker,
+    Button: Button
   },
   props: {},
   data: () => {

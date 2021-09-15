@@ -76,7 +76,7 @@ export default {
         case 'landSearch':
           title = '作業基金土地查詢';
           break;
-        case 'userSearchAcct':
+        case 'userAcctSearch':
           title = '使用者帳號查詢';
           break;
         case 'systemSearch':
@@ -104,6 +104,9 @@ export default {
   top: 0;
   left:-350px;
   background: #EFF4F3;
+}
+.page-header{
+  margin-bottom: 20px;
 }
 .toggleBtn{
   position: absolute;
