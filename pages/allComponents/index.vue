@@ -27,6 +27,49 @@
       <br>
       <br>
       <Buttons-component />
+      <Buttons-component
+        :name="'button-primary-disable'"
+        :text="'新增圖層'"
+      />
+      <Buttons-component
+        :name="'button-default'"
+        :text="'新增圖層'"
+      />
+      <Buttons-component
+        :name="'button-default-disable'"
+        :text="'新增圖層'"
+      />
+      <Buttons-component
+        :name="'button-link'"
+        :text="'新增圖層'"
+      />
+      <Buttons-component
+        :name="'button-link-disable'"
+        :text="'新增圖層'"
+      />
+      <Buttons-component
+        :name="'button-red'"
+        :text="'新增圖層'"
+      />
+      <Buttons-component
+        :name="'button-red-disable'"
+        :text="'新增圖層'"
+      />
+      <Buttons-component
+        :name="'button-add'"
+        :text="'新增圖層'"
+        :add="true"
+      />
+      <Buttons-component
+        :name="'button-add-disable'"
+        :text="'新增圖層'"
+        :add="true"
+      />
+      <Buttons-component
+        :name="'button-round'"
+        :text="'新增圖層'"
+        :round="true"
+      />
       <br>
       <br>
       <Paginate-component />

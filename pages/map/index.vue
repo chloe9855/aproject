@@ -17,6 +17,7 @@
         <template #content>
           <NavTabs-component
             :type-list="layerOptions.typeList"
+            :selected="layerOptions.current"
             @current="payload => layerOptions.current = payload"
           />
 
@@ -95,6 +96,7 @@
               class="shp__list"
             >
               <SwitchTabs-component
+                :selected="shpOptions.current"
                 :type-list="shpOptions.typeList"
                 @current="payload => shpOptions.current = payload"
               />
@@ -141,6 +143,7 @@
             >
               <div class="btn_group_wms">
                 <SwitchTabs-component
+                  :selected="ogcOptions.current"
                   :type-list="ogcOptions.typeList"
                   @current="payload => ogcOptions.current = payload"
                 />

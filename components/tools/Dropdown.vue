@@ -1,5 +1,11 @@
 <template>
   <div class="input-box dropdown">
+    <div class="input-title-box">
+      <p class="input-title">
+        {{ title }}
+      </p>
+    </div>
+
     <select>
       <option
         v-for="(item, index) in options.option"
@@ -15,6 +21,10 @@
 <script>
 export default {
   props: {
+    title: {
+      type: String,
+      default: ''
+    },
     options: {
       type: Object,
       default: () => {
@@ -31,4 +41,12 @@ export default {
 
 <style lang="scss" scoped>
 @import '~/assets/scss/input.scss';
+
+.input-title {
+    color: $header-black;
+    flex: 1;
+    margin-right: 2px;
+    @include noto-sans-tc-16-medium;
+}
+
 </style>

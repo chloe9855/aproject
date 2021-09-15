@@ -15,12 +15,16 @@
 <script>
 export default {
   props: {
-    typeList: Array
+    typeList: Array,
+    selected: Number
   },
   data () {
     return {
       current: 0
     };
+  },
+  created () {
+    this.current = this.selected;
   }
 };
 </script>
