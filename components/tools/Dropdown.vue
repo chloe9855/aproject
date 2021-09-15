@@ -1,6 +1,6 @@
 <template>
   <div class="input-box dropdown">
-    <select>
+    <select v-model="selected">
       <option
         v-for="(item, index) in options.option"
         :key="index"
@@ -23,9 +23,16 @@ export default {
     }
   },
   data: () => {
-    return {};
+    return {
+      selected: ''
+    };
   },
-  name: 'Dropdown'
+  name: 'Dropdown',
+  watch: {
+    selected (n, o) {
+      this.$emit('DropdownVal', n);
+    }
+  }
 };
 </script>
 
