@@ -1,22 +1,32 @@
 <template>
   <div class="inputBox">
-    <Dropdown :options="member" />
-    <Dropdown :options="member" />
-    <Dropdown :options="member" />
+    <DropdownVertical :options="member" />
+    <DropdownVertical :options="member" />
+    <DropdownVertical :options="member" />
     <InputTool />
     <DatePicker />
+    <Button
+      :name="'button-primary'"
+      :text="'清除全部'"
+    />
+    <Button
+      :name="'button-default-disable'"
+      :text="'查詢'"
+    />
   </div>
 </template>
 
 <script>
 import InputTool from '~/components/tools/InputTool.vue';
-import Dropdown from '~/components/tools/Dropdown.vue';
+import DropdownVertical from '~/components/tools/DropdownVertical.vue';
 import DatePicker from '~/components/tools/DatePicker.vue';
+import Button from '~/components/tools/Buttons';
 export default {
   components: {
-    Dropdown: Dropdown,
+    DropdownVertical: DropdownVertical,
     InputTool: InputTool,
-    DatePicker: DatePicker
+    DatePicker: DatePicker,
+    Button: Button
   },
   props: {},
   data: () => {
