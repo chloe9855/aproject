@@ -17,6 +17,7 @@
           >
             {{ item.title }}
           </th>
+          <th colspan="2" />
         </tr>
       </thead>
       <tbody>
@@ -99,6 +100,7 @@ export default {
             line-height: 33px;
             height: 33px;
             padding: 0 10px;
+            border: 1px solid $light-green;
         }
     }
     tbody{
@@ -106,6 +108,7 @@ export default {
             line-height: 33px;
             height: 33px;
             padding: 0 10px;
+            border: 1px solid $light-green;
         }
     }
   }
