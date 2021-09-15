@@ -9,7 +9,10 @@
           >{{ name }}</label>
         </slot>
       </div>
-      <div class="close_icon" />
+      <div
+        class="close_icon"
+        @click="$emit('close')"
+      />
     </div>
 
     <div class="drag_content">
@@ -83,6 +86,10 @@ export default {
 
   .icon-layer-ctrl::before {
     background: url('~/assets/img/icon-layer-ctrl.svg') no-repeat right/contain;
+  }
+
+  .icon-set-position::before {
+    background: url('~/assets/img/icon-set-position.svg') no-repeat right/contain;
   }
 
 </style>
