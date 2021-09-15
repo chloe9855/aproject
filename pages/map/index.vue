@@ -257,6 +257,9 @@
           </div>
         </template>
       </DragBox-component>
+
+      <!--    地圖搜尋欄     -->
+      <MapSearchBox-component />
     </div>
   </div>
 </template>
@@ -274,6 +277,7 @@ import PositionNav from '~/components/PositionNav.vue';
 import Buttons from '~/components/tools/Buttons.vue';
 import GeoMeasure from '~/components/GeoMeasure.vue';
 import ScreenShot from '~/components/ScreenShot.vue';
+import MapSearchBox from '~/components/MapSearchBox.vue';
 
 export default {
   components: {
@@ -288,7 +292,8 @@ export default {
     'PositionNav-component': PositionNav,
     'Buttons-component': Buttons,
     'GeoMeasure-component': GeoMeasure,
-    'ScreenShot-component': ScreenShot
+    'ScreenShot-component': ScreenShot,
+    'MapSearchBox-component': MapSearchBox
   },
   data () {
     return {
