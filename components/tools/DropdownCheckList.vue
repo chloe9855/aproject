@@ -1,5 +1,13 @@
 <template>
-  <div class="dropCheckList">
+  <div class="dropCheckList input-box dropdown">
+    <div
+      v-show="isTitle"
+      class="input-title-box"
+    >
+      <p class="input-title">
+        {{ title }}
+      </p>
+    </div>
     <div
       class="dropItem"
       :class="{listOpen:istoggle,isUp:getType}"
@@ -10,7 +18,7 @@
     <ul
       v-show="istoggle"
       class="dropList"
-      :class="dropType"
+      :class="{up:getType,onTitle:isTitle}"
     >
       <li
         v-for="(item , index) in options.option"
@@ -40,6 +48,10 @@ export default {
     dropType: {
       type: String,
       default: 'down'
+    },
+    title: {
+      type: String,
+      default: ''
     }
   },
   data: () => {
@@ -62,6 +74,14 @@ export default {
       } else {
         return true;
       }
+    },
+    isTitle: function () {
+      const title = this.title;
+      if (title === '') {
+        return false;
+      } else {
+        return true;
+      }
     }
   },
   watch: {
@@ -73,6 +93,13 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import '~/assets/scss/input.scss';
+.input-title {
+    color: $header-black;
+    flex: 1;
+    margin-right: 2px;
+    @include noto-sans-tc-16-medium;
+}
 .dropCheckList{
   display: flex;
   align-items: center;
@@ -123,11 +150,13 @@ export default {
     border: 1px solid #959595;
     width: 100%;
     background-color: #FFF;
+    top: 38px;
+    &.onTitle{
+      top: calc( 24px + 38px );
+    }
     &.up{
       bottom: 38px;
-    }
-    &.down{
-      top: 38px;
+      top:unset;
     }
     li{
       height: 38px;
