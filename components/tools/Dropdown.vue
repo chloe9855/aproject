@@ -1,9 +1,9 @@
 <template>
   <div
+    :class="{'add_bg': bgColor}"
     class="input-box dropdown"
-    :class="sizing"
   >
-    <select v-model="selected">
+    <select :class="{'add_bg': bgColor}">
       <option
         v-for="(item, index) in options.option"
         :key="index"
@@ -27,6 +27,10 @@ export default {
     sizing: {
       type: String,
       default: 'w-100'
+    },
+    bgColor: {
+      type: Boolean,
+      default: false
     }
   },
   data: () => {
@@ -51,6 +55,11 @@ export default {
     flex: 1;
     margin-right: 2px;
     @include noto-sans-tc-16-medium;
+}
+
+.add_bg {
+  background-color: #DBE4E2;
+  border: none !important;
 }
 
 </style>
