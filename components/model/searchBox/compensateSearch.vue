@@ -5,14 +5,16 @@
     <DropdownVertical :options="member" />
     <DropdownVertical :options="member" />
     <InputVertical />
-    <Button
-      :name="'button-primary'"
-      :text="'清除全部'"
-    />
-    <Button
-      :name="'button-default-disable'"
-      :text="'查詢'"
-    />
+    <div class="buttonBox">
+      <Button
+        :name="'button-primary'"
+        :text="'清除全部'"
+      />
+      <Button
+        :name="'button-default-disable'"
+        :text="'查詢'"
+      />
+    </div>
   </div>
 </template>
 
@@ -37,5 +39,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
+.buttonBox{
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 20px;
+}
 </style>
