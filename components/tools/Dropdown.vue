@@ -1,5 +1,8 @@
 <template>
-  <div class="input-box dropdown">
+  <div
+    class="input-box dropdown"
+    :class="sizing"
+  >
     <select v-model="selected">
       <option
         v-for="(item, index) in options.option"
@@ -20,6 +23,10 @@ export default {
       default: () => {
         return { option: [{ title: '選項1', value: '0' }, { title: '選項2', value: '1' }, { title: '選項3', value: '2' }] };
       }
+    },
+    sizing: {
+      type: String,
+      default: 'w-100'
     }
   },
   data: () => {

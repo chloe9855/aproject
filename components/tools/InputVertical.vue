@@ -1,5 +1,8 @@
 <template>
-  <div class="input-box">
+  <div
+    class="input-box"
+    :class="sizing"
+  >
     <div class="input-title-box">
       <p class="input-title">
         {{ title }}
@@ -62,6 +65,10 @@ export default {
     inputType: {
       type: String,
       default: 'text'
+    },
+    sizing: {
+      type: String,
+      default: 'w-100'
     }
   },
   data: () => {

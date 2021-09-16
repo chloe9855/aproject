@@ -1,5 +1,8 @@
 <template>
-  <div class="datepicker">
+  <div
+    class="datepicker"
+    :class="sizing"
+  >
     <date-picker
       v-model="time"
       class="datepickerTool"
@@ -27,6 +30,10 @@ export default {
     type: {
       type: String,
       default: 'datetime'
+    },
+    sizing: {
+      type: String,
+      default: 'w-100'
     }
   },
   data () {
