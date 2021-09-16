@@ -11,30 +11,33 @@
 export default {
   name: 'Fragment',
   props: {
-    type: {
-      type: String,
-      default: 'Green'
-    },
     text: {
       type: String,
       default: '啟用中'
+    },
+    tagList: {
+      type: Array,
+      default: () => {
+        return ['驗證中', '啟用中', '停用中', '無狀態'];
+      }
     }
   },
   computed: {
     tagColor: function () {
-      const propsType = this.type;
+      const propsType = this.text;
+      const tagId = this.tagList.indexOf(propsType);
       let type = '';
-      switch (propsType) {
-        case 'Green':
+      switch (tagId) {
+        case 0:
           type = 'tag-green';
           break;
-        case 'Red':
+        case 1:
           type = 'tag-red';
           break;
-        case 'Yellow':
+        case 2:
           type = 'tag-yellow';
           break;
-        case 'Gray':
+        case 3:
           type = 'tag-gray';
           break;
         default:
