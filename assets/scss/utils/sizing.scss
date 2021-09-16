@@ -1,31 +1,5 @@
 @charset "UTF-8";
 
-$w-100:100%;
-$w-90:90%;
-$w-80:80%;
-$w-75:75%;
-$w-70:70%;
-$w-60:60%;
-$w-50:50%;
-$w-40:40%;
-$w-30:30%;
-$w-25:25%;
-$w-20:20%;
-$w-10:10%;
-
-$vm-100:100vm;
-$vm-90:90vm;
-$vm-80:80vm;
-$vm-75:75vm;
-$vm-70:70vm;
-$vm-60:60vm;
-$vm-50:50vm;
-$vm-40:40vm;
-$vm-30:30vm;
-$vm-25:25vm;
-$vm-20:20vm;
-$vm-10:10vm;
-
 .w-100{
     width: $w-100;
 }
@@ -63,41 +37,41 @@ $vm-10:10vm;
     width: $w-10;
 }
 
-.vm-100{
-    width: $vm-100;
+.vw-100{
+    width: $vw-100;
 }
-.vm-90{
-    width: $vm-90;
+.vw-90{
+    width: $vw-90;
 }
-.vm-80{
-    width: $vm-80;
+.vw-80{
+    width: $vw-80;
 }
-.vm-75{
-    width: $vm-75;
+.vw-75{
+    width: $vw-75;
 }
-.vm-70{
-    width: $vm-70;
+.vw-70{
+    width: $vw-70;
 }
-.vm-60{
-    width: $vm-60;
+.vw-60{
+    width: $vw-60;
 }
-.vm-50{
-    width: $vm-50;
+.vw-50{
+    width: $vw-50;
 }
-.vm-40{
-    width: $vm-40;
+.vw-40{
+    width: $vw-40;
 }
-.vm-30{
-    width: $vm-30;
+.vw-30{
+    width: $vw-30;
 }
-.vm-25{
-    width: $vm-25;
+.vw-25{
+    width: $vw-25;
 }
-.vm-20{
-    width: $vm-20;
+.vw-20{
+    width: $vw-20;
 }
-.vm-10{
-    width: $vm-10;
+.vw-10{
+    width: $vw-10;
 }
 
 
