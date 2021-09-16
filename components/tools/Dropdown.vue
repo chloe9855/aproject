@@ -1,9 +1,12 @@
 <template>
   <div
-    :class="{'add_bg': bgColor}"
+    :class="sizing"
     class="input-box dropdown"
   >
-    <select :class="{'add_bg': bgColor}">
+    <select
+      v-model="selected"
+      :class="{'add_bg': bgColor}"
+    >
       <option
         v-for="(item, index) in options.option"
         :key="index"
