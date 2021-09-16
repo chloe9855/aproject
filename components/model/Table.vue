@@ -6,7 +6,7 @@
       <thead>
         <tr>
           <th
-            v-show="!isShowBg"
+            v-show="!isShowBg&&isCheck"
             class="checkBoxOption"
           >
             <input type="checkBox">
@@ -17,7 +17,10 @@
           >
             {{ item.title }}
           </th>
-          <th colspan="2" />
+          <th
+            v-if="optionLength>0"
+            :colspan="optionLength"
+          />
         </tr>
       </thead>
       <tbody>
@@ -25,7 +28,10 @@
           v-for="( item, index ) in tableColumn.body"
           :key="index"
         >
-          <td class="checkBoxOption">
+          <td
+            v-show="isCheck"
+            class="checkBoxOption"
+          >
             <input
               type="checkBox"
               :value="index"
@@ -37,7 +43,10 @@
           >
             {{ text }}
           </td>
-          <td class="editOption">
+          <td
+            v-show="isEdit"
+            class="editOption"
+          >
             <div>
               <img
                 alt=""
@@ -46,7 +55,10 @@
               >
             </div>
           </td>
-          <td class="delOption">
+          <td
+            v-show="isDel"
+            class="delOption"
+          >
             <div>
               <img
                 alt=""
@@ -58,11 +70,16 @@
         </tr>
       </tbody>
     </table>
+    <Paginate />
   </div>
 </template>
 
 <script>
+import Paginate from '~/components/tools/Paginate';
 export default {
+  components: {
+    Paginate: Paginate
+  },
   props: {
     tableColumn: {
       type: Object,
@@ -72,6 +89,18 @@ export default {
           body: []
         };
       }
+    },
+    isEdit: {
+      type: Boolean,
+      default: true
+    },
+    isDel: {
+      type: Boolean,
+      default: true
+    },
+    isCheck: {
+      type: Boolean,
+      default: true
     }
   },
   name: 'Table',
@@ -83,6 +112,19 @@ export default {
       } else {
         return false;
       }
+    },
+    optionLength: function () {
+      const edit = this.isEdit;
+      const del = this.isDel;
+      let num;
+      if (!edit && !del) {
+        num = 0;
+      } else if (edit && del) {
+        num = 2;
+      } else {
+        num = 1;
+      }
+      return num;
     }
   }
 };
@@ -93,31 +135,47 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-direction:column;
   table{
+    //flex: 1;
+    width: 100%;
+    border:1px solid $light-green;
     thead{
         border-bottom: 5px solid $main-green;
         th{
             line-height: 33px;
             height: 33px;
             padding: 0 10px;
-            border: 1px solid $light-green;
+            //border: 1px solid $light-green;
+            //font-family: Noto Sans TC;
+            font-style: normal;
+            font-weight: 500;
         }
     }
     tbody{
+        text-align: center;
+        tr{
+          &:nth-child(odd){
+            background: #F5F5F5;
+          }
+          &:nth-child(even){
+            background: #FFF;
+          }
+        }
         td{
-            line-height: 33px;
-            height: 33px;
-            padding: 0 10px;
-            border: 1px solid $light-green;
+          line-height: 33px;
+          height: 33px;
+          padding: 0 10px;
+          //border: 1px solid $light-green;
         }
     }
   }
 }
 .vector {
-  width: 100%;
   align-self: stretch;
   object-fit: cover;
   vertical-align: middle;
+  cursor: pointer;
 }
 .isNoData{
   width: 100%;
@@ -135,5 +193,8 @@ export default {
   background-repeat: no-repeat;
   background-position: center;
   background-color: #eff3f2;
+}
+.checkBoxOption,.editOption,.delOption{
+  width: 30px;
 }
 </style>
