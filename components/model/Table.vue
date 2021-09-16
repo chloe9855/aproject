@@ -41,7 +41,12 @@
             v-for="( text, textIndex ) in item.title"
             :key="textIndex"
           >
-            {{ text }}
+            <Tag
+              v-if="tagList.indexOf(text)>-1"
+              :tag-list="tagList"
+              :text="text"
+            />
+            <span v-else>{{ text }}</span>
           </td>
           <td
             v-show="isEdit"
@@ -76,9 +81,11 @@
 
 <script>
 import Paginate from '~/components/tools/Paginate';
+import Tag from '~/components/tools/Tag.vue';
 export default {
   components: {
-    Paginate: Paginate
+    Paginate: Paginate,
+    Tag: Tag
   },
   props: {
     tableColumn: {
@@ -101,6 +108,12 @@ export default {
     isCheck: {
       type: Boolean,
       default: true
+    },
+    tagList: {
+      type: Array,
+      default: () => {
+        return ['驗證中', '啟用中', '停用中', '無狀態'];
+      }
     }
   },
   name: 'Table',
