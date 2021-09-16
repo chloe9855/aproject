@@ -9,7 +9,11 @@
             v-show="!isShowBg&&isCheck"
             class="checkBoxOption"
           >
-            <input type="checkBox">
+            <input
+              id="all"
+              type="checkBox"
+              name="all"
+            ><label for="all" />
           </th>
           <th
             v-for="( item, index ) in tableColumn.head"
@@ -33,9 +37,11 @@
             class="checkBoxOption"
           >
             <input
+              :id="index"
+              v-model="dataArr"
               type="checkBox"
-              :value="index"
-            >
+              :name="index"
+            ><label :for="index" />
           </td>
           <td
             v-for="( text, textIndex ) in item.title"
@@ -76,6 +82,7 @@
       </tbody>
     </table>
     <Paginate />
+    {{ dataArr }}
   </div>
 </template>
 
@@ -115,6 +122,11 @@ export default {
         return ['驗證中', '啟用中', '停用中', '無狀態'];
       }
     }
+  },
+  data: () => {
+    return {
+      dataArr: []
+    };
   },
   name: 'Table',
   computed: {
@@ -209,5 +221,28 @@ export default {
 }
 .checkBoxOption,.editOption,.delOption{
   width: 30px;
+}
+.checkBoxOption{
+  input[type="checkbox"] {
+    display:none;
+  }
+  input[type="checkbox"] + label
+  {
+    background: #999;
+    height: 14px;
+    width: 14px;
+    display:inline-block;
+    margin: 0 5px;
+    cursor: pointer;
+  }
+  input[type="checkbox"]:checked + label
+  {
+    background: url("~/assets/img/check.svg");
+    height: 14px;
+    width: 14px;
+    display:inline-block;
+    margin: 0 5px;
+    cursor: pointer;
+  }
 }
 </style>
