@@ -1,6 +1,6 @@
 <template>
   <div class="input-box dropdown">
-    <select>
+    <select :class="{'add_bg': bgColor}">
       <option
         v-for="(item, index) in options.option"
         :key="index"
@@ -21,6 +21,10 @@ export default {
       default: () => {
         return { option: [{ title: '選項1', value: '0' }, { title: '選項2', value: '1' }, { title: '選項3', value: '2' }] };
       }
+    },
+    bgColor: {
+      type: Boolean,
+      default: false
     }
   },
   data: () => {
@@ -38,6 +42,11 @@ export default {
     flex: 1;
     margin-right: 2px;
     @include noto-sans-tc-16-medium;
+}
+
+.add_bg {
+  background-color: #DBE4E2;
+  border: none !important;
 }
 
 </style>

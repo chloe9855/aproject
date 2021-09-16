@@ -1,11 +1,13 @@
 <template>
-  <div class="map_search_wrap">
-    <NavTabs-component
-      :type-list="barOptions.typeList"
-      :selected="barOptions.current"
-      @current="payload => barOptions.current = payload"
-    />
-    <component :is="componentInstance" />
+  <div class="search_container">
+    <div class="search_box">
+      <NavTabs-component
+        :type-list="barOptions.typeList"
+        :selected="barOptions.current"
+        @current="payload => barOptions.current = payload"
+      />
+      <component :is="componentInstance" />
+    </div>
   </div>
 </template>
 
@@ -41,13 +43,25 @@ export default {
       }
     };
   },
+  name: 'MapSearchBox',
   computed: {
     searchType () {
       return (this.barOptions.current === 0) ? 'KeyWordSearch' : (this.barOptions.current === 1) ? 'ChannelSearch' : (this.barOptions.current === 2) ? 'StakeSearch' : (this.barOptions.current === 3) ? 'ClickSearch' : '';
     },
     componentInstance () {
-      return () => import(`~/components/model/MapSearchBox/${this.searchType}`);
+      const myType = this.searchType;
+      return () => import(`~/components/model/MapSearchBox/${myType}`);
     }
   }
 };
 </script>
+
+<style lang="scss" scoped>
+
+  .search_box {
+    width: 350px;
+    background-color: #EFF4F3;
+    border-radius: 0 0 22px 0;
+  }
+
+</style>
