@@ -1,6 +1,6 @@
 <template>
-  <div class="input-error-two">
-    <div class="input-title-and-error-hint">
+  <div class="input-box">
+    <div class="input-title-box">
       <p class="input-title">
         {{ title }}
       </p>
@@ -24,14 +24,16 @@
       v-model="message"
       class="inputType"
       :class="{inputError:isError}"
-      placeholder="錯誤文字"
+      :placeholder="inputText"
+      :name="name"
+      :type="inputType"
+      :disabled="isDisable === true"
     >
   </div>
 </template>
 
 <script>
 export default {
-  name: 'InputVertical',
   props: {
     name: {
       type: String,
@@ -41,31 +43,59 @@ export default {
       type: String,
       default: '輸入框標題'
     },
-    errorText: {
+    inputText: {
       type: String,
-      default: '錯誤文字'
+      default: '輸入文字'
     },
     errorTip: {
       type: String,
       default: '輸入文字格式錯誤'
     },
-    inputWarn: {
+    isWarn: {
+      type: String,
+      default: ''
+    },
+    isDisable: {
       type: Boolean,
       default: false
+    },
+    inputType: {
+      type: String,
+      default: 'text'
     }
   },
   data: () => {
     return {
       message: '',
-      isError: true
+      RegExpType: {
+        code8: '^.{8}$'
+      }
     };
+  },
+  name: 'InputVertical',
+  computed: {
+    isError: function () {
+      const defaultStatus = this.isWarn;
+      const regtype = this.RegExpType[defaultStatus];
+      const rules = new RegExp(regtype);
+      if (defaultStatus === '' || this.message === '' || !regtype) {
+        return false;
+      } else {
+        return !rules.test(this.message);
+      }
+    }
+  },
+  watch: {
+    message (n, o) {
+      this.$emit('inputValue', n);
+    }
   }
 };
 </script>
 
 <style lang="scss" scoped>
 @import '~/assets/scss/input.scss';
-.input-title-and-error-hint {
+.input-title-box {
     margin-bottom: 2px;
     display: flex;
     align-items: flex-end;

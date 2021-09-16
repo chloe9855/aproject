@@ -1,23 +1,43 @@
 <template>
-  <div style="display: inline-block;">
+  <div class="fea_wrap">
     <div class="container">
-      <div class="feature__btn">
+      <div
+        class="feature__btn"
+        :class="currentClassHandler('switchLayersWindow')"
+        @click.stop="setDragboxHandler('switchLayersWindow')"
+      >
         <div class="icon_layer" />
         <span>圖層</span>
       </div>
-      <div class="feature__btn">
+      <div
+        class="feature__btn"
+        :class="currentClassHandler('streetMapWindow')"
+        @click.stop="setDragboxHandler('streetMapWindow')"
+      >
         <div class="icon_streetview" />
         <span>街景</span>
       </div>
-      <div class="feature__btn">
+      <div
+        class="feature__btn"
+        :class="currentClassHandler('setPositionWindow')"
+        @click.stop="setDragboxHandler('setPositionWindow')"
+      >
         <div class="icon_location" />
         <span>定位</span>
       </div>
-      <div class="feature__btn">
+      <div
+        class="feature__btn"
+        :class="currentClassHandler('geoMeasureWindow')"
+        @click.stop="setDragboxHandler('geoMeasureWindow')"
+      >
         <div class="icon_measure" />
         <span>測量</span>
       </div>
-      <div class="feature__btn">
+      <div
+        class="feature__btn"
+        :class="currentClassHandler('screenShotWindow')"
+        @click.stop="setDragboxHandler('screenShotWindow')"
+      >
         <div class="icon_print" />
         <span>截圖</span>
       </div>
@@ -39,11 +59,40 @@
 
 <script>
 export default {
+  props: {
+    current: String
+  },
+  data () {
+    return {
 
+    };
+  },
+  methods: {
+    // * 設定拖曳選單開啟/關閉
+    setDragboxHandler (payload) {
+      const result = this.current === payload ? '' : payload;
+      this.$emit('select', result);
+    },
+    // * 設定 current 的 class
+    currentClassHandler (payload) {
+      return { current: this.current === payload };
+    }
+  }
 };
 </script>
 
 <style lang="scss" scoped>
+
+  .current {
+    background-color: $dark-green;
+  }
+
+  .fea_wrap {
+    display: inline-block;
+    position: absolute;
+    right: 10px;
+    top: 12px;
+  }
 
   .container {
     background-color: $main-green;

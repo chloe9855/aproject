@@ -14,7 +14,6 @@
 import DatePicker from 'vue2-datepicker';
 import 'vue2-datepicker/index.css';
 export default {
-  name: 'Datepicker',
   components: { DatePicker },
   props: {
     isRange: {
@@ -34,18 +33,23 @@ export default {
     return {
       time: null
     };
+  },
+  name: 'Datepicker',
+  watch: {
+    time (n, o) {
+      this.$emit('DateValue', n);
+    }
   }
 };
 </script>
 
 <style lang="scss" scoped>
 .datepicker {
-  background-color: $white;
   border-radius: 5px;
-  padding: 5px 9px;
   display: flex;
   align-items: center;
   justify-content: center;
+  margin-top: 5px;
   .datepickerTool{
     flex:1
   }

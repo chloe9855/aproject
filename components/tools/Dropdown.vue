@@ -1,6 +1,6 @@
 <template>
-  <div class="dropdown">
-    <select>
+  <div class="input-box dropdown">
+    <select v-model="selected">
       <option
         v-for="(item, index) in options.option"
         :key="index"
@@ -14,7 +14,6 @@
 
 <script>
 export default {
-  name: 'Dropdown',
   props: {
     options: {
       type: Object,
@@ -24,31 +23,27 @@ export default {
     }
   },
   data: () => {
-    return {};
+    return {
+      selected: ''
+    };
+  },
+  name: 'Dropdown',
+  watch: {
+    selected (n, o) {
+      this.$emit('DropdownVal', n);
+    }
   }
 };
 </script>
 
 <style lang="scss" scoped>
-.dropdown {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    align-self: stretch;
-    select{
-        background-color: white;
-        border-radius: 5px;
-        padding: 10px 9px;
-        align-items: center;
-        justify-content: center;
-        border: 1px solid $input-gray;
-        align-self: stretch;
-        flex: 1;
-        &:active,&:focus,&:visited {
-            outline:none;
-            border: 1px solid $main-green !important;
-            box-shadow: 0 0 4px 0 $dark-sea-green;
-        }
-    }
+@import '~/assets/scss/input.scss';
+
+.input-title {
+    color: $header-black;
+    flex: 1;
+    margin-right: 2px;
+    @include noto-sans-tc-16-medium;
 }
+
 </style>

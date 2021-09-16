@@ -1,8 +1,15 @@
-.input-error-two {
+.input-box {
     display: flex;
     flex-direction: column;
     align-items: flex-end;
     justify-content: center;
+}
+.input-title-box {
+    margin-bottom: 2px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    align-self: stretch;
 }
 .error-circle {
     margin-right: 4px;
@@ -33,8 +40,9 @@
     align-self: stretch;
     &.inputError{
         border: 1px solid $caution-red;
-        &::placeholder {
         color: $caution-red;
+        &::placeholder {
+            color: $caution-red;
         }
     }
     &:hover {
@@ -44,6 +52,7 @@
         outline:none;
         border: 1px solid $main-green !important;
         box-shadow: 0 0 4px 0 $dark-sea-green;
+        color: #000;
     }
     &::placeholder {
         line-height: 16px;
@@ -51,9 +60,41 @@
         font-size: 16px;
         font-weight: bold;
     }
+    &:disabled{
+        background: #DBE4E2;
+        border-radius: 5px;
+    }
+}
+.dropdown {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    align-self: stretch;
+    margin: 5px 0;
+    select{
+        border-radius: 5px;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid $input-gray;
+        align-self: stretch;
+        flex: 1;
+        font-family: Noto Sans TC;
+        font-style: normal;
+        font-weight: normal;
+        font-size: 16px;
+        line-height: 23px;
+        padding: 5px;
+        color: #959595;
+        &:active,&:focus,&:visited {
+            outline:none;
+            border: 1px solid $main-green !important;
+            box-shadow: 0 0 4px 0 $dark-sea-green;
+        }
+    }
 }
 .input-text {
     color: $caution-red;
     flex: 1;
     @include noto-sans-tc-16-regular;
 }
+
