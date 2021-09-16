@@ -1,5 +1,8 @@
 <template>
-  <div class="input-box">
+  <div
+    class="input-box"
+    :class="sizing"
+  >
     <div class="input-title-box">
       <p class="input-title">
         {{ title }}
@@ -26,6 +29,8 @@
       :class="{inputError:isError}"
       :placeholder="inputText"
       :name="name"
+      :type="inputType"
+      :disabled="isDisable === true"
     >
   </div>
 </template>
@@ -52,6 +57,18 @@ export default {
     isWarn: {
       type: String,
       default: ''
+    },
+    isDisable: {
+      type: Boolean,
+      default: false
+    },
+    inputType: {
+      type: String,
+      default: 'text'
+    },
+    sizing: {
+      type: String,
+      default: 'w-100'
     }
   },
   data: () => {
@@ -73,6 +90,11 @@ export default {
       } else {
         return !rules.test(this.message);
       }
+    }
+  },
+  watch: {
+    message (n, o) {
+      this.$emit('inputValue', n);
     }
   }
 };

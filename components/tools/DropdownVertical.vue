@@ -1,11 +1,17 @@
 <template>
-  <div class="input-box dropdown">
+  <div
+    class="input-box dropdown"
+    :class="sizing"
+  >
     <div class="input-title-box">
       <p class="input-title">
         {{ title }}
       </p>
     </div>
-    <select :class="{'add_bg': bgColor}">
+    <select
+      v-model="selected"
+      :class="{'add_bg': bgColor}"
+    >
       <option
         v-for="(item, index) in options.option"
         :key="index"
@@ -33,12 +39,23 @@ export default {
     bgColor: {
       type: Boolean,
       default: false
+    },
+    sizing: {
+      type: String,
+      default: 'w-100'
     }
   },
   data: () => {
-    return {};
+    return {
+      selected: ''
+    };
   },
-  name: 'Dropdown'
+  name: 'DropdownVertical',
+  watch: {
+    selected (n, o) {
+      this.$emit('DropdownVal', n);
+    }
+  }
 };
 </script>
 
