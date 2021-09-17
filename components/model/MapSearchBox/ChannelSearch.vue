@@ -14,19 +14,14 @@
       <label>
         <input type="checkbox">反向
       </label>
-      <!-- <div class="wrap1">
-        <span>椿號定位</span>
 
-        <input type="text">
-        ~
-
-        <input type="text">
-      </div> -->
       <div class="meme">
+        <span>椿號定位</span>
         <InputTool-component
           :input-text="'0'"
           sizing="w-30"
         />
+        ~
         <InputTool-component
           :input-text="'0'"
           sizing="w-30"
@@ -114,6 +109,8 @@ export default {
 
   .meme {
     display: flex;
+    align-items: center;
+    justify-content: space-between;
   }
 
 </style>
