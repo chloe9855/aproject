@@ -1,6 +1,6 @@
 <template>
   <div class="inputBox">
-    <Dropdown
+    <DropdownVertical
       title="工具分類"
       :options="member"
     />
@@ -20,12 +20,12 @@
 </template>
 
 <script>
-import Dropdown from '~/components/tools/Dropdown.vue';
+import DropdownVertical from '~/components/tools/DropdownVertical.vue';
 import DatePicker from '~/components/tools/DatePicker.vue';
 import Button from '~/components/tools/Buttons';
 export default {
   components: {
-    Dropdown: Dropdown,
+    DropdownVertical: DropdownVertical,
     DatePicker: DatePicker,
     Button: Button
   },

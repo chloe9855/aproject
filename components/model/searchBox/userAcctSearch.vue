@@ -12,7 +12,7 @@
       title="工作站"
       :options="member"
     />
-    <InputTool title="姓名" />
+    <InputVertical title="姓名" />
     <DatePicker title="上次登入起始時間" />
     <DatePicker title="上次登入結束時間" />
     <div class="buttonBox">
@@ -29,14 +29,14 @@
 </template>
 
 <script>
-import InputTool from '~/components/tools/InputTool.vue';
+import InputVertical from '~/components/tools/InputVertical.vue';
 import DropdownVertical from '~/components/tools/DropdownVertical.vue';
 import DatePicker from '~/components/tools/DatePicker.vue';
 import Button from '~/components/tools/Buttons';
 export default {
   components: {
     DropdownVertical: DropdownVertical,
-    InputTool: InputTool,
+    InputVertical: InputVertical,
     DatePicker: DatePicker,
     Button: Button
   },
