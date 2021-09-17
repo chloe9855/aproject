@@ -232,7 +232,7 @@ export default {
 
   .table_block_wrap {
     width: 100%;
-    height: 84%;
+    height: 81%;
     position: relative;
   }
 
