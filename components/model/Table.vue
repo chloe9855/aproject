@@ -13,6 +13,7 @@
               id="all"
               type="checkBox"
               name="all"
+              value="all"
             ><label for="all" />
           </th>
           <th
@@ -37,11 +38,12 @@
             class="checkBoxOption"
           >
             <input
-              :id="index"
-              v-model="dataArr"
-              type="checkBox"
-              :name="index"
-            ><label :for="index" />
+              :id="'a'+index"
+              v-model="dataList"
+              type="checkbox"
+              :name="'a'+index"
+              :value="item.val"
+            ><label :for="'a'+index" />
           </td>
           <td
             v-for="( text, textIndex ) in item.title"
@@ -82,7 +84,6 @@
       </tbody>
     </table>
     <Paginate />
-    {{ dataArr }}
   </div>
 </template>
 
@@ -95,6 +96,12 @@ export default {
     Tag: Tag
   },
   props: {
+    options: {
+      type: Object,
+      default: () => {
+        return { option: [{ title: '無清單資料1', value: '0' }, { title: '無清單資料2', value: '1' }] };
+      }
+    },
     tableColumn: {
       type: Object,
       default: () => {
@@ -125,7 +132,7 @@ export default {
   },
   data: () => {
     return {
-      dataArr: []
+      dataList: []
     };
   },
   name: 'Table',
@@ -150,6 +157,15 @@ export default {
         num = 1;
       }
       return num;
+    },
+    dataLength: function () {
+      const data = this.tableColumn.body;
+      return data.length;
+    }
+  },
+  watch: {
+    dataList: function (n) {
+      this.$emit('DropdownVal', n);
     }
   }
 };
