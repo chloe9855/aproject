@@ -40,8 +40,9 @@
     align-self: stretch;
     &.inputError{
         border: 1px solid $caution-red;
-        &::placeholder {
         color: $caution-red;
+        &::placeholder {
+            color: $caution-red;
         }
     }
     &:hover {
@@ -51,12 +52,17 @@
         outline:none;
         border: 1px solid $main-green !important;
         box-shadow: 0 0 4px 0 $dark-sea-green;
+        color: #000;
     }
     &::placeholder {
         line-height: 16px;
         height: 16px;
         font-size: 16px;
         font-weight: bold;
+    }
+    &:disabled{
+        background: #DBE4E2;
+        border-radius: 5px;
     }
 }
 .dropdown {
@@ -91,3 +97,4 @@
     flex: 1;
     @include noto-sans-tc-16-regular;
 }
+

@@ -1,5 +1,8 @@
 <template>
-  <div class="datepicker">
+  <div
+    class="datepicker"
+    :class="sizing"
+  >
     <date-picker
       v-model="time"
       class="datepickerTool"
@@ -14,7 +17,6 @@
 import DatePicker from 'vue2-datepicker';
 import 'vue2-datepicker/index.css';
 export default {
-  name: 'Datepicker',
   components: { DatePicker },
   props: {
     isRange: {
@@ -28,12 +30,22 @@ export default {
     type: {
       type: String,
       default: 'datetime'
+    },
+    sizing: {
+      type: String,
+      default: 'w-100'
     }
   },
   data () {
     return {
       time: null
     };
+  },
+  name: 'Datepicker',
+  watch: {
+    time (n, o) {
+      this.$emit('DateValue', n);
+    }
   }
 };
 </script>
