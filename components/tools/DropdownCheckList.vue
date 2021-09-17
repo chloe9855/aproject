@@ -1,5 +1,8 @@
 <template>
-  <div class="dropCheckList input-box dropdown">
+  <div
+    class="dropCheckList input-box dropdown"
+    :class="sizing"
+  >
     <div
       v-show="isTitle"
       class="input-title-box"
@@ -52,6 +55,10 @@ export default {
     title: {
       type: String,
       default: ''
+    },
+    sizing: {
+      type: String,
+      default: 'w-100'
     }
   },
   data: () => {

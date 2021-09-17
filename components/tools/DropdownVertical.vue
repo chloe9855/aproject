@@ -1,5 +1,8 @@
 <template>
-  <div class="input-box dropdown">
+  <div
+    class="input-box dropdown"
+    :class="sizing"
+  >
     <div class="input-title-box">
       <p class="input-title">
         {{ title }}
@@ -36,6 +39,10 @@ export default {
     bgColor: {
       type: Boolean,
       default: false
+    },
+    sizing: {
+      type: String,
+      default: 'w-100'
     }
   },
   data: () => {
