@@ -54,6 +54,14 @@
               :tag-list="tagList"
               :text="text"
             />
+            <Button
+              v-else-if="typeof text === 'object' && text.type === 'btn'"
+              :name="'button-primary'"
+              :text="text.title"
+            />
+            <Input
+              v-else-if="typeof text === 'object' && text.type === 'input'"
+            />
             <span v-else>{{ text }}</span>
           </td>
           <td
@@ -83,6 +91,7 @@
         </tr>
       </tbody>
     </table>
+    {{ inputData }}
     <Paginate />
   </div>
 </template>
@@ -90,10 +99,14 @@
 <script>
 import Paginate from '~/components/tools/Paginate';
 import Tag from '~/components/tools/Tag.vue';
+import Button from '~/components/tools/Buttons.vue';
+import Input from '~/components/tools/InputTool.vue';
 export default {
   components: {
     Paginate: Paginate,
-    Tag: Tag
+    Tag: Tag,
+    Button: Button,
+    Input: Input
   },
   props: {
     options: {
