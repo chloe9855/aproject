@@ -9,19 +9,43 @@
       v-if="options.current === 0"
       class="irrigatedLand"
     >
-      <DropdownVertical :options="member" />
-      <DropdownVertical :options="member" />
-      <DropdownVertical :options="member" />
-      <DropdownVertical :options="member" />
+      <DropdownVertical
+        title="管理處"
+        :options="member"
+      />
+      <DropdownVertical
+        title="管理分處"
+        :options="member"
+      />
+      <DropdownVertical
+        title="工作站"
+        :options="member"
+      />
+      <DropdownVertical
+        title="水利小組"
+        :options="member"
+      />
     </div>
     <div
       v-if="options.current === 1"
       class="irrigatedInfo"
     >
-      <DropdownVertical :options="member" />
-      <DropdownVertical :options="member" />
-      <DropdownVertical :options="member" />
-      <DropdownCheckList :options="member" />
+      <DropdownVertical
+        title="縣市"
+        :options="member"
+      />
+      <DropdownVertical
+        title="鄉鎮"
+        :options="member"
+      />
+      <DropdownVertical
+        title="段名"
+        :options="member"
+      />
+      <DropdownCheckList
+        title="地號"
+        :options="member"
+      />
     </div>
     <div class="buttonBox">
       <Button

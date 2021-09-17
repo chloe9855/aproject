@@ -1,8 +1,11 @@
 <template>
   <div class="inputBox">
-    <Dropdown :options="member" />
-    <DatePicker />
-    <DatePicker />
+    <Dropdown
+      title="工具分類"
+      :options="member"
+    />
+    <DatePicker title="統計起始時間" />
+    <DatePicker title="統計結束時間" />
     <div class="buttonBox">
       <Button
         :name="'button-primary'"
