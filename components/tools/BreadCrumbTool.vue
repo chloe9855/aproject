@@ -8,6 +8,7 @@
         {{ item }}
         <span>
           <img
+            v-if="index < options.length-1"
             alt=""
             :src="require('~/assets/img/arrow-right.svg')"
           >
@@ -23,7 +24,7 @@ export default {
     options: {
       type: Array,
       default: () => {
-        return ['首頁', '系統管理', '群組權限管理'];
+        return ['首頁'];
       }
     }
   },
