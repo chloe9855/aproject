@@ -1,10 +1,20 @@
 <template>
   <div class="inputBox">
-    <DropdownVertical :options="member" />
-    <DropdownVertical :options="member" />
-    <DropdownVertical :options="member" />
-    <InputTool />
-    <DatePicker />
+    <DropdownVertical
+      title="群組"
+      :options="member"
+    />
+    <DropdownVertical
+      title="管理處"
+      :options="member"
+    />
+    <DropdownVertical
+      title="工作站"
+      :options="member"
+    />
+    <InputTool title="姓名" />
+    <DatePicker title="上次登入起始時間" />
+    <DatePicker title="上次登入結束時間" />
     <div class="buttonBox">
       <Button
         :name="'button-primary'"
