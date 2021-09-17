@@ -25,9 +25,11 @@
       <div class="meme">
         <InputTool-component
           :input-text="'0'"
+          sizing="w-30"
         />
         <InputTool-component
           :input-text="'0'"
+          sizing="w-30"
         />
       </div>
       <label>

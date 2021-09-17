@@ -1,96 +1,98 @@
 <template>
   <header>
-    <div class="banner-group">
-      <div class="logo-group">
-        <img
-          alt=""
-          class="logo"
-          :src="require('~/assets/img/logo.svg')"
-        >
-        <p class="logo-text">
-          農田水利灌溉管理整合雲系統
-        </p>
-      </div>
-      <div class="account">
-        <p class="name">
-          王大明
-        </p>
-        <div
-          class="account-icon"
-          @click="showBox = !showBox"
-        >
+    <div class="header">
+      <div class="banner-group">
+        <div class="logo-group">
           <img
             alt=""
-            class="vector"
-            :src="require('~/assets/img/account-icon.svg')"
+            class="logo"
+            :src="require('~/assets/img/logo.svg')"
           >
+          <p class="logo-text">
+            農田水利灌溉管理整合雲系統
+          </p>
+        </div>
+        <div class="account">
+          <p class="name">
+            王大明
+          </p>
+          <div
+            class="account-icon"
+            @click="showBox = !showBox"
+          >
+            <img
+              alt=""
+              class="vector"
+              :src="require('~/assets/img/account-icon.svg')"
+            >
+          </div>
+        </div>
+
+        <div
+          v-if="showBox"
+          class="login-box"
+        >
+          <p>帳號設定</p>
+          <p>登出</p>
         </div>
       </div>
 
-      <div
-        v-if="showBox"
-        class="login-box"
-      >
-        <p>帳號設定</p>
-        <p>登出</p>
-      </div>
-    </div>
-
-    <div class="navbar">
-      <div class="menu-list">
-        <div
-          v-for="item of menuList"
-          :key="item.name"
-          class="submenu-group"
-          @mouseover="mouseOver(item.name)"
-          @mouseleave="mouseLeave(item.name)"
-        >
-          <nuxt-link
-            :to="item.path"
-            :title="item.name"
+      <div class="navbar">
+        <div class="menu-list">
+          <div
+            v-for="item of menuList"
+            :key="item.name"
+            class="submenu-group"
+            @mouseover="mouseOver(item.name)"
+            @mouseleave="mouseLeave(item.name)"
           >
-            <p class="title-two seticon">
-              {{ item.name }}
-            </p>
-          </nuxt-link>
-
-          <ul
-            v-if="listOne === true && item.name === '灌溉地管理'"
-            class="list-one"
-          >
-            <li
-              v-for="side of sideList1"
-              :key="side.name"
+            <nuxt-link
+              :to="item.path"
+              :title="item.name"
             >
-              <nuxt-link
-                :to="side.path"
-                :title="side.name"
-              >
-                <p class="title-two">
-                  {{ side.name }}
-                </p>
-              </nuxt-link>
-            </li>
-          </ul>
+              <p class="title-two seticon">
+                {{ item.name }}
+              </p>
+            </nuxt-link>
 
-          <ul
-            v-if="listTwo === true && item.name === '系統管理'"
-            class="list-one"
-          >
-            <li
-              v-for="side of sideList2"
-              :key="side.name"
+            <ul
+              v-if="listOne === true && item.name === '灌溉地管理'"
+              class="list-one"
             >
-              <nuxt-link
-                :to="side.path"
-                :title="side.name"
+              <li
+                v-for="side of sideList1"
+                :key="side.name"
               >
-                <p class="title-two">
-                  {{ side.name }}
-                </p>
-              </nuxt-link>
-            </li>
-          </ul>
+                <nuxt-link
+                  :to="side.path"
+                  :title="side.name"
+                >
+                  <p class="title-two">
+                    {{ side.name }}
+                  </p>
+                </nuxt-link>
+              </li>
+            </ul>
+
+            <ul
+              v-if="listTwo === true && item.name === '系統管理'"
+              class="list-one"
+            >
+              <li
+                v-for="side of sideList2"
+                :key="side.name"
+              >
+                <nuxt-link
+                  :to="side.path"
+                  :title="side.name"
+                >
+                  <p class="title-two">
+                    {{ side.name }}
+                  </p>
+                </nuxt-link>
+              </li>
+            </ul>
+          </div>
         </div>
       </div>
     </div>
@@ -190,6 +192,10 @@ export default {
 
 <style lang="scss" scoped>
 
+.header {
+  z-index: 7000;
+}
+
 .login-box {
   position: absolute;
   top: 32px;
@@ -200,6 +206,7 @@ export default {
   color: #494949;
   width: 217px;
   padding: 0 10px;
+  z-index: 70000;
   @include noto-sans-tc-16-regular;
 
   p {
@@ -216,6 +223,7 @@ export default {
   left: 0;
   border-radius: 0 0 5px 5px;
   overflow: hidden;
+  z-index: 70000;
 }
 
 .list-one li {
