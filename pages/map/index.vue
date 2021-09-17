@@ -435,10 +435,20 @@ export default {
 
 <style lang="scss" scoped>
 
+  // .map {
+  //   width: 100%;
+  //   height: 100%;
+  //   background-color: pink;
+  //   z-index: -1;
+  // }
+
   .main{
     position: relative;
-    border: 1px solid red;
-    // height: calc(100vw - 106px);
+    width: 100%;
+    height: calc(100vh - 66px);
+    overflow: hidden;
+    z-index: 0;
+    background: pink;
   }
 
   .layerwindow {
