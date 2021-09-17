@@ -1,11 +1,19 @@
 <template>
   <div
-    class="datepicker"
+    class="input-box datepicker"
     :class="sizing"
   >
+    <div
+      v-show="isTitle"
+      class="input-title-box"
+    >
+      <p class="input-title">
+        {{ title }}
+      </p>
+    </div>
     <date-picker
       v-model="time"
-      class="datepickerTool"
+      class="datepickerTool w-100"
       :value-type="valueType"
       :type="type"
       :range="isRange"
@@ -34,6 +42,10 @@ export default {
     sizing: {
       type: String,
       default: 'w-100'
+    },
+    title: {
+      type: String,
+      default: ''
     }
   },
   data () {
@@ -42,6 +54,16 @@ export default {
     };
   },
   name: 'Datepicker',
+  computed: {
+    isTitle: function () {
+      const title = this.title;
+      if (title === '') {
+        return false;
+      } else {
+        return true;
+      }
+    }
+  },
   watch: {
     time (n, o) {
       this.$emit('DateValue', n);
@@ -51,6 +73,13 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import '~/assets/scss/input.scss';
+.input-title {
+    color: $header-black;
+    flex: 1;
+    margin-right: 2px;
+    @include noto-sans-tc-16-medium;
+}
 .datepicker {
   border-radius: 5px;
   display: flex;
