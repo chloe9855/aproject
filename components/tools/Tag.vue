@@ -17,7 +17,7 @@ export default {
     tagList: {
       type: Array,
       default: () => {
-        return ['驗證中', '啟用中', '停用中', '無狀態'];
+        return ['啟用中', '停用中', '驗證中', '無狀態'];
       }
     }
   },
