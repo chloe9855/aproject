@@ -1,5 +1,5 @@
 <template>
-  <div class="popupBox w-100" v-show="isActive">
+  <div v-show="isActive" class="popupBox w-100">
     <div class="popupContent">
       <div class="popupTitle">
         <img
@@ -10,7 +10,7 @@
         <img
           :src="require('~/assets/img/close-icon.svg')"
           class="closeIcon"
-          v-on:click="toggleMaskStatus()"
+          v-on:click="toggleMaskStatus"
         >
       </div>
       <component :is="componentInstance" />
@@ -67,7 +67,7 @@ export default {
 <style lang="scss" scoped>
 .popupBox{
   position: absolute;
-  top:20%;
+  top:$vh-10;
   display: flex;
   justify-content: center;
   z-index:1000;
