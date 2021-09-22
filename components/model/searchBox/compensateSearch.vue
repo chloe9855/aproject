@@ -1,10 +1,19 @@
 <template>
   <div class="inputBox">
-    <InputVertical />
-    <DropdownVertical :options="member" />
-    <DropdownVertical :options="member" />
-    <DropdownVertical :options="member" />
-    <InputVertical />
+    <InputVertical title="身分證字號" />
+    <DropdownVertical
+      title="縣市"
+      :options="member"
+    />
+    <DropdownVertical
+      title="鄉鎮"
+      :options="member"
+    />
+    <DropdownVertical
+      title="段名"
+      :options="member"
+    />
+    <InputVertical title="地號" />
     <div class="buttonBox">
       <Button
         :name="'button-primary'"

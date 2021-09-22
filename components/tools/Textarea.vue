@@ -1,6 +1,6 @@
 <template>
   <div
-    class="input-box datepicker"
+    class="input-box textarea-box"
     :class="sizing"
   >
     <div
@@ -9,48 +9,42 @@
     >
       <p class="input-title">
         {{ title }}
+        <span
+          v-show="isRequire"
+          class="error-hint-text"
+        >*</span>
       </p>
     </div>
-    <date-picker
-      v-model="time"
-      class="datepickerTool w-100"
-      :value-type="valueType"
-      :type="type"
-      :range="isRange"
+    <textarea
+      class="w-100"
+      :class="inputHeight"
     />
   </div>
 </template>
 
 <script>
-import DatePicker from 'vue2-datepicker';
-import 'vue2-datepicker/index.css';
 export default {
-  components: { DatePicker },
   props: {
-    isRange: {
-      type: Boolean,
-      default: false
-    },
-    valueType: {
-      type: String,
-      default: 'format'
-    },
-    type: {
-      type: String,
-      default: 'datetime'
-    },
     sizing: {
       type: String,
       default: 'w-100'
     },
+    inputHeight: {
+      type: String,
+      default: 'vh-10'
+    },
     title: {
       type: String,
       default: ''
+    },
+    isRequire: {
+      type: Boolean,
+      default: false
     }
   },
   data () {
     return {
-      time: null
+
     };
   },
   name: 'Datepicker',
@@ -62,11 +56,6 @@ export default {
       } else {
         return true;
       }
-    }
-  },
-  watch: {
-    time (n, o) {
-      this.$emit('DateValue', n);
     }
   }
 };
@@ -80,14 +69,12 @@ export default {
     margin-right: 2px;
     @include noto-sans-tc-16-medium;
 }
-.datepicker {
-  border-radius: 5px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-top: 5px;
-  .datepickerTool{
-    flex:1
-  }
+.textarea-box{
+    textarea{
+        background: #FFF;
+        border: 1px solid #959595;
+        box-sizing: border-box;
+        border-radius: 5px;
+    }
 }
 </style>
