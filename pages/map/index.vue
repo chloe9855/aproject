@@ -379,7 +379,6 @@ export default {
       ]
     };
   },
-  layout: 'map',
   mounted () {
     const surface = require('~/static/surfaceLayer.json');
     this.layerOptions.surfaceList = [...surface.data];
