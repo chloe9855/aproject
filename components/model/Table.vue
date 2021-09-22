@@ -88,10 +88,45 @@
               >
             </div>
           </td>
+          <td
+            v-show="isPrint"
+            class="printOption"
+          >
+            <div>
+              <img
+                alt=""
+                class="vector"
+                :src="require('~/assets/img/print.svg')"
+              >
+            </div>
+          </td>
+          <td
+            v-show="isMap"
+            class="mapOption"
+          >
+            <div>
+              <img
+                alt=""
+                class="vector"
+                :src="require('~/assets/img/map.svg')"
+              >
+            </div>
+          </td>
+          <td
+            v-show="isSearch"
+            class="searchOption"
+          >
+            <div>
+              <img
+                alt=""
+                class="vector"
+                :src="require('~/assets/img/search.svg')"
+              >
+            </div>
+          </td>
         </tr>
       </tbody>
     </table>
-    {{ inputData }}
     <Paginate />
   </div>
 </template>
@@ -126,11 +161,23 @@ export default {
     },
     isEdit: {
       type: Boolean,
-      default: true
+      default: false
     },
     isDel: {
       type: Boolean,
-      default: true
+      default: false
+    },
+    isPrint: {
+      type: Boolean,
+      default: false
+    },
+    isMap: {
+      type: Boolean,
+      default: false
+    },
+    isSearch: {
+      type: Boolean,
+      default: false
     },
     isCheck: {
       type: Boolean,
@@ -161,14 +208,16 @@ export default {
     optionLength: function () {
       const edit = this.isEdit;
       const del = this.isDel;
-      let num;
-      if (!edit && !del) {
-        num = 0;
-      } else if (edit && del) {
-        num = 2;
-      } else {
-        num = 1;
-      }
+      const print = this.isPrint;
+      const search = this.isSearch;
+      const map = this.isMap;
+      const arr = [edit, del, print, search, map];
+      let num = 0;
+      arr.forEach(function (i) {
+        if (i) {
+          num += 1;
+        }
+      });
       return num;
     },
     dataLength: function () {
@@ -248,7 +297,7 @@ export default {
   background-position: center;
   background-color: #eff3f2;
 }
-.checkBoxOption,.editOption,.delOption{
+.checkBoxOption,.editOption,.delOption,.printOption,.mapOption,.searchOption{
   width: 30px;
 }
 .checkBoxOption{
