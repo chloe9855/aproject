@@ -1,5 +1,8 @@
 <template>
-  <div class="input-box">
+  <div
+    class="input-box"
+    :class="sizing"
+  >
     <div class="input-title-box">
       <p class="input-title">
         {{ title }}
@@ -34,7 +37,6 @@
 
 <script>
 export default {
-  name: 'InputVertical',
   props: {
     name: {
       type: String,
@@ -63,6 +65,10 @@ export default {
     inputType: {
       type: String,
       default: 'text'
+    },
+    sizing: {
+      type: String,
+      default: 'w-100'
     }
   },
   data: () => {
@@ -73,6 +79,7 @@ export default {
       }
     };
   },
+  name: 'InputVertical',
   computed: {
     isError: function () {
       const defaultStatus = this.isWarn;

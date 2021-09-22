@@ -1,5 +1,8 @@
 <template>
-  <div class="input-box">
+  <div
+    class="input-box"
+    :class="sizing"
+  >
     <div
       v-show="isError"
       class="error-hinit"
@@ -34,7 +37,6 @@
 
 <script>
 export default {
-  name: 'InputHorizontal',
   props: {
     name: {
       type: String,
@@ -63,6 +65,10 @@ export default {
     inputType: {
       type: String,
       default: 'text'
+    },
+    sizing: {
+      type: String,
+      default: 'w-100'
     }
   },
   data: () => {
@@ -73,6 +79,7 @@ export default {
       }
     };
   },
+  name: 'InputHorizontal',
   computed: {
     isError: function () {
       const defaultStatus = this.isWarn;
