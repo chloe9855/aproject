@@ -1,8 +1,9 @@
 <template>
-  <div class="tableBox">
-    <table
-      :class="{isNoData:isShowBg}"
-    >
+  <div
+    class="tableBox"
+    :class="{isNoData:isShowBg}"
+  >
+    <table>
       <thead>
         <tr>
           <th
@@ -127,7 +128,11 @@
         </tr>
       </tbody>
     </table>
-    <Paginate />
+    <Paginate
+      v-show="isPaginate"
+      :total="100"
+      per-page="10"
+    />
   </div>
 </template>
 
@@ -182,6 +187,10 @@ export default {
     isCheck: {
       type: Boolean,
       default: true
+    },
+    isPaginate: {
+      type: Boolean,
+      default: false
     },
     tagList: {
       type: Array,
