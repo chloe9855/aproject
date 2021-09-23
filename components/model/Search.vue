@@ -97,16 +97,16 @@ export default {
 
 <style lang="scss" scoped>
 .searchBox{
-  padding: 10px 15px 27px;
+  padding: 0 15px;
   position: absolute;
   width: 320px;
-  height: 810px;
+  height: $vh-100;
   top: 0;
   left:-350px;
   background: #EFF4F3;
 }
 .page-header{
-  margin-bottom: 20px;
+  margin: 10px 0;
 }
 .toggleBtn{
   position: absolute;

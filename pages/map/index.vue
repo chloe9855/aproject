@@ -1,6 +1,5 @@
 <template>
   <div class="wrapper">
-    <Header-component />
     <div class="main">
       <Feature-component
         :current="activeWindow"
@@ -265,7 +264,6 @@
 </template>
 
 <script>
-import Header from '~/components/model/Header';
 // import Footer from '~/components/model/Footer';
 import NavTabs from '~/components/tools/NavTabs.vue';
 import Feature from '~/components/Feature.vue';
@@ -281,7 +279,6 @@ import MapSearchBox from '~/components/MapSearchBox.vue';
 
 export default {
   components: {
-    'Header-component': Header,
     // 'Footer-component': Footer,
     'NavTabs-component': NavTabs,
     'Feature-component': Feature,
@@ -445,7 +442,7 @@ export default {
   .main{
     position: relative;
     width: 100%;
-    height: calc(100vh - 66px);
+    height: calc(100vh - 86px);
     overflow: hidden;
     z-index: 0;
     background: pink;

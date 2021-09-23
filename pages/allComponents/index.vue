@@ -72,7 +72,11 @@
       />
       <br>
       <br>
-      <Paginate-component />
+      <Paginate-component
+        :total="255"
+        :per-page="13"
+        @nowPage="payload => currentPage = payload"
+      />
       <br>
       <br>
       <SwitchOn-component />
@@ -158,7 +162,8 @@ export default {
             id: 1
           }
         ]
-      }
+      },
+      currentPage: 1
     };
   }
 };
