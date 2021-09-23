@@ -11,8 +11,14 @@
       {{ title }}
     </div>
     <div class="loginInput">
-      <InputHorizontal title="帳號" />
-      <InputHorizontal title="密碼" />
+      <InputHorizontal
+        title="帳號"
+        is-icon="account"
+      />
+      <InputHorizontal
+        title="密碼"
+        is-icon="lock"
+      />
       <div class="verification">
         <InputHorizontal
           title="驗證碼"
