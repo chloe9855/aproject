@@ -24,7 +24,7 @@
         屬性表格
       </p>
       <div class="table_block_wrap">
-        <div class="table_block">
+        <div class="table_block theme_scrollbar">
           <table>
             <tbody>
               <tr

@@ -24,3 +24,25 @@
 .navtabs__content {
   padding: 0 20px;
 }
+
+// * ==========================================================================
+// * Scrollbar 的樣式
+// * ==========================================================================
+
+.theme_scrollbar {
+  &::-webkit-scrollbar-track {
+    border-radius: 10px;
+    background-color: $white;
+  }
+
+  &::-webkit-scrollbar {
+    width: 5px;
+    height: 5px;
+    background-color: $white;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    background-color: #A1BFB8;
+  }
+}

@@ -23,7 +23,7 @@
             @current="payload => layerOptions.current = payload"
           />
 
-          <div class="navtabs__content layerwindow">
+          <div class="navtabs__content layerwindow theme_scrollbar">
             <div
               v-if="layerOptions.current === 0"
               class="layer__list"
@@ -165,7 +165,7 @@
                     圖層名稱
                   </label>
                 </div>
-                <div class="og_item_wrap">
+                <div class="og_item_wrap theme_scrollbar">
                   <div
                     v-for="ogItem in ogcOptions.layerList"
                     :key="ogItem.id"

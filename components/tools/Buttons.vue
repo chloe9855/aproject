@@ -110,7 +110,7 @@ export default {
     opacity: 0;
     z-index: 99999;
     visibility: hidden;
-     @include noto-sans-tc-14-medium;
+    @include noto-sans-tc-14-medium;
 }
 
 [data-title] {
