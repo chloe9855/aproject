@@ -54,11 +54,12 @@
     </div>
     <div class="buttonBox">
       <Button
-        :name="'button-primary'"
+        :name="'button-default'"
         :text="'清除全部'"
       />
+      &emsp;
       <Button
-        :name="'button-default-disable'"
+        :name="'button-primary'"
         :text="'查詢'"
       />
     </div>
@@ -84,11 +85,11 @@ export default {
         current: 0,
         typeList: [
           {
-            name: '依單筆地號',
+            name: '依管理單位',
             id: 0
           },
           {
-            name: '依管理單位',
+            name: '依單筆地號',
             id: 1
           }
         ]
