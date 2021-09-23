@@ -21,11 +21,16 @@
     <input
       v-model="message"
       class="inputType"
-      :class="{inputError:isError}"
+      :class="{inputError:isError,isIcon:isAddIcon}"
       :placeholder="inputText"
       :name="name"
       :type="inputType"
       :disabled="isDisable === true"
+    >
+    <img
+      v-show="isAddIcon"
+      :src="iconImg"
+      class="input-icon"
     >
   </div>
 </template>
@@ -60,6 +65,10 @@ export default {
     sizing: {
       type: String,
       default: 'w-100'
+    },
+    isIcon: {
+      type: String,
+      default: ''
     }
   },
   data: () => {
@@ -80,6 +89,22 @@ export default {
         return false;
       } else {
         return !rules.test(this.message);
+      }
+    },
+    iconImg () {
+      const icon = this.isIcon;
+      if (icon !== '') {
+        return require(`~/assets/img/${icon}.svg`);
+      } else {
+        return null;
+      }
+    },
+    isAddIcon () {
+      const icon = this.isIcon;
+      if (icon !== '') {
+        return true;
+      } else {
+        return false;
       }
     }
   },

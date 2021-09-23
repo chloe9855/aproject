@@ -26,11 +26,16 @@
     <input
       v-model="message"
       class="inputType"
-      :class="{inputError:isError}"
+      :class="{inputError:isError,isIcon:isAddIcon}"
       :placeholder="inputText"
       :name="name"
       :type="inputType"
       :disabled="isDisable === true"
+    >
+    <img
+      v-show="isAddIcon"
+      :src="iconImg"
+      class="input-icon"
     >
   </div>
 </template>
@@ -69,6 +74,10 @@ export default {
     sizing: {
       type: String,
       default: 'w-100'
+    },
+    isIcon: {
+      type: String,
+      default: ''
     }
   },
   data: () => {
@@ -90,6 +99,22 @@ export default {
       } else {
         return !rules.test(this.message);
       }
+    },
+    iconImg () {
+      const icon = this.isIcon;
+      if (icon !== '') {
+        return require(`~/assets/img/${icon}.svg`);
+      } else {
+        return null;
+      }
+    },
+    isAddIcon () {
+      const icon = this.isIcon;
+      if (icon !== '') {
+        return true;
+      } else {
+        return false;
+      }
     }
   },
   watch: {
@@ -103,21 +128,30 @@ export default {
 <style lang="scss" scoped>
 @import '~/assets/scss/input.scss';
 .input-title-box {
-    margin-bottom: 2px;
-    display: flex;
-    align-items: flex-end;
-    justify-content: center;
-    align-self: stretch;
+  margin-bottom: 2px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  align-self: stretch;
 }
 .input-title {
-    color: $header-black;
-    flex: 1;
-    margin-right: 2px;
-    @include noto-sans-tc-16-medium;
+  color: $header-black;
+  flex: 1;
+  margin-right: 2px;
+  @include noto-sans-tc-16-medium;
 }
 .error-hinit {
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
 }
+.inputType{
+  &.isIcon{
+    padding-left: 28px !important;
+  }
+}
+.input-icon{
+  top: 35px !important;
+}
+
 </style>
