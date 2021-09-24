@@ -2,16 +2,21 @@
   <div class="search_container">
     <div
       class="search_box"
-      :class="{'no_radius': tableList.length >= 1 }"
+      :class="{'no_radius': columnList.length >= 1 }"
     >
       <NavTabs-component
         :type-list="barOptions.typeList"
         :selected="barOptions.current"
         @current="payload => barOptions.current = payload"
       />
-      <component :is="componentInstance" />
+      <component
+        :is="componentInstance"
+        @channelSearch="$emit('search')"
+        @clear="$emit('clear')"
+      />
     </div>
     <div
+      v-if="columnList.length >= 1"
       class="content_block"
       :class="{'hide_block': hideResult, 'show_block': !hideResult}"
     >
@@ -19,11 +24,11 @@
         屬性表格
       </p>
       <div class="table_block_wrap">
-        <div class="table_block">
+        <div class="table_block theme_scrollbar">
           <table>
             <tbody>
               <tr
-                v-for="item in tableList"
+                v-for="item in columnList"
                 :key="item.id"
               >
                 <td>{{ item.name }}</td>
@@ -85,81 +90,20 @@ export default {
           }
         ]
       },
-      tableList: [
-        {
-          name: '流水編號',
-          value: '851705',
-          id: 0
-        },
-        {
-          name: '管理處代碼',
-          value: '09',
-          id: 1
-        },
-        {
-          name: '管理處名稱',
-          value: '851705',
-          id: 2
-        },
-        {
-          name: '管理分分處名稱',
-          value: '09',
-          id: 3
-        },
-        {
-          name: '工作站代碼',
-          value: '851705',
-          id: 4
-        },
-        {
-          name: '工作站名稱',
-          value: '09',
-          id: 5
-        },
-        {
-          name: '水利小組代碼',
-          value: '851705',
-          id: 6
-        },
-        {
-          name: '水利小組名稱',
-          value: '泉厝支線小組',
-          id: 7
-        },
-        {
-          name: '輪區代碼',
-          value: '851705',
-          id: 8
-        },
-        {
-          name: '輪區名稱',
-          value: '09',
-          id: 57
-        },
-        {
-          name: '長度',
-          value: '09',
-          id: 66
-        },
-        {
-          name: '渠道名稱',
-          value: '851705',
-          id: 62
-        },
-        {
-          name: '渠道等級代碼',
-          value: '09',
-          id: 58
-        },
-        {
-          name: '渠道等級名稱',
-          value: '851705',
-          id: 52
-        }
-      ]
+      searchResult: {
+        channel: ''
+      },
+      columnList: []
     };
   },
   name: 'MapSearchBox',
+  mounted () {
+    const data = require('~/static/channel.json');
+    this.searchResult.channel = data;
+  },
+  methods: {
+
+  },
   computed: {
     searchType () {
       return (this.barOptions.current === 0) ? 'KeyWordSearch' : (this.barOptions.current === 1) ? 'ChannelSearch' : (this.barOptions.current === 2) ? 'StakeSearch' : (this.barOptions.current === 3) ? 'ClickSearch' : '';
