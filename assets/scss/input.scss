@@ -3,6 +3,14 @@
     flex-direction: column;
     align-items: flex-end;
     justify-content: center;
+    position: relative;
+    .input-icon{
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        width: 14px;
+        height: 14px;
+    }
 }
 .input-title-box {
     margin-bottom: 2px;
@@ -63,6 +71,9 @@
     &:disabled{
         background: #DBE4E2;
         border-radius: 5px;
+    }
+    &.isIcon{
+        padding-left: 28px;
     }
 }
 .dropdown {
