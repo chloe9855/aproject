@@ -1,5 +1,6 @@
 <template>
   <div
+
     class="searchBox"
     :class="toggleBox"
   >
