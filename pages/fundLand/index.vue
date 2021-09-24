@@ -37,22 +37,10 @@
           :selected="options.current"
           @current="payload => options.current = payload"
         />
-        <div
+        <NormalTable
           v-if="columnList.length >= 1"
-          class="table_block theme_scrollbar"
-        >
-          <table>
-            <tbody>
-              <tr
-                v-for="item in columnList"
-                :key="item.id"
-              >
-                <td>{{ item.name }}</td>
-                <td>{{ item.value }}</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+          :list="columnList"
+        />
       </div>
     </div>
   </div>
@@ -63,6 +51,7 @@ import SearchFund from '~/components/model/SearchFund';
 import BreadCrumbTool from '~/components/tools/BreadCrumbTool';
 import PageHeader from '~/components/tools/PageHeader.vue';
 import Table from '~/components/model/Table.vue';
+import NormalTable from '~/components/model/NormalTable.vue';
 import NavTabs from '~/components/tools/NavTabs.vue';
 
 export default {
@@ -71,6 +60,7 @@ export default {
     BreadCrumbTool: BreadCrumbTool,
     PageHeader: PageHeader,
     Table: Table,
+    NormalTable: NormalTable,
     NavTabs: NavTabs
   },
   data () {
@@ -222,7 +212,7 @@ export default {
 
   .table_block {
     width: 512px;
-    height: 400px;
+    height: 480px;
     overflow-y: auto;
     overflow-x: hidden;
     color: #494949;
