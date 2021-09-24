@@ -3,7 +3,7 @@
     <SearchFund
       ref="searchFund"
       type="landSearch"
-      @hideSidebar="payload => growUp = payload"
+      @showSidebar="payload => growUp = payload"
     />
 
     <div
@@ -173,7 +173,18 @@ export default {
     addDetail (payload) {
       this.showDetail = payload;
       const _searchFund = this.$refs.searchFund;
-      _searchFund.toggleSearchBox();
+      if (payload === true) {
+        _searchFund.closeBar();
+      } else {
+        _searchFund.showBar();
+      }
+    }
+  },
+  watch: {
+    growUp (value) {
+      if (value === true) {
+        this.showDetail = false;
+      }
     }
   }
 };
@@ -195,7 +206,6 @@ export default {
     transition: ease-in-out 0.4s;
     display: flex;
     height:100%;
-    border: 1px solid red;
   }
 
   .left_content {
