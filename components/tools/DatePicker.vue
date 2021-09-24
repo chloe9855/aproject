@@ -17,6 +17,7 @@
       :value-type="valueType"
       :type="type"
       :range="isRange"
+      :editable="false"
     />
   </div>
 </template>
@@ -46,6 +47,10 @@ export default {
     title: {
       type: String,
       default: ''
+    },
+    inputId: {
+      type: Number,
+      default: 0
     }
   },
   data () {
@@ -66,7 +71,8 @@ export default {
   },
   watch: {
     time (n, o) {
-      this.$emit('DateValue', n);
+      const data = { val: n, id: this.inputId };
+      this.$emit('DateValue', data);
     }
   }
 };

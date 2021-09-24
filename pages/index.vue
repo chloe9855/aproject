@@ -41,7 +41,10 @@
       type="Gray"
       text="標籤4"
     />
-    <TableTool :table-column="tableList" />
+    <TableTool
+      :table-column="tableList"
+      :is-paginate="true"
+    />
     <Pagination :table-count="count" />
     <PageHeader icon="edit" />
     <Search
