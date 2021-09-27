@@ -203,7 +203,7 @@
               v-show="isEdit"
               class="editOption"
             >
-              <div>
+              <div @click="$emit('clickIcon', 'isEdit')">
                 <img
                   alt=""
                   class="vector"
@@ -215,7 +215,7 @@
               v-show="isDel"
               class="delOption"
             >
-              <div>
+              <div @click="$emit('clickIcon', 'isDel')">
                 <img
                   alt=""
                   class="vector"
@@ -227,7 +227,7 @@
               v-show="isPrint"
               class="printOption"
             >
-              <div>
+              <div @click="$emit('clickIcon', 'isPrint')">
                 <img
                   alt=""
                   class="vector"
@@ -239,7 +239,7 @@
               v-show="isMap"
               class="mapOption"
             >
-              <div>
+              <div @click="$emit('clickIcon', 'isMap')">
                 <img
                   alt=""
                   class="vector"
@@ -251,7 +251,7 @@
               v-show="isSearch"
               class="searchOption"
             >
-              <div>
+              <div @click="$emit('clickIcon', 'isSearch')">
                 <img
                   alt=""
                   class="vector"

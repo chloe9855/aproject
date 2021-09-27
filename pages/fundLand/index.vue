@@ -4,6 +4,8 @@
       ref="searchFund"
       type="landSearch"
       @showSidebar="payload => growUp = payload"
+      @search="searchHandler"
+      @clear="clearAllHandler"
     />
 
     <div
@@ -11,7 +13,7 @@
       :class="{ 'grow': !growUp }"
     >
       <div class="left_content">
-        <BreadCrumbTool />
+        <BreadCrumbTool :options="breadCrumb" />
         <PageHeader icon="land" />
         <Table
           v-if="searchResult.authority !== ''"
@@ -20,8 +22,32 @@
           :is-search="true"
           :is-check="false"
         />
-        <div @click="addDetail(true)">
+        <div
+          v-if="searchResult.authority !== ''"
+          @click="addDetail(true)"
+        >
           看詳細
+        </div>
+
+        <div v-if="searchResult.landNo !== ''">
+          <NavTabs
+            :type-list="options.typeList"
+            :selected="options.current"
+            @current="payload => options.current = payload"
+          />
+          <NormalTable
+            :list="searchResult.landNo"
+            :shorten="true"
+          />
+        </div>
+
+        <div
+          v-if="searchResult.landNo === '' && searchResult.authority === ''"
+          class="no_file"
+        >
+          <img :src="require('~/assets/img/no_file.svg')">
+          <p>請設定查詢條件</p>
+          <p>並開始查詢 !</p>
         </div>
       </div>
       <div
@@ -68,8 +94,10 @@ export default {
       growUp: true,
       showDetail: false,
       searchResult: {
-        authority: ''
+        authority: '',
+        landNo: ''
       },
+      breadCrumb: ['首頁', '作業基金土地管理'],
       options: {
         current: 0,
         typeList: [
@@ -166,8 +194,7 @@ export default {
     };
   },
   mounted () {
-    const data = require('~/static/land.json');
-    this.searchResult.authority = data;
+
   },
   methods: {
     addDetail (payload) {
@@ -178,6 +205,22 @@ export default {
       } else {
         _searchFund.showBar();
       }
+    },
+    searchHandler (type) {
+      this.clearAllHandler();
+      if (type === 0) {
+        const data = require('~/static/land.json');
+        this.searchResult.authority = data;
+      }
+
+      if (type === 1) {
+        const datas = require('~/static/singleLand.json');
+        this.searchResult.landNo = datas.data;
+      }
+    },
+    clearAllHandler () {
+      this.searchResult.authority = '';
+      this.searchResult.landNo = '';
     }
   },
   watch: {
@@ -211,37 +254,14 @@ export default {
   .left_content {
     width: 100%;
     padding: 13px;
+    padding-right: 40px;
   }
 
   .right_content {
-    // width: 516px;
+    width: 850px;
     box-shadow: -1px 0 5px rgba(135, 135, 135, 0.28);
     padding: 40px 10px 10px;
     position: relative;
-  }
-
-  .table_block {
-    width: 512px;
-    height: 480px;
-    overflow-y: auto;
-    overflow-x: hidden;
-    color: #494949;
-    background: white;
-    @include noto-sans-tc-16-regular;
-
-    table {
-      text-align: left;
-      margin: 0 auto;
-      width: 100%;
-
-      td {
-        padding: 10px;
-      }
-
-      tr:nth-child(odd) {
-        background-color: #F5F5F5;
-      }
-    }
   }
 
   .grow {
@@ -255,6 +275,17 @@ export default {
     cursor: pointer;
     position: absolute;
     top: 10px;
+  }
+
+  .no_file{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    background: #EFF4F3;
+    color: #3E9F88;
+    height: 450px;
+    @include noto-sans-tc-16-regular;
   }
 
 </style>

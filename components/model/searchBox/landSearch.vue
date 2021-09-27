@@ -56,11 +56,13 @@
       <Button
         :name="'button-default'"
         :text="'清除全部'"
+        @click="$emit('clear')"
       />
       &emsp;
       <Button
         :name="'button-primary'"
         :text="'查詢'"
+        @click="$emit('search', options.current)"
       />
     </div>
   </div>
