@@ -32,7 +32,7 @@ export default {
     },
     title: {
       type: String,
-      default: '請設定查詢作業標題'
+      default: ''
     },
     isArrow: {
       type: Boolean,
@@ -64,7 +64,7 @@ export default {
     mainTitle () {
       const icon = this.icon;
       let title;
-      if (icon === 'slider') {
+      if (icon === 'slider' || this.title !== '') {
         title = this.title;
       } else {
         title = this.titleList[icon];

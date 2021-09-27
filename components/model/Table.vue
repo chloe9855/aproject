@@ -4,7 +4,7 @@
     :class="{isNoData:isShowBg}"
   >
     <div
-      v-show="!isShowBg && isCheck"
+      v-show="!isShowBg && isCheck && isScrollTable"
       class="tableBox tableCheck"
     >
       <table :style="{'height':tableColumnH+'px'}">
@@ -68,11 +68,20 @@
           <tr
             v-for="( item, index ) in tableColumnBody"
             :key="index"
+            :ref="'tabletd'+index"
           >
             <td
               v-show="isCheck"
               :style="{'min-width':'35px'}"
-            />
+            >
+              <input
+                :id="'a'+index"
+                v-model="checkList"
+                type="checkbox"
+                :name="'a'+index"
+                :value="item.val"
+              ><label :for="'a'+index" />
+            </td>
             <td
               v-for="( text, textIndex ) in item.title"
               :key="textIndex"
@@ -105,16 +114,76 @@
               <span v-else>{{ text }}</span>
             </td>
             <td
-              v-if="optionLength>0"
+              v-if="optionLength > 0 && isScrollTable"
               :colspan="optionLength"
               :style="{'min-width': (optionLength*35)+'px'}"
             />
+            <td
+              v-show="isEdit && !isScrollTable"
+              class="editOption"
+            >
+              <div>
+                <img
+                  alt=""
+                  class="vector"
+                  :src="require('~/assets/img/edit.svg')"
+                >
+              </div>
+            </td>
+            <td
+              v-show="isDel && !isScrollTable"
+              class="delOption"
+            >
+              <div>
+                <img
+                  alt=""
+                  class="vector"
+                  :src="require('~/assets/img/delete.svg')"
+                >
+              </div>
+            </td>
+            <td
+              v-show="isPrint && !isScrollTable"
+              class="printOption"
+            >
+              <div>
+                <img
+                  alt=""
+                  class="vector"
+                  :src="require('~/assets/img/print.svg')"
+                >
+              </div>
+            </td>
+            <td
+              v-show="isMap && !isScrollTable"
+              class="mapOption"
+            >
+              <div>
+                <img
+                  alt=""
+                  class="vector"
+                  :src="require('~/assets/img/map.svg')"
+                >
+              </div>
+            </td>
+            <td
+              v-show="isSearch"
+              class="searchOption"
+            >
+              <div>
+                <img
+                  alt=""
+                  class="vector"
+                  :src="require('~/assets/img/search.svg')"
+                >
+              </div>
+            </td>
           </tr>
         </tbody>
       </table>
     </div>
     <div
-      v-if="optionLength>0"
+      v-if="optionLength > 0 && isScrollTable"
       class="tableBox tableBtn"
     >
       <table :style="{'height':tableColumnH+'px'}">
@@ -256,6 +325,10 @@ export default {
     isPaginate: {
       type: Boolean,
       default: true
+    },
+    isScrollTable: {
+      type: Boolean,
+      default: false
     },
     tagList: {
       type: Array,
