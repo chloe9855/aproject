@@ -1,5 +1,6 @@
 <template>
   <div
+
     class="searchBox"
     :class="toggleBox"
   >
@@ -57,13 +58,25 @@ export default {
         this.toggleBox = 'hideBox';
         this.arrow = 'arrowLeft';
         this.toggleState = false;
-        this.$emit('hideSidebar', false);
+        this.$emit('showSidebar', false);
       } else {
         this.toggleBox = 'showBox';
         this.arrow = 'arrowRight';
         this.toggleState = true;
-        this.$emit('hideSidebar', true);
+        this.$emit('showSidebar', true);
       }
+    },
+    closeBar () {
+      this.toggleBox = 'hideBox';
+      this.arrow = 'arrowLeft';
+      this.toggleState = false;
+      this.$emit('showSidebar', false);
+    },
+    showBar () {
+      this.toggleBox = 'showBox';
+      this.arrow = 'arrowRight';
+      this.toggleState = true;
+      this.$emit('showSidebar', true);
     }
   },
   computed: {

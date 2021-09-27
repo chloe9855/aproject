@@ -1,15 +1,16 @@
 <template>
   <div class="main">
     <SearchFund
+      ref="searchFund"
       type="landSearch"
-      @hideSidebar="payload => growUp = payload"
+      @showSidebar="payload => growUp = payload"
     />
 
     <div
-      class="content"
+      class="content_block"
       :class="{ 'grow': !growUp }"
     >
-      <div>
+      <div class="left_content">
         <BreadCrumbTool />
         <PageHeader icon="land" />
         <Table
@@ -19,15 +20,26 @@
           :is-search="true"
           :is-check="false"
         />
-        <div @click="showDetail = true">
+        <div @click="addDetail(true)">
           看詳細
         </div>
       </div>
-      <div v-if="showDetail">
+      <div
+        v-if="showDetail"
+        class="right_content"
+      >
+        <div
+          class="close_icon"
+          @click="addDetail(false)"
+        />
         <NavTabs
           :type-list="options.typeList"
           :selected="options.current"
           @current="payload => options.current = payload"
+        />
+        <NormalTable
+          v-if="columnList.length >= 1"
+          :list="columnList"
         />
       </div>
     </div>
@@ -39,6 +51,7 @@ import SearchFund from '~/components/model/SearchFund';
 import BreadCrumbTool from '~/components/tools/BreadCrumbTool';
 import PageHeader from '~/components/tools/PageHeader.vue';
 import Table from '~/components/model/Table.vue';
+import NormalTable from '~/components/model/NormalTable.vue';
 import NavTabs from '~/components/tools/NavTabs.vue';
 
 export default {
@@ -47,6 +60,7 @@ export default {
     BreadCrumbTool: BreadCrumbTool,
     PageHeader: PageHeader,
     Table: Table,
+    NormalTable: NormalTable,
     NavTabs: NavTabs
   },
   data () {
@@ -76,12 +90,102 @@ export default {
             id: 3
           }
         ]
-      }
+      },
+      columnList: [
+        {
+          name: '流水編號',
+          value: '851705',
+          id: 0
+        },
+        {
+          name: '管理處代碼',
+          value: '09',
+          id: 1
+        },
+        {
+          name: '管理處名稱',
+          value: '851705',
+          id: 2
+        },
+        {
+          name: '管理分分處名稱',
+          value: '09',
+          id: 3
+        },
+        {
+          name: '工作站代碼',
+          value: '851705',
+          id: 4
+        },
+        {
+          name: '工作站名稱',
+          value: '09',
+          id: 5
+        },
+        {
+          name: '水利小組代碼',
+          value: '851705',
+          id: 6
+        },
+        {
+          name: '水利小組名稱',
+          value: '泉厝支線小組',
+          id: 7
+        },
+        {
+          name: '輪區代碼',
+          value: '851705',
+          id: 8
+        },
+        {
+          name: '輪區名稱',
+          value: '09',
+          id: 57
+        },
+        {
+          name: '長度',
+          value: '09',
+          id: 66
+        },
+        {
+          name: '渠道名稱',
+          value: '851705',
+          id: 62
+        },
+        {
+          name: '渠道等級代碼',
+          value: '09',
+          id: 58
+        },
+        {
+          name: '渠道等級名稱',
+          value: '851705',
+          id: 52
+        }
+      ]
     };
   },
   mounted () {
     const data = require('~/static/land.json');
     this.searchResult.authority = data;
+  },
+  methods: {
+    addDetail (payload) {
+      this.showDetail = payload;
+      const _searchFund = this.$refs.searchFund;
+      if (payload === true) {
+        _searchFund.closeBar();
+      } else {
+        _searchFund.showBar();
+      }
+    }
+  },
+  watch: {
+    growUp (value) {
+      if (value === true) {
+        this.showDetail = false;
+      }
+    }
   }
 };
 </script>
@@ -94,18 +198,63 @@ export default {
     display: flex;
   }
 
-  .content {
+  .content_block {
     // border: 1px solid purple;
     width: calc(100% - 414px);
     position: absolute;
     right: 0;
     transition: ease-in-out 0.4s;
-    padding: 13px;
     display: flex;
+    height:100%;
+  }
+
+  .left_content {
+    width: 100%;
+    padding: 13px;
+  }
+
+  .right_content {
+    // width: 516px;
+    box-shadow: -1px 0 5px rgba(135, 135, 135, 0.28);
+    padding: 40px 10px 10px;
+    position: relative;
+  }
+
+  .table_block {
+    width: 512px;
+    height: 480px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    color: #494949;
+    background: white;
+    @include noto-sans-tc-16-regular;
+
+    table {
+      text-align: left;
+      margin: 0 auto;
+      width: 100%;
+
+      td {
+        padding: 10px;
+      }
+
+      tr:nth-child(odd) {
+        background-color: #F5F5F5;
+      }
+    }
   }
 
   .grow {
     width: calc(100% - 67px);
+  }
+
+  .close_icon {
+    background: url('~/assets/img/close-icon.svg') no-repeat right/contain;
+    width: 23px;
+    height: 23px;
+    cursor: pointer;
+    position: absolute;
+    top: 10px;
   }
 
 </style>

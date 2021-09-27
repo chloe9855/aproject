@@ -389,6 +389,7 @@ export default {
   background: #FFF;
   table{
     border:1px solid $light-green;
+    white-space: nowrap;
     thead{
         border-bottom: 5px solid $main-green;
         th{
