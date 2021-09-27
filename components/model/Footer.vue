@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div :class="{ 'hide': $store.state.hideFooter === true }">
     <footer v-if="$route === 'map'">
       <div>
         版權所有：行政院農業委員會農田水利署、系統開發：財團法人農業工程研究中心
@@ -36,6 +36,10 @@ export default {
     @include noto-sans-tc-14-regular;
 
     padding: 0 18px;
+  }
+
+  .hide {
+    display: none;
   }
 
 </style>

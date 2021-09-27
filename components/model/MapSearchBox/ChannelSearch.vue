@@ -12,7 +12,7 @@
         <span>0</span>
       </div>
 
-      <label>
+      <label class="oneIn">
         <input type="checkbox">反向
       </label>
 
@@ -24,18 +24,35 @@
         />
         ~
         <InputTool-component
-          :input-text="'0'"
+          :input-text="'800'"
           sizing="w-30"
         />
       </div>
-      <label>
+      <label class="oneIn">
         <input type="checkbox">使用環域(公尺 : 最大200公尺)
       </label>
       <div class="wrap2">
-        <Dropdown-component
-          :bg-color="true"
+        <InputTool-component
+          :input-text="'地籍資料'"
+          sizing="w-70"
         />
-        <InputTool-component />
+        <InputTool-component
+          :input-text="'10'"
+          sizing="w-25"
+        />
+      </div>
+      <div class="bt_wrap">
+        <Buttons-component
+          :name="'button-default'"
+          :text="'清除全部'"
+          @click="$emit('clear')"
+        />
+        &emsp;
+        <Buttons-component
+          :name="'button-primary'"
+          :text="'查詢'"
+          @click="$emit('channelSearch', 'CHANNEL')"
+        />
       </div>
     </div>
   </div>
@@ -44,11 +61,13 @@
 <script>
 import Dropdown from '~/components/tools/Dropdown.vue';
 import InputTool from '~/components/tools/InputTool.vue';
+import Buttons from '~/components/tools/Buttons.vue';
 
 export default {
   components: {
     'Dropdown-component': Dropdown,
-    'InputTool-component': InputTool
+    'InputTool-component': InputTool,
+    'Buttons-component': Buttons
   },
   data () {
     return {
@@ -76,12 +95,25 @@ export default {
 
 <style lang="scss" scoped>
 
+  .bt_wrap {
+    padding: 8px 0 0;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+  }
+
+  .oneIn {
+    color: #494949;
+    @include noto-sans-tc-16-regular;
+  }
+
   .out_wrap {
     padding: 0 20px;
   }
 
   .input_wrap {
     padding: 7px 0;
+    @include noto-sans-tc-16-regular;
 
     span {
       @include noto-sans-tc-16-medium-line19;
@@ -106,6 +138,7 @@ export default {
   .wrap2 {
     display: flex;
     align-items: center;
+    justify-content: space-between;
   }
 
   .meme {

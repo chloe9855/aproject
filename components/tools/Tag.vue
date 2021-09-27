@@ -56,6 +56,7 @@ export default {
   display: inline-block;
   align-items: center;
   justify-content: center;
+  min-width: 45px;
 }
 .tag-green {
   background-color: $tag-bg-green;

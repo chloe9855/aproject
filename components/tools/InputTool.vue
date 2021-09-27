@@ -69,6 +69,10 @@ export default {
     isIcon: {
       type: String,
       default: ''
+    },
+    inputId: {
+      type: Number,
+      default: 0
     }
   },
   data: () => {
@@ -110,7 +114,8 @@ export default {
   },
   watch: {
     message (n, o) {
-      this.$emit('inputValue', n);
+      const data = { val: n, id: this.inputId };
+      this.$emit('inputValue', data);
     }
   }
 };
