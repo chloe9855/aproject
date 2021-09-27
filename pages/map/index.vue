@@ -1,7 +1,9 @@
 <template>
   <div class="wrapper">
-    <Header-component />
-    <div class="main">
+    <div
+      class="main"
+      :class="{ 'reduceHeight': $store.state.hideFooter === true }"
+    >
       <Feature-component
         :current="activeWindow"
         @select="payload => activeWindow = payload"
@@ -21,7 +23,7 @@
             @current="payload => layerOptions.current = payload"
           />
 
-          <div class="navtabs__content layerwindow">
+          <div class="navtabs__content layerwindow theme_scrollbar">
             <div
               v-if="layerOptions.current === 0"
               class="layer__list"
@@ -163,7 +165,7 @@
                     圖層名稱
                   </label>
                 </div>
-                <div class="og_item_wrap">
+                <div class="og_item_wrap theme_scrollbar">
                   <div
                     v-for="ogItem in ogcOptions.layerList"
                     :key="ogItem.id"
@@ -259,13 +261,45 @@
       </DragBox-component>
 
       <!--    地圖搜尋欄     -->
-      <MapSearchBox-component />
+      <MapSearchBox-component
+        @search="searchHandler"
+        @clear="clearSearchResult"
+      />
+      <div
+        v-if="searchResult.channel !== ''"
+        class="result_table"
+        :class="{'hide_block': hideResult, 'show_block': !hideResult}"
+      >
+        <div
+          class="hide_button"
+          @click="hideResult = !hideResult"
+        >
+          <p
+            v-if="hideResult"
+            :class="{'up_arrow': hideResult }"
+          >
+            顯示查詢結果
+          </p>
+          <p
+            v-if="!hideResult"
+            :class="{'up_arrow': hideResult }"
+          >
+            隱藏查詢結果
+          </p>
+        </div>
+        <div class="table_wrap">
+          <Table-component
+            :table-column="searchResult.channel"
+            :is-check="false"
+            :is-map="true"
+          />
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-import Header from '~/components/model/Header';
 // import Footer from '~/components/model/Footer';
 import NavTabs from '~/components/tools/NavTabs.vue';
 import Feature from '~/components/Feature.vue';
@@ -278,10 +312,10 @@ import Buttons from '~/components/tools/Buttons.vue';
 import GeoMeasure from '~/components/GeoMeasure.vue';
 import ScreenShot from '~/components/ScreenShot.vue';
 import MapSearchBox from '~/components/MapSearchBox.vue';
+import Table from '~/components/model/Table.vue';
 
 export default {
   components: {
-    'Header-component': Header,
     // 'Footer-component': Footer,
     'NavTabs-component': NavTabs,
     'Feature-component': Feature,
@@ -293,12 +327,17 @@ export default {
     'Buttons-component': Buttons,
     'GeoMeasure-component': GeoMeasure,
     'ScreenShot-component': ScreenShot,
-    'MapSearchBox-component': MapSearchBox
+    'MapSearchBox-component': MapSearchBox,
+    'Table-component': Table
   },
   data () {
     return {
       // * 目前所選取的功能視窗
       activeWindow: '',
+      searchResult: {
+        channel: ''
+      },
+      hideResult: false,
       layerOptions: {
         current: 0,
         typeList: [
@@ -382,6 +421,7 @@ export default {
       ]
     };
   },
+  // layout: 'map',
   mounted () {
     const surface = require('~/static/surfaceLayer.json');
     this.layerOptions.surfaceList = [...surface.data];
@@ -391,6 +431,16 @@ export default {
     ctrlDragBoxVisible (payload) {
       // @DragBox：電腦版可以在畫面上任意移動的 component
       return this.activeWindow === payload;
+    },
+    // * @ 左側搜尋
+    searchHandler () {
+      const data = require('~/static/channel.json');
+      this.searchResult.channel = data;
+    },
+    // * @ 清除搜尋結果
+    clearSearchResult () {
+      this.searchResult.channel = '';
+      this.hideResult = false;
     },
     // * @ 圖層工具：切換圖層顯示
     layerVisibleCtrl ($event, id) {
@@ -429,6 +479,17 @@ export default {
     clearOgcLayer () {
       this.ogcOptions.layerList = [];
     }
+  },
+  watch: {
+    'searchResult.channel': {
+      handler (value) {
+        if (value !== '') {
+          this.$store.commit('HIDE_FOOTER_CTRL', true);
+        } else {
+          this.$store.commit('HIDE_FOOTER_CTRL', false);
+        }
+      }
+    }
   }
 };
 </script>
@@ -442,17 +503,69 @@ export default {
   //   z-index: -1;
   // }
 
+  .hide_button {
+    background: $main-green;
+    text-align: center;
+    width: 250px;
+    padding: 8.5px 0;
+    color: white;
+    cursor: pointer;
+    position: absolute;
+    top: -34px;
+    border-radius: 0 22px 0 0;
+
+    p {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-left: -7px;
+    }
+
+    p::before {
+      content: '';
+      width: 18px;
+      height: 18px;
+      background: url('~/assets/img/down-white-triangle.svg') no-repeat right/contain;
+      display: inline-block;
+      margin-right: 7px;
+    }
+  }
+
+  .up_arrow::before {
+    background: url('~/assets/img/white-triangle.svg') no-repeat right/contain !important;
+  }
+
+  .hide_block {
+    transition: transform 0.4s;
+    transform: translateY(97.5%);
+  }
+
+  .show_block {
+    transition: transform 0.4s;
+    transform: translateY(0);
+  }
+
+  .table_wrap {
+    padding: 10px;
+  }
+
+  .reduceHeight {
+    height: calc(100vh - 66px) !important;
+  }
+
   .main{
     position: relative;
     width: 100%;
-    height: calc(100vh - 66px);
+    height: calc(100vh - 86px);
     overflow: hidden;
     z-index: 0;
     background: pink;
   }
 
   .layerwindow {
-    width: 420px;
+    width: 380px;
+    max-height: 440.2px;
+    overflow-y: auto;
   }
 
   .layer__list {
@@ -612,5 +725,39 @@ export default {
     color: #595959;
     @include noto-sans-tc-16-regular;
   }
+
+  .result_table {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    background: white;
+    z-index: 100000;
+    width: 100%;
+    height: 372px;
+  }
+
+  .checkBoxOption{
+  input[type="checkbox"] {
+    display:none;
+  }
+  input[type="checkbox"] + label
+  {
+    background: #999;
+    height: 14px;
+    width: 14px;
+    display:inline-block;
+    margin: 0 5px;
+    cursor: pointer;
+  }
+  input[type="checkbox"]:checked + label
+  {
+    background: url("~/assets/img/check.svg");
+    height: 14px;
+    width: 14px;
+    display:inline-block;
+    margin: 0 5px;
+    cursor: pointer;
+  }
+}
 
 </style>

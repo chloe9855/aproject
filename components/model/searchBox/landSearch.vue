@@ -9,30 +9,60 @@
       v-if="options.current === 0"
       class="landNum"
     >
-      <DropdownVertical :options="member" />
-      <DropdownVertical :options="member" />
-      <DropdownVertical :options="member" />
-      <DropdownVertical :options="member" />
-      <DropdownVertical :options="member" />
-      <DropdownVertical :options="member" />
+      <DropdownVertical
+        title="縣市"
+        :options="member"
+      />
+      <DropdownVertical
+        title="鄉鎮市區"
+        :options="member"
+      />
+      <DropdownVertical
+        title="段名"
+        :options="member"
+      />
+      <InputVertical title="地號" />
     </div>
     <div
       v-if="options.current === 1"
       class="landUnit"
     >
-      <DropdownVertical :options="member" />
-      <DropdownVertical :options="member" />
-      <DropdownVertical :options="member" />
-      <InputVertical />
+      <DropdownVertical
+        title="縣市"
+        :options="member"
+      />
+      <DropdownVertical
+        title="鄉鎮市區"
+        :options="member"
+      />
+      <DropdownVertical
+        title="管理處"
+        :options="member"
+      />
+      <DropdownVertical
+        title="管理分處"
+        :options="member"
+      />
+      <DropdownVertical
+        title="工作站"
+        :options="member"
+      />
+      <DropdownVertical
+        title="水利小組"
+        :options="member"
+      />
     </div>
     <div class="buttonBox">
       <Button
-        :name="'button-primary'"
+        :name="'button-default'"
         :text="'清除全部'"
+        @click="$emit('clear')"
       />
+      &emsp;
       <Button
-        :name="'button-default-disable'"
+        :name="'button-primary'"
         :text="'查詢'"
+        @click="$emit('search', options.current)"
       />
     </div>
   </div>
@@ -57,11 +87,11 @@ export default {
         current: 0,
         typeList: [
           {
-            name: '依單筆地號',
+            name: '依管理單位',
             id: 0
           },
           {
-            name: '依管理單位',
+            name: '依單筆地號',
             id: 1
           }
         ]

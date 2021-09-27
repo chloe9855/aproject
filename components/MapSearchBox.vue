@@ -2,16 +2,21 @@
   <div class="search_container">
     <div
       class="search_box"
-      :class="{'no_radius': tableList.length >= 1 }"
+      :class="{'no_radius': columnList.length >= 1 }"
     >
       <NavTabs-component
         :type-list="barOptions.typeList"
         :selected="barOptions.current"
         @current="payload => barOptions.current = payload"
       />
-      <component :is="componentInstance" />
+      <component
+        :is="componentInstance"
+        @channelSearch="$emit('search')"
+        @clear="$emit('clear')"
+      />
     </div>
     <div
+      v-if="columnList.length >= 1"
       class="content_block"
       :class="{'hide_block': hideResult, 'show_block': !hideResult}"
     >
@@ -19,11 +24,11 @@
         屬性表格
       </p>
       <div class="table_block_wrap">
-        <div class="table_block">
+        <div class="table_block theme_scrollbar">
           <table>
             <tbody>
               <tr
-                v-for="item in tableList"
+                v-for="item in columnList"
                 :key="item.id"
               >
                 <td>{{ item.name }}</td>
@@ -85,7 +90,10 @@ export default {
           }
         ]
       },
-      tableList: [
+      searchResult: {
+        channel: ''
+      },
+      columnList: [
         {
           name: '流水編號',
           value: '851705',
@@ -160,6 +168,13 @@ export default {
     };
   },
   name: 'MapSearchBox',
+  mounted () {
+    const data = require('~/static/channel.json');
+    this.searchResult.channel = data;
+  },
+  methods: {
+
+  },
   computed: {
     searchType () {
       return (this.barOptions.current === 0) ? 'KeyWordSearch' : (this.barOptions.current === 1) ? 'ChannelSearch' : (this.barOptions.current === 2) ? 'StakeSearch' : (this.barOptions.current === 3) ? 'ClickSearch' : '';
@@ -232,7 +247,7 @@ export default {
 
   .table_block_wrap {
     width: 100%;
-    height: 84%;
+    height: 81%;
     position: relative;
   }
 

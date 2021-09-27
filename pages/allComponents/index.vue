@@ -70,9 +70,24 @@
         :text="'新增圖層'"
         :round="true"
       />
+      <Buttons-component
+        :name="'button-primary'"
+        :text="'選擇檔案1'"
+        :hover="true"
+      />
+      <Buttons-component
+        :name="'button-primary'"
+        :text="'選擇檔案2'"
+        :hover="true"
+        note="請選擇要上傳的檔案"
+      />
       <br>
       <br>
-      <Paginate-component />
+      <Paginate-component
+        :total="255"
+        :per-page="13"
+        @nowPage="payload => currentPage = payload"
+      />
       <br>
       <br>
       <SwitchOn-component />
@@ -158,7 +173,8 @@ export default {
             id: 1
           }
         ]
-      }
+      },
+      currentPage: 1
     };
   }
 };

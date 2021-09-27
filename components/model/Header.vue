@@ -47,6 +47,7 @@
             @mouseleave="mouseLeave(item.name)"
           >
             <nuxt-link
+              class="myLink"
               :to="item.path"
               :title="item.name"
             >
@@ -111,7 +112,7 @@ export default {
         },
         {
           name: '作業基金土地管理',
-          path: '/'
+          path: '/fundLand'
         },
         {
           name: 'GIS地圖',
@@ -284,6 +285,14 @@ export default {
 
 // ****** navbar
 
+.myLink {
+  width: 170px;
+  height: 33px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .navbar {
   background-color: $main-green;
   padding: 0 545px 0 0;
@@ -322,8 +331,8 @@ export default {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  width: 170px;
-  height: 33px;
+  // width: 170px;
+  // height: 33px;
   position: relative;
   &:not(:last-of-type) {
     margin-right: 10px;

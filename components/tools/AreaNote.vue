@@ -1,14 +1,19 @@
 <template>
   <div style="display: inline-block;">
     <div class="important-note">
-      地籍面積8000平方公尺
+      {{ text }}
     </div>
   </div>
 </template>
 
 <script>
 export default {
-
+  props: {
+    text: {
+      type: String,
+      default: '檔案支援格式: *.pdf、*.doc，大小以5MB為限'
+    }
+  }
 };
 </script>
 

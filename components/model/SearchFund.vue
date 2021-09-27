@@ -1,5 +1,6 @@
 <template>
   <div
+
     class="searchBox"
     :class="toggleBox"
   >
@@ -7,12 +8,16 @@
       icon="slider"
       :title="searchTitle"
     />
-    <component :is="componentInstance" />
+    <component
+      :is="componentInstance"
+      @search="(type) => { $emit('search', type) }"
+      @clear="$emit('clear')"
+    />
     <div
       class="toggleBtn"
-      @click="toggleSearthBox"
+      @click="toggleSearchBox"
     >
-      收合查詢列
+      {{ boxText }}
       <span :class="arrow" />
     </div>
   </div>
@@ -44,24 +49,43 @@ export default {
   },
   data: () => {
     return {
-      toggleState: false,
-      toggleBox: '',
-      arrow: 'arrowLeft'
+      toggleState: true,
+      toggleBox: 'showBox',
+      arrow: 'arrowRight',
+      boxText: '收合查詢列'
     };
   },
   name: 'SearchBox',
   methods: {
-    toggleSearthBox () {
+    toggleSearchBox () {
       const isOpen = this.toggleState;
       if (isOpen) {
         this.toggleBox = 'hideBox';
         this.arrow = 'arrowLeft';
         this.toggleState = false;
+        this.boxText = '展開查詢列';
+        this.$emit('showSidebar', false);
       } else {
         this.toggleBox = 'showBox';
         this.arrow = 'arrowRight';
         this.toggleState = true;
+        this.boxText = '收合查詢列';
+        this.$emit('showSidebar', true);
       }
+    },
+    closeBar () {
+      this.toggleBox = 'hideBox';
+      this.arrow = 'arrowLeft';
+      this.toggleState = false;
+      this.boxText = '展開查詢列';
+      this.$emit('showSidebar', false);
+    },
+    showBar () {
+      this.toggleBox = 'showBox';
+      this.arrow = 'arrowRight';
+      this.toggleState = true;
+      this.boxText = '收合查詢列';
+      this.$emit('showSidebar', true);
     }
   },
   computed: {
@@ -91,6 +115,11 @@ export default {
       }
       return title;
     }
+  },
+  watch: {
+    // myToggleState (value) {
+    //   this.$emit('hideSidebar', value);
+    // }
   }
 };
 </script>
@@ -100,7 +129,8 @@ export default {
   padding: 0 15px;
   position: absolute;
   width: 320px;
-  height: $vh-100;
+  // height: $vh-100;
+  height: 100%;
   top: 0;
   left:-350px;
   background: #EFF4F3;

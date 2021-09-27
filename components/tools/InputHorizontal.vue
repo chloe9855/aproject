@@ -19,17 +19,26 @@
       </p>
     </div>
     <div class="inputtitle-horizontal-error">
-      <p class="input-title">
+      <p
+        ref="inputTitle"
+        class="input-title"
+      >
         {{ title }}
       </p>
       <input
         v-model="message"
         class="inputType"
-        :class="{inputError:isError}"
+        :class="{inputError:isError,isIcon:isAddIcon}"
         :placeholder="inputText"
         :name="name"
         :type="inputType"
         :disabled="isDisable === true"
+      >
+      <img
+        v-show="isAddIcon"
+        :src="iconImg"
+        class="input-icon"
+        :style="{ left : titleLength }"
       >
     </div>
   </div>
@@ -69,17 +78,25 @@ export default {
     sizing: {
       type: String,
       default: 'w-100'
+    },
+    isIcon: {
+      type: String,
+      default: ''
     }
   },
   data: () => {
     return {
       message: '',
+      titleLength: '80px',
       RegExpType: {
         code8: '^.{8}$'
       }
     };
   },
   name: 'InputHorizontal',
+  mounted: function () {
+    this.titleLength = (this.$refs.inputTitle.clientWidth + 20) + 'px';
+  },
   computed: {
     isError: function () {
       const defaultStatus = this.isWarn;
@@ -89,6 +106,22 @@ export default {
         return false;
       } else {
         return !rules.test(this.message);
+      }
+    },
+    iconImg () {
+      const icon = this.isIcon;
+      if (icon !== '') {
+        return require(`~/assets/img/${icon}.svg`);
+      } else {
+        return null;
+      }
+    },
+    isAddIcon () {
+      const icon = this.isIcon;
+      if (icon !== '') {
+        return true;
+      } else {
+        return false;
       }
     }
   },
