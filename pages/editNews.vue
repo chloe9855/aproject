@@ -1,8 +1,17 @@
 <template>
   <div>
+    <BreadCrumbTool
+      class="w-90"
+      :options="BreadCrumb"
+    />
     <PageHeader
       icon="edit"
       title="首頁資料管理"
+      class="w-90"
+    />
+    <SubTitleTool
+      title="最新公告"
+      btn-text="新增公告"
       class="w-90"
     />
     <TableTool
@@ -12,6 +21,17 @@
       :is-del="true"
       class="w-90"
     />
+
+    <div class="downloadTitle w-90">
+      <SubTitleTool
+        title="相關表單資料"
+        btn-text="新增表單"
+      />
+      <SubTitleTool
+        title="相關文件資料"
+        btn-text="新增文件"
+      />
+    </div>
     <div class="downloadArea w-90">
       <TableTool
         :table-column="tableData"
@@ -27,12 +47,16 @@
 
 <script>
 import TableTool from '~/components/model/Table.vue';
+import SubTitleTool from '~/components/tools/SubTitleTool.vue';
 import PageHeader from '~/components/tools/PageHeader.vue';
+import BreadCrumbTool from '~/components/tools/BreadCrumbTool.vue';
 
 export default {
   components: {
     PageHeader,
-    TableTool
+    TableTool,
+    SubTitleTool,
+    BreadCrumbTool
   },
   data () {
     return {
@@ -62,14 +86,14 @@ export default {
           { title: ['XXXX資料須填寫XXXX表單', '資料填寫表單 '] },
           { title: ['XXXX資料須填寫XXXX表單', '資料填寫表單 '] }
         ]
-      }
+      },
+      BreadCrumb: ['首頁', '系統管理', '首頁資料管理']
     };
-  },
-  layout: 'main'
+  }
 };
 </script>
 <style lang="scss">
-.page-header{
+.page-header,.subTitleTool{
   margin: 1em auto !important;
 }
 .tableTool{
@@ -99,6 +123,19 @@ export default {
   .tableTool:nth-child(1){
     margin-right: 1em !important;
   }
+}
+.downloadTitle{
+  display: flex;
+  margin: 0 auto;
+  .subTitleTool{
+    flex:1;
+  }
+  .subTitleTool:nth-child(1){
+    margin-right: 1em !important;
+  }
+}
+.breadcrumb{
+  margin: 1em auto !important;
 }
 
 </style>
