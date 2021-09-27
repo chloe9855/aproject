@@ -1,5 +1,8 @@
 <template>
-  <div v-show="isActive" class="popupBox w-100">
+  <div
+    v-show="isActive"
+    class="popupBox w-100"
+  >
     <div class="popupContent">
       <div class="popupTitle">
         <img
@@ -10,7 +13,7 @@
         <img
           :src="require('~/assets/img/close-icon.svg')"
           class="closeIcon"
-          v-on:click="toggleMaskStatus"
+          @:click="toggleMaskStatus"
         >
       </div>
       <component :is="componentInstance" />

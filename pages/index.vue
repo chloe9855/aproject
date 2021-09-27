@@ -52,6 +52,12 @@
     <Search
       type="landSearch"
     />
+    <Bar
+      setbar-color="blue"
+      :setbar-length="20"
+      setbar-width="thin"
+    />
+    <ToggleList />
   </div>
 </template>
 
@@ -66,6 +72,8 @@ import TableTool from '~/components/model/Table.vue';
 import Pagination from '~/components/tools/Pagination.vue';
 import PageHeader from '~/components/tools/PageHeader.vue';
 import Search from '~/components/model/Search.vue';
+import Bar from '~/components/tools/BarChart.vue';
+import ToggleList from '~/components/model/ToggleList.vue';
 
 export default {
   components: {
@@ -78,7 +86,9 @@ export default {
     TableTool: TableTool,
     Pagination: Pagination,
     PageHeader: PageHeader,
-    Search: Search
+    Search: Search,
+    Bar: Bar,
+    ToggleList: ToggleList
   },
   data () {
     return {
