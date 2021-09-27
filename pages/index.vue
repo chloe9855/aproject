@@ -54,9 +54,10 @@
     />
     <Bar
       setbar-color="blue"
-      setbar-length="20"
+      :setbar-length="20"
       setbar-width="thin"
     />
+    <ToggleList />
   </div>
 </template>
 
@@ -72,6 +73,7 @@ import Pagination from '~/components/tools/Pagination.vue';
 import PageHeader from '~/components/tools/PageHeader.vue';
 import Search from '~/components/model/Search.vue';
 import Bar from '~/components/tools/BarChart.vue';
+import ToggleList from '~/components/model/ToggleList.vue';
 
 export default {
   components: {
@@ -85,7 +87,8 @@ export default {
     Pagination: Pagination,
     PageHeader: PageHeader,
     Search: Search,
-    Bar: Bar
+    Bar: Bar,
+    ToggleList: ToggleList
   },
   data () {
     return {

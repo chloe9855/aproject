@@ -10,7 +10,7 @@ export default {
   props: {
     setbarLength: {
       type: Number,
-      default: 50
+      default: 0
     },
     setbarColor: {
       type: String,
