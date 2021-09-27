@@ -23,7 +23,7 @@
 </template>
 
 <script>
-import BarList from '~/components/model/BarListTest';
+import BarList from '~/components/model/BarList';
 export default {
   components: {
     BarList
