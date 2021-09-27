@@ -57,7 +57,11 @@
             >
               {{ item.title }}
             </th>
-            <th />
+            <th
+              v-if="optionLength>0"
+              :colspan="optionLength"
+              :style="{'min-width': (optionLength*35)+'px'}"
+            />
           </tr>
         </thead>
         <tbody>
@@ -389,7 +393,7 @@ export default {
   background: #FFF;
   table{
     border:1px solid $light-green;
-    white-space: nowrap;
+    //white-space: nowrap;
     thead{
         border-bottom: 5px solid $main-green;
         th{

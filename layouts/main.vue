@@ -2,15 +2,18 @@
   <div class="mainArea">
     <Header />
     <nuxt />
+    <Footer />
   </div>
 </template>
 
 <script>
 import Header from '~/components/model/Header';
+import Footer from '~/components/model/Footer';
 
 export default {
   components: {
-    Header
+    Header,
+    Footer
   }
 };
 </script>
@@ -18,5 +21,6 @@ export default {
 .mainArea{
     min-height: $vh-100;
     background: url('~/assets/img/mainBg.jpg') no-repeat center;
+    background-size: cover;
 }
 </style>

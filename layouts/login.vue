@@ -18,5 +18,6 @@ export default {
 .loginArea{
     min-height: $vh-100;
     background: url('~/assets/img/mainBg.jpg') no-repeat center;
+    background-size: cover;
 }
 </style>

@@ -33,6 +33,10 @@ export default {
     title: {
       type: String,
       default: '請設定查詢作業標題'
+    },
+    isArrow: {
+      type: Boolean,
+      default: false
     }
   },
   data () {
@@ -66,10 +70,6 @@ export default {
         title = this.titleList[icon];
       }
       return title;
-    },
-    isArrow () {
-      const icon = this.icon;
-      return !!(icon === 'edit' || icon === 'file');
     }
   }
 };
