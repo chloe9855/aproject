@@ -8,12 +8,16 @@
       icon="slider"
       :title="searchTitle"
     />
-    <component :is="componentInstance" />
+    <component
+      :is="componentInstance"
+      @search="(type) => { $emit('search', type) }"
+      @clear="$emit('clear')"
+    />
     <div
       class="toggleBtn"
       @click="toggleSearchBox"
     >
-      收合查詢列
+      {{ boxText }}
       <span :class="arrow" />
     </div>
   </div>
@@ -47,7 +51,8 @@ export default {
     return {
       toggleState: true,
       toggleBox: 'showBox',
-      arrow: 'arrowRight'
+      arrow: 'arrowRight',
+      boxText: '收合查詢列'
     };
   },
   name: 'SearchBox',
@@ -58,11 +63,13 @@ export default {
         this.toggleBox = 'hideBox';
         this.arrow = 'arrowLeft';
         this.toggleState = false;
+        this.boxText = '展開查詢列';
         this.$emit('showSidebar', false);
       } else {
         this.toggleBox = 'showBox';
         this.arrow = 'arrowRight';
         this.toggleState = true;
+        this.boxText = '收合查詢列';
         this.$emit('showSidebar', true);
       }
     },
@@ -70,12 +77,14 @@ export default {
       this.toggleBox = 'hideBox';
       this.arrow = 'arrowLeft';
       this.toggleState = false;
+      this.boxText = '展開查詢列';
       this.$emit('showSidebar', false);
     },
     showBar () {
       this.toggleBox = 'showBox';
       this.arrow = 'arrowRight';
       this.toggleState = true;
+      this.boxText = '收合查詢列';
       this.$emit('showSidebar', true);
     }
   },

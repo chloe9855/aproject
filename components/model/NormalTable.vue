@@ -9,7 +9,9 @@
           v-for="item in list"
           :key="item.id"
         >
-          <td>{{ item.name }}</td>
+          <td :class="{ 'set': shorten }">
+            {{ item.name }}
+          </td>
           <td>{{ item.value }}</td>
         </tr>
       </tbody>
@@ -24,6 +26,10 @@ export default {
     sizing: {
       type: String,
       default: 'h-480'
+    },
+    shorten: {
+      type: Boolean,
+      default: false
     }
   }
 };
@@ -31,8 +37,12 @@ export default {
 
 <style lang="scss" scoped>
 
+  .set {
+    width: 21%;
+  }
+
   .table_block {
-    width: 512px;
+    // width: 512px;
     height: 480px;
     overflow-y: auto;
     overflow-x: hidden;

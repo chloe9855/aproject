@@ -63,7 +63,7 @@ export default {
 <style lang="scss">
 
   .page_container {
-    display: inline-flex;
+    display: flex;
     align-items: center;
 
     p {
@@ -74,7 +74,6 @@ export default {
   .pageWrap {
     display: flex;
     justify-content: space-between;
-    width: 250px;
     @include noto-sans-tc-14-regular;
 
     li {
