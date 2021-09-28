@@ -50,6 +50,21 @@
       >
         <thead>
           <tr>
+            <th v-show="isCheck" />
+            <th
+              v-for="( item, index ) in tableColumn.topHead"
+              :key="index"
+              :colspan="item.col"
+            >
+              {{ item.title }}
+            </th>
+            <th
+              v-if="optionLength>0"
+              :colspan="optionLength"
+              :style="{'min-width': (optionLength*35)+'px'}"
+            />
+          </tr>
+          <tr>
             <th v-show="isCheck">
               <input
                 id="all"
@@ -484,6 +499,9 @@ export default {
             font-style: normal;
             font-weight: 500;
             text-align:left;
+            &.topHead{
+              border:1px solid #c4ded8;
+            }
         }
     }
     tbody{
