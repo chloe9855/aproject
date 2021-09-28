@@ -87,8 +87,11 @@ export default {
           { title: ['XXXX資料須填寫XXXX表單', '資料填寫表單 '] }
         ]
       },
-      BreadCrumb: ['首頁', '系統管理', '首頁資料管理']
+      BreadCrumb: ['系統管理', '首頁資料管理']
     };
+  },
+  mounted () {
+    console.log(this.$route);
   }
 };
 </script>
