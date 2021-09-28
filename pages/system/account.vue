@@ -14,7 +14,7 @@
     />
     <TableTool
       :table-column="tableList"
-      :is-paginate="false"
+      :is-paginate="true"
       :is-edit="true"
       :is-del="true"
       :class="boxWidth"
