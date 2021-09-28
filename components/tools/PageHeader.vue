@@ -22,9 +22,9 @@
     </h3>
     <Buttons
       v-show="isBtn"
-      :name="'button-add'"
+      :name="btnName"
       :text="btnText"
-      :add="true"
+      :add="btnAdd"
       @click="getBtnStatus"
     />
   </div>
@@ -49,9 +49,17 @@ export default {
       type: Boolean,
       default: false
     },
+    btnName: {
+      type: String,
+      default: 'button-add'
+    },
     btnText: {
       type: String,
       default: ''
+    },
+    btnAdd: {
+      type: Boolean,
+      default: false
     }
   },
   data () {

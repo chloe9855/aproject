@@ -89,6 +89,9 @@ export default {
         case 'compensateSearch':
           title = '停灌補償案件查詢';
           break;
+        case 'usageAmountSearch':
+          title = '系統使用量查詢';
+          break;
       }
       return title;
     }

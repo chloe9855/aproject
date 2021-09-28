@@ -6,38 +6,31 @@
     />
     <PageHeader
       icon="slider"
-      title="群組權限管理"
+      title="系統使用量統計"
       :class="boxWidth"
-      btn-text="新增群組"
-      btn-add="true"
-      btn-name="button-add"
+      btn-text="資料下載"
+      btn-name="button-primary"
     />
-    <TableTool
-      :table-column="tableList"
-      :is-paginate="false"
-      :is-edit="true"
-      :is-del="true"
-      :class="boxWidth"
-    />
+    <ToggleList :class="boxWidth" />
     <Search
-      type="userAcctSearch"
+      type="usageAmountSearch"
       @toggleStatus="getToggleStatus"
     />
   </div>
 </template>
 
 <script>
-import TableTool from '~/components/model/Table.vue';
 import PageHeader from '~/components/tools/PageHeader.vue';
 import BreadCrumbTool from '~/components/tools/BreadCrumbTool.vue';
 import Search from '~/components/model/Search.vue';
+import ToggleList from '~/components/model/ToggleList.vue';
 
 export default {
   components: {
     PageHeader,
-    TableTool,
     BreadCrumbTool,
-    Search: Search
+    Search: Search,
+    ToggleList: ToggleList
   },
   data () {
     return {
@@ -48,17 +41,17 @@ export default {
           { title: '最後變更日期' }
         ],
         body: [
-          { val: 0, title: ['XX工作站', '2012/12/17'] },
-          { val: 1, title: ['XX工作站', '2012/12/17'] },
-          { val: 2, title: ['OX工作站', '2012/12/17'] },
-          { val: 3, title: ['OO工作站', '2012/12/17'] },
-          { val: 4, title: ['XX工作站', '2012/12/17'] },
-          { val: 5, title: ['XX工作站', '2012/12/17'] },
-          { val: 6, title: ['OX工作站', '2012/12/17'] },
-          { val: 7, title: ['OO工作站', '2012/12/17'] }
+          { title: ['XX工作站', '2012/12/17'] },
+          { title: ['XX工作站', '2012/12/17'] },
+          { title: ['OX工作站', '2012/12/17'] },
+          { title: ['OO工作站', '2012/12/17'] },
+          { title: ['XX工作站', '2012/12/17'] },
+          { title: ['XX工作站', '2012/12/17'] },
+          { title: ['OX工作站', '2012/12/17'] },
+          { title: ['OO工作站', '2012/12/17'] }
         ]
       },
-      BreadCrumb: ['系統管理', '群組權限管理'],
+      BreadCrumb: ['系統管理', '系統使用量統計'],
       toggleStatus: false
     };
   },
@@ -79,20 +72,8 @@ export default {
 .page-header,.subTitleTool{
   margin: 1em auto !important;
 }
-.tableTool{
+.toggleList{
   margin: 0 auto !important;
-  .tableContent{
-    table{
-      tbody{
-        text-align: left !important;
-        tr{
-          td:nth-child(2){
-            width: 120px;
-          }
-        }
-      }
-    }
-  }
 }
 .downloadArea{
   display: flex;
