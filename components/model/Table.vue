@@ -72,7 +72,7 @@
           >
             <td
               v-show="isCheck"
-              :style="{'min-width':'35px'}"
+              :style="{'width':'35px'}"
             >
               <input
                 :id="'a'+index"
@@ -476,6 +476,7 @@ export default {
             font-family: Noto Sans TC;
             font-style: normal;
             font-weight: 500;
+            text-align:left;
         }
     }
     tbody{
@@ -492,6 +493,7 @@ export default {
           line-height: 33px;
           height: 33px;
           padding: 2px 10px;
+          text-align: left;
         }
     }
   }

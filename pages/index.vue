@@ -69,7 +69,7 @@ export default {
   layout: 'main'
 };
 </script>
-<style lang="scss">
+<style lang="scss" scoped>
 .page-header{
   margin: 1em auto !important;
 }
