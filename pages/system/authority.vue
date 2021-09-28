@@ -8,6 +8,7 @@
       icon="slider"
       title="群組權限管理"
       :class="boxWidth"
+      btn-text="新增群組"
     />
     <TableTool
       :table-column="tableList"

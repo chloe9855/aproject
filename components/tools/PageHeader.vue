@@ -20,11 +20,22 @@
     <h3 class="title">
       {{ mainTitle }}
     </h3>
+    <Buttons
+      v-show="isBtn"
+      :name="'button-add'"
+      :text="btnText"
+      :add="true"
+      @click="getBtnStatus"
+    />
   </div>
 </template>
 
 <script>
+import Buttons from '~/components/tools/Buttons.vue';
 export default {
+  components: {
+    Buttons
+  },
   props: {
     icon: {
       type: String,
@@ -37,6 +48,10 @@ export default {
     isArrow: {
       type: Boolean,
       default: false
+    },
+    btnText: {
+      type: String,
+      default: ''
     }
   },
   data () {
@@ -52,10 +67,16 @@ export default {
         file: '統計報表',
         password: '設定密碼',
         news: '最新消息'
-      }
+      },
+      btnStatus: false
     };
   },
   name: 'PageHeader',
+  methods: {
+    getBtnStatus (e) {
+      this.btnStatus = e;
+    }
+  },
   computed: {
     mainIcon () {
       const icon = this.icon;
@@ -70,6 +91,14 @@ export default {
         title = this.titleList[icon];
       }
       return title;
+    },
+    isBtn () {
+      const btnText = this.btnText;
+      if (btnText !== '') {
+        return true;
+      } else {
+        return false;
+      }
     }
   }
 };
