@@ -9,7 +9,7 @@
       title="帳號管理"
       :class="boxWidth"
       btn-text="新增帳號"
-      btn-add="true"
+      :btn-add="true"
       btn-name="button-add"
     />
     <TableTool

@@ -9,7 +9,7 @@
       title="群組權限管理"
       :class="boxWidth"
       btn-text="新增群組"
-      btn-add="true"
+      :btn-add="true"
       btn-name="button-add"
     />
     <TableTool

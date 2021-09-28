@@ -50,7 +50,14 @@
       >
         <thead>
           <tr>
-            <th v-show="isCheck" />
+            <th v-show="isCheck">
+              <input
+                id="all"
+                type="checkBox"
+                name="all"
+                value="all"
+              ><label for="all" />
+            </th>
             <th
               v-for="( item, index ) in tableColumn.head"
               :key="index"
