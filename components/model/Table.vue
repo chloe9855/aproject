@@ -49,7 +49,7 @@
         class="w-100"
       >
         <thead>
-          <tr>
+          <tr v-if="!!tableColumn.topHead">
             <th v-show="isCheck" />
             <th
               v-for="( item, index ) in tableColumn.topHead"
@@ -124,6 +124,12 @@
                 :input-id="item.id"
                 :input-text="text.title"
                 @inputValue="inputVal"
+              />
+              <Dropdown
+                v-else-if="typeof text === 'object' && text.type === 'dropdown'"
+                :key="item.id"
+                :input-id="item.id"
+                :input-text="text.title"
               />
               <DatePicker
                 v-else-if="typeof text === 'object' && text.type === 'date'"
@@ -296,17 +302,19 @@
 
 <script>
 import Paginate from '~/components/tools/Paginate';
-import Tag from '~/components/tools/Tag.vue';
-import Button from '~/components/tools/Buttons.vue';
-import Input from '~/components/tools/InputTool.vue';
+import Tag from '~/components/tools/Tag';
+import Button from '~/components/tools/Buttons';
+import Input from '~/components/tools/InputTool';
 import DatePicker from '~/components/tools/DatePicker';
+import Dropdown from '~/components/tools/Dropdown';
 export default {
   components: {
     Paginate,
     Tag,
     Button,
     Input,
-    DatePicker
+    DatePicker,
+    Dropdown
   },
   props: {
     options: {

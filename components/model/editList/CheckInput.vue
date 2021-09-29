@@ -43,13 +43,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.check-input-box{
-    div{
-        span{
-            //margin: 0 1em;
-        }
-    }
-}
 .flexCheckBox{
   min-width: 180px;
 }
