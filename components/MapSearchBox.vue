@@ -2,7 +2,7 @@
   <div class="search_container">
     <div
       class="search_box"
-      :class="{'no_radius': columnList.length >= 1 }"
+      :class="{'no_radius': columnList.length >= 1 && (barOptions.current === 0 || barOptions.current === 3) }"
     >
       <NavTabs-component
         :type-list="barOptions.typeList"

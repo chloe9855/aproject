@@ -1,6 +1,5 @@
 <template>
   <div class="wrapper">
-    <Header-component />
     <div class="main">
       <NavTabs-component
         :type-list="options.typeList"
@@ -101,13 +100,10 @@
       <br>
       <TreeSelect-component />
     </div>
-    <Footer-component />
   </div>
 </template>
 
 <script>
-import Header from '~/components/model/Header';
-import Footer from '~/components/model/Footer';
 import NavTabs from '~/components/tools/NavTabs.vue';
 import Feature from '~/components/Feature.vue';
 import SwitchTabs from '~/components/tools/SwitchTabs.vue';
@@ -123,8 +119,6 @@ import TreeSelect from '~/components/tools/TreeSelect.vue';
 
 export default {
   components: {
-    'Header-component': Header,
-    'Footer-component': Footer,
     'NavTabs-component': NavTabs,
     'Feature-component': Feature,
     'SwitchTabs-component': SwitchTabs,
