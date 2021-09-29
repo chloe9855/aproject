@@ -46,7 +46,7 @@
               class="layer__list"
             >
               <div
-                v-for="item in layerOptions.surfaceList"
+                v-for="item in layerOptions.lineList"
                 :key="item.id"
                 class="layer__item"
               >
@@ -366,7 +366,8 @@ export default {
             id: 5
           }
         ],
-        surfaceList: []
+        surfaceList: [],
+        lineList: []
       },
       ogcOptions: {
         current: 0,
@@ -424,7 +425,9 @@ export default {
   // layout: 'map',
   mounted () {
     const surface = require('~/static/surfaceLayer.json');
+    const line = require('~/static/lineLayer.json');
     this.layerOptions.surfaceList = [...surface.data];
+    this.layerOptions.lineList = [...line.data];
   },
   methods: {
     // * 控制視窗顯示
@@ -537,7 +540,7 @@ export default {
 
   .hide_block {
     transition: transform 0.4s;
-    transform: translateY(97.5%);
+    transform: translateY(62.5%);
   }
 
   .show_block {
@@ -733,7 +736,7 @@ export default {
     background: white;
     z-index: 100000;
     width: 100%;
-    height: 372px;
+    height: 430px;
   }
 
   .checkBoxOption{

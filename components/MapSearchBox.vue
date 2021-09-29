@@ -16,7 +16,7 @@
       />
     </div>
     <div
-      v-if="columnList.length >= 1"
+      v-if="columnList.length >= 1 && (barOptions.current === 0 || barOptions.current === 3)"
       class="content_block"
       :class="{'hide_block': hideResult, 'show_block': !hideResult}"
     >

@@ -6,6 +6,9 @@
     <div class="input-title-box">
       <p class="input-title">
         {{ title }}
+        <span class="starSign">
+          {{ starSign }}
+        </span>
       </p>
     </div>
     <select
@@ -43,6 +46,10 @@ export default {
     sizing: {
       type: String,
       default: 'w-100'
+    },
+    starSign: {
+      type: String,
+      default: ''
     }
   },
   data: () => {
@@ -71,6 +78,10 @@ export default {
 .add_bg {
   background-color: #DBE4E2;
   border: none !important;
+}
+
+.starSign {
+  color: red;
 }
 
 </style>
