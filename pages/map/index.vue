@@ -307,6 +307,7 @@
             :table-column="searchResult.channel"
             :is-check="false"
             :is-map="true"
+            :is-paginate="false"
           />
         </div>
       </div>
