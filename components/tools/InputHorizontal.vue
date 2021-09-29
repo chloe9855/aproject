@@ -34,6 +34,7 @@
         :type="inputType"
         :disabled="isDisable === true"
       >
+      <InputTool v-show="isSecondInput" />
       <img
         v-show="isAddIcon"
         :src="iconImg"
@@ -45,7 +46,11 @@
 </template>
 
 <script>
+import InputTool from '~/components/tools/InputTool';
 export default {
+  components: {
+    InputTool
+  },
   props: {
     name: {
       type: String,
@@ -82,6 +87,10 @@ export default {
     isIcon: {
       type: String,
       default: ''
+    },
+    isSecondInput: {
+      type: Boolean,
+      default: false
     }
   },
   data: () => {
@@ -149,6 +158,7 @@ export default {
 .input-title {
   color: $header-black;
   margin-right: 10px;
+  min-width: 120px;
   @include noto-sans-tc-16-medium;
 }
 .input-error {
@@ -158,7 +168,6 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
-  flex: 1;
   border: 1px solid $caution-red;
 }
 </style>
