@@ -380,7 +380,7 @@ export default {
 .tableTool{
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: flex-end;
   flex-direction: column;
   position: relative;
 }

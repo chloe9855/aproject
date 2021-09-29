@@ -12,17 +12,17 @@
         <span>0</span>
       </div>
 
-      <input
-        id="inp1"
-        type="checkbox"
-        class="styled-checkbox"
-      >
-      <label
-        for="inp1"
-        class="oneIn"
-      >
-        反向
-      </label>
+      <div class="theme_checkbox">
+        <input
+          id="check1"
+          type="checkbox"
+        >
+        <label
+          for="check1"
+        >
+          反向
+        </label>
+      </div>
 
       <div class="meme">
         <span>椿號定位</span>
@@ -36,9 +36,17 @@
           sizing="w-30"
         />
       </div>
-      <label class="oneIn">
-        <input type="checkbox">使用環域(公尺 : 最大200公尺)
-      </label>
+      <div class="theme_checkbox box_margin">
+        <input
+          id="check2"
+          type="checkbox"
+        >
+        <label
+          for="check2"
+        >
+          使用環域(公尺 : 最大200公尺)
+        </label>
+      </div>
       <div class="wrap2">
         <InputTool-component
           :input-text="'地籍資料'"
@@ -103,84 +111,68 @@ export default {
 
 <style lang="scss" scoped>
 
-  .styled-checkbox {
-  position: absolute; // take it out of document flow
-  opacity: 0; // hide it
+  .theme_checkbox {
+    input {
+    position: absolute; // take it out of document flow
+    opacity: 0; // hide it
 
-  & + label {
-    position: relative;
-    cursor: pointer;
-    padding: 0;
+      & + label {
+        position: relative;
+        cursor: pointer;
+        padding: 0;
+      }
+
+      // Box.
+      & + label::before {
+        content: '';
+        margin-right: 7px;
+        margin-bottom: -2px;
+        display: inline-block;
+        width: 13px;
+        height: 13px;
+        background: white;
+        border: 1px solid #959595;
+        border-radius: 3px;
+      }
+
+      // Box checked
+      &:checked + label::before {
+        content: '';
+        background: url('~/assets/img/checkbox.svg') no-repeat right/contain;
+        width: 15px;
+        height: 15px;
+        border: none;
+      }
+
+      &:disabled + label {
+        color: #b8b8b8;
+        cursor: auto;
+      }
+
+      &:disabled + label::before {
+        box-shadow: none;
+        background: #ddd;
+      }
+
+    }
+
+    label {
+      color: #494949;
+      display: flex;
+      align-items: center;
+      @include noto-sans-tc-16-regular;
+    }
   }
 
-  // Box.
-  & + label::before {
-    content: '';
-    margin-right: 10px;
-    display: inline-block;
-    vertical-align: text-top;
-    width: 20px;
-    height: 20px;
-    background: white;
+  .box_margin {
+    margin: 3px 0;
   }
-
-  // Box hover
-  &:hover + label::before {
-    background: #f35429;
-  }
-
-  // Box focus
-  &:focus + label::before {
-    box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.12);
-  }
-
-  // Box checked
-  &:checked + label::before {
-    background: #f35429;
-  }
-
-  // Disabled state label.
-  &:disabled + label {
-    color: #b8b8b8;
-    cursor: auto;
-  }
-
-  // Disabled box.
-  &:disabled + label::before {
-    box-shadow: none;
-    background: #ddd;
-  }
-
-  // Checkmark. Could be replaced with an image
-  &:checked + label::after {
-    content: '';
-    position: absolute;
-    left: 5px;
-    top: 9px;
-    background: white;
-    width: 2px;
-    height: 2px;
-    box-shadow:
-      2px 0 0 white,
-      4px 0 0 white,
-      4px -2px 0 white,
-      4px -4px 0 white,
-      4px -6px 0 white,
-      4px -8px 0 white;
-    transform: rotate(45deg);
-  }
-}
 
   .bt_wrap {
     padding: 8px 0 0;
     display: flex;
     justify-content: flex-end;
     align-items: center;
-  }
-
-  .oneIn {
-    color: #494949;
-    @include noto-sans-tc-16-regular;
   }
 
   .out_wrap {
