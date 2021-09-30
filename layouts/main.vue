@@ -8,7 +8,7 @@
       type="editAccount"
     />
     <MaskTool :is-active="togglePopup" />
-    <Footer :set-position="true" />
+    <Footer />
   </div>
 </template>
 
@@ -37,5 +37,6 @@ export default {
     min-height: $vh-100;
     background: url('~/assets/img/mainBg.jpg') no-repeat center;
     background-size: cover;
+    position: relative;
 }
 </style>

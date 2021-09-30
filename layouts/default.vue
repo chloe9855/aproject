@@ -40,7 +40,8 @@ export default {
 <style lang="scss" scoped>
 
  .mainArea {
-   height: 100vh;
+   min-height: 100vh;
+   position: relative;
  }
 
 </style>
