@@ -20,11 +20,34 @@
     <h3 class="title">
       {{ mainTitle }}
     </h3>
+    <div>
+      <Buttons
+        v-show="isBtn"
+        :name="btnName"
+        :text="btnText"
+        :add="btnAdd"
+        @click="getBtnStatus"
+      />
+      <Buttons
+        v-show="isSecBtn"
+        :name="btnSecName"
+        :text="btnSecText"
+        :add="btnSecAdd"
+        @click="getSecBtnStatus"
+      />
+    </div>
+    <div class="tips">
+      <span>{{ tips }}</span>
+    </div>
   </div>
 </template>
 
 <script>
+import Buttons from '~/components/tools/Buttons.vue';
 export default {
+  components: {
+    Buttons
+  },
   props: {
     icon: {
       type: String,
@@ -32,7 +55,39 @@ export default {
     },
     title: {
       type: String,
-      default: '請設定查詢作業標題'
+      default: ''
+    },
+    tips: {
+      type: String,
+      default: ''
+    },
+    isArrow: {
+      type: Boolean,
+      default: false
+    },
+    btnName: {
+      type: String,
+      default: 'button-add'
+    },
+    btnText: {
+      type: String,
+      default: ''
+    },
+    btnAdd: {
+      type: Boolean,
+      default: false
+    },
+    btnSecName: {
+      type: String,
+      default: 'button-add'
+    },
+    btnSecText: {
+      type: String,
+      default: ''
+    },
+    btnSecAdd: {
+      type: Boolean,
+      default: false
     }
   },
   data () {
@@ -48,10 +103,20 @@ export default {
         file: '統計報表',
         password: '設定密碼',
         news: '最新消息'
-      }
+      },
+      btnStatus: false,
+      btnSecStatus: false
     };
   },
   name: 'PageHeader',
+  methods: {
+    getBtnStatus (e) {
+      this.btnStatus = e;
+    },
+    getSecBtnStatus (e) {
+      this.btnSecStatus = e;
+    }
+  },
   computed: {
     mainIcon () {
       const icon = this.icon;
@@ -60,16 +125,28 @@ export default {
     mainTitle () {
       const icon = this.icon;
       let title;
-      if (icon === 'slider') {
+      if (icon === 'slider' || this.title !== '') {
         title = this.title;
       } else {
         title = this.titleList[icon];
       }
       return title;
     },
-    isArrow () {
-      const icon = this.icon;
-      return !!(icon === 'edit' || icon === 'file');
+    isBtn () {
+      const btnText = this.btnText;
+      if (btnText !== '') {
+        return true;
+      } else {
+        return false;
+      }
+    },
+    isSecBtn () {
+      const btnText = this.btnSecText;
+      if (btnText !== '') {
+        return true;
+      } else {
+        return false;
+      }
     }
   }
 };
@@ -79,6 +156,9 @@ export default {
 .page-header {
   display: flex;
   align-items: center;
+  border-bottom:1px solid #C4DED8;
+  padding-bottom: 5px;
+  margin: 1em auto;
 }
 .arrow {
   margin-right: 5px;
@@ -107,5 +187,16 @@ export default {
   width: 24px;
   height: 24px;
   position: relative;
+}
+.button_wrap{
+  margin: 0 2.5px;
+}
+.tips{
+  font-family: Noto Sans TC;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 20px;
+  color: #21705D;
 }
 </style>

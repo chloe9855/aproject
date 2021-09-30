@@ -1,14 +1,32 @@
 <template>
   <nav class="breadcrumb">
     <ol>
-      <li
-        v-for="(item , index) in options"
-        :key="index"
-      >
-        {{ item }}
+      <li>
+        <nuxt-link
+          class="crumbTitle"
+          to="/"
+        >
+          首頁
+        </nuxt-link>
         <span>
           <img
-            v-if="index < options.length-1"
+            :src="require('~/assets/img/arrow-right.svg')"
+          >
+        </span>
+      </li>
+      <li
+        v-for="(item , index) in crumbTitleData.data"
+        :key="index"
+      >
+        <nuxt-link
+          class="crumbTitle"
+          :to="item.path"
+        >
+          {{ item.name }}
+        </nuxt-link>
+        <span>
+          <img
+            v-if="index < crumbTitleData.data.length-1"
             alt=""
             :src="require('~/assets/img/arrow-right.svg')"
           >
@@ -29,27 +47,64 @@ export default {
     }
   },
   data () {
-    return {};
+    return {
+      routerData: []
+    };
   },
-  name: 'BreadCrumb'
+  name: 'BreadCrumb',
+  mounted () {
+    this.routerData = this.$route.matched;
+  },
+  methods: {
+    test (item) {
+      return item.split('-');
+    }
+  },
+  computed: {
+    crumbTitleData: function () {
+      const routerData = this.routerData;
+      const nameData = this.options;
+      const result = {};
+      let pathArr = [];
+      let i = 0;
+      let path = '/';
+      result.data = [];
+      routerData.forEach(function (item) {
+        pathArr = (item.path.split('/'));
+        pathArr.shift();
+      });
+      while (i < pathArr.length) {
+        path += pathArr[i] + '/';
+        result.data.push({ name: nameData[i], path: path });
+        i++;
+      }
+      return result;
+    }
+  },
+  watch: {
+    $route () {
+      this.routerData = this.$route.matched;
+    }
+  }
 };
 </script>
 <style lang="scss" scoped>
 .breadcrumb{
   display: flex;
+  margin: 1em auto;
   ol{
     li{
-      font-family: Noto Sans TC;
-      font-style: normal;
-      font-weight: 500;
-      font-size: 16px;
       line-height: 23px;
       align-items: center;
       text-align: center;
       display: inline-block;
-
-      /* dark-green */
-      color: #21705D;
+      .crumbTitle{
+        font-family: Noto Sans TC;
+        font-style: normal;
+        font-weight: 500;
+        font-size: 16px;
+        color: #21705D;
+      }
       span{
         margin: 2px;
         img{

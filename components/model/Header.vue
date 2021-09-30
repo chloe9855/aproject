@@ -125,47 +125,47 @@ export default {
         },
         {
           name: '灌溉地管理',
-          path: '/'
+          path: '/irrigatedLand'
         },
         {
           name: '系統管理',
-          path: '/'
+          path: '/system'
         }
       ],
       sideList1: [
         {
           name: '灌溉地籍查詢',
-          path: '/'
+          path: '/irrigatedLand'
         },
         {
           name: '停灌補償申報',
-          path: '/'
+          path: '/irrigatedLand/compensate'
         },
         {
           name: '停灌資料異動',
-          path: '/'
+          path: '/irrigatedLand/dataChange'
         },
         {
           name: '統計報表',
-          path: '/'
+          path: '/irrigatedLand/report'
         }
       ],
       sideList2: [
         {
           name: '帳號管理',
-          path: '/'
+          path: '/system'
         },
         {
           name: '群組權限管理',
-          path: '/'
+          path: '/system/authority'
         },
         {
           name: '首頁資料管理',
-          path: '/'
+          path: '/system/editNews'
         },
         {
           name: '系統使用量統計',
-          path: '/'
+          path: '/system/statistics'
         }
       ],
       listOne: false,

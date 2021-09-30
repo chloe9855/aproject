@@ -87,6 +87,18 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+
+ul{
+    li{
+      &:nth-child(odd){
+        background: #F5F5F5;
+      }
+      &:nth-child(even){
+        background: #FFF;
+      }
+    }
+}
+
 .listItem{
     display: flex;
     align-content: center;

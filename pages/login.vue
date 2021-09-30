@@ -46,6 +46,7 @@ export default {
       title: '農田水利灌溉管理整合雲系統'
     };
   },
+  name: 'Login',
   layout: 'login'
 };
 </script>
