@@ -72,6 +72,7 @@ export default {
       toggleStatus: false
     };
   },
+  name: 'LandSearch',
   methods: {
     getToggleStatus (e) {
       this.toggleStatus = e;
@@ -86,15 +87,12 @@ export default {
 };
 </script>
 <style lang="scss">
-.page-header{
-  margin: 1em auto !important;
-}
 .calNoteBox{
     display: flex;
     justify-content:flex-end;
     margin: 0 auto;
     div{
-        margin: 0 2.5px;
+      margin: 0 2.5px;
     }
 }
 .tableTool{
@@ -107,8 +105,4 @@ export default {
     }
   }
 }
-.breadcrumb{
-  margin: 1em auto !important;
-}
-
 </style>

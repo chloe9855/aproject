@@ -37,7 +37,6 @@ export default {
   },
   data () {
     return {
-      member: { option: [{ title: '預設選項', value: '0' }, { title: '工作站人員', value: '1' }, { title: '管理人員', value: '2' }, { title: '民眾', value: '3' }] },
       tableList: {
         head: [
           { title: '公告名稱' },
@@ -66,15 +65,12 @@ export default {
       }
     };
   },
+  name: 'Main',
   layout: 'main'
 };
 </script>
 <style lang="scss" scoped>
-.page-header{
-  margin: 1em auto !important;
-}
 .tableTool{
-  margin: 0 auto !important;
   .tableContent{
     table{
       tbody{

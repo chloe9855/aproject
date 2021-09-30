@@ -40,13 +40,11 @@ export default {
   data () {
     return {};
   },
+  name: 'PwdSetting',
   layout: 'main'
 };
 </script>
 <style lang="scss">
-.page-header{
-  margin: 1em auto !important;
-}
 .pwdSetting{
   display: flex;
   margin: 10vh auto;

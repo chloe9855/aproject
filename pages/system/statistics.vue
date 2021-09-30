@@ -34,7 +34,6 @@ export default {
   },
   data () {
     return {
-      member: { option: [{ title: '預設選項', value: '0' }, { title: '工作站人員', value: '1' }, { title: '管理人員', value: '2' }, { title: '民眾', value: '3' }] },
       tableList: {
         head: [
           { title: '群組名稱' },
@@ -55,6 +54,7 @@ export default {
       toggleStatus: false
     };
   },
+  name: 'Statistics',
   methods: {
     getToggleStatus (e) {
       this.toggleStatus = e;
@@ -69,12 +69,6 @@ export default {
 };
 </script>
 <style lang="scss">
-.page-header,.subTitleTool{
-  margin: 1em auto !important;
-}
-.toggleList{
-  margin: 0 auto !important;
-}
 .downloadArea{
   display: flex;
   margin: 0 auto;
@@ -95,8 +89,4 @@ export default {
     margin-right: 1em !important;
   }
 }
-.breadcrumb{
-  margin: 1em auto !important;
-}
-
 </style>

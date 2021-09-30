@@ -75,7 +75,6 @@ export default {
   },
   data () {
     return {
-      member: { option: [{ title: '預設選項', value: '0' }, { title: '工作站人員', value: '1' }, { title: '管理人員', value: '2' }, { title: '民眾', value: '3' }] },
       tableList1: {
         head: [
           { title: '事件名稱' },
@@ -97,13 +96,11 @@ export default {
           { val: 1, title: [{ type: 'input' }, { type: 'input' }] }
         ]
       },
-      checkList: { data: [{ title: '全選', value: 'all' }, { title: '1.身分證(正反)影本', value: 0 }, { title: '2.金融帳戶影本', value: 1 }, { title: '3.附件一:切結書', value: 2 }, { title: '4.附件二:實耕者證明文件', value: 3 }, { title: '5.代理委任書:(授權書或同意書)', value: 4 }] },
       BreadCrumb: ['灌溉地管理', '停灌補償申報', '編輯停灌補償申請事件'],
-      toggleStatus: false,
-      RequisitionDqata1: { data: [{ title: '姓名', name: '', isRequire: true }, { title: '身份證字號', name: '', isRequire: true }, { title: '出生日期', name: '', isRequire: true }, { title: '地址', name: '', isRequire: true }, { title: '連絡電話', name: '', isRequire: true }, { title: '匯款資訊', name: '', isRequire: true, isSecondInput: true }] },
-      RequisitionDqata2: { data: [{ title: '代理人姓名', name: '', isRequire: true }, { title: '代理人身份證字號', name: '', isRequire: true }, { title: '代理人地址', name: '', isRequire: true }, { title: '代理人連絡電話', name: '', isRequire: true }] }
+      toggleStatus: false
     };
   },
+  name: 'EditCompensateEvent',
   methods: {
     getToggleStatus (e) {
       this.toggleStatus = e;
@@ -118,11 +115,7 @@ export default {
 };
 </script>
 <style lang="scss">
-.page-header{
-  margin: 1em auto !important;
-}
 .tableTool{
-  margin: 0 auto !important;
   .tableContent{
     table{
       tbody{
@@ -130,11 +123,5 @@ export default {
       }
     }
   }
-}
-.breadcrumb{
-  margin: 1em auto !important;
-}
-.subTitleTool{
-  margin: 1em auto !important;
 }
 </style>

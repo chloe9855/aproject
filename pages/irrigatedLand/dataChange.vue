@@ -56,6 +56,7 @@ export default {
       toggleStatus: false
     };
   },
+  name: 'DataChange',
   computed: {
     boxWidth () {
       const setWidth = this.toggleStatus ? 'tg-75' : 'w-90';
@@ -65,9 +66,6 @@ export default {
 };
 </script>
 <style lang="scss">
-.page-header{
-  margin: 1em auto !important;
-}
 .calNoteBox{
     display: flex;
     justify-content:flex-end;
@@ -77,7 +75,6 @@ export default {
     }
 }
 .tableTool{
-  margin: 0 auto !important;
   .tableContent{
     table{
       tbody{
@@ -86,8 +83,4 @@ export default {
     }
   }
 }
-.breadcrumb{
-  margin: 1em auto !important;
-}
-
 </style>

@@ -72,6 +72,7 @@ export default {
       toggleStatus: false
     };
   },
+  name: 'IrrigatedLand',
   methods: {
     getToggleStatus (e) {
       this.toggleStatus = e;
@@ -85,10 +86,7 @@ export default {
   }
 };
 </script>
-<style lang="scss">
-.page-header{
-  margin: 1em auto !important;
-}
+<style lang="scss" scoped>
 .calNoteBox{
     display: flex;
     justify-content:flex-end;
@@ -98,7 +96,6 @@ export default {
     }
 }
 .tableTool{
-  margin: 0 auto !important;
   .tableContent{
     table{
       tbody{
@@ -107,8 +104,4 @@ export default {
     }
   }
 }
-.breadcrumb{
-  margin: 1em auto !important;
-}
-
 </style>

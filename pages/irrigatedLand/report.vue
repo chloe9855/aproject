@@ -69,22 +69,10 @@ export default {
       BreadCrumb: ['灌溉地管理', '統計報表']
     };
   },
-  methods: {
-  },
-  computed: {
-  }
+  name: 'Report'
 };
 </script>
 <style lang="scss" scoped>
-.page-header{
-  margin: 1em auto !important;
-}
-.breadcrumb{
-  margin: 1em auto !important;
-}
-.subTitleTool{
-  margin: 1em auto !important;
-}
 .treeListBox{
   margin: 1em auto !important;
   display: flex;

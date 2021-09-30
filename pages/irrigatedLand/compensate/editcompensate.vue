@@ -83,7 +83,6 @@ export default {
   },
   data () {
     return {
-      member: { option: [{ title: '預設選項', value: '0' }, { title: '工作站人員', value: '1' }, { title: '管理人員', value: '2' }, { title: '民眾', value: '3' }] },
       tableList: {
         topHead: [
           { title: '土地資料', col: 4 },
@@ -126,6 +125,7 @@ export default {
       RequisitionDqata2: { data: [{ title: '代理人姓名', name: '', isRequire: true }, { title: '代理人身份證字號', name: '', isRequire: true }, { title: '代理人地址', name: '', isRequire: true }, { title: '代理人連絡電話', name: '', isRequire: true }] }
     };
   },
+  name: 'EditCompensate',
   methods: {
     getToggleStatus (e) {
       this.toggleStatus = e;
@@ -143,9 +143,6 @@ export default {
 };
 </script>
 <style lang="scss">
-.page-header{
-  margin: 1em auto !important;
-}
 .calNoteBox{
     display: flex;
     justify-content:flex-end;
@@ -155,7 +152,6 @@ export default {
     }
 }
 .tableTool{
-  margin: 0 auto !important;
   .tableContent{
     table{
       tbody{
@@ -163,12 +159,6 @@ export default {
       }
     }
   }
-}
-.breadcrumb{
-  margin: 1em auto !important;
-}
-.subTitleTool{
-  margin: 1em auto !important;
 }
 .editListBox{
   .Box4{

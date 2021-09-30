@@ -158,6 +158,7 @@ export default {
   align-items: center;
   border-bottom:1px solid #C4DED8;
   padding-bottom: 5px;
+  margin: 1em auto;
 }
 .arrow {
   margin-right: 5px;

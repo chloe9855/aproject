@@ -490,6 +490,7 @@ export default {
   align-items: center;
   flex-direction: column;
   position: relative;
+  margin: 0 auto;
 }
 .tableBox{
   flex:1;
