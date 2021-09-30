@@ -261,7 +261,7 @@ export default {
 
   .content_block {
     // border: 1px solid purple;
-    width: calc(100% - 414px);
+    width: calc(100% - 372px);
     position: absolute;
     right: 0;
     transition: ease-in-out 0.4s;
