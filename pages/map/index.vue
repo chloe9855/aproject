@@ -46,7 +46,7 @@
               class="layer__list"
             >
               <div
-                v-for="item in layerOptions.surfaceList"
+                v-for="item in layerOptions.lineList"
                 :key="item.id"
                 class="layer__item"
               >
@@ -80,7 +80,7 @@
               class="layer__list"
             >
               <div
-                v-for="item in layerOptions.surfaceList"
+                v-for="item in layerOptions.baseLayerList"
                 :key="item.id"
                 class="layer__item"
               >
@@ -160,10 +160,18 @@
                 class="ogc_table1"
               >
                 <div class="og_title">
-                  <label class="title">
-                    <input type="checkbox">
-                    圖層名稱
-                  </label>
+                  <div class="theme_checkbox">
+                    <input
+                      id="c1"
+                      type="checkbox"
+                    >
+                    <label
+                      for="c1"
+                      class="title"
+                    >
+                      圖層名稱
+                    </label>
+                  </div>
                 </div>
                 <div class="og_item_wrap theme_scrollbar">
                   <div
@@ -171,10 +179,17 @@
                     :key="ogItem.id"
                     class="og_item"
                   >
-                    <label class="title">
-                      <input type="checkbox">
-                      {{ ogItem.name }}
-                    </label>
+                    <div class="theme_checkbox">
+                      <input
+                        :id="ogItem.id"
+                        type="checkbox"
+                      >
+                      <label
+                        :for="ogItem.id"
+                      >
+                        {{ ogItem.name }}
+                      </label>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -292,6 +307,7 @@
             :table-column="searchResult.channel"
             :is-check="false"
             :is-map="true"
+            :is-paginate="false"
           />
         </div>
       </div>
@@ -366,7 +382,9 @@ export default {
             id: 5
           }
         ],
-        surfaceList: []
+        surfaceList: [],
+        lineList: [],
+        baseLayerList: []
       },
       ogcOptions: {
         current: 0,
@@ -424,7 +442,11 @@ export default {
   // layout: 'map',
   mounted () {
     const surface = require('~/static/surfaceLayer.json');
+    const line = require('~/static/lineLayer.json');
+    const base = require('~/static/baseLayer.json');
     this.layerOptions.surfaceList = [...surface.data];
+    this.layerOptions.lineList = [...line.data];
+    this.layerOptions.baseLayerList = [...base.data];
   },
   methods: {
     // * 控制視窗顯示
@@ -537,7 +559,7 @@ export default {
 
   .hide_block {
     transition: transform 0.4s;
-    transform: translateY(97.5%);
+    transform: translateY(62.5%);
   }
 
   .show_block {
@@ -656,6 +678,7 @@ export default {
       .og_item {
         padding: 8px 0;
         color: #494949;
+        padding-left: 7px;
         @include noto-sans-tc-16-regular-line16;
       }
 
@@ -682,6 +705,13 @@ export default {
     .og_title {
         border-bottom:  5px solid #3E9F88;
         padding: 7px 0;
+        padding-left: 7px;
+        @include noto-sans-tc-16-medium;
+    }
+
+    .title {
+      color: $header-black;
+      @include noto-sans-tc-16-medium;
     }
 
     .ogc_table2 {
@@ -733,7 +763,7 @@ export default {
     background: white;
     z-index: 100000;
     width: 100%;
-    height: 372px;
+    height: 430px;
   }
 
   .checkBoxOption{

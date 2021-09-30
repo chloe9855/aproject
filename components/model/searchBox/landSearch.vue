@@ -11,17 +11,24 @@
     >
       <DropdownVertical
         title="縣市"
+        star-sign="*"
         :options="member"
       />
       <DropdownVertical
         title="鄉鎮市區"
+        star-sign="*"
         :options="member"
       />
       <DropdownVertical
         title="段名"
+        star-sign="*"
         :options="member"
       />
-      <InputVertical title="地號" />
+      <InputVertical
+        title="地號"
+        green-hint="地號範圍:0"
+        star-sign="*"
+      />
     </div>
     <div
       v-if="options.current === 1"

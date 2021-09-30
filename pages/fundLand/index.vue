@@ -21,15 +21,19 @@
           :is-map="true"
           :is-search="true"
           :is-check="false"
+          @clickIcon="showDetailHandler"
         />
-        <div
-          v-if="searchResult.authority !== ''"
-          @click="addDetail(true)"
-        >
-          看詳細
-        </div>
 
-        <div v-if="searchResult.landNo !== ''">
+        <div
+          v-if="searchResult.landNo !== ''"
+          class="landno_wrap"
+        >
+          <div class="btn_wrap2">
+            <Buttons
+              :name="'button-primary'"
+              :text="'在地圖上顯示'"
+            />
+          </div>
           <NavTabs
             :type-list="options.typeList"
             :selected="options.current"
@@ -58,6 +62,13 @@
           class="close_icon"
           @click="addDetail(false)"
         />
+        <div class="btn_wrap">
+          <Buttons
+            :name="'button-primary'"
+            :text="'在地圖上顯示'"
+          />
+        </div>
+
         <NavTabs
           :type-list="options.typeList"
           :selected="options.current"
@@ -79,6 +90,7 @@ import PageHeader from '~/components/tools/PageHeader.vue';
 import Table from '~/components/model/Table.vue';
 import NormalTable from '~/components/model/NormalTable.vue';
 import NavTabs from '~/components/tools/NavTabs.vue';
+import Buttons from '~/components/tools/Buttons.vue';
 
 export default {
   components: {
@@ -87,7 +99,8 @@ export default {
     PageHeader: PageHeader,
     Table: Table,
     NormalTable: NormalTable,
-    NavTabs: NavTabs
+    NavTabs: NavTabs,
+    Buttons: Buttons
   },
   data () {
     return {
@@ -206,6 +219,11 @@ export default {
         _searchFund.showBar();
       }
     },
+    showDetailHandler (payload) {
+      if (payload === 'isSearch') {
+        this.addDetail(true);
+      }
+    },
     searchHandler (type) {
       this.clearAllHandler();
       if (type === 0) {
@@ -258,7 +276,7 @@ export default {
   }
 
   .right_content {
-    width: 850px;
+    width: 853px;
     box-shadow: -1px 0 5px rgba(135, 135, 135, 0.28);
     padding: 40px 10px 10px;
     position: relative;
@@ -286,6 +304,22 @@ export default {
     color: #3E9F88;
     height: 450px;
     @include noto-sans-tc-16-regular;
+  }
+
+  .btn_wrap {
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  .btn_wrap2 {
+    display: inline-flex;
+    position: absolute;
+    right: 0;
+    top: -33px;
+  }
+
+  .landno_wrap {
+    position: relative;
   }
 
 </style>

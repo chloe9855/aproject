@@ -380,7 +380,7 @@ export default {
 .tableTool{
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: flex-end;
   flex-direction: column;
   position: relative;
 }
@@ -403,6 +403,8 @@ export default {
     }
     tbody{
         text-align: center;
+        color: #494949;
+        @include noto-sans-tc-16-regular;
         tr{
           &:nth-child(odd){
             background: #F5F5F5;
