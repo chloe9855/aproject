@@ -70,6 +70,7 @@ export default {
     @include noto-sans-tc-16-medium;
 }
 .textarea-box{
+    margin: 0 auto;
     textarea{
         background: #FFF;
         border: 1px solid #959595;

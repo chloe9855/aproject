@@ -115,6 +115,98 @@
     height: 480px;
 }
 
+.tg-75{
+    margin-left: 22.5vw !important;
+    width: $vw-75 !important;
+}
+
+.flexBox{
+    width: $w-100;
+    display: flex;
+    .flex-1{
+        flex:1 !important;
+    }
+    .flex-2{
+        flex:2 !important;
+    }
+    .flex-3{
+        flex-basis:33.33% !important;
+    }
+    .flex-4{
+        flex:4 !important;
+    }
+    .flex-5{
+        flex:5 !important;
+    }
+    .flex-6{
+        flex:5 !important;
+    }
+    .flex-7{
+        flex:7 !important;
+    }
+    .flex-8{
+        flex:8 !important;
+    }
+    .flex-9{
+        flex:9 !important;
+    }
+    .flex-10{
+        flex:10 !important;
+    }
+    .flex-11{
+        flex:11 !important;
+    }
+    .flex-12{
+        flex:12 !important;
+    }
+    .flex-13{
+        flex:13 !important;
+    }
+    .flex-14{
+        flex:14 !important;
+    }
+    .flex-15{
+        flex:15 !important;
+    }
+    .flex-16{
+        flex:16 !important;
+    }
+}
+
+
+
+//電腦
+@mixin pcxl-width() {
+  @media all and (min-width: $pcxl-media){
+    @content;
+  }
+}
+@mixin pcl-width() {
+    @media all and (min-width: $pcl-media) and (max-width: $pcxl-media) {
+      @content;
+    }
+  }
+@mixin pc-width() {
+  @media all and (min-width: $pc-media) and (max-width: $pcl-media) {
+    @content;
+  }
+}
+@mixin pcm-width() {
+    @media all and (min-width: $pcm-media) and (max-width: $pc-media) {
+      @content;
+    }
+  }
+@mixin pcs-width() {
+  @media all and (min-width: $pcs-media) and (max-width: $pcm-media) {
+    @content;
+  }
+}
+@mixin pcxs-width() {
+    @media all and (min-width: $pcxs-media) and (max-width: $pcs-media) {
+      @content;
+    }
+}
+
 
 
 

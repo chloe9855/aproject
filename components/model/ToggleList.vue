@@ -94,6 +94,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.toggleList{
+  border: 1px solid $light-green;
+  margin: 0 auto;
+}
 .listTitle{
     display: flex;
     align-content: center;

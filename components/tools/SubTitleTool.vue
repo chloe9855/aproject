@@ -1,14 +1,24 @@
 <template>
   <div class="subTitleTool">
-    <h3>
+    <h3 :class="{small:isSmall}">
       {{ title }}
     </h3>
-    <Buttons
-      v-show="isBtn"
-      :name="'button-add'"
-      :text="btnText"
-      :add="true"
-    />
+    <div>
+      <Buttons
+        v-show="isBtn"
+        :name="btnName"
+        :text="btnText"
+        :add="btnAdd"
+        @click="getBtnStatus"
+      />
+      <Buttons
+        v-show="isSecBtn"
+        :name="btnSecName"
+        :text="btnSecText"
+        :add="btnSecAdd"
+        @click="getSecBtnStatus"
+      />
+    </div>
   </div>
 </template>
 
@@ -23,18 +33,61 @@ export default {
       type: String,
       default: ''
     },
+    isSmall: {
+      type: Boolean,
+      default: false
+    },
+    btnName: {
+      type: String,
+      default: 'button-add'
+    },
     btnText: {
       type: String,
       default: ''
+    },
+    btnAdd: {
+      type: Boolean,
+      default: false
+    },
+    btnSecName: {
+      type: String,
+      default: 'button-add'
+    },
+    btnSecText: {
+      type: String,
+      default: ''
+    },
+    btnSecAdd: {
+      type: Boolean,
+      default: false
     }
   },
   data () {
-    return {};
+    return {
+      btnStatus: false,
+      btnSecStatus: false
+    };
   },
   name: 'SubTitleTool',
+  methods: {
+    getBtnStatus (e) {
+      this.btnStatus = e;
+    },
+    getSecBtnStatus (e) {
+      this.btnSecStatus = e;
+    }
+  },
   computed: {
     isBtn () {
       const btnText = this.btnText;
+      if (btnText !== '') {
+        return true;
+      } else {
+        return false;
+      }
+    },
+    isSecBtn () {
+      const btnText = this.btnSecText;
       if (btnText !== '') {
         return true;
       } else {
@@ -48,6 +101,7 @@ export default {
 <style lang="scss" scoped>
 .subTitleTool{
   display: flex;
+  margin: 1em auto;
   justify-content: space-between;
   h3{
     color:$dark-green;
@@ -58,6 +112,9 @@ export default {
     line-height: 29px;
     display: flex;
     align-items: center;
+    &.small{
+      font-size: 16px;
+    }
   }
 }
 </style>

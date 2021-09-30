@@ -4,7 +4,7 @@
     :class="{isNoData:isShowBg}"
   >
     <div
-      v-show="!isShowBg && isCheck"
+      v-show="!isShowBg && isCheck && isScrollTable"
       class="tableBox tableCheck"
     >
       <table :style="{'height':tableColumnH+'px'}">
@@ -49,26 +49,61 @@
         class="w-100"
       >
         <thead>
-          <tr>
+          <tr v-if="!!tableColumn.topHead">
             <th v-show="isCheck" />
+            <th
+              v-for="( item, index ) in tableColumn.topHead"
+              :key="index"
+              :colspan="item.col"
+            >
+              {{ item.title }}
+            </th>
+            <th
+              v-if="optionLength>0"
+              :colspan="optionLength"
+              :style="{'min-width': (optionLength*35)+'px'}"
+            />
+          </tr>
+          <tr>
+            <th v-show="isCheck">
+              <input
+                id="all"
+                type="checkBox"
+                name="all"
+                value="all"
+              ><label for="all" />
+            </th>
             <th
               v-for="( item, index ) in tableColumn.head"
               :key="index"
             >
               {{ item.title }}
             </th>
-            <th />
+            <th
+              v-if="optionLength>0"
+              :colspan="optionLength"
+              :style="{'min-width': (optionLength*35)+'px'}"
+            />
           </tr>
         </thead>
         <tbody>
           <tr
             v-for="( item, index ) in tableColumnBody"
             :key="index"
+            :ref="'tabletd'+index"
           >
             <td
               v-show="isCheck"
-              :style="{'min-width':'35px'}"
-            />
+              :style="{'width':'35px'}"
+            >
+              <input
+                :id="'a'+index"
+                v-model="checkList"
+                type="checkbox"
+                :name="'a'+index"
+                :value="item.val"
+              ><label :for="'a'+index" />
+            </td>
             <td
               v-for="( text, textIndex ) in item.title"
               :key="textIndex"
@@ -90,6 +125,12 @@
                 :input-text="text.title"
                 @inputValue="inputVal"
               />
+              <Dropdown
+                v-else-if="typeof text === 'object' && text.type === 'dropdown'"
+                :key="item.id"
+                :input-id="item.id"
+                :input-text="text.title"
+              />
               <DatePicker
                 v-else-if="typeof text === 'object' && text.type === 'date'"
                 :key="item.id"
@@ -101,16 +142,76 @@
               <span v-else>{{ text }}</span>
             </td>
             <td
-              v-if="optionLength>0"
+              v-if="optionLength > 0 && isScrollTable"
               :colspan="optionLength"
               :style="{'min-width': (optionLength*35)+'px'}"
             />
+            <td
+              v-show="isEdit && !isScrollTable"
+              class="editOption"
+            >
+              <div>
+                <img
+                  alt=""
+                  class="vector"
+                  :src="require('~/assets/img/edit.svg')"
+                >
+              </div>
+            </td>
+            <td
+              v-show="isDel && !isScrollTable"
+              class="delOption"
+            >
+              <div>
+                <img
+                  alt=""
+                  class="vector"
+                  :src="require('~/assets/img/delete.svg')"
+                >
+              </div>
+            </td>
+            <td
+              v-show="isPrint && !isScrollTable"
+              class="printOption"
+            >
+              <div>
+                <img
+                  alt=""
+                  class="vector"
+                  :src="require('~/assets/img/print.svg')"
+                >
+              </div>
+            </td>
+            <td
+              v-show="isMap && !isScrollTable"
+              class="mapOption"
+            >
+              <div>
+                <img
+                  alt=""
+                  class="vector"
+                  :src="require('~/assets/img/map.svg')"
+                >
+              </div>
+            </td>
+            <td
+              v-show="isSearch"
+              class="searchOption"
+            >
+              <div>
+                <img
+                  alt=""
+                  class="vector"
+                  :src="require('~/assets/img/search.svg')"
+                >
+              </div>
+            </td>
           </tr>
         </tbody>
       </table>
     </div>
     <div
-      v-if="optionLength>0"
+      v-if="optionLength > 0 && isScrollTable"
       class="tableBox tableBtn"
     >
       <table :style="{'height':tableColumnH+'px'}">
@@ -201,17 +302,19 @@
 
 <script>
 import Paginate from '~/components/tools/Paginate';
-import Tag from '~/components/tools/Tag.vue';
-import Button from '~/components/tools/Buttons.vue';
-import Input from '~/components/tools/InputTool.vue';
+import Tag from '~/components/tools/Tag';
+import Button from '~/components/tools/Buttons';
+import Input from '~/components/tools/InputTool';
 import DatePicker from '~/components/tools/DatePicker';
+import Dropdown from '~/components/tools/Dropdown';
 export default {
   components: {
     Paginate,
     Tag,
     Button,
     Input,
-    DatePicker
+    DatePicker,
+    Dropdown
   },
   props: {
     options: {
@@ -252,6 +355,10 @@ export default {
     isPaginate: {
       type: Boolean,
       default: true
+    },
+    isScrollTable: {
+      type: Boolean,
+      default: false
     },
     tagList: {
       type: Array,
@@ -383,13 +490,14 @@ export default {
   align-items: flex-end;
   flex-direction: column;
   position: relative;
+  margin: 0 auto;
 }
 .tableBox{
   flex:1;
   background: #FFF;
   table{
     border:1px solid $light-green;
-    white-space: nowrap;
+    //white-space: nowrap;
     thead{
         border-bottom: 5px solid $main-green;
         th{
@@ -399,6 +507,10 @@ export default {
             font-family: Noto Sans TC;
             font-style: normal;
             font-weight: 500;
+            text-align:left;
+            &.topHead{
+              border:1px solid #c4ded8;
+            }
         }
     }
     tbody{
@@ -417,6 +529,7 @@ export default {
           line-height: 33px;
           height: 33px;
           padding: 2px 10px;
+          text-align: left;
         }
     }
   }

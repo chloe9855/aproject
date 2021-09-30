@@ -62,6 +62,7 @@ export default {
         this.arrow = 'arrowRight';
         this.toggleState = true;
       }
+      this.$emit('toggleStatus', this.toggleState);
     }
   },
   computed: {
@@ -88,6 +89,9 @@ export default {
         case 'compensateSearch':
           title = '停灌補償案件查詢';
           break;
+        case 'usageAmountSearch':
+          title = '系統使用量查詢';
+          break;
       }
       return title;
     }
@@ -99,10 +103,10 @@ export default {
 .searchBox{
   padding: 0 15px;
   position: absolute;
-  width: 320px;
+  width: calc( 20vw - 30px);
   height: $vh-100;
   top: 0;
-  left:-350px;
+  left:-20vw;
   background: #EFF4F3;
 }
 .page-header{
@@ -114,7 +118,7 @@ export default {
   border-radius: 0 22px 22px 0;
   line-height: 20px;
   color: white;
-  left: 350px;
+  left: 20vw;
   width: 16px;
   padding: 30px 8px;
   height: 108px;
@@ -126,7 +130,7 @@ export default {
   animation: on 0.5s
 }
 .hideBox{
-  left:-350px;
+  left:-20vw;
   animation: off 0.5s
 }
 .arrowLeft{
@@ -150,11 +154,11 @@ export default {
   right: 12px;
 }
 @keyframes on{
-  from{ left: -350px;}
+  from{ left: -20vw;}
   to{ left: 0;}
 }
 @keyframes off{
   from{ left: 0;}
-  to{ left: -350px;}
+  to{ left: -20vw;}
 }
 </style>
