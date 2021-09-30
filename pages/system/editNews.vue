@@ -12,6 +12,7 @@
     <SubTitleTool
       title="最新公告"
       btn-text="新增公告"
+      :btn-add="true"
       class="w-90"
     />
     <TableTool
@@ -25,10 +26,12 @@
     <div class="downloadTitle w-90">
       <SubTitleTool
         title="相關表單資料"
+        :btn-add="true"
         btn-text="新增表單"
       />
       <SubTitleTool
         title="相關文件資料"
+        :btn-add="true"
         btn-text="新增文件"
       />
     </div>
@@ -96,6 +99,7 @@ export default {
 .news{
   &.tableTool{
     flex:1;
+    @include noto-sans-tc-16-regular;
     .tableContent{
       table{
         tbody{

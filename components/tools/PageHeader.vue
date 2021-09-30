@@ -201,11 +201,7 @@ export default {
   margin: 0 2.5px;
 }
 .tips{
-  font-family: Noto Sans TC;
-  font-style: normal;
-  font-weight: 500;
-  font-size: 14px;
-  line-height: 20px;
   color: #21705D;
+  @include noto-sans-tc-14-medium;
 }
 </style>

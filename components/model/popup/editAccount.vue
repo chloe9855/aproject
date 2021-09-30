@@ -83,5 +83,6 @@ export default {
 }
 .box{
     margin: 0.5em auto;
+    @include noto-sans-tc-16-medium;
 }
 </style>

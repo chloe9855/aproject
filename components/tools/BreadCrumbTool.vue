@@ -99,11 +99,8 @@ export default {
       text-align: center;
       display: inline-block;
       .crumbTitle{
-        font-family: Noto Sans TC;
-        font-style: normal;
-        font-weight: 500;
-        font-size: 16px;
         color: #21705D;
+        @include noto-sans-tc-16-medium;
       }
       span{
         margin: 2px;

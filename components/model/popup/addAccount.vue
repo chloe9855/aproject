@@ -55,6 +55,7 @@ export default {
   margin-top: 20px;
 }
 .box{
-    margin: 0.5em auto;
+  margin: 0.5em auto;
+  @include noto-sans-tc-16-medium;
 }
 </style>
