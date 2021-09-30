@@ -46,7 +46,7 @@ export default {
       dataArr: []
     };
   },
-  name: 'LandSearch',
+  name: 'Requisition',
   computed: {
   }
 };

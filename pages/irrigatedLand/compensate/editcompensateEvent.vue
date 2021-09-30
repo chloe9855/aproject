@@ -8,9 +8,12 @@
       icon="edit"
       title="編輯停灌補償申請事件"
       :class="boxWidth"
-      btn-text="停灌補償申報"
-      :btn-add="true"
-      btn-name="button-add"
+      btn-text="取消"
+      :btn-add="false"
+      btn-name="button-primary-disable"
+      btn-sec-text="確定"
+      :btn-sec-add="false"
+      btn-sec-name="button-primary"
     />
     <SubTitleTool
       title="停灌補償申請事件綁定"
@@ -28,10 +31,23 @@
       class="w-90"
       :class="boxWidth"
       btn-text="存檔"
+      :btn-add="false"
+      btn-name="button-primary"
     />
     <Textarea
       class="w-90"
       :class="boxWidth"
+    />
+    <SubTitleTool
+      title="停灌補償申請別"
+      class="w-90"
+      :class="boxWidth"
+      btn-text="存檔"
+      :btn-add="false"
+      btn-name="button-primary"
+      btn-sec-text="新增申請類別"
+      :btn-sec-add="true"
+      btn-sec-name="button-add"
     />
     <TableTool
       :table-column="tableList2"

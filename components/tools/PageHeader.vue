@@ -20,13 +20,25 @@
     <h3 class="title">
       {{ mainTitle }}
     </h3>
-    <Buttons
-      v-show="isBtn"
-      :name="btnName"
-      :text="btnText"
-      :add="btnAdd"
-      @click="getBtnStatus"
-    />
+    <div>
+      <Buttons
+        v-show="isBtn"
+        :name="btnName"
+        :text="btnText"
+        :add="btnAdd"
+        @click="getBtnStatus"
+      />
+      <Buttons
+        v-show="isSecBtn"
+        :name="btnSecName"
+        :text="btnSecText"
+        :add="btnSecAdd"
+        @click="getSecBtnStatus"
+      />
+    </div>
+    <div class="tips">
+      <span>{{ tips }}</span>
+    </div>
   </div>
 </template>
 
@@ -45,6 +57,10 @@ export default {
       type: String,
       default: ''
     },
+    tips: {
+      type: String,
+      default: ''
+    },
     isArrow: {
       type: Boolean,
       default: false
@@ -58,6 +74,18 @@ export default {
       default: ''
     },
     btnAdd: {
+      type: Boolean,
+      default: false
+    },
+    btnSecName: {
+      type: String,
+      default: 'button-add'
+    },
+    btnSecText: {
+      type: String,
+      default: ''
+    },
+    btnSecAdd: {
       type: Boolean,
       default: false
     }
@@ -76,13 +104,17 @@ export default {
         password: '設定密碼',
         news: '最新消息'
       },
-      btnStatus: false
+      btnStatus: false,
+      btnSecStatus: false
     };
   },
   name: 'PageHeader',
   methods: {
     getBtnStatus (e) {
       this.btnStatus = e;
+    },
+    getSecBtnStatus (e) {
+      this.btnSecStatus = e;
     }
   },
   computed: {
@@ -107,6 +139,14 @@ export default {
       } else {
         return false;
       }
+    },
+    isSecBtn () {
+      const btnText = this.btnSecText;
+      if (btnText !== '') {
+        return true;
+      } else {
+        return false;
+      }
     }
   }
 };
@@ -116,6 +156,8 @@ export default {
 .page-header {
   display: flex;
   align-items: center;
+  border-bottom:1px solid #C4DED8;
+  padding-bottom: 5px;
 }
 .arrow {
   margin-right: 5px;
@@ -144,5 +186,16 @@ export default {
   width: 24px;
   height: 24px;
   position: relative;
+}
+.button_wrap{
+  margin: 0 2.5px;
+}
+.tips{
+  font-family: Noto Sans TC;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 20px;
+  color: #21705D;
 }
 </style>
