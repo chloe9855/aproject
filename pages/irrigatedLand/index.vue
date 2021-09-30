@@ -82,6 +82,9 @@ export default {
     boxWidth () {
       const setWidth = this.toggleStatus ? 'tg-75' : 'w-90';
       return setWidth;
+    },
+    accountToggle () {
+      return this.$store.state.settingAccount;
     }
   }
 };

@@ -3,7 +3,8 @@
 // * ==========================================================================
 
 export const state = () => ({
-  hideFooter: false
+  hideFooter: false,
+  popupState: false
 });
 
 // * ==========================================================================
@@ -14,5 +15,8 @@ export const mutations = {
   // * 隱藏FOOTER
   HIDE_FOOTER_CTRL (state, payload) {
     state.hideFooter = payload;
+  },
+  TOGGLE_ACCOUNT_POPUP (state) {
+    state.popupState = !state.popupState;
   }
 };

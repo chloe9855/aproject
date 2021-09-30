@@ -13,7 +13,7 @@
         <img
           :src="require('~/assets/img/close-icon.svg')"
           class="closeIcon"
-          @:click="toggleMaskStatus"
+          @click="toggleStatus"
         >
       </div>
       <component :is="componentInstance" />
@@ -50,8 +50,8 @@ export default {
   },
   name: 'Popup',
   methods: {
-    toggleMaskStatus () {
-      this.$emit('PopupStatus', !this.isActive);
+    toggleStatus () {
+      this.$store.commit('TOGGLE_ACCOUNT_POPUP');
     }
   },
   computed: {
@@ -104,5 +104,9 @@ export default {
       }
     }
   }
+}
+.inputBox{
+  overflow-y: scroll;
+  max-height: $vh-80;
 }
 </style>
