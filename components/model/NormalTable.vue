@@ -64,4 +64,9 @@ export default {
       }
     }
   }
+
+  .h-432{
+    height: 432px !important;
+  }
+
 </style>

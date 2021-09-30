@@ -2,13 +2,13 @@
   <div class="mainArea">
     <Header />
     <nuxt />
-    <Footer />
     <Popup
       :is-active="togglePopup"
       title="編輯帳號"
       type="editAccount"
     />
     <MaskTool :is-active="togglePopup" />
+    <Footer :set-position="true" />
   </div>
 </template>
 
@@ -27,7 +27,6 @@ export default {
   },
   computed: {
     togglePopup () {
-      console.log(this.$store.state.popupState);
       return this.$store.state.popupState;
     }
   }
