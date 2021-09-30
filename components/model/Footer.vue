@@ -1,5 +1,8 @@
 <template>
-  <div :class="{ 'hide': $store.state.hideFooter === true }">
+  <div
+    :class="{ 'hide': $store.state.hideFooter === true }"
+    class="foot_wrap"
+  >
     <footer v-if="$route === 'map'">
       <div>
         版權所有：行政院農業委員會農田水利署、系統開發：財團法人農業工程研究中心
@@ -40,6 +43,12 @@ export default {
 
   .hide {
     display: none;
+  }
+
+  .foot_wrap {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
   }
 
 </style>
