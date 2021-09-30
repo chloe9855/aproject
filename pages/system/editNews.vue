@@ -19,7 +19,7 @@
       :is-paginate="false"
       :is-edit="true"
       :is-del="true"
-      class="w-90"
+      class="w-90 news"
     />
 
     <div class="downloadTitle w-90">
@@ -92,11 +92,9 @@ export default {
   name: 'EditNews'
 };
 </script>
-<style lang="scss" scoped>
-.downloadArea{
-  display: flex;
-  margin: 0 auto;
-  .tableTool{
+<style lang="scss">
+.news{
+  &.tableTool{
     flex:1;
     .tableContent{
       table{
@@ -113,6 +111,13 @@ export default {
         }
       }
     }
+  }
+}
+.downloadArea{
+  display: flex;
+  margin: 0 auto;
+  .tableTool{
+    flex:1;
   }
   .tableTool:nth-child(1){
     margin-right: 1em !important;

@@ -7,7 +7,7 @@
     <TableTool
       :table-column="tableList"
       :is-paginate="false"
-      class="w-90"
+      class="w-90 news"
     />
     <PageHeader
       icon="download"
@@ -69,18 +69,21 @@ export default {
   layout: 'main'
 };
 </script>
-<style lang="scss" scoped>
-.tableTool{
-  .tableContent{
-    table{
-      tbody{
-        text-align: left !important;
-        tr{
-          td:nth-child(2){
-            min-width: 240px;
-          }
-          td:nth-child(5){
-            min-width: 320px;
+<style lang="scss">
+.news{
+  &.tableTool{
+    flex:1;
+    .tableContent{
+      table{
+        tbody{
+          text-align: left !important;
+          tr{
+            td:nth-child(2){
+              min-width: 240px;
+            }
+            td:nth-child(5){
+              min-width: 320px;
+            }
           }
         }
       }
