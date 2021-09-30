@@ -12,9 +12,17 @@
         <span>0</span>
       </div>
 
-      <label class="oneIn">
-        <input type="checkbox">反向
-      </label>
+      <div class="theme_checkbox">
+        <input
+          id="check1"
+          type="checkbox"
+        >
+        <label
+          for="check1"
+        >
+          反向
+        </label>
+      </div>
 
       <div class="meme">
         <span>椿號定位</span>
@@ -28,9 +36,17 @@
           sizing="w-30"
         />
       </div>
-      <label class="oneIn">
-        <input type="checkbox">使用環域(公尺 : 最大200公尺)
-      </label>
+      <div class="theme_checkbox box_margin">
+        <input
+          id="check2"
+          type="checkbox"
+        >
+        <label
+          for="check2"
+        >
+          使用環域(公尺 : 最大200公尺)
+        </label>
+      </div>
       <div class="wrap2">
         <InputTool-component
           :input-text="'地籍資料'"
@@ -95,16 +111,68 @@ export default {
 
 <style lang="scss" scoped>
 
+  .theme_checkbox {
+    input {
+    position: absolute; // take it out of document flow
+    opacity: 0; // hide it
+
+      & + label {
+        position: relative;
+        cursor: pointer;
+        padding: 0;
+      }
+
+      // Box.
+      & + label::before {
+        content: '';
+        margin-right: 7px;
+        margin-bottom: -2px;
+        display: inline-block;
+        width: 13px;
+        height: 13px;
+        background: white;
+        border: 1px solid #959595;
+        border-radius: 3px;
+      }
+
+      // Box checked
+      &:checked + label::before {
+        content: '';
+        background: url('~/assets/img/checkbox.svg') no-repeat right/contain;
+        width: 15px;
+        height: 15px;
+        border: none;
+      }
+
+      &:disabled + label {
+        color: #b8b8b8;
+        cursor: auto;
+      }
+
+      &:disabled + label::before {
+        box-shadow: none;
+        background: #ddd;
+      }
+
+    }
+
+    label {
+      color: #494949;
+      display: flex;
+      align-items: center;
+      @include noto-sans-tc-16-regular;
+    }
+  }
+
+  .box_margin {
+    margin: 3px 0;
+  }
+
   .bt_wrap {
     padding: 8px 0 0;
     display: flex;
     justify-content: flex-end;
     align-items: center;
-  }
-
-  .oneIn {
-    color: #494949;
-    @include noto-sans-tc-16-regular;
   }
 
   .out_wrap {

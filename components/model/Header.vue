@@ -8,9 +8,14 @@
             class="logo"
             :src="require('~/assets/img/logo.svg')"
           >
-          <p class="logo-text">
-            農田水利灌溉管理整合雲系統
-          </p>
+
+          <nuxt-link
+            :to="'/'"
+          >
+            <p class="logo-text">
+              農田水利灌溉管理整合雲系統
+            </p>
+          </nuxt-link>
         </div>
         <div class="account">
           <p class="name">

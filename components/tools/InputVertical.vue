@@ -6,6 +6,9 @@
     <div class="input-title-box">
       <p class="input-title">
         {{ title }}
+        <span class="starSign">
+          {{ starSign }}
+        </span>
       </p>
       <div
         v-show="isError"
@@ -21,6 +24,9 @@
         <p class="error-hint-text">
           {{ errorTip }}
         </p>
+      </div>
+      <div class="green_hint_text">
+        {{ greenHint }}
       </div>
     </div>
     <input
@@ -76,6 +82,14 @@ export default {
       default: 'w-100'
     },
     isIcon: {
+      type: String,
+      default: ''
+    },
+    greenHint: {
+      type: String,
+      default: ''
+    },
+    starSign: {
       type: String,
       default: ''
     }
@@ -152,6 +166,15 @@ export default {
 }
 .input-icon{
   top: 35px !important;
+}
+
+.green_hint_text {
+  color: #21705D;
+  @include noto-sans-tc-14-medium;
+}
+
+.starSign {
+  color: red;
 }
 
 </style>

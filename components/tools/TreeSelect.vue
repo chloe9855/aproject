@@ -6,10 +6,19 @@
         :src="arrowHandler1"
         @click="showBlock1 = !showBlock1"
       >
-      <label class="title">
-        <input type="checkbox">
-        XXX管理處
-      </label>
+
+      <div class="theme_checkbox">
+        <input
+          id="ttt1"
+          type="checkbox"
+        >
+        <label
+          class="title"
+          for="ttt1"
+        >
+          XXX管理處
+        </label>
+      </div>
     </div>
 
     <div
@@ -22,10 +31,18 @@
           :src="arrowHandler2"
           @click="showBlock2 = !showBlock2"
         >
-        <label class="title">
-          <input type="checkbox">
-          XXX工作站
-        </label>
+        <div class="theme_checkbox">
+          <input
+            id="ttt2"
+            type="checkbox"
+          >
+          <label
+            class="title"
+            for="ttt2"
+          >
+            XXX工作站
+          </label>
+        </div>
       </div>
 
       <div
@@ -37,10 +54,18 @@
           :key="item.id"
           class="title_wrap"
         >
-          <label class="title">
-            <input type="checkbox">
-            {{ item.name }}
-          </label>
+          <div class="theme_checkbox">
+            <input
+              :id="item.id"
+              type="checkbox"
+            >
+            <label
+              class="title"
+              :for="item.id"
+            >
+              {{ item.name }}
+            </label>
+          </div>
         </div>
       </div>
     </div>

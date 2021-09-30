@@ -5,25 +5,25 @@
         class="close"
         :src="require('~/assets/img/close-icon.svg')"
       >
-      <img
+      <div
         class="icon"
-        :src="require('~/assets/img/alert-icon.svg')"
-      >
+        :class="`icon_${boxIcon}`"
+      />
       <p class="title">
-        小標題文字文字文字
+        {{ title }}
       </p>
       <p class="text">
-        警示文字警示文字警示文字警示文字警示文字警示文字警示文字警示文字警示文字
+        {{ text }}
       </p>
       <div class="button-group">
-        <div class="msg-btn">
-          確定
-        </div>
         <div
           v-if="cancelButton === true"
           class="msg-btn cancel"
         >
           取消
+        </div>
+        <div class="msg-btn">
+          確定
         </div>
       </div>
     </div>
@@ -32,9 +32,28 @@
 
 <script>
 export default {
+  props: {
+    cancelButton: {
+      type: Boolean,
+      default: false
+    },
+    title: {
+      type: String,
+      default: '我是標題'
+    },
+    text: {
+      type: String,
+      default: '我是警示文字'
+    },
+    boxIcon: {
+      type: String,
+      default: 'warning'
+      // warning, error, success
+    }
+  },
   data () {
     return {
-      cancelButton: true
+
     };
   }
 };
@@ -65,6 +84,24 @@ export default {
 
   .icon {
     margin: 25px 0 16px;
+  }
+
+  .icon_warning {
+    width: 30px;
+    height: 30px;
+    background: url('~/assets/img/warning_icon.svg') no-repeat center/contain;
+  }
+
+  .icon_error {
+    width: 30px;
+    height: 30px;
+    background: url('~/assets/img/alert-icon.svg') no-repeat center/contain;
+  }
+
+  .icon_success {
+    width: 30px;
+    height: 30px;
+    background: url('~/assets/img/success_icon.svg') no-repeat center/contain;
   }
 
   .title {

@@ -1,0 +1,71 @@
+{
+  "data": [
+    {
+      "id": "47", 
+      "layer_index": "4541", 
+      "name": "池塘", 
+      "type": [{"name": "河川水源","visible": true, "pic":"river", "id":"145411"},
+               {"name": "支線","visible": true, "pic":"zhi", "id":"14522"}
+      ],
+      "visible": true, 
+      "opacity": 50
+    },
+    {
+      "id": "523",
+      "layer_index": "2545",
+      "name": "輪區圖",
+      "type": [{"name": "中央管區域排水","visible": true, "pic":"center", "id":"154577"},
+               {"name": "市管區排","visible": true, "pic":"county", "id":"18458"},
+               {"name": "取入","visible": true, "pic":"in", "id":"14599"},
+               {"name": "主給","visible": true, "pic":"give", "id":"25200"}
+      ],
+      "visible": true,
+      "opacity": 50
+    },
+    {
+      "id": "355",
+      "layer_index": "533",
+      "name": "地段圖",
+      "type": ["黃色"],
+      "pic":["yellow-block"],
+      "visible": true,
+      "opacity": 50
+    },
+    {
+      "id": "856",
+      "layer_index": "453",
+      "name": "期作別圖",
+      "type": ["藍色"],
+      "pic":["yellow-block"],
+      "visible": true,
+      "opacity": 50
+    },
+    {
+      "id": "858",
+      "layer_index": "5558",
+      "name": "地籍圖",
+      "type": ["粉紅色"],
+      "pic":["yellow-block"],
+      "visible": true,
+      "opacity": 50
+    },
+    {
+      "id": "7558",
+      "layer_index": "7556",
+      "name": "工作站",
+      "type": ["綠色"],
+      "pic":["yellow-block"],
+      "visible": true,
+      "opacity": 50
+    },
+    {
+      "id": "65",
+      "layer_index": "752",
+      "name": "管理分處",
+      "type": ["紫色"],
+      "pic":["yellow-block"],
+      "visible": true,
+      "opacity": 50
+    }
+  ]
+}

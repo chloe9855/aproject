@@ -31,7 +31,7 @@
       "name": "縣市界",
       "type": ["黃色"],
       "pic":["yellow-block"],
-      "visible": false,
+      "visible": true,
       "opacity": 50
     },
     {
@@ -40,7 +40,7 @@
       "name": "地段界",
       "type": ["藍色"],
       "pic":["yellow-block"],
-      "visible": false,
+      "visible": true,
       "opacity": 50
     },
     {
@@ -49,7 +49,7 @@
       "name": "地籍圖",
       "type": ["粉紅色"],
       "pic":["yellow-block"],
-      "visible": false,
+      "visible": true,
       "opacity": 50
     },
     {
@@ -58,7 +58,7 @@
       "name": "工作站",
       "type": ["綠色"],
       "pic":["yellow-block"],
-      "visible": false,
+      "visible": true,
       "opacity": 50
     },
     {

@@ -1,0 +1,71 @@
+{
+  "data": [
+    {
+      "id": "475335", 
+      "layer_index": "4541", 
+      "name": "都市計畫使用分區", 
+      "type": [{"name": "河川水源","visible": true, "pic":"river", "id":"145411"},
+               {"name": "支線","visible": true, "pic":"zhi", "id":"14522"}
+      ],
+      "visible": true, 
+      "opacity": 50
+    },
+    {
+      "id": "5235354",
+      "layer_index": "2545",
+      "name": "非都市土地使用分區",
+      "type": [{"name": "中央管區域排水","visible": true, "pic":"center", "id":"154577"},
+               {"name": "市管區排","visible": true, "pic":"county", "id":"18458"},
+               {"name": "取入","visible": true, "pic":"in", "id":"14599"},
+               {"name": "主給","visible": true, "pic":"give", "id":"25200"}
+      ],
+      "visible": true,
+      "opacity": 50
+    },
+    {
+      "id": "35589",
+      "layer_index": "533",
+      "name": "村里界",
+      "type": ["黃色"],
+      "pic":["yellow-block"],
+      "visible": true,
+      "opacity": 50
+    },
+    {
+      "id": "856824",
+      "layer_index": "453",
+      "name": "1/5000圖幅框",
+      "type": ["藍色"],
+      "pic":["yellow-block"],
+      "visible": true,
+      "opacity": 50
+    },
+    {
+      "id": "858645",
+      "layer_index": "5558",
+      "name": "正射影像圖(通用版)",
+      "type": ["粉紅色"],
+      "pic":["yellow-block"],
+      "visible": true,
+      "opacity": 50
+    },
+    {
+      "id": "755835",
+      "layer_index": "7556",
+      "name": "臺灣通用電子地圖(不含等高線)",
+      "type": ["綠色"],
+      "pic":["yellow-block"],
+      "visible": true,
+      "opacity": 50
+    },
+    {
+      "id": "65356",
+      "layer_index": "752",
+      "name": "臺灣通用電子地圖(套疊等高線)",
+      "type": ["紫色"],
+      "pic":["yellow-block"],
+      "visible": true,
+      "opacity": 50
+    }
+  ]
+}
