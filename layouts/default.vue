@@ -17,3 +17,11 @@ export default {
   }
 };
 </script>
+
+<style lang="scss" scoped>
+
+ .mainArea {
+   height: 100vh;
+ }
+
+</style>
