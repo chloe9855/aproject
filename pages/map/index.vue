@@ -54,7 +54,7 @@
                   :item="item"
                   :drop-down="true"
                   @changeVisible="layerVisibleCtrl"
-                  @setAllVisible="allLayerVisibleCtrl"
+                  @setAllVisible="allLineLayerVisibleCtrl"
                 />
               </div>
             </div>
@@ -88,7 +88,6 @@
                   :item="item"
                   :drop-down="false"
                   @changeVisible="layerVisibleCtrl"
-                  @setAllVisible="allLayerVisibleCtrl"
                 />
               </div>
             </div>
@@ -476,6 +475,12 @@ export default {
       console.log($event);
       const index = this.layerOptions.surfaceList.findIndex(item => item.id === id);
       this.layerOptions.surfaceList[index].type.forEach((item) => {
+        item.visible = $event;
+      });
+    },
+    allLineLayerVisibleCtrl ($event, id) {
+      const index = this.layerOptions.lineList.findIndex(item => item.id === id);
+      this.layerOptions.lineList[index].type.forEach((item) => {
         item.visible = $event;
       });
     },
