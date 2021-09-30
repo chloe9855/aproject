@@ -7,7 +7,10 @@
       icon="slider"
       :title="searchTitle"
     />
-    <component :is="componentInstance" />
+    <component
+      :is="componentInstance"
+      @tabCurrent="current"
+    />
     <div
       class="toggleBtn"
       @click="toggleSearthBox"
@@ -63,6 +66,9 @@ export default {
         this.toggleState = true;
       }
       this.$emit('toggleStatus', this.toggleState);
+    },
+    current (e) {
+      this.$emit('toggleCurrent', e);
     }
   },
   computed: {

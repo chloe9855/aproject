@@ -91,7 +91,9 @@ export default {
       }
     };
   },
-  name: 'IrrigatedLandSearch'
+  updated () {
+    this.$emit('tabCurrent', this.options.current);
+  }
 };
 </script>
 

@@ -12,6 +12,7 @@
     <SubTitleTool
       title="最新公告"
       btn-text="新增公告"
+      :btn-add="true"
       class="w-90"
     />
     <TableTool
@@ -19,16 +20,18 @@
       :is-paginate="false"
       :is-edit="true"
       :is-del="true"
-      class="w-90"
+      class="w-90 news"
     />
 
     <div class="downloadTitle w-90">
       <SubTitleTool
         title="相關表單資料"
+        :btn-add="true"
         btn-text="新增表單"
       />
       <SubTitleTool
         title="相關文件資料"
+        :btn-add="true"
         btn-text="新增文件"
       />
     </div>
@@ -92,12 +95,11 @@ export default {
   name: 'EditNews'
 };
 </script>
-<style lang="scss" scoped>
-.downloadArea{
-  display: flex;
-  margin: 0 auto;
-  .tableTool{
+<style lang="scss">
+.news{
+  &.tableTool{
     flex:1;
+    @include noto-sans-tc-16-regular;
     .tableContent{
       table{
         tbody{
@@ -113,6 +115,13 @@ export default {
         }
       }
     }
+  }
+}
+.downloadArea{
+  display: flex;
+  margin: 0 auto;
+  .tableTool{
+    flex:1;
   }
   .tableTool:nth-child(1){
     margin-right: 1em !important;
