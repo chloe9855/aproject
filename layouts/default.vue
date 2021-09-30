@@ -36,3 +36,12 @@ export default {
   }
 };
 </script>
+
+<style lang="scss" scoped>
+
+ .mainArea {
+   min-height: 100vh;
+   position: relative;
+ }
+
+</style>

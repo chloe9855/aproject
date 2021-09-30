@@ -14,7 +14,11 @@
     >
       <div class="left_content">
         <BreadCrumbTool :options="breadCrumb" />
-        <PageHeader icon="land" />
+        <PageHeader
+          icon="land"
+          btn-text="在地圖上顯示"
+          btn-name="button-primary"
+        />
         <Table
           v-if="searchResult.authority !== ''"
           :table-column="searchResult.authority"
@@ -28,12 +32,12 @@
           v-if="searchResult.landNo !== ''"
           class="landno_wrap"
         >
-          <div class="btn_wrap2">
+          <!-- <div class="btn_wrap2">
             <Buttons
               :name="'button-primary'"
               :text="'在地圖上顯示'"
             />
-          </div>
+          </div> -->
           <NavTabs
             :type-list="options.typeList"
             :selected="options.current"
@@ -41,6 +45,7 @@
           />
           <NormalTable
             :list="searchResult.landNo"
+            sizing="h-432"
             :shorten="true"
           />
         </div>
@@ -220,6 +225,7 @@ export default {
       }
     },
     showDetailHandler (payload) {
+      console.log('hahahaa');
       if (payload === 'isSearch') {
         this.addDetail(true);
       }
@@ -273,6 +279,7 @@ export default {
     width: 100%;
     padding: 13px;
     padding-right: 40px;
+    padding-top: 0;
   }
 
   .right_content {
@@ -309,13 +316,6 @@ export default {
   .btn_wrap {
     display: flex;
     justify-content: flex-end;
-  }
-
-  .btn_wrap2 {
-    display: inline-flex;
-    position: absolute;
-    right: 0;
-    top: -33px;
   }
 
   .landno_wrap {
