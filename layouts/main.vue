@@ -2,7 +2,7 @@
   <div class="mainArea">
     <Header />
     <nuxt />
-    <Footer />
+    <Footer :set-position="true" />
   </div>
 </template>
 

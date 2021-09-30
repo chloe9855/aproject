@@ -1,6 +1,6 @@
 <template>
   <div
-    :class="{ 'hide': $store.state.hideFooter === true }"
+    :class="{ 'hide': $store.state.hideFooter === true, 'set_pos': setPosition }"
     class="foot_wrap"
   >
     <footer v-if="$route === 'map'">
@@ -25,7 +25,12 @@
 
 <script>
 export default {
-
+  props: {
+    setPosition: {
+      type: Boolean,
+      default: false
+    }
+  }
 };
 </script>
 
@@ -49,6 +54,10 @@ export default {
     position: absolute;
     bottom: 0;
     width: 100%;
+  }
+
+  .set_pos {
+    position: relative !important;
   }
 
 </style>
