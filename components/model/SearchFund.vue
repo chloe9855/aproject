@@ -126,7 +126,6 @@ export default {
 
 <style lang="scss" scoped>
 .searchBox{
-  padding: 0 15px;
   position: absolute;
   width: 320px;
   // height: $vh-100;
@@ -137,14 +136,16 @@ export default {
 }
 .page-header{
   margin: 10px 0;
+  padding: 0 15px;
 }
+
 .toggleBtn{
   position: absolute;
   background: #3E9F88;
   border-radius: 0 22px 22px 0;
   line-height: 20px;
   color: white;
-  left: 350px;
+  left: 320px;
   width: 16px;
   padding: 30px 8px;
   height: 108px;
@@ -156,7 +157,7 @@ export default {
   animation: on 0.5s
 }
 .hideBox{
-  left:-350px;
+  left:-320px;
   animation: off 0.5s
 }
 .arrowLeft{
@@ -180,11 +181,11 @@ export default {
   right: 12px;
 }
 @keyframes on{
-  from{ left: -350px;}
+  from{ left: -320px;}
   to{ left: 0;}
 }
 @keyframes off{
   from{ left: 0;}
-  to{ left: -350px;}
+  to{ left: -320px;}
 }
 </style>
