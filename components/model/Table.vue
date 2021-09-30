@@ -198,7 +198,7 @@
               v-show="isSearch"
               class="searchOption"
             >
-              <div>
+              <div @click="$emit('clickIcon', 'isSearch')">
                 <img
                   alt=""
                   class="vector"
