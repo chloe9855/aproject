@@ -92,29 +92,27 @@ export default {
   name: 'EditNews'
 };
 </script>
-<style lang="scss">
-.tableTool{
-  .tableContent{
-    table{
-      tbody{
-        text-align: left !important;
-        tr{
-          td:nth-child(2){
-            min-width: 240px;
-          }
-          td:nth-child(5){
-            min-width: 320px;
-          }
-        }
-      }
-    }
-  }
-}
+<style lang="scss" scoped>
 .downloadArea{
   display: flex;
   margin: 0 auto;
   .tableTool{
     flex:1;
+    .tableContent{
+      table{
+        tbody{
+          text-align: left !important;
+          tr{
+            td:nth-child(2){
+              min-width: 240px;
+            }
+            td:nth-child(5){
+              min-width: 320px;
+            }
+          }
+        }
+      }
+    }
   }
   .tableTool:nth-child(1){
     margin-right: 1em !important;

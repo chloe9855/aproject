@@ -110,7 +110,7 @@ export default {
         authority: '',
         landNo: ''
       },
-      breadCrumb: ['首頁', '作業基金土地管理'],
+      breadCrumb: ['作業基金土地管理'],
       options: {
         current: 0,
         typeList: [
