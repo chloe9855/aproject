@@ -9,22 +9,33 @@
       title="灌溉地籍查詢與統計"
       :class="boxWidth"
     />
-    <TableTool
-      :table-column="tableList"
-      :is-paginate="true"
-      :class="boxWidth"
-    />
-    <div
-      class="calNoteBox w-90"
-      :class="boxWidth"
-    >
-      <CalNote />
-      <CalNote />
-      <CalNote />
+    <div v-if=" toggleCurrent === 0 ">
+      <TableTool
+        :table-column="tableList"
+        :is-paginate="true"
+        :class="boxWidth"
+      />
+      <div
+        class="calNoteBox w-90"
+        :class="boxWidth"
+      >
+        <CalNote />
+        <CalNote />
+        <CalNote />
+      </div>
+    </div>
+    <div v-else-if=" toggleCurrent === 1 ">
+      <NormalTable
+        v-if="columnList.length >= 1"
+        :list="columnList"
+        :class="boxWidth"
+        class="listTable"
+      />
     </div>
     <Search
       type="irrigatedLandSearch"
       @toggleStatus="getToggleStatus"
+      @toggleCurrent="getToggleCurrent"
     />
   </div>
 </template>
@@ -33,6 +44,7 @@
 import TableTool from '~/components/model/Table.vue';
 import PageHeader from '~/components/tools/PageHeader.vue';
 import BreadCrumbTool from '~/components/tools/BreadCrumbTool.vue';
+import NormalTable from '~/components/model/NormalTable.vue';
 import Search from '~/components/model/Search.vue';
 import CalNote from '~/components/tools/CalNote.vue';
 
@@ -41,6 +53,7 @@ export default {
     PageHeader,
     TableTool,
     BreadCrumbTool,
+    NormalTable,
     Search,
     CalNote
   },
@@ -68,14 +81,90 @@ export default {
           { title: ['XX分處鹿草工作站', '山子腳', '山子腳-山腳', 'XXX小組', '2,050', '2,050', '2,050'] }
         ]
       },
+      columnList: [
+        {
+          name: '流水編號',
+          value: '851705',
+          id: 0
+        },
+        {
+          name: '管理處代碼',
+          value: '09',
+          id: 1
+        },
+        {
+          name: '管理處名稱',
+          value: '851705',
+          id: 2
+        },
+        {
+          name: '管理分分處名稱',
+          value: '09',
+          id: 3
+        },
+        {
+          name: '工作站代碼',
+          value: '851705',
+          id: 4
+        },
+        {
+          name: '工作站名稱',
+          value: '09',
+          id: 5
+        },
+        {
+          name: '水利小組代碼',
+          value: '851705',
+          id: 6
+        },
+        {
+          name: '水利小組名稱',
+          value: '泉厝支線小組',
+          id: 7
+        },
+        {
+          name: '輪區代碼',
+          value: '851705',
+          id: 8
+        },
+        {
+          name: '輪區名稱',
+          value: '09',
+          id: 57
+        },
+        {
+          name: '長度',
+          value: '09',
+          id: 66
+        },
+        {
+          name: '渠道名稱',
+          value: '851705',
+          id: 62
+        },
+        {
+          name: '渠道等級代碼',
+          value: '09',
+          id: 58
+        },
+        {
+          name: '渠道等級名稱',
+          value: '851705',
+          id: 52
+        }
+      ],
       BreadCrumb: ['灌溉地管理', '灌溉地籍查詢'],
-      toggleStatus: false
+      toggleStatus: false,
+      toggleCurrent: 0
     };
   },
   name: 'IrrigatedLand',
   methods: {
     getToggleStatus (e) {
       this.toggleStatus = e;
+    },
+    getToggleCurrent (e) {
+      this.toggleCurrent = e;
     }
   },
   computed: {
@@ -106,5 +195,8 @@ export default {
       }
     }
   }
+}
+.listTable{
+  margin: 0 auto;
 }
 </style>

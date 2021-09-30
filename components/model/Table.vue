@@ -491,6 +491,7 @@ export default {
   flex-direction: column;
   position: relative;
   margin: 0 auto;
+  @include noto-sans-tc-16-regular;
 }
 .tableBox{
   flex:1;
@@ -501,13 +502,9 @@ export default {
     thead{
         border-bottom: 5px solid $main-green;
         th{
-            line-height: 33px;
-            height: 33px;
             padding: 0 10px;
-            font-family: Noto Sans TC;
-            font-style: normal;
-            font-weight: 500;
             text-align:left;
+            @include noto-sans-tc-16-bold;
             &.topHead{
               border:1px solid #c4ded8;
             }

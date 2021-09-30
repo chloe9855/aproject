@@ -19,27 +19,28 @@
         title="密碼"
         is-icon="lock"
       />
-      <div class="verification">
+      <div class="verification flexBox">
         <InputHorizontal
           title="驗證碼"
+          class="flex-1"
         />
-        <img :src="require('~/assets/img/verification.jpg')">
+        <img
+          :src="require('~/assets/img/verification.jpg')"
+          class="flex-1"
+        >
       </div>
-      <Button
-        class="loginBtn"
-        text="登入"
-      />
+      <button class="loginBtn">
+        登入
+      </button>
     </div>
   </div>
 </template>
 
 <script>
 import InputHorizontal from '~/components/tools/InputHorizontal.vue';
-import Button from '~/components/tools/Buttons.vue';
 export default {
   components: {
-    InputHorizontal,
-    Button
+    InputHorizontal
   },
   data () {
     return {
@@ -68,16 +69,13 @@ export default {
         }
     }
     .mainTitle{
-        font-family: Noto Sans TC;
-        font-style: normal;
-        font-weight: 500;
-        font-size: 28px;
-        line-height: 41px;
         display: flex;
         align-items: center;
         text-align: center;
         letter-spacing: 0.09em;
         margin-bottom: 2vh;
+        font-size: 28px !important;
+        @include noto-sans-tc-24-medium;
     }
     .loginInput{
         width: 360px;
@@ -89,10 +87,18 @@ export default {
                 height: 40px;
                 margin-left: 5px;
             }
+            input{
+              max-width: 100px;
+            }
         }
         .loginBtn{
-            display: flex;
             margin: 1vh 0;
+            width: 100%;
+            background: #3E9F88;
+            border-radius: 5px;
+            color:#FFF;
+            text-align: center;
+            @include noto-sans-tc-18-medium;
         }
     }
 }

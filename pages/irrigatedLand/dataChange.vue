@@ -52,7 +52,7 @@ export default {
           { title: ['109年第1期', '109/3/10', '109/4/10', 'XX管理處XX水利小組、XX管理處XX水利小組、XX管理處XX水利小組'] }
         ]
       },
-      BreadCrumb: ['灌溉地管理', '灌溉地籍查詢'],
+      BreadCrumb: ['灌溉地管理', '停灌資料異動'],
       toggleStatus: false
     };
   },
