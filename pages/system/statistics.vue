@@ -5,7 +5,7 @@
       :options="BreadCrumb"
     />
     <PageHeader
-      icon="slider"
+      icon="system"
       title="系統使用量統計"
       :class="boxWidth"
       btn-text="資料下載"

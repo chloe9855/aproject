@@ -101,6 +101,7 @@ export default {
 <style lang="scss" scoped>
 .subTitleTool{
   display: flex;
+  margin: 1em auto !important;
   justify-content: space-between;
   h3{
     color:$dark-green;

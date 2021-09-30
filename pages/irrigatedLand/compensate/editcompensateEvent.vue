@@ -5,12 +5,12 @@
       :options="BreadCrumb"
     />
     <PageHeader
-      icon="edit"
+      icon="layer"
       title="編輯停灌補償申請事件"
       :class="boxWidth"
       btn-text="取消"
       :btn-add="false"
-      btn-name="button-primary-disable"
+      btn-name="button-default"
       btn-sec-text="確定"
       :btn-sec-add="false"
       btn-sec-name="button-primary"
