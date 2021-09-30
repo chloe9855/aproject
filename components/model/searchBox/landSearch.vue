@@ -94,11 +94,11 @@ export default {
         current: 0,
         typeList: [
           {
-            name: '依管理單位',
+            name: '依單筆地號',
             id: 0
           },
           {
-            name: '依單筆地號',
+            name: '依管理單位',
             id: 1
           }
         ]
@@ -115,5 +115,11 @@ export default {
   display: flex;
   justify-content: flex-end;
   margin-top: 20px;
+  padding: 0 15px;
 }
+
+.landNum, .landUnit {
+  padding: 0 15px;
+}
+
 </style>
