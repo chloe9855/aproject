@@ -37,7 +37,9 @@
           v-if="showBox"
           class="login-box"
         >
-          <p>帳號設定</p>
+          <p @click="openSettingAccount">
+            帳號設定
+          </p>
           <p>登出</p>
         </div>
       </div>
@@ -191,6 +193,15 @@ export default {
       if (payload === '系統管理') {
         this.listTwo = false;
       }
+    },
+    openSettingAccount () {
+      this.$store.commit('TOGGLE_ACCOUNT_POPUP');
+      this.showBox = !this.showBox;
+    }
+  },
+  computed: {
+    togglePopup () {
+      return this.$store.state.popupState;
     }
   }
 };
