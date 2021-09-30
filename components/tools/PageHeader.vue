@@ -1,5 +1,8 @@
 <template>
-  <div class="page-header">
+  <div
+    class="page-header"
+    :class="{isBorder:isBorder}"
+  >
     <div
       v-show="isArrow"
       class="arrow"
@@ -61,13 +64,17 @@ export default {
       type: String,
       default: ''
     },
+    isBorder: {
+      type: Boolean,
+      default: false
+    },
     isArrow: {
       type: Boolean,
       default: false
     },
     btnName: {
       type: String,
-      default: 'button-add'
+      default: 'button-primary'
     },
     btnText: {
       type: String,
@@ -79,7 +86,7 @@ export default {
     },
     btnSecName: {
       type: String,
-      default: 'button-add'
+      default: 'button-primary'
     },
     btnSecText: {
       type: String,
@@ -156,9 +163,11 @@ export default {
 .page-header {
   display: flex;
   align-items: center;
-  border-bottom:1px solid #C4DED8;
   padding-bottom: 5px;
   margin: 1em auto;
+  &.isBorder{
+    border-bottom:1px solid #C4DED8;
+  }
 }
 .arrow {
   margin-right: 5px;
