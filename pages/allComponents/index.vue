@@ -95,7 +95,7 @@
       <AreaNote-component />
       <br>
       <br>
-      <CalNote-component />
+      <CalNote-component :date-note="true" />
       <br>
       <br>
       <TreeSelect-component />
