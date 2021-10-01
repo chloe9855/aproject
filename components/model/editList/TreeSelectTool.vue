@@ -46,10 +46,10 @@ export default {
     margin: 0.5em 5px;
   }
   .icon{
-    width: 16px;
-    height: 16px;
+    width: 25px;
+    height: 25px;
     position:absolute;
-    top: 1em;
+    top: 0.75em;
     right: 0.5em;
     cursor: pointer;
   }

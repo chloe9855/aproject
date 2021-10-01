@@ -30,9 +30,11 @@
           class="flex-1"
         >
       </div>
-      <button class="loginBtn">
-        登入
-      </button>
+      <div class="loginBtn">
+        <nuxt-link to="/">
+          登入
+        </nuxt-link>
+      </div>
     </div>
   </div>
 </template>
@@ -94,12 +96,20 @@ export default {
         }
         .loginBtn{
             margin: 1vh 0;
-            width: 100%;
             background: #3E9F88;
             border-radius: 5px;
-            color:#FFF;
             text-align: center;
+            padding: 6px 15px;
+            cursor: pointer;
+            a{
+              color:#FFF;
+              padding: 6px 8em;
+            }
             @include noto-sans-tc-18-medium;
+            &:active,&:hover,&.focus{
+              background-color: #21705d;
+              color: white;
+            }
         }
     }
 }

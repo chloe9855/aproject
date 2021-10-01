@@ -17,6 +17,7 @@
       :is-paginate="true"
       :is-edit="true"
       :is-del="true"
+      :is-scroll-table="true"
       :class="boxWidth"
     />
     <Search
@@ -81,11 +82,7 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-.page-header,.subTitleTool{
-  margin: 1em auto !important;
-}
 .tableTool{
-  margin: 0 auto !important;
   .tableContent{
     table{
       tbody{

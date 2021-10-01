@@ -8,28 +8,16 @@
     <InputVertical title="信箱" />
     <InputVertical title="備註" />
     <DropdownVertical title="群組" />
-    <div class="buttonBox">
-      <Button
-        :name="'button-primary'"
-        :text="'按鈕'"
-      />
-      <Button
-        :name="'button-default-disable'"
-        :text="'按鈕'"
-      />
-    </div>
   </div>
 </template>
 
 <script>
 import InputVertical from '~/components/tools/InputVertical.vue';
 import DropdownVertical from '~/components/tools/DropdownVertical.vue';
-import Button from '~/components/tools/Buttons.vue';
 export default {
   components: {
     InputVertical,
-    DropdownVertical,
-    Button
+    DropdownVertical
   },
   data: () => {
     return {

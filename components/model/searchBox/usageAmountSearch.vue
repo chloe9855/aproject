@@ -4,26 +4,14 @@
       title="管理處"
       :options="member"
     />
-    <div class="buttonBox">
-      <Button
-        :name="'button-primary'"
-        :text="'清除全部'"
-      />
-      <Button
-        :name="'button-default-disable'"
-        :text="'查詢'"
-      />
-    </div>
   </div>
 </template>
 
 <script>
 import DropdownVertical from '~/components/tools/DropdownVertical.vue';
-import Button from '~/components/tools/Buttons';
 export default {
   components: {
-    DropdownVertical: DropdownVertical,
-    Button: Button
+    DropdownVertical: DropdownVertical
   },
   props: {},
   data: () => {
@@ -36,9 +24,4 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.buttonBox{
-  display: flex;
-  justify-content: flex-end;
-  margin-top: 20px;
-}
 </style>

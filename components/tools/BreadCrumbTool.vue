@@ -91,7 +91,7 @@ export default {
 <style lang="scss" scoped>
 .breadcrumb{
   display: flex;
-  margin: 1em auto;
+  margin: 0.5em auto;
   ol{
     li{
       line-height: 23px;
