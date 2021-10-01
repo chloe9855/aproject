@@ -23,6 +23,7 @@
         <InputHorizontal
           title="驗證碼"
           class="flex-1"
+          :is-verification="true"
         />
         <img
           :src="require('~/assets/img/verification.jpg')"

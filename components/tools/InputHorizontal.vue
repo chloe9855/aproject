@@ -28,7 +28,7 @@
       <input
         v-model="message"
         class="inputType"
-        :class="{inputError:isError,isIcon:isAddIcon}"
+        :class="[{inputError:isError,isIcon:isAddIcon,verification:isVerification}]"
         :placeholder="inputText"
         :name="name"
         :type="inputType"
@@ -73,6 +73,10 @@ export default {
       default: ''
     },
     isDisable: {
+      type: Boolean,
+      default: false
+    },
+    isVerification: {
       type: Boolean,
       default: false
     },
@@ -169,5 +173,8 @@ export default {
   align-items: center;
   justify-content: center;
   border: 1px solid $caution-red;
+}
+.verification{
+  max-width: 105px;
 }
 </style>
