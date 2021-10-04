@@ -6,8 +6,9 @@
     <div
       v-show="!isShowBg && isCheck && isScrollTable"
       class="tableBox tableCheck"
+      :class="[!!tableColumn.topHead?'tableTopL':'tableTopS']"
     >
-      <table :style="{'height':tableColumnH+'px'}">
+      <table>
         <thead>
           <tr>
             <th
@@ -43,10 +44,13 @@
         </tbody>
       </table>
     </div>
-    <div class="tableBox w-100 tableContent">
+    <div
+      ref="tableContent"
+      class="tableBox w-100 tableContent"
+    >
       <table
-        ref="tableContent"
-        class="w-100"
+        ref="tableContentTable"
+        :class="test"
       >
         <thead>
           <tr v-if="!!tableColumn.topHead">
@@ -213,8 +217,9 @@
     <div
       v-if="optionLength > 0 && isScrollTable"
       class="tableBox tableBtn"
+      :class="[!!tableColumn.topHead?'tableTopL':'tableTopS']"
     >
-      <table :style="{'height':tableColumnH+'px'}">
+      <table>
         <thead>
           <tr>
             <th
@@ -297,6 +302,7 @@
       :per-page="10"
       @nowPage="getPageNum"
     />
+    {{ test }}
   </div>
 </template>
 
@@ -360,6 +366,10 @@ export default {
       type: Boolean,
       default: false
     },
+    isToggle: {
+      type: Boolean,
+      default: false
+    },
     tagList: {
       type: Array,
       default: () => {
@@ -374,17 +384,33 @@ export default {
       inputListId: [],
       dateList: [],
       dateListId: [],
-      tableColumnH: '',
       tableColumnBody: [],
-      getPage: 1
+      getPage: 1,
+      tableContentW: '',
+      tableContentTableW: '',
+      test: ''
     };
   },
   name: 'Table',
   mounted: function () {
     this.getPageNum(1);
+    const _this = this;
+    this.setTableWidth(_this);
+    window.onresize = function () { // 定義視窗大小變更通知事件
+      _this.setTableWidth(_this);
+      if (_this.$refs.tableContent.clientWidth > _this.$refs.tableContentTable.clientWidth) {
+        _this.test = 'is100';
+      } else {
+        _this.test = 'ismax';
+      };
+    };
   },
   updated: function () {
-    this.tableColumnH = this.$refs.tableContent.clientHeight;
+    if (this.$refs.tableContent.clientWidth > this.$refs.tableContentTable.clientWidth) {
+      this.test = 'is100';
+    } else {
+      this.test = 'ismax';
+    };
   },
   methods: {
     inputVal (e) { // 取得INPUT內容
@@ -411,6 +437,10 @@ export default {
           }
         });
       }
+    },
+    setTableWidth (t) {
+      t.tableContentW = t.$refs.tableContent.clientWidth;
+      t.tableContentTableW = t.$refs.tableContentTable.clientWidth;
     },
     getPageNum (e) { // 換頁取得DATA
       this.getPage = e;
@@ -470,6 +500,10 @@ export default {
     dataNum: function () {
       const data = this.tableColumn.body;
       return data.length;
+    },
+    tableWidth: function () {
+      const result = (this.tableContentW > this.tableContentTableW);
+      return result;
     }
   },
   watch: {
@@ -478,6 +512,13 @@ export default {
     },
     inputList: function (n) {
       this.$emit('tableInput', n);
+    },
+    isToggle: function (n) {
+      if (this.$refs.tableContent.clientWidth > this.$refs.tableContentTable.clientWidth) {
+        this.test = 'is100';
+      } else {
+        this.test = 'ismax';
+      };
     }
   }
 };
@@ -495,15 +536,20 @@ export default {
 }
 .tableBox{
   flex:1;
-  background: #FFF;
+  //background: #FFF;
   table{
     border:1px solid $light-green;
+    display: inline-table;
+    overflow:auto;
+    //width:max-content;
+    width:100%;
     //white-space: nowrap;
     thead{
-        border-bottom: 5px solid $main-green;
+        border-bottom: 6px solid $main-green;
         th{
             padding: 0 10px;
             text-align:left;
+            line-height: 24px !important;
             @include noto-sans-tc-16-bold;
             &.topHead{
               border:1px solid #c4ded8;
@@ -534,10 +580,34 @@ export default {
     width:50px;
     position:absolute;
     left:0;
-    top:0;
+    top:1px;
+    background: #fff;
+    border-left:1px solid $light-green;
+    padding-top:18px ;
+    table{
+      border:none;
+    }
+    &.tableTopL{
+      padding-top:24px;
+    }
+    &.tableTopS{
+      padding-top:0;
+    }
   }
   &.tableContent{
     overflow-x: scroll;
+    table{
+      //width:max-content;
+      &.isFullWidth{
+        width: 100%;
+      }
+      &.is100{
+        width: 100%;
+      }
+      &.ismax{
+        width:max-content;
+      }
+    }
     &::-webkit-scrollbar{
       width: 6px;
       height: 6px;
@@ -552,7 +622,19 @@ export default {
   &.tableBtn{
     position:absolute;
     right:0;
-    top:0;
+    background: #fff;
+    border-right:1px solid $light-green;
+    top:1px;
+    padding-top:30px ;
+    table{
+      border:none;
+    }
+    &.tableTopL{
+      padding-top:29.69px;
+    }
+    &.tableTopS{
+      padding-top:0;
+    }
   }
 }
 .vector {
