@@ -1,24 +1,26 @@
 <template>
   <div>
-    <BreadCrumbTool
-      :class="boxWidth"
-      :options="BreadCrumb"
-    />
-    <PageHeader
-      icon="slider"
-      title="群組權限管理"
-      :class="boxWidth"
-      btn-text="新增群組"
-      :btn-add="true"
-      btn-name="button-add"
-    />
-    <TableTool
-      :table-column="tableList"
-      :is-paginate="false"
-      :is-edit="true"
-      :is-del="true"
-      :class="boxWidth"
-    />
+    <div
+      class="content_block"
+      :class="[growDiv,boxWidth]"
+    >
+      <BreadCrumbTool
+        :options="BreadCrumb"
+      />
+      <PageHeader
+        icon="slider"
+        title="群組權限管理"
+        btn-text="新增群組"
+        :btn-add="true"
+        btn-name="button-add"
+      />
+      <TableTool
+        :table-column="tableList"
+        :is-paginate="false"
+        :is-edit="true"
+        :is-del="true"
+      />
+    </div>
     <Search
       type="userAcctSearch"
       @toggleStatus="getToggleStatus"
@@ -71,6 +73,10 @@ export default {
     boxWidth () {
       const setWidth = this.toggleStatus ? 'tg-75' : 'w-90';
       return setWidth;
+    },
+    growDiv () {
+      const setWidth = this.toggleStatus ? '' : 'grow';
+      return setWidth;
     }
   }
 };
@@ -109,5 +115,14 @@ export default {
   .subTitleTool:nth-child(1){
     margin-right: 1em !important;
   }
+}
+.content_block {
+    width: calc(100% - 372px);
+    transition: ease-in-out 0.4s;
+    height:100%;
+    margin : 0 5%;
+}
+.grow {
+  width: 90%;
 }
 </style>

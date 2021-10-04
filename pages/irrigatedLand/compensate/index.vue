@@ -1,31 +1,32 @@
 <template>
   <div>
-    <BreadCrumbTool
-      :class="boxWidth"
-      :options="BreadCrumb"
-    />
-    <PageHeader
-      icon="layer"
-      title="停灌補償案件"
-      :class="boxWidth"
-      btn-text="停灌補償申報"
-      :btn-add="true"
-      btn-name="button-add"
-    />
-    <TableTool
-      :table-column="tableList"
-      :is-paginate="true"
-      :is-edit="true"
-      :is-print="true"
-      :is-scroll-table="true"
-      :is-toggle="toggleStatus"
-      :class="boxWidth"
-    />
     <div
-      class="calNoteBox w-90"
-      :class="boxWidth"
+      class="content_block"
+      :class="[growDiv,boxWidth]"
     >
-      <CalNote />
+      <BreadCrumbTool
+        :options="BreadCrumb"
+      />
+      <PageHeader
+        icon="layer"
+        title="停灌補償案件"
+        btn-text="停灌補償申報"
+        :btn-add="true"
+        btn-name="button-add"
+      />
+      <TableTool
+        :table-column="tableList"
+        :is-paginate="true"
+        :is-edit="true"
+        :is-print="true"
+        :is-scroll-table="true"
+        :is-toggle="toggleStatus"
+      />
+      <div
+        class="calNoteBox w-90"
+      >
+        <CalNote />
+      </div>
     </div>
     <Search
       type="irrigatedLandSearch"
@@ -102,6 +103,10 @@ export default {
     boxWidth () {
       const setWidth = this.toggleStatus ? 'tg-75' : 'w-90';
       return setWidth;
+    },
+    growDiv () {
+      const setWidth = this.toggleStatus ? '' : 'grow';
+      return setWidth;
     }
   }
 };
@@ -123,5 +128,14 @@ export default {
       }
     }
   }
+}
+.content_block {
+    width: calc(100% - 372px);
+    transition: ease-in-out 0.4s;
+    height:100%;
+    margin : 0 5%;
+}
+.grow {
+  width: 90%;
 }
 </style>
