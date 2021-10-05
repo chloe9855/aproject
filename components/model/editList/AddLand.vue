@@ -108,7 +108,7 @@
       <Button
         :name="'button-default'"
         :text="'收合新增視窗'"
-        @click="$emit('clear')"
+        @click="$emit('clear',false)"
       />
       &emsp;
       <Button

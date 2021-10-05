@@ -20,11 +20,11 @@
       <div class="buttonBox">
         <Button
           :name="'button-primary'"
-          :text="'按鈕'"
+          :text="'確認'"
         />
         <Button
           :name="'button-default-disable'"
-          :text="'按鈕'"
+          :text="'取消'"
         />
       </div>
     </div>
@@ -63,12 +63,12 @@ export default {
   name: 'Popup',
   methods: {
     toggleStatus () {
-      this.$store.commit('TOGGLE_ACCOUNT_POPUP');
+      this.$store.commit('TOGGLE_POPUP_STATUS');
     }
   },
   computed: {
     componentInstance () {
-      const popupType = this.type;
+      const popupType = this.$store.state.popupType;
       return () => import(`~/components/model/popup/${popupType}`);
     },
     iconUrl () {

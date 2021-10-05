@@ -15,16 +15,6 @@
       :is-paginate="false"
       :is-del="true"
     />
-    <div class="buttonBox">
-      <Button
-        :name="'button-default-disable'"
-        :text="'取消'"
-      />
-      <Button
-        :name="'button-primary'"
-        :text="'新增'"
-      />
-    </div>
   </div>
 </template>
 

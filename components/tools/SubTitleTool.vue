@@ -72,9 +72,11 @@ export default {
   methods: {
     getBtnStatus (e) {
       this.btnStatus = e;
+      this.$emit('STbtnStatus', e);
     },
     getSecBtnStatus (e) {
       this.btnSecStatus = e;
+      this.$emit('STbtnSecStatus', e);
     }
   },
   computed: {

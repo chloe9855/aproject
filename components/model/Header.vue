@@ -195,7 +195,8 @@ export default {
       }
     },
     openSettingAccount () {
-      this.$store.commit('TOGGLE_ACCOUNT_POPUP');
+      this.$store.commit('TOGGLE_POPUP_STATUS');
+      this.$store.commit('TOGGLE_POPUP_TYPE', { type: 'editAccount' });
       this.showBox = !this.showBox;
     }
   },
