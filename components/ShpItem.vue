@@ -8,12 +8,12 @@
       <ViewCheckBox-component
         :id="item.id"
         :visible="item.visible"
-        @change="($event, id) => { $emit('changeVisible', $event, id) }"
+        @change="($event, id) => { $emit('changeVisible', $event, id, category) }"
       />
       <SliderBar-component
         :id="item.id"
         :value="item.opacity"
-        @update="(id, value) => { $emit('updateOpacity', id, value) }"
+        @update="(id, value) => { $emit('updateOpacity', id, value, category) }"
       />
       <img
         class="street_map"
@@ -38,7 +38,11 @@ export default {
     'SliderBar-component': SliderBar
   },
   props: {
-    item: Object
+    item: Object,
+    category: {
+      type: String,
+      default: ''
+    }
   },
   data () {
     return {

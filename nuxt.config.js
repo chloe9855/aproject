@@ -1,6 +1,9 @@
 export default {
   // Target: https://go.nuxtjs.dev/config-target
   target: 'static',
+  // router: {
+  //   base: '/cloudmap/'
+  // },
 
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
@@ -29,6 +32,23 @@ export default {
     { src: '~/plugins/sliderbar.js', mode: 'client' },
     { src: '~/plugins/paginate.js', mode: 'client' },
     { src: '~/plugins/dragbox.js', mode: 'client' }
+
+    // { src: '~/plugins/Base.js', mode: 'client' },
+    // { src: '~/plugins/OperationBase.js', mode: 'client' },
+    // { src: '~/plugins/SuperGeoUtility.js', mode: 'client' },
+    // { src: '~/plugins/AjaxAgent.js', mode: 'client' },
+    // { src: '~/plugins/Framework.js', mode: 'client' },
+    // { src: '~/plugins/MapBase.js', mode: 'client' },
+    // { src: '~/plugins/Controls.js', mode: 'client' },
+    // { src: '~/plugins/MapLayer.js', mode: 'client' },
+    // { src: '~/plugins/Navigate.js', mode: 'client' },
+    // { src: '~/plugins/CachedLayer.js', mode: 'client' },
+    // { src: '~/plugins/OpenStreetMap.js', mode: 'client' },
+    // { src: '~/plugins/ToolControls.js', mode: 'client' },
+    // { src: '~/plugins/ServerGate.js', mode: 'client' },
+    // { src: '~/plugins/SGServer.js', mode: 'client' },
+
+    // { src: '~/plugins/setMap.js', mode: 'client' }
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
@@ -70,7 +90,6 @@ export default {
     }
   },
   server: {
-    host: '192.168.1.103',
-    port: 3000
+    host: 'localhost'
   }
 };

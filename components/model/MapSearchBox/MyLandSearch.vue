@@ -61,8 +61,9 @@
     </div>
     <div class="buttonBox">
       <Button
-        :name="'button-primary-disable'"
+        :name="'button-default'"
         :text="'清除全部'"
+        @click="$emit('clear')"
       />
       <Button
         :name="'button-primary'"
@@ -103,7 +104,7 @@ export default {
       }
     };
   },
-  name: 'LandSearch',
+  name: 'MyLandSearch',
   computed: {}
 };
 </script>
