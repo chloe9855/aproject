@@ -24,23 +24,28 @@
           />
 
           <div class="navtabs__content layerwindow theme_scrollbar">
+            <!-- 點圖資 -->
             <div
               v-if="layerOptions.current === 0"
               class="layer__list"
             >
               <div
-                v-for="item in layerOptions.surfaceList"
+                v-for="item in layerOptions.pointList"
                 :key="item.id"
                 class="layer__item"
               >
                 <LayerItem-component
+                  category="pointList"
                   :item="item"
                   :drop-down="true"
                   @changeVisible="layerVisibleCtrl"
-                  @setAllVisible="allLayerVisibleCtrl"
+                  @changeBranchVisible="branchVisibleCtrl"
+                  @setAllVisible="allPointCtrl"
+                  @updateOpacity="layerOpacityCtrl"
                 />
               </div>
             </div>
+            <!-- 線圖資 -->
             <div
               v-if="layerOptions.current === 1"
               class="layer__list"
@@ -51,13 +56,17 @@
                 class="layer__item"
               >
                 <LayerItem-component
+                  category="lineList"
                   :item="item"
                   :drop-down="true"
                   @changeVisible="layerVisibleCtrl"
-                  @setAllVisible="allLineLayerVisibleCtrl"
+                  @changeBranchVisible="branchVisibleCtrl"
+                  @setAllVisible="allLineCtrl"
+                  @updateOpacity="layerOpacityCtrl"
                 />
               </div>
             </div>
+            <!-- 面圖資 -->
             <div
               v-if="layerOptions.current === 2"
               class="layer__list"
@@ -68,13 +77,17 @@
                 class="layer__item"
               >
                 <LayerItem-component
+                  category="surfaceList"
                   :item="item"
                   :drop-down="true"
                   @changeVisible="layerVisibleCtrl"
-                  @setAllVisible="allLayerVisibleCtrl"
+                  @changeBranchVisible="branchVisibleCtrl"
+                  @setAllVisible="allSurfaceCtrl"
+                  @updateOpacity="layerOpacityCtrl"
                 />
               </div>
             </div>
+            <!-- 底圖切換 -->
             <div
               v-if="layerOptions.current === 3"
               class="layer__list"
@@ -85,13 +98,15 @@
                 class="layer__item"
               >
                 <LayerItem-component
+                  category="baseLayer"
                   :item="item"
                   :drop-down="false"
                   @changeVisible="layerVisibleCtrl"
+                  @updateOpacity="layerOpacityCtrl"
                 />
               </div>
             </div>
-
+            <!-- 臨時展繪 -->
             <div
               v-if="layerOptions.current === 4"
               class="shp__list"
@@ -128,7 +143,7 @@
                 <p>尚未取得服務</p>
               </div>
             </div>
-
+            <!-- OGC介接 -->
             <div
               v-if="layerOptions.current === 5"
               class="ogc__list"
@@ -381,8 +396,9 @@ export default {
             id: 5
           }
         ],
-        surfaceList: [],
+        pointList: [],
         lineList: [],
+        surfaceList: [],
         baseLayerList: []
       },
       ogcOptions: {
@@ -440,11 +456,13 @@ export default {
   },
   // layout: 'map',
   mounted () {
-    const surface = require('~/static/surfaceLayer.json');
+    const point = require('~/static/pointLayer.json');
     const line = require('~/static/lineLayer.json');
+    const surface = require('~/static/surfaceLayer.json');
     const base = require('~/static/baseLayer.json');
     this.layerOptions.surfaceList = [...surface.data];
     this.layerOptions.lineList = [...line.data];
+    this.layerOptions.pointList = [...point.data];
     this.layerOptions.baseLayerList = [...base.data];
   },
   methods: {
@@ -463,26 +481,88 @@ export default {
       this.searchResult.channel = '';
       this.hideResult = false;
     },
-    // * @ 圖層工具：切換圖層顯示
-    layerVisibleCtrl ($event, id) {
+    // * @ 圖層工具：切換圖層 顯示/隱藏
+    layerVisibleCtrl ($event, id, category) {
       console.log(id);
       console.log($event);
+      if (category === 'pointList') {
+        const index = this.layerOptions.pointList.findIndex(item => item.id === id);
+        this.layerOptions.pointList[index].visible = $event;
+      }
+      if (category === 'lineList') {
+        const index = this.layerOptions.lineList.findIndex(item => item.id === id);
+        this.layerOptions.lineList[index].visible = $event;
+      }
+      if (category === 'surfaceList') {
+        const index = this.layerOptions.surfaceList.findIndex(item => item.id === id);
+        this.layerOptions.surfaceList[index].visible = $event;
+      }
+      if (category === 'baseLayer') {
+        const index = this.layerOptions.baseLayerList.findIndex(item => item.id === id);
+        this.layerOptions.baseLayerList[index].visible = $event;
+      }
+    },
+    // * @ 圖層工具：單一支線圖層 顯示/隱藏
+    branchVisibleCtrl ($event, id, category, mainId) {
+      if (category === 'pointList') {
+        const index = this.layerOptions.pointList.findIndex(item => item.id === mainId);
+        const indexB = this.layerOptions.pointList[index].type.findIndex(item => item.id === id);
+        this.layerOptions.pointList[index].type[indexB].visible = $event;
+      }
+      if (category === 'lineList') {
+        const index = this.layerOptions.lineList.findIndex(item => item.id === mainId);
+        const indexB = this.layerOptions.lineList[index].type.findIndex(item => item.id === id);
+        this.layerOptions.lineList[index].type[indexB].visible = $event;
+      }
+      if (category === 'surfaceList') {
+        const index = this.layerOptions.surfaceList.findIndex(item => item.id === mainId);
+        const indexB = this.layerOptions.surfaceList[index].type.findIndex(item => item.id === id);
+        this.layerOptions.surfaceList[index].type[indexB].visible = $event;
+      }
     },
     // * @ 圖層工具：全部顯示/關閉
-    allLayerVisibleCtrl ($event, id) {
-      // 拿到的id是渠道的id
-      console.log(id);
-      console.log($event);
-      const index = this.layerOptions.surfaceList.findIndex(item => item.id === id);
-      this.layerOptions.surfaceList[index].type.forEach((item) => {
+    allPointCtrl ($event, id) {
+      const myId = id.split('-')[1];
+      const index = this.layerOptions.pointList.findIndex(item => item.id === myId);
+      this.layerOptions.pointList[index].type.forEach((item) => {
         item.visible = $event;
       });
+      this.layerOptions.pointList[index].allShow = $event;
     },
-    allLineLayerVisibleCtrl ($event, id) {
-      const index = this.layerOptions.lineList.findIndex(item => item.id === id);
+    allLineCtrl ($event, id) {
+      const myId = id.split('-')[1];
+      const index = this.layerOptions.lineList.findIndex(item => item.id === myId);
       this.layerOptions.lineList[index].type.forEach((item) => {
         item.visible = $event;
       });
+      this.layerOptions.lineList[index].allShow = $event;
+    },
+    allSurfaceCtrl ($event, id) {
+      const myId = id.split('-')[1];
+      const index = this.layerOptions.surfaceList.findIndex(item => item.id === myId);
+      this.layerOptions.surfaceList[index].type.forEach((item) => {
+        item.visible = $event;
+      });
+      this.layerOptions.surfaceList[index].allShow = $event;
+    },
+    // * @ 圖層工具：透明度調整
+    layerOpacityCtrl (id, value, category) {
+      if (category === 'pointList') {
+        const index = this.layerOptions.pointList.findIndex(item => item.id === id);
+        this.layerOptions.pointList[index].opacity = value;
+      }
+      if (category === 'lineList') {
+        const index = this.layerOptions.lineList.findIndex(item => item.id === id);
+        this.layerOptions.lineList[index].opacity = value;
+      }
+      if (category === 'surfaceList') {
+        const index = this.layerOptions.surfaceList.findIndex(item => item.id === id);
+        this.layerOptions.surfaceList[index].opacity = value;
+      }
+      if (category === 'baseLayer') {
+        const index = this.layerOptions.baseLayerList.findIndex(item => item.id === id);
+        this.layerOptions.baseLayerList[index].opacity = value;
+      }
     },
     // * @ 圖層工具：臨時展繪 新增圖層
     addShpLayer () {
