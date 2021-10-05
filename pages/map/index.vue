@@ -1,9 +1,32 @@
 <template>
   <div class="wrapper">
     <div
+      id="mapNode"
       class="main"
       :class="{ 'reduceHeight': $store.state.hideFooter === true }"
     >
+      <!-- <div
+        id="TOC"
+        class="Drawer"
+        style="display:none;"
+      >
+        <div class="Frame">
+          <div
+            id="Header"
+            class="Headercolor"
+          >
+            <span class="Layoutcolor">Layers</span>
+          </div>
+          <div id="TOCBody" />
+        </div>
+      </div>
+      <div
+        id="IndexMap"
+        class="Tools On Buttoncolor"
+      >
+        <div id="IndexMapNode" />
+        <button class="IndexMap_Arrow" />
+      </div> -->
       <Feature-component
         :current="activeWindow"
         @select="payload => activeWindow = payload"
@@ -131,7 +154,9 @@
               <div v-if="shpOptions.layerList.length >= 1">
                 <ShpItem-component
                   :item="shpOptions.layerList[0]"
+                  category="shpitem"
                   @changeVisible="layerVisibleCtrl"
+                  @updateOpacity="layerOpacityCtrl"
                   @delete="deleteShpLayer"
                 />
               </div>
@@ -455,6 +480,66 @@ export default {
     };
   },
   // layout: 'map',
+  // head: {
+  //   script: [
+  //     {
+  //       src: 'scripts/Base.js',
+  //       async: true
+  //     },
+  //     {
+  //       src: 'scripts/OperationBase.js',
+  //       async: true
+  //     },
+  //     {
+  //       src: 'scripts/SuperGeoUtility.js',
+  //       async: true
+  //     },
+  //     {
+  //       src: 'scripts/AjaxAgent.js',
+  //       async: true
+  //     },
+  //     {
+  //       src: 'scripts/Framework.js',
+  //       async: true
+  //     },
+  //     {
+  //       src: 'scripts/MapBase.js',
+  //       async: true
+  //     },
+  //     {
+  //       src: 'scripts/Controls.js',
+  //       async: true
+  //     },
+  //     {
+  //       src: 'scripts/MapLayer.js',
+  //       async: true
+  //     },
+  //     {
+  //       src: 'scripts/Navigate.js',
+  //       async: true
+  //     },
+  //     {
+  //       src: 'scripts/CachedLayer.js',
+  //       async: true
+  //     },
+  //     {
+  //       src: 'scripts/OpenStreetMap.js',
+  //       async: true
+  //     },
+  //     {
+  //       src: 'scripts/ToolControls.js',
+  //       async: true
+  //     },
+  //     // {
+  //     //   src: 'ServerGate/SGSGate.ashx?F=~/scripts/Framework.js',
+  //     //   async: true
+  //     // },
+  //     {
+  //       src: 'scripts/setMap.js',
+  //       async: true
+  //     }
+  //   ]
+  // },
   mounted () {
     const point = require('~/static/pointLayer.json');
     const line = require('~/static/lineLayer.json');
@@ -500,6 +585,10 @@ export default {
       if (category === 'baseLayer') {
         const index = this.layerOptions.baseLayerList.findIndex(item => item.id === id);
         this.layerOptions.baseLayerList[index].visible = $event;
+      }
+      if (category === 'shpitem') {
+        const index = this.shpOptions.layerList.findIndex(item => item.id === id);
+        this.shpOptions.layerList[index].visible = $event;
       }
     },
     // * @ 圖層工具：單一支線圖層 顯示/隱藏
@@ -562,6 +651,10 @@ export default {
       if (category === 'baseLayer') {
         const index = this.layerOptions.baseLayerList.findIndex(item => item.id === id);
         this.layerOptions.baseLayerList[index].opacity = value;
+      }
+      if (category === 'shpitem') {
+        const index = this.shpOptions.layerList.findIndex(item => item.id === id);
+        this.shpOptions.layerList[index].opacity = value;
       }
     },
     // * @ 圖層工具：臨時展繪 新增圖層
