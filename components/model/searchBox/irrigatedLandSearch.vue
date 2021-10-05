@@ -86,7 +86,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.irrigatedLand{
+.irrigatedLand,.irrigatedInfo{
   padding: 0 15px;
 }
 </style>

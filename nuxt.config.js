@@ -31,7 +31,8 @@ export default {
   plugins: [
     { src: '~/plugins/sliderbar.js', mode: 'client' },
     { src: '~/plugins/paginate.js', mode: 'client' },
-    { src: '~/plugins/dragbox.js', mode: 'client' }
+    { src: '~/plugins/dragbox.js', mode: 'client' },
+    { src: '~/plugins/select.js', mode: 'client' }
 
     // { src: '~/plugins/Base.js', mode: 'client' },
     // { src: '~/plugins/OperationBase.js', mode: 'client' },
