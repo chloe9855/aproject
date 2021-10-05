@@ -5,6 +5,8 @@
       class="main"
       :class="{ 'reduceHeight': $store.state.hideFooter === true }"
     >
+      <!--    -->
+
       <!-- <div
         id="TOC"
         class="Drawer"
@@ -27,6 +29,8 @@
         <div id="IndexMapNode" />
         <button class="IndexMap_Arrow" />
       </div> -->
+
+      <!--  -->
       <Feature-component
         :current="activeWindow"
         @select="payload => activeWindow = payload"
@@ -342,12 +346,17 @@
           </p>
         </div>
         <div class="table_wrap">
-          <Table-component
+          <!-- <Table-component
             :table-column="searchResult.channel"
             :is-check="false"
             :is-map="true"
             :is-paginate="false"
+          /> -->
+          <ScrollTable-component
+            :table-data="searchResult.channel"
+            :hide="hideResult"
           />
+          <div class="border_bot" />
         </div>
       </div>
     </div>
@@ -367,7 +376,8 @@ import Buttons from '~/components/tools/Buttons.vue';
 import GeoMeasure from '~/components/GeoMeasure.vue';
 import ScreenShot from '~/components/ScreenShot.vue';
 import MapSearchBox from '~/components/MapSearchBox.vue';
-import Table from '~/components/model/Table.vue';
+// import Table from '~/components/model/Table.vue';
+import ScrollTable from '~/components/tools/ScrollTable.vue';
 
 export default {
   components: {
@@ -383,7 +393,8 @@ export default {
     'GeoMeasure-component': GeoMeasure,
     'ScreenShot-component': ScreenShot,
     'MapSearchBox-component': MapSearchBox,
-    'Table-component': Table
+    'ScrollTable-component': ScrollTable
+    // 'Table-component': Table
   },
   data () {
     return {
@@ -528,6 +539,134 @@ export default {
   //     },
   //     {
   //       src: 'scripts/ToolControls.js',
+  //       async: true
+  //     },
+  //     {
+  //       src: 'scripts/Tasks.js',
+  //       async: true
+  //     },
+  //     {
+  //       src: 'scripts/GFX.js',
+  //       async: true
+  //     },
+  //     {
+  //       src: 'scripts/FX.js',
+  //       async: true
+  //     },
+  //     {
+  //       src: 'scripts/Compass.js',
+  //       async: true
+  //     },
+  //     {
+  //       src: 'scripts/Tracker.js',
+  //       async: true
+  //     },
+  //     {
+  //       src: 'scripts/Geometry.js',
+  //       async: true
+  //     },
+  //     {
+  //       src: 'scripts/Symbol.js',
+  //       async: true
+  //     },
+  //     {
+  //       src: 'scripts/Draw.js',
+  //       async: true
+  //     },
+  //     {
+  //       src: 'scripts/Overview.js',
+  //       async: true
+  //     },
+  //     {
+  //       src: 'scripts/Bookmark.js',
+  //       async: true
+  //     },
+  //     {
+  //       src: 'scripts/TemplatePicker.js',
+  //       async: true
+  //     },
+  //     {
+  //       src: 'scripts/Layer.js',
+  //       async: true
+  //     },
+  //     {
+  //       src: 'scripts/DynamicLayer.js',
+  //       async: true
+  //     },
+  //     {
+  //       src: 'scripts/Graphic.js',
+  //       async: true
+  //     },
+  //     {
+  //       src: 'scripts/GraphicsLayer.js',
+  //       async: true
+  //     },
+  //     {
+  //       src: 'scripts/TileLayer.js',
+  //       async: true
+  //     },
+  //     {
+  //       src: 'scripts/OSMLayer.js',
+  //       async: true
+  //     },
+  //     {
+  //       src: 'scripts/BingTiledLayer.js',
+  //       async: true
+  //     },
+  //     {
+  //       src: 'scripts/Infowindow.js',
+  //       async: true
+  //     },
+  //     {
+  //       src: 'scripts/Mercator.js',
+  //       async: true
+  //     },
+  //     {
+  //       src: 'scripts/CoordSys.js',
+  //       async: true
+  //     },
+  //     {
+  //       src: 'scripts/PrintTool.js',
+  //       async: true
+  //     },
+  //     {
+  //       src: 'scripts/Process.js',
+  //       async: true
+  //     },
+  //     {
+  //       src: 'scripts/Query.js',
+  //       async: true
+  //     },
+  //     {
+  //       src: 'scripts/Edit.js',
+  //       async: true
+  //     },
+  //     {
+  //       src: 'scripts/UndoManager.js',
+  //       async: true
+  //     },
+  //     {
+  //       src: 'scripts/Request.js',
+  //       async: true
+  //     },
+  //     {
+  //       src: 'scripts/WMSLayer.js',
+  //       async: true
+  //     },
+  //     {
+  //       src: 'scripts/WMTSLayer.js',
+  //       async: true
+  //     },
+  //     {
+  //       src: 'scripts/Google.js',
+  //       async: true
+  //     },
+  //     {
+  //       src: 'scripts/Base64.js',
+  //       async: true
+  //     },
+  //     {
+  //       src: 'scripts/Projection.js',
   //       async: true
   //     },
   //     // {
@@ -702,6 +841,12 @@ export default {
   //   background-color: pink;
   //   z-index: -1;
   // }
+
+  .border_bot {
+    height: 1px;
+    background: $light-green;
+    width: calc(100% - 4.5px);
+  }
 
   .hide_button {
     background: $main-green;
