@@ -132,7 +132,7 @@ ul{
             border-width: 4px 0 4px 6.9px;
             border-color: transparent transparent transparent #494949;
             top:1em;
-            left:1em;
+            left:0.5em;
             cursor: pointer;
             &.active{
                 border-width: 6.9px 4px 0 4px;

@@ -15,6 +15,7 @@
         <TableTool
           :table-column="tableList"
           :is-paginate="true"
+          :column-min-width="150"
         />
         <div
           class="calNoteBox w-90"
@@ -68,8 +69,8 @@ export default {
           { title: '工作站' },
           { title: '水利小組' },
           { title: '水利小組面積㎡' },
-          { title: '水利小組轄區 農地地籍面積㎡' },
-          { title: '水利小組轄區 農地灌溉面積㎡' }
+          { title: '水利小組轄區農地地籍面積㎡' },
+          { title: '水利小組轄區農地灌溉面積㎡' }
         ],
         body: [
           { title: ['XX分處鹿草工作站', '山子腳', '山子腳-山腳', 'XXX小組', '2,050', '2,050', '2,050'] },

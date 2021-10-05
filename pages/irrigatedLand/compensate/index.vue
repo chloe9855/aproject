@@ -21,6 +21,7 @@
         :is-print="true"
         :is-scroll-table="true"
         :is-toggle="toggleStatus"
+        :column-min-width="80"
       />
       <div
         class="calNoteBox w-90"

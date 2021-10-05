@@ -47,14 +47,17 @@
     <div
       ref="tableContent"
       class="tableBox w-100 tableContent"
+      :class="'minWidth'+columnMinWidth"
     >
       <table
         ref="tableContentTable"
-        :class="test"
       >
         <thead>
           <tr v-if="!!tableColumn.topHead">
-            <th v-show="isCheck" />
+            <th
+              v-show="isCheck"
+              class="checkColumn"
+            />
             <th
               v-for="( item, index ) in tableColumn.topHead"
               :key="index"
@@ -69,7 +72,10 @@
             />
           </tr>
           <tr>
-            <th v-show="isCheck">
+            <th
+              v-show="isCheck"
+              class="checkColumn"
+            >
               <input
                 id="all"
                 type="checkBox"
@@ -302,7 +308,6 @@
       :per-page="10"
       @nowPage="getPageNum"
     />
-    {{ test }}
   </div>
 </template>
 
@@ -370,6 +375,14 @@ export default {
       type: Boolean,
       default: false
     },
+    columnMinWidth: {
+      type: Number,
+      default: 80
+    },
+    columnLength: {
+      type: Number,
+      default: 10
+    },
     tagList: {
       type: Array,
       default: () => {
@@ -385,32 +398,12 @@ export default {
       dateList: [],
       dateListId: [],
       tableColumnBody: [],
-      getPage: 1,
-      tableContentW: '',
-      tableContentTableW: '',
-      test: ''
+      getPage: 1
     };
   },
   name: 'Table',
   mounted: function () {
     this.getPageNum(1);
-    const _this = this;
-    this.setTableWidth(_this);
-    window.onresize = function () { // 定義視窗大小變更通知事件
-      _this.setTableWidth(_this);
-      if (_this.$refs.tableContent.clientWidth > _this.$refs.tableContentTable.clientWidth) {
-        _this.test = 'is100';
-      } else {
-        _this.test = 'ismax';
-      };
-    };
-  },
-  updated: function () {
-    if (this.$refs.tableContent.clientWidth > this.$refs.tableContentTable.clientWidth) {
-      this.test = 'is100';
-    } else {
-      this.test = 'ismax';
-    };
   },
   methods: {
     inputVal (e) { // 取得INPUT內容
@@ -438,16 +431,13 @@ export default {
         });
       }
     },
-    setTableWidth (t) {
-      t.tableContentW = t.$refs.tableContent.clientWidth;
-      t.tableContentTableW = t.$refs.tableContentTable.clientWidth;
-    },
     getPageNum (e) { // 換頁取得DATA
       this.getPage = e;
       this.tableColumnBody = [];
       const page = this.getPage;
-      const startId = 1 + 10 * (page - 1);
-      const endId = startId + (10 - 1);
+      const columnLength = this.columnLength;
+      const startId = 1 + columnLength * (page - 1);
+      const endId = startId + (columnLength - 1);
       const tableColumnBodyContent = this.tableColumnBody;
       this.tableColumn.body.forEach(function (v, i) {
         const num = i + 1;
@@ -500,10 +490,6 @@ export default {
     dataNum: function () {
       const data = this.tableColumn.body;
       return data.length;
-    },
-    tableWidth: function () {
-      const result = (this.tableContentW > this.tableContentTableW);
-      return result;
     }
   },
   watch: {
@@ -512,13 +498,6 @@ export default {
     },
     inputList: function (n) {
       this.$emit('tableInput', n);
-    },
-    isToggle: function (n) {
-      if (this.$refs.tableContent.clientWidth > this.$refs.tableContentTable.clientWidth) {
-        this.test = 'is100';
-      } else {
-        this.test = 'ismax';
-      };
     }
   }
 };
@@ -536,12 +515,10 @@ export default {
 }
 .tableBox{
   flex:1;
-  //background: #FFF;
   table{
     border:1px solid $light-green;
     display: inline-table;
     overflow:auto;
-    //width:max-content;
     width:100%;
     //white-space: nowrap;
     thead{
@@ -586,6 +563,9 @@ export default {
     padding-top:18px ;
     table{
       border:none;
+      th{
+        min-width: 30px;
+      }
     }
     &.tableTopL{
       padding-top:24px;
@@ -597,15 +577,11 @@ export default {
   &.tableContent{
     overflow-x: scroll;
     table{
-      //width:max-content;
-      &.isFullWidth{
-        width: 100%;
-      }
-      &.is100{
-        width: 100%;
-      }
-      &.ismax{
-        width:max-content;
+      width:100%;
+      th{
+        &.checkColumn{
+          min-width: 30px;
+        }
       }
     }
     &::-webkit-scrollbar{
@@ -630,7 +606,7 @@ export default {
       border:none;
     }
     &.tableTopL{
-      padding-top:29.69px;
+      padding-top:29px;
     }
     &.tableTopS{
       padding-top:0;
@@ -684,6 +660,26 @@ export default {
     display:inline-block;
     margin: 0 5px;
     cursor: pointer;
+  }
+}
+.minWidth80{
+  th{
+    min-width: 80px;
+  }
+}
+.minWidth100{
+  th{
+    min-width: 100px;
+  }
+}
+.minWidth120{
+  th{
+    min-width: 120px;
+  }
+}
+.minWidth150{
+  th{
+    min-width: 150px;
   }
 }
 </style>
