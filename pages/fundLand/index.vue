@@ -32,12 +32,6 @@
           v-if="searchResult.landNo !== ''"
           class="landno_wrap"
         >
-          <!-- <div class="btn_wrap2">
-            <Buttons
-              :name="'button-primary'"
-              :text="'在地圖上顯示'"
-            />
-          </div> -->
           <NavTabs
             :type-list="options.typeList"
             :selected="options.current"

@@ -11,7 +11,8 @@
                {"name": "主給","visible": true, "pic":"give", "id":"166"}
       ],
       "visible": true, 
-      "opacity": 50
+      "opacity": 50,
+      "allShow":true
     },
     {
       "id": "123457",
@@ -23,7 +24,8 @@
                {"name": "主給","visible": true, "pic":"give", "id":"200"}
       ],
       "visible": true,
-      "opacity": 50
+      "opacity": 50,
+      "allShow":true
     },
     {
       "id": "123458",

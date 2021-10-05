@@ -15,12 +15,12 @@
         <ViewCheckBox-component
           :id="item.id"
           :visible="item.visible"
-          @change="($event, id) => { $emit('changeVisible', $event, id) }"
+          @change="($event, id) => { $emit('changeVisible', $event, id, category) }"
         />
         <SliderBar-component
           :id="item.id"
           :value="item.opacity"
-          @update="(id, value) => { $emit('updateOpacity', id, value) }"
+          @update="(id, value) => { $emit('updateOpacity', id, value, category) }"
         />
       </div>
     </div>
@@ -37,8 +37,9 @@
         <div class="allshow">
           <span>全部顯示</span>
           <ViewCheckBox-component
-            :visible="true"
-            @change="($event) => { $emit('setAllVisible', $event, item.id) }"
+            :id="`all-${item.id}`"
+            :visible="item.allShow"
+            @change="($event, id) => { $emit('setAllVisible', $event, id) }"
           />
         </div>
         <div class="branch_block">
@@ -55,7 +56,7 @@
             <ViewCheckBox-component
               :id="typeItem.id"
               :visible="typeItem.visible"
-              @change="($event, id) => { $emit('changeVisible', $event, id) }"
+              @change="($event, id) => { $emit('changeBranchVisible', $event, id, category, item.id) }"
             />
           </div>
         </div>
@@ -75,7 +76,11 @@ export default {
   },
   props: {
     item: Object,
-    dropDown: Boolean
+    dropDown: Boolean,
+    category: {
+      type: String,
+      default: ''
+    }
   },
   data () {
     return {
