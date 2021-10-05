@@ -5,7 +5,7 @@
 export const state = () => ({
   hideFooter: false,
   popupState: false,
-  popupType: 'editAccount'
+  popupType: { type: 'editAccount', title: '請設定查詢作業標題' }
 });
 
 // * ==========================================================================
@@ -21,6 +21,7 @@ export const mutations = {
     state.popupState = !state.popupState;
   },
   TOGGLE_POPUP_TYPE (state, payload) {
-    state.popupType = payload.type;
+    state.popupType.title = payload.title;
+    state.popupType.type = payload.type;
   }
 };

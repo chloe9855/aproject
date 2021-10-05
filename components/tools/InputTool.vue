@@ -32,6 +32,19 @@
       :src="iconImg"
       class="input-icon"
     >
+    <div
+      v-show="filterData"
+      class="filterBox"
+    >
+      <ul>
+        <li
+          v-for="(item, index) in searchInput"
+          :key="index"
+        >
+          {{ item }}
+        </li>
+      </ul>
+    </div>
   </div>
 </template>
 
@@ -73,6 +86,14 @@ export default {
     inputId: {
       type: Number,
       default: 0
+    },
+    searchInput: {
+      type: Object,
+      default: () => {
+        return {
+          searchData: {}
+        };
+      }
     }
   },
   data: () => {
@@ -80,7 +101,8 @@ export default {
       message: '',
       RegExpType: {
         code8: '^.{8}$'
-      }
+      },
+      filterBox: false
     };
   },
   name: 'InputTool',
@@ -117,6 +139,11 @@ export default {
       const data = { val: n, id: this.inputId };
       this.$emit('inputValue', data);
     }
+  },
+  method: {
+    filterData () {
+      this.filterBox = true;
+    }
   }
 };
 </script>
@@ -124,8 +151,8 @@ export default {
 <style lang="scss" scoped>
 @import '~/assets/scss/input.scss';
 .error-hinit {
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
 }
 </style>

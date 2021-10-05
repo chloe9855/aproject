@@ -29,11 +29,13 @@
         title="相關表單資料"
         :btn-add="true"
         btn-text="新增表單"
+        @STbtnStatus="addTable"
       />
       <SubTitleTool
         title="相關文件資料"
         :btn-add="true"
         btn-text="新增文件"
+        @STbtnStatus="addFile"
       />
     </div>
     <div class="downloadArea w-90">
@@ -98,7 +100,19 @@ export default {
     addNews (e) {
       if (e) {
         this.$store.commit('TOGGLE_POPUP_STATUS');
-        this.$store.commit('TOGGLE_POPUP_TYPE', { type: 'addTableData' });
+        this.$store.commit('TOGGLE_POPUP_TYPE', { type: 'news', title: '新增公告' });
+      }
+    },
+    addTable (e) {
+      if (e) {
+        this.$store.commit('TOGGLE_POPUP_STATUS');
+        this.$store.commit('TOGGLE_POPUP_TYPE', { type: 'addTableData', title: '新增表單資料' });
+      }
+    },
+    addFile (e) {
+      if (e) {
+        this.$store.commit('TOGGLE_POPUP_STATUS');
+        this.$store.commit('TOGGLE_POPUP_TYPE', { type: 'addFile', title: '新增文件資料' });
       }
     }
   }

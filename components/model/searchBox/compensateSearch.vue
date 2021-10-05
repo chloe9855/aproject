@@ -36,4 +36,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.inputBox{
+  padding: 0 15px;
+}
 </style>

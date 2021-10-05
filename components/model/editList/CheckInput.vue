@@ -3,11 +3,13 @@
     class="check-input-box flexBox"
     :class="sizing"
   >
-    <div class="flex-1 flexCheckBox">
+    <div class="flex-1 flexCheckBox checkBoxOption">
       <input
+        :id="name"
         v-model="isCheck"
         type="checkBox"
-      >
+        :name="name"
+      ><label :for="name" />
       {{ text }}<span>面積(㎡)</span>
     </div>
 
@@ -29,6 +31,10 @@ export default {
     sizing: {
       type: String,
       default: 'w-100'
+    },
+    name: {
+      type: String,
+      default: 'a0'
     }
   },
   data: () => {
@@ -45,5 +51,28 @@ export default {
 <style lang="scss" scoped>
 .flexCheckBox{
   min-width: 180px;
+}
+.checkBoxOption{
+  input[type="checkbox"] {
+    display:none;
+  }
+  input[type="checkbox"] + label
+  {
+    background: #999;
+    height: 14px;
+    width: 14px;
+    display:inline-block;
+    margin: 0 5px;
+    cursor: pointer;
+  }
+  input[type="checkbox"]:checked + label
+  {
+    background: url("~/assets/img/check.svg");
+    height: 14px;
+    width: 14px;
+    display:inline-block;
+    margin: 0 5px;
+    cursor: pointer;
+  }
 }
 </style>

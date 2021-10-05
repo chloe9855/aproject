@@ -37,6 +37,7 @@
         :is-paginate="false"
         class="w-90"
         :is-del="true"
+        :is-scroll-table="true"
       />
       <SubTitleTool
         title="申請人資料"

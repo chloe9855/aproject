@@ -43,6 +43,10 @@
       </div>
     </div>
     <div class="listBox Box2">
+      <div class="listTitle" />
+      <AreaNote />
+    </div>
+    <div class="listBox Box2">
       <div class="listTitle">
         土地所有權人
       </div>
@@ -74,7 +78,16 @@
         申請類別
       </div>
       <div class="flexBox">
-        <CheckInput text="態樣1(93000)" /><CheckInput text="態樣2(93000)" /><CheckInput text="態樣3(93000)" />
+        <CheckInput
+          name="a1"
+          text="態樣1(93000)"
+        /><CheckInput
+          name="a2"
+          text="態樣2(93000)"
+        /><CheckInput
+          name="a3"
+          text="態樣3(93000)"
+        />
       </div>
     </div>
     <div class="listBox Box5">
@@ -89,7 +102,7 @@
       <div class="listTitle">
         檢附資料
       </div>
-      <div class="flexBox">
+      <div class="flexBox checkBoxOption">
         <span
           v-for="(item , index) in option.data"
           :key="index"
@@ -125,12 +138,14 @@ import Dropdown from '~/components/tools/Dropdown.vue';
 import Button from '~/components/tools/Buttons';
 import InputTool from '~/components/tools/InputTool';
 import CheckInput from '~/components/model/editList/CheckInput';
+import AreaNote from '~/components/tools/AreaNote.vue';
 export default {
   components: {
     Dropdown,
     Button,
     CheckInput,
-    InputTool
+    InputTool,
+    AreaNote
   },
   props: {
     option: {
@@ -202,6 +217,41 @@ export default {
         div{
             margin: 0 2.5px;
         }
+        @include pc-width{
+          flex-wrap: wrap;
+        }
+        @include pcm-width{
+          flex-wrap: wrap;
+        }
+        @include pcs-width{
+          flex-wrap: wrap;
+        }
+        @include pcxs-width{
+          flex-wrap: wrap;
+        }
     }
+}
+.checkBoxOption{
+  input[type="checkbox"] {
+    display:none;
+  }
+  input[type="checkbox"] + label
+  {
+    background: #999;
+    height: 14px;
+    width: 14px;
+    display:inline-block;
+    margin: 0 5px;
+    cursor: pointer;
+  }
+  input[type="checkbox"]:checked + label
+  {
+    background: url("~/assets/img/check.svg");
+    height: 14px;
+    width: 14px;
+    display:inline-block;
+    margin: 0 5px;
+    cursor: pointer;
+  }
 }
 </style>

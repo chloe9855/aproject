@@ -9,7 +9,7 @@
           :src="iconUrl"
           class="mainIcon"
         >
-        <span>{{ title }}</span>
+        <span>{{ popTitle }}</span>
         <img
           :src="require('~/assets/img/close-icon.svg')"
           class="closeIcon"
@@ -40,10 +40,6 @@ export default {
     Button
   },
   props: {
-    type: {
-      type: String,
-      default: 'edit'
-    },
     icon: {
       type: String,
       default: 'edit'
@@ -64,16 +60,21 @@ export default {
   methods: {
     toggleStatus () {
       this.$store.commit('TOGGLE_POPUP_STATUS');
+      this.$store.commit('TOGGLE_POPUP_TYPE', { type: 'addTableData', title: '編輯內容' });
     }
   },
   computed: {
     componentInstance () {
-      const popupType = this.$store.state.popupType;
+      const popupType = this.$store.state.popupType.type;
       return () => import(`~/components/model/popup/${popupType}`);
     },
     iconUrl () {
       const popupIcon = this.icon;
       return require(`~/assets/img/${popupIcon}.svg`);
+    },
+    popTitle () {
+      const popupTitle = this.$store.state.popupType.title;
+      return popupTitle;
     }
   }
 };
