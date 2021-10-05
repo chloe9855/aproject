@@ -5,7 +5,7 @@
     <Footer />
     <Popup
       :is-active="togglePopup"
-      type="editAccount"
+      :type="popupType"
     />
     <MaskTool :is-active="togglePopup" />
   </div>
@@ -32,6 +32,9 @@ export default {
   computed: {
     togglePopup () {
       return this.$store.state.popupState;
+    },
+    popupType () {
+      return this.$store.state.popupType;
     }
   }
 };

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="news">
     <BreadCrumbTool
       class="w-90"
       :options="BreadCrumb"
@@ -14,6 +14,7 @@
       btn-text="新增公告"
       :btn-add="true"
       class="w-90"
+      @STbtnStatus="addNews"
     />
     <TableTool
       :table-column="tableList"
@@ -92,12 +93,23 @@ export default {
       BreadCrumb: ['系統管理', '首頁資料管理']
     };
   },
-  name: 'EditNews'
+  name: 'EditNews',
+  methods: {
+    addNews (e) {
+      if (e) {
+        this.$store.commit('TOGGLE_POPUP_STATUS');
+        this.$store.commit('TOGGLE_POPUP_TYPE', { type: 'addTableData' });
+      }
+    }
+  }
+
 };
 </script>
 <style lang="scss">
 .news{
+  padding-bottom:5vh !important;
   &.tableTool{
+    padding-bottom:0 !important;
     flex:1;
     @include noto-sans-tc-16-regular;
     .tableContent{

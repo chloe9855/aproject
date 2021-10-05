@@ -4,7 +4,8 @@
 
 export const state = () => ({
   hideFooter: false,
-  popupState: false
+  popupState: false,
+  popupType: 'editAccount'
 });
 
 // * ==========================================================================
@@ -16,7 +17,10 @@ export const mutations = {
   HIDE_FOOTER_CTRL (state, payload) {
     state.hideFooter = payload;
   },
-  TOGGLE_ACCOUNT_POPUP (state) {
+  TOGGLE_POPUP_STATUS (state) {
     state.popupState = !state.popupState;
+  },
+  TOGGLE_POPUP_TYPE (state, payload) {
+    state.popupType = payload.type;
   }
 };
