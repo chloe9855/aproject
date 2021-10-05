@@ -1,6 +1,5 @@
 <template>
   <div
-
     class="searchBox"
     :class="toggleBox"
   >
@@ -25,9 +24,11 @@
 
 <script>
 import PageHeader from '~/components/tools/PageHeader';
+
 export default {
   components: {
     PageHeader: PageHeader
+
   },
   props: {
     tableColumn: {
@@ -40,7 +41,7 @@ export default {
     },
     type: {
       type: String,
-      default: 'landSearchNum'
+      default: 'MyLandSearch'
     },
     title: {
       type: String,
@@ -91,13 +92,13 @@ export default {
   computed: {
     componentInstance () {
       const searchType = this.type;
-      return () => import(`~/components/model/searchBox/${searchType}`);
+      return () => import(`~/components/model/MapSearchBox/${searchType}`);
     },
     searchTitle () {
       const searchType = this.type;
       let title = '';
       switch (searchType) {
-        case 'landSearch':
+        case 'MyLandSearch':
           title = '作業基金土地查詢';
           break;
         case 'userAcctSearch':

@@ -51,6 +51,7 @@
     >
       <table
         ref="tableContentTable"
+        :class="{'noWrap': noWrap }"
       >
         <thead>
           <tr v-if="!!tableColumn.topHead">
@@ -383,6 +384,10 @@ export default {
       type: Number,
       default: 10
     },
+    noWrap: {
+      type: Boolean,
+      default: false
+    },
     tagList: {
       type: Array,
       default: () => {
@@ -504,6 +509,11 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+
+.noWrap {
+  white-space: nowrap;
+}
+
 .tableTool{
   display: flex;
   justify-content: center;

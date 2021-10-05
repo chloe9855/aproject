@@ -1,9 +1,9 @@
 export default {
   // Target: https://go.nuxtjs.dev/config-target
   target: 'static',
-  router: {
-    base: '/cloudmap/'
-  },
+  // router: {
+  //   base: '/cloudmap/'
+  // },
 
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
@@ -90,7 +90,6 @@ export default {
     }
   },
   server: {
-    host: '192.168.1.103',
-    port: 3000
+    host: 'localhost'
   }
 };

@@ -213,6 +213,7 @@ export default {
     border-radius: 0 0 22px 0;
     overflow: hidden;
     flex-grow: 1;
+    width: 320px;
     @include noto-sans-tc-16-regular;
 
     table {
