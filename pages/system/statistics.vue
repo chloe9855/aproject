@@ -1,17 +1,20 @@
 <template>
   <div>
-    <BreadCrumbTool
-      :class="boxWidth"
-      :options="BreadCrumb"
-    />
-    <PageHeader
-      icon="system"
-      title="系統使用量統計"
-      :class="boxWidth"
-      btn-text="資料下載"
-      btn-name="button-primary"
-    />
-    <ToggleList :class="boxWidth" />
+    <div
+      class="content_block"
+      :class="[growDiv,boxWidth]"
+    >
+      <BreadCrumbTool
+        :options="BreadCrumb"
+      />
+      <PageHeader
+        icon="system"
+        title="系統使用量統計"
+        btn-text="資料下載"
+        btn-name="button-primary"
+      />
+      <ToggleList />
+    </div>
     <Search
       type="usageAmountSearch"
       @toggleStatus="getToggleStatus"
@@ -64,6 +67,13 @@ export default {
     boxWidth () {
       const setWidth = this.toggleStatus ? 'tg-75' : 'w-90';
       return setWidth;
+    },
+    growDiv () {
+      const setWidth = this.toggleStatus ? '' : 'grow';
+      return setWidth;
+    },
+    accountToggle () {
+      return this.$store.state.settingAccount;
     }
   }
 };
@@ -88,5 +98,14 @@ export default {
   .subTitleTool:nth-child(1){
     margin-right: 1em !important;
   }
+}
+.content_block {
+    width: calc(100% - 372px);
+    transition: ease-in-out 0.4s;
+    height:100%;
+    margin : 0 5%;
+}
+.grow {
+  width: 90%;
 }
 </style>

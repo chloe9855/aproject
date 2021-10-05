@@ -6,8 +6,9 @@
     <div
       v-show="!isShowBg && isCheck && isScrollTable"
       class="tableBox tableCheck"
+      :class="[!!tableColumn.topHead?'tableTopL':'tableTopS']"
     >
-      <table :style="{'height':tableColumnH+'px'}">
+      <table>
         <thead>
           <tr>
             <th
@@ -43,14 +44,20 @@
         </tbody>
       </table>
     </div>
-    <div class="tableBox w-100 tableContent">
+    <div
+      ref="tableContent"
+      class="tableBox w-100 tableContent"
+      :class="'minWidth'+columnMinWidth"
+    >
       <table
-        ref="tableContent"
-        class="w-100"
+        ref="tableContentTable"
       >
         <thead>
           <tr v-if="!!tableColumn.topHead">
-            <th v-show="isCheck" />
+            <th
+              v-show="isCheck"
+              class="checkColumn"
+            />
             <th
               v-for="( item, index ) in tableColumn.topHead"
               :key="index"
@@ -65,7 +72,10 @@
             />
           </tr>
           <tr>
-            <th v-show="isCheck">
+            <th
+              v-show="isCheck"
+              class="checkColumn"
+            >
               <input
                 id="all"
                 type="checkBox"
@@ -213,8 +223,9 @@
     <div
       v-if="optionLength > 0 && isScrollTable"
       class="tableBox tableBtn"
+      :class="[!!tableColumn.topHead?'tableTopL':'tableTopS']"
     >
-      <table :style="{'height':tableColumnH+'px'}">
+      <table>
         <thead>
           <tr>
             <th
@@ -360,6 +371,18 @@ export default {
       type: Boolean,
       default: false
     },
+    isToggle: {
+      type: Boolean,
+      default: false
+    },
+    columnMinWidth: {
+      type: Number,
+      default: 80
+    },
+    columnLength: {
+      type: Number,
+      default: 10
+    },
     tagList: {
       type: Array,
       default: () => {
@@ -374,7 +397,6 @@ export default {
       inputListId: [],
       dateList: [],
       dateListId: [],
-      tableColumnH: '',
       tableColumnBody: [],
       getPage: 1
     };
@@ -382,9 +404,6 @@ export default {
   name: 'Table',
   mounted: function () {
     this.getPageNum(1);
-  },
-  updated: function () {
-    this.tableColumnH = this.$refs.tableContent.clientHeight;
   },
   methods: {
     inputVal (e) { // 取得INPUT內容
@@ -416,8 +435,9 @@ export default {
       this.getPage = e;
       this.tableColumnBody = [];
       const page = this.getPage;
-      const startId = 1 + 10 * (page - 1);
-      const endId = startId + (10 - 1);
+      const columnLength = this.columnLength;
+      const startId = 1 + columnLength * (page - 1);
+      const endId = startId + (columnLength - 1);
       const tableColumnBodyContent = this.tableColumnBody;
       this.tableColumn.body.forEach(function (v, i) {
         const num = i + 1;
@@ -495,15 +515,18 @@ export default {
 }
 .tableBox{
   flex:1;
-  background: #FFF;
   table{
     border:1px solid $light-green;
+    display: inline-table;
+    overflow:auto;
+    width:100%;
     //white-space: nowrap;
     thead{
-        border-bottom: 5px solid $main-green;
+        border-bottom: 6px solid $main-green;
         th{
             padding: 0 10px;
             text-align:left;
+            line-height: 24px !important;
             @include noto-sans-tc-16-bold;
             &.topHead{
               border:1px solid #c4ded8;
@@ -534,10 +557,33 @@ export default {
     width:50px;
     position:absolute;
     left:0;
-    top:0;
+    top:1px;
+    background: #fff;
+    border-left:1px solid $light-green;
+    padding-top:18px ;
+    table{
+      border:none;
+      th{
+        min-width: 30px;
+      }
+    }
+    &.tableTopL{
+      padding-top:24px;
+    }
+    &.tableTopS{
+      padding-top:0;
+    }
   }
   &.tableContent{
     overflow-x: scroll;
+    table{
+      width:100%;
+      th{
+        &.checkColumn{
+          min-width: 30px;
+        }
+      }
+    }
     &::-webkit-scrollbar{
       width: 6px;
       height: 6px;
@@ -552,7 +598,19 @@ export default {
   &.tableBtn{
     position:absolute;
     right:0;
-    top:0;
+    background: #fff;
+    border-right:1px solid $light-green;
+    top:1px;
+    padding-top:30px ;
+    table{
+      border:none;
+    }
+    &.tableTopL{
+      padding-top:29px;
+    }
+    &.tableTopS{
+      padding-top:0;
+    }
   }
 }
 .vector {
@@ -602,6 +660,26 @@ export default {
     display:inline-block;
     margin: 0 5px;
     cursor: pointer;
+  }
+}
+.minWidth80{
+  th{
+    min-width: 80px;
+  }
+}
+.minWidth100{
+  th{
+    min-width: 100px;
+  }
+}
+.minWidth120{
+  th{
+    min-width: 120px;
+  }
+}
+.minWidth150{
+  th{
+    min-width: 150px;
   }
 }
 </style>

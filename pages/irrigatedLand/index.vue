@@ -1,37 +1,39 @@
 <template>
   <div>
-    <BreadCrumbTool
-      :class="boxWidth"
-      :options="BreadCrumb"
-    />
-    <PageHeader
-      icon="bungalow"
-      title="灌溉地籍查詢與統計"
-      :class="boxWidth"
-    />
-    <div v-if=" toggleCurrent === 0 ">
-      <TableTool
-        :table-column="tableList"
-        :is-paginate="true"
-        :class="boxWidth"
+    <div
+      class="content_block"
+      :class="[growDiv,boxWidth]"
+    >
+      <BreadCrumbTool
+        :options="BreadCrumb"
       />
-      <div
-        class="calNoteBox w-90"
-        :class="boxWidth"
-      >
-        <CalNote />
-        <CalNote />
-        <CalNote />
+      <PageHeader
+        icon="bungalow"
+        title="灌溉地籍查詢與統計"
+      />
+      <div v-if=" toggleCurrent === 0 ">
+        <TableTool
+          :table-column="tableList"
+          :is-paginate="true"
+          :column-min-width="150"
+        />
+        <div
+          class="calNoteBox w-90"
+        >
+          <CalNote />
+          <CalNote />
+          <CalNote />
+        </div>
+      </div>
+      <div v-else-if=" toggleCurrent === 1 ">
+        <NormalTable
+          v-if="columnList.length >= 1"
+          :list="columnList"
+          class="listTable"
+        />
       </div>
     </div>
-    <div v-else-if=" toggleCurrent === 1 ">
-      <NormalTable
-        v-if="columnList.length >= 1"
-        :list="columnList"
-        :class="boxWidth"
-        class="listTable"
-      />
-    </div>
+
     <Search
       type="irrigatedLandSearch"
       @toggleStatus="getToggleStatus"
@@ -67,8 +69,8 @@ export default {
           { title: '工作站' },
           { title: '水利小組' },
           { title: '水利小組面積㎡' },
-          { title: '水利小組轄區 農地地籍面積㎡' },
-          { title: '水利小組轄區 農地灌溉面積㎡' }
+          { title: '水利小組轄區農地地籍面積㎡' },
+          { title: '水利小組轄區農地灌溉面積㎡' }
         ],
         body: [
           { title: ['XX分處鹿草工作站', '山子腳', '山子腳-山腳', 'XXX小組', '2,050', '2,050', '2,050'] },
@@ -172,6 +174,10 @@ export default {
       const setWidth = this.toggleStatus ? 'tg-75' : 'w-90';
       return setWidth;
     },
+    growDiv () {
+      const setWidth = this.toggleStatus ? '' : 'grow';
+      return setWidth;
+    },
     accountToggle () {
       return this.$store.state.settingAccount;
     }
@@ -198,5 +204,14 @@ export default {
 }
 .listTable{
   margin: 0 auto;
+}
+.content_block {
+    width: calc(100% - 372px);
+    transition: ease-in-out 0.4s;
+    height:100%;
+    margin : 0 5%;
+}
+.grow {
+  width: 90%;
 }
 </style>

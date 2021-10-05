@@ -1,29 +1,33 @@
 <template>
   <div>
-    <BreadCrumbTool
-      :class="boxWidth"
-      :options="BreadCrumb"
-    />
-    <PageHeader
-      icon="layer"
-      title="停灌補償案件"
-      :class="boxWidth"
-      btn-text="停灌補償申報"
-      :btn-add="true"
-      btn-name="button-add"
-    />
-    <TableTool
-      :table-column="tableList"
-      :is-paginate="true"
-      :is-edit="true"
-      :is-print="true"
-      :class="boxWidth"
-    />
     <div
-      class="calNoteBox w-90"
-      :class="boxWidth"
+      class="content_block"
+      :class="[growDiv,boxWidth]"
     >
-      <CalNote />
+      <BreadCrumbTool
+        :options="BreadCrumb"
+      />
+      <PageHeader
+        icon="layer"
+        title="停灌補償案件"
+        btn-text="停灌補償申報"
+        :btn-add="true"
+        btn-name="button-add"
+      />
+      <TableTool
+        :table-column="tableList"
+        :is-paginate="true"
+        :is-edit="true"
+        :is-print="true"
+        :is-scroll-table="true"
+        :is-toggle="toggleStatus"
+        :column-min-width="80"
+      />
+      <div
+        class="calNoteBox w-90"
+      >
+        <CalNote />
+      </div>
     </div>
     <Search
       type="irrigatedLandSearch"
@@ -72,14 +76,18 @@ export default {
           { title: '申請面積㎡' }
         ],
         body: [
-          { title: ['XX縣', 'XX鄉', 'XX段', '2,503,882', 'xx工作站', '2,506,555', '陳XX', '1/3', '公同共有', '小大', 'XX', '2,506'] },
-          { title: ['XX縣', 'XX鄉', 'XX段', '2,503,882', 'xx工作站', '2,506,555', '陳XX', '1/3', '公同共有', '小大', 'XX', '2,506'] },
-          { title: ['XX縣', 'XX鄉', 'XX段', '2,503,882', 'xx工作站', '2,506,555', '陳XX', '1/3', '公同共有', '小大', 'XX', '2,506'] },
-          { title: ['XX縣', 'XX鄉', 'XX段', '2,503,882', 'xx工作站', '2,506,555', '陳XX', '1/3', '公同共有', '小大', 'XX', '2,506'] },
-          { title: ['XX縣', 'XX鄉', 'XX段', '2,503,882', 'xx工作站', '2,506,555', '陳XX', '1/3', '公同共有', '小大', 'XX', '2,506'] },
-          { title: ['XX縣', 'XX鄉', 'XX段', '2,503,882', 'xx工作站', '2,506,555', '陳XX', '1/3', '公同共有', '小大', 'XX', '2,506'] },
-          { title: ['XX縣', 'XX鄉', 'XX段', '2,503,882', 'xx工作站', '2,506,555', '陳XX', '1/3', '公同共有', '小大', 'XX', '2,506'] },
-          { title: ['XX縣', 'XX鄉', 'XX段', '2,503,882', 'xx工作站', '2,506,555', '陳XX', '1/3', '公同共有', '小大', 'XX', '2,506'] }
+          { val: 1, title: ['XX縣', 'XX鄉', 'XX段', '2,503,882', 'xx工作站', '2,506,555', '陳XX', '1/3', '公同共有', '小大', 'XX', '2,506'] },
+          { val: 2, title: ['XX縣', 'XX鄉', 'XX段', '2,503,882', 'xx工作站', '2,506,555', '陳XX', '1/3', '公同共有', '小大', 'XX', '2,506'] },
+          { val: 3, title: ['XX縣', 'XX鄉', 'XX段', '2,503,882', 'xx工作站', '2,506,555', '陳XX', '1/3', '公同共有', '小大', 'XX', '2,506'] },
+          { val: 4, title: ['XX縣', 'XX鄉', 'XX段', '2,503,882', 'xx工作站', '2,506,555', '陳XX', '1/3', '公同共有', '小大', 'XX', '2,506'] },
+          { val: 5, title: ['XX縣', 'XX鄉', 'XX段', '2,503,882', 'xx工作站', '2,506,555', '陳XX', '1/3', '公同共有', '小大', 'XX', '2,506'] },
+          { val: 6, title: ['XX縣', 'XX鄉', 'XX段', '2,503,882', 'xx工作站', '2,506,555', '陳XX', '1/3', '公同共有', '小大', 'XX', '2,506'] },
+          { val: 7, title: ['XX縣', 'XX鄉', 'XX段', '2,503,882', 'xx工作站', '2,506,555', '陳XX', '1/3', '公同共有', '小大', 'XX', '2,506'] },
+          { val: 8, title: ['XX縣', 'XX鄉', 'XX段', '2,503,882', 'xx工作站', '2,506,555', '陳XX', '1/3', '公同共有', '小大', 'XX', '2,506'] },
+          { val: 9, title: ['XX縣', 'XX鄉', 'XX段', '2,503,882', 'xx工作站', '2,506,555', '陳XX', '1/3', '公同共有', '小大', 'XX', '2,506'] },
+          { val: 10, title: ['XX縣', 'XX鄉', 'XX段', '2,503,882', 'xx工作站', '2,506,555', '陳XX', '1/3', '公同共有', '小大', 'XX', '2,506'] },
+          { val: 11, title: ['XX縣', 'XX鄉', 'XX段', '2,503,882', 'xx工作站', '2,506,555', '陳XX', '1/3', '公同共有', '小大', 'XX', '2,506'] },
+          { val: 12, title: ['XX縣', 'XX鄉', 'XX段', '2,503,882', 'xx工作站', '2,506,555', '陳XX', '1/3', '公同共有', '小大', 'XX', '2,506'] }
         ]
       },
       BreadCrumb: ['灌溉地管理', '停灌補償案件'],
@@ -95,6 +103,10 @@ export default {
   computed: {
     boxWidth () {
       const setWidth = this.toggleStatus ? 'tg-75' : 'w-90';
+      return setWidth;
+    },
+    growDiv () {
+      const setWidth = this.toggleStatus ? '' : 'grow';
       return setWidth;
     }
   }
@@ -117,5 +129,14 @@ export default {
       }
     }
   }
+}
+.content_block {
+    width: calc(100% - 372px);
+    transition: ease-in-out 0.4s;
+    height:100%;
+    margin : 0 5%;
+}
+.grow {
+  width: 90%;
 }
 </style>

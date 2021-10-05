@@ -101,7 +101,7 @@ export default {
 <style lang="scss" scoped>
 .subTitleTool{
   display: flex;
-  margin: 1em auto;
+  margin: 0.5em auto;
   justify-content: space-between;
   h3{
     color:$dark-green;
@@ -114,6 +114,18 @@ export default {
     align-items: center;
     &.small{
       font-size: 16px;
+      width:80%;
+      word-wrap:break-word;
+      align-items:start;
+      @include pcm-width{
+        height: 60px;
+      }
+      @include pcs-width{
+        height: 60px;
+      }
+      @include pcxs-width{
+        height: 60px;
+      }
     }
   }
 }

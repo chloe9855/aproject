@@ -164,7 +164,7 @@ export default {
   display: flex;
   align-items: center;
   padding-bottom: 5px;
-  margin: 1em auto;
+  margin: 0.5em auto;
   &.isBorder{
     border-bottom:1px solid #C4DED8;
   }

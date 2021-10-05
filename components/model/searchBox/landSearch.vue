@@ -59,19 +59,6 @@
         :options="member"
       />
     </div>
-    <div class="buttonBox">
-      <Button
-        :name="'button-default'"
-        :text="'清除全部'"
-        @click="$emit('clear')"
-      />
-      &emsp;
-      <Button
-        :name="'button-primary'"
-        :text="'查詢'"
-        @click="$emit('search', options.current)"
-      />
-    </div>
   </div>
 </template>
 
@@ -79,13 +66,11 @@
 import InputVertical from '~/components/tools/InputVertical.vue';
 import DropdownVertical from '~/components/tools/DropdownVertical.vue';
 import NavTabs from '~/components/tools/NavTabs';
-import Button from '~/components/tools/Buttons';
 export default {
   components: {
     DropdownVertical: DropdownVertical,
     InputVertical: InputVertical,
-    NavTabs: NavTabs,
-    Button: Button
+    NavTabs: NavTabs
   },
   data: () => {
     return {
@@ -111,13 +96,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.buttonBox{
-  display: flex;
-  justify-content: flex-end;
-  margin-top: 20px;
-  padding: 0 15px;
-}
-
 .landNum, .landUnit {
   padding: 0 15px;
 }

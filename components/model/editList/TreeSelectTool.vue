@@ -10,7 +10,7 @@
       class="w-100"
       :is-small="true"
     />
-    <TreeSelect />
+    <TreeSelect class="treeSelect" />
   </div>
 </template>
 
@@ -38,7 +38,22 @@ export default {
   background: #EFF4F3;
   flex-direction: column;
   position: relative;
-  min-height: 200px;
+  height: 400px;
+  border: 1px solid #C4DED8 !important;
+  .treeSelect{
+    overflow: auto;
+    max-height: 300px;
+    &::-webkit-scrollbar{
+      width: 6px;
+      height: 6px;
+    }
+    &::-webkit-scrollbar-track{
+      background: #FFF;
+    }
+    &::-webkit-scrollbar-thumb{
+      background: #A1BFB8;
+    }
+  }
   .subTitleTool{
     margin: 0.5em 5px;
   }
@@ -46,10 +61,10 @@ export default {
     margin: 0.5em 5px;
   }
   .icon{
-    width: 16px;
-    height: 16px;
+    width: 25px;
+    height: 25px;
     position:absolute;
-    top: 1em;
+    top: 0.75em;
     right: 0.5em;
     cursor: pointer;
   }
