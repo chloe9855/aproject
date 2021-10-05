@@ -17,15 +17,27 @@
         >
       </div>
       <component :is="componentInstance" />
+      <div class="buttonBox">
+        <Button
+          :name="'button-primary'"
+          :text="'按鈕'"
+        />
+        <Button
+          :name="'button-default-disable'"
+          :text="'按鈕'"
+        />
+      </div>
     </div>
   </div>
 </template>
 
 <script>
 import InputVertical from '~/components/tools/InputVertical';
+import Button from '~/components/tools/Buttons.vue';
 export default {
   components: {
-    InputVertical: InputVertical
+    InputVertical,
+    Button
   },
   props: {
     type: {
@@ -70,7 +82,7 @@ export default {
 <style lang="scss" scoped>
 .popupBox{
   position: absolute;
-  top:$vh-10;
+  top:5vh;
   display: flex;
   justify-content: center;
   z-index:1000;
@@ -107,6 +119,12 @@ export default {
 }
 .inputBox{
   overflow-y: scroll;
-  max-height: $vh-80;
+  max-height: $vh-70;
+}
+
+.buttonBox{
+  display: flex;
+  justify-content: flex-end;
+  margin: 10px 5px;
 }
 </style>

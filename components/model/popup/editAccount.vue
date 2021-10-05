@@ -33,16 +33,6 @@
       <span>帳號啟用</span>
       <Tag text="驗證中" />
     </div>
-    <div class="buttonBox">
-      <Button
-        :name="'button-primary'"
-        :text="'按鈕'"
-      />
-      <Button
-        :name="'button-default-disable'"
-        :text="'按鈕'"
-      />
-    </div>
   </div>
 </template>
 

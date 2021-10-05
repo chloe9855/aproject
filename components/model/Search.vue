@@ -11,6 +11,16 @@
       :is="componentInstance"
       @tabCurrent="current"
     />
+    <div class="buttonBox">
+      <Button
+        :name="'button-primary-disable'"
+        :text="'清除全部'"
+      />
+      <Button
+        :name="'button-primary'"
+        :text="'查詢'"
+      />
+    </div>
     <div
       class="toggleBtn"
       @click="toggleSearthBox"
@@ -23,9 +33,11 @@
 
 <script>
 import PageHeader from '~/components/tools/PageHeader';
+import Button from '~/components/tools/Buttons.vue';
 export default {
   components: {
-    PageHeader: PageHeader
+    PageHeader,
+    Button
   },
   props: {
     tableColumn: {
@@ -53,6 +65,9 @@ export default {
     };
   },
   name: 'SearchBox',
+  mounted () {
+    this.toggleSearthBox();
+  },
   methods: {
     toggleSearthBox () {
       const isOpen = this.toggleState;
@@ -109,10 +124,10 @@ export default {
 .searchBox{
   padding: 0 15px;
   position: absolute;
-  width: calc( 20vw - 30px);
-  height: $vh-100;
-  top: 0;
-  left:-20vw;
+  width: 290px;
+  height: calc( 100vh - 66px );
+  top: 66px;
+  left:-320px;
   background: #EFF4F3;
 }
 .page-header{
@@ -124,19 +139,27 @@ export default {
   border-radius: 0 22px 22px 0;
   line-height: 20px;
   color: white;
-  left: 20vw;
+  left: 320px;
   width: 16px;
   padding: 30px 8px;
   height: 108px;
   cursor: pointer;
   top: 33vh;
 }
+.buttonBox{
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 20px;
+  .button_wrap{
+    padding-left: 5px;
+  }
+}
 .showBox{
   left:0;
   animation: on 0.5s
 }
 .hideBox{
-  left:-20vw;
+  left:-320px;
   animation: off 0.5s
 }
 .arrowLeft{
@@ -160,11 +183,11 @@ export default {
   right: 12px;
 }
 @keyframes on{
-  from{ left: -20vw;}
+  from{ left: -320px;}
   to{ left: 0;}
 }
 @keyframes off{
   from{ left: 0;}
-  to{ left: -20vw;}
+  to{ left: -320px;}
 }
 </style>

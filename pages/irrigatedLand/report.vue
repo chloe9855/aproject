@@ -9,6 +9,7 @@
       title="統計報表"
       class="w-90"
       tips="列印日期:110年8月3日"
+      :is-border="true"
     />
     <div class="w-90 treeListBox">
       <div class="flexBox selectList">
@@ -23,7 +24,7 @@
           />
           <TreeSelectBox
             class="flex-1"
-            title="停灌補償申報統計表(日期)"
+            title="停灌補償申報統計表(日報)"
           />
           <TreeSelectBox
             class="flex-1"
@@ -43,7 +44,7 @@
           />
           <TreeSelectBox
             class="flex-1"
-            title="停灌補償申報統計表(日期)"
+            title="停灌補償申報統計表(日報)"
           />
         </div>
       </div>

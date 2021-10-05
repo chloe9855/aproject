@@ -219,7 +219,6 @@ export default {
       }
     },
     showDetailHandler (payload) {
-      console.log('hahahaa');
       if (payload === 'isSearch') {
         this.addDetail(true);
       }
