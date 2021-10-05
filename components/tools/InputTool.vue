@@ -26,6 +26,7 @@
       :name="name"
       :type="inputType"
       :disabled="isDisable === true"
+      @input="filterData"
     >
     <img
       v-show="isAddIcon"
@@ -142,7 +143,7 @@ export default {
   },
   method: {
     filterData () {
-      this.filterBox = true;
+      this.$emit('inputValue', this.message);
     }
   }
 };
