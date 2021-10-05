@@ -1,9 +1,36 @@
 <template>
   <div class="wrapper">
     <div
+      id="mapNode"
       class="main"
       :class="{ 'reduceHeight': $store.state.hideFooter === true }"
     >
+      <!--    -->
+
+      <!-- <div
+        id="TOC"
+        class="Drawer"
+        style="display:none;"
+      >
+        <div class="Frame">
+          <div
+            id="Header"
+            class="Headercolor"
+          >
+            <span class="Layoutcolor">Layers</span>
+          </div>
+          <div id="TOCBody" />
+        </div>
+      </div>
+      <div
+        id="IndexMap"
+        class="Tools On Buttoncolor"
+      >
+        <div id="IndexMapNode" />
+        <button class="IndexMap_Arrow" />
+      </div> -->
+
+      <!--  -->
       <Feature-component
         :current="activeWindow"
         @select="payload => activeWindow = payload"
@@ -131,7 +158,9 @@
               <div v-if="shpOptions.layerList.length >= 1">
                 <ShpItem-component
                   :item="shpOptions.layerList[0]"
+                  category="shpitem"
                   @changeVisible="layerVisibleCtrl"
+                  @updateOpacity="layerOpacityCtrl"
                   @delete="deleteShpLayer"
                 />
               </div>
@@ -317,12 +346,17 @@
           </p>
         </div>
         <div class="table_wrap">
-          <Table-component
+          <!-- <Table-component
             :table-column="searchResult.channel"
             :is-check="false"
             :is-map="true"
             :is-paginate="false"
+          /> -->
+          <ScrollTable-component
+            :table-data="searchResult.channel"
+            :hide="hideResult"
           />
+          <div class="border_bot" />
         </div>
       </div>
     </div>
@@ -342,7 +376,8 @@ import Buttons from '~/components/tools/Buttons.vue';
 import GeoMeasure from '~/components/GeoMeasure.vue';
 import ScreenShot from '~/components/ScreenShot.vue';
 import MapSearchBox from '~/components/MapSearchBox.vue';
-import Table from '~/components/model/Table.vue';
+// import Table from '~/components/model/Table.vue';
+import ScrollTable from '~/components/tools/ScrollTable.vue';
 
 export default {
   components: {
@@ -358,7 +393,8 @@ export default {
     'GeoMeasure-component': GeoMeasure,
     'ScreenShot-component': ScreenShot,
     'MapSearchBox-component': MapSearchBox,
-    'Table-component': Table
+    'ScrollTable-component': ScrollTable
+    // 'Table-component': Table
   },
   data () {
     return {
@@ -455,6 +491,194 @@ export default {
     };
   },
   // layout: 'map',
+  // head: {
+  //   script: [
+  //     {
+  //       src: 'scripts/Base.js',
+  //       async: true
+  //     },
+  //     {
+  //       src: 'scripts/OperationBase.js',
+  //       async: true
+  //     },
+  //     {
+  //       src: 'scripts/SuperGeoUtility.js',
+  //       async: true
+  //     },
+  //     {
+  //       src: 'scripts/AjaxAgent.js',
+  //       async: true
+  //     },
+  //     {
+  //       src: 'scripts/Framework.js',
+  //       async: true
+  //     },
+  //     {
+  //       src: 'scripts/MapBase.js',
+  //       async: true
+  //     },
+  //     {
+  //       src: 'scripts/Controls.js',
+  //       async: true
+  //     },
+  //     {
+  //       src: 'scripts/MapLayer.js',
+  //       async: true
+  //     },
+  //     {
+  //       src: 'scripts/Navigate.js',
+  //       async: true
+  //     },
+  //     {
+  //       src: 'scripts/CachedLayer.js',
+  //       async: true
+  //     },
+  //     {
+  //       src: 'scripts/OpenStreetMap.js',
+  //       async: true
+  //     },
+  //     {
+  //       src: 'scripts/ToolControls.js',
+  //       async: true
+  //     },
+  //     {
+  //       src: 'scripts/Tasks.js',
+  //       async: true
+  //     },
+  //     {
+  //       src: 'scripts/GFX.js',
+  //       async: true
+  //     },
+  //     {
+  //       src: 'scripts/FX.js',
+  //       async: true
+  //     },
+  //     {
+  //       src: 'scripts/Compass.js',
+  //       async: true
+  //     },
+  //     {
+  //       src: 'scripts/Tracker.js',
+  //       async: true
+  //     },
+  //     {
+  //       src: 'scripts/Geometry.js',
+  //       async: true
+  //     },
+  //     {
+  //       src: 'scripts/Symbol.js',
+  //       async: true
+  //     },
+  //     {
+  //       src: 'scripts/Draw.js',
+  //       async: true
+  //     },
+  //     {
+  //       src: 'scripts/Overview.js',
+  //       async: true
+  //     },
+  //     {
+  //       src: 'scripts/Bookmark.js',
+  //       async: true
+  //     },
+  //     {
+  //       src: 'scripts/TemplatePicker.js',
+  //       async: true
+  //     },
+  //     {
+  //       src: 'scripts/Layer.js',
+  //       async: true
+  //     },
+  //     {
+  //       src: 'scripts/DynamicLayer.js',
+  //       async: true
+  //     },
+  //     {
+  //       src: 'scripts/Graphic.js',
+  //       async: true
+  //     },
+  //     {
+  //       src: 'scripts/GraphicsLayer.js',
+  //       async: true
+  //     },
+  //     {
+  //       src: 'scripts/TileLayer.js',
+  //       async: true
+  //     },
+  //     {
+  //       src: 'scripts/OSMLayer.js',
+  //       async: true
+  //     },
+  //     {
+  //       src: 'scripts/BingTiledLayer.js',
+  //       async: true
+  //     },
+  //     {
+  //       src: 'scripts/Infowindow.js',
+  //       async: true
+  //     },
+  //     {
+  //       src: 'scripts/Mercator.js',
+  //       async: true
+  //     },
+  //     {
+  //       src: 'scripts/CoordSys.js',
+  //       async: true
+  //     },
+  //     {
+  //       src: 'scripts/PrintTool.js',
+  //       async: true
+  //     },
+  //     {
+  //       src: 'scripts/Process.js',
+  //       async: true
+  //     },
+  //     {
+  //       src: 'scripts/Query.js',
+  //       async: true
+  //     },
+  //     {
+  //       src: 'scripts/Edit.js',
+  //       async: true
+  //     },
+  //     {
+  //       src: 'scripts/UndoManager.js',
+  //       async: true
+  //     },
+  //     {
+  //       src: 'scripts/Request.js',
+  //       async: true
+  //     },
+  //     {
+  //       src: 'scripts/WMSLayer.js',
+  //       async: true
+  //     },
+  //     {
+  //       src: 'scripts/WMTSLayer.js',
+  //       async: true
+  //     },
+  //     {
+  //       src: 'scripts/Google.js',
+  //       async: true
+  //     },
+  //     {
+  //       src: 'scripts/Base64.js',
+  //       async: true
+  //     },
+  //     {
+  //       src: 'scripts/Projection.js',
+  //       async: true
+  //     },
+  //     // {
+  //     //   src: 'ServerGate/SGSGate.ashx?F=~/scripts/Framework.js',
+  //     //   async: true
+  //     // },
+  //     {
+  //       src: 'scripts/setMap.js',
+  //       async: true
+  //     }
+  //   ]
+  // },
   mounted () {
     const point = require('~/static/pointLayer.json');
     const line = require('~/static/lineLayer.json');
@@ -500,6 +724,10 @@ export default {
       if (category === 'baseLayer') {
         const index = this.layerOptions.baseLayerList.findIndex(item => item.id === id);
         this.layerOptions.baseLayerList[index].visible = $event;
+      }
+      if (category === 'shpitem') {
+        const index = this.shpOptions.layerList.findIndex(item => item.id === id);
+        this.shpOptions.layerList[index].visible = $event;
       }
     },
     // * @ 圖層工具：單一支線圖層 顯示/隱藏
@@ -563,6 +791,10 @@ export default {
         const index = this.layerOptions.baseLayerList.findIndex(item => item.id === id);
         this.layerOptions.baseLayerList[index].opacity = value;
       }
+      if (category === 'shpitem') {
+        const index = this.shpOptions.layerList.findIndex(item => item.id === id);
+        this.shpOptions.layerList[index].opacity = value;
+      }
     },
     // * @ 圖層工具：臨時展繪 新增圖層
     addShpLayer () {
@@ -609,6 +841,12 @@ export default {
   //   background-color: pink;
   //   z-index: -1;
   // }
+
+  .border_bot {
+    height: 1px;
+    background: $light-green;
+    width: calc(100% - 4.5px);
+  }
 
   .hide_button {
     background: $main-green;
@@ -670,7 +908,7 @@ export default {
   }
 
   .layerwindow {
-    width: 380px;
+    width: 363px;
     max-height: 440.2px;
     overflow-y: auto;
   }

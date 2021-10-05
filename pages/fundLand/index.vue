@@ -2,7 +2,7 @@
   <div class="main">
     <SearchFund
       ref="searchFund"
-      type="landSearch"
+      type="MyLandSearch"
       @showSidebar="payload => growUp = payload"
       @search="searchHandler"
       @clear="clearAllHandler"
@@ -21,6 +21,7 @@
         />
         <Table
           v-if="searchResult.authority !== ''"
+          :no-wrap="true"
           :table-column="searchResult.authority"
           :is-map="true"
           :is-search="true"
@@ -270,8 +271,8 @@ export default {
 
   .left_content {
     width: 100%;
-    padding: 13px;
-    padding-right: 40px;
+    // padding: 13px;
+    padding-right: 24px;
     padding-top: 0;
   }
 
