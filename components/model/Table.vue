@@ -162,7 +162,7 @@
               v-show="isEdit && !isScrollTable"
               class="editOption"
             >
-              <div>
+              <div @click="sendEvent('isEdit')">
                 <img
                   alt=""
                   class="vector"
@@ -174,7 +174,7 @@
               v-show="isDel && !isScrollTable"
               class="delOption"
             >
-              <div>
+              <div @click="sendEvent('isDel')">
                 <img
                   alt=""
                   class="vector"
@@ -186,7 +186,7 @@
               v-show="isPrint && !isScrollTable"
               class="printOption"
             >
-              <div>
+              <div @click="sendEvent('isPrint')">
                 <img
                   alt=""
                   class="vector"
@@ -198,7 +198,7 @@
               v-show="isMap && !isScrollTable"
               class="mapOption"
             >
-              <div>
+              <div @click="sendEvent('isMap')">
                 <img
                   alt=""
                   class="vector"
@@ -210,7 +210,7 @@
               v-show="isSearch"
               class="searchOption"
             >
-              <div @click="$emit('clickIcon', 'isSearch')">
+              <div @click="sendEvent('isSearch')">
                 <img
                   alt=""
                   class="vector"
@@ -244,7 +244,7 @@
               v-show="isEdit"
               class="editOption"
             >
-              <div @click="$emit('clickIcon', 'isEdit')">
+              <div @click="sendEvent('isEdit')">
                 <img
                   alt=""
                   class="vector"
@@ -256,7 +256,7 @@
               v-show="isDel"
               class="delOption"
             >
-              <div @click="$emit('clickIcon', 'isDel')">
+              <div @click="sendEvent('isDel')">
                 <img
                   alt=""
                   class="vector"
@@ -268,7 +268,7 @@
               v-show="isPrint"
               class="printOption"
             >
-              <div @click="$emit('clickIcon', 'isPrint')">
+              <div @click="sendEvent('isPrint')">
                 <img
                   alt=""
                   class="vector"
@@ -280,7 +280,7 @@
               v-show="isMap"
               class="mapOption"
             >
-              <div @click="$emit('clickIcon', 'isMap')">
+              <div @click="sendEvent('isMap')">
                 <img
                   alt=""
                   class="vector"
@@ -292,7 +292,7 @@
               v-show="isSearch"
               class="searchOption"
             >
-              <div @click="$emit('clickIcon', 'isSearch')">
+              <div @click="sendEvent('isSearch')">
                 <img
                   alt=""
                   class="vector"
@@ -407,7 +407,7 @@ export default {
       getPage: 1
     };
   },
-  name: 'Table',
+  name: 'TableTool',
   mounted: function () {
     this.getPageNum(1);
   },
@@ -451,6 +451,9 @@ export default {
           tableColumnBodyContent.push(v);
         }
       });
+    },
+    sendEvent (e) {
+      this.$emit('tableEvent', e);
     }
   },
   computed: {
