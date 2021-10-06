@@ -53,7 +53,16 @@
             @mouseover="mouseOver(item.name)"
             @mouseleave="mouseLeave(item.name)"
           >
-            <nuxt-link
+            <a
+              class="myLink"
+              :href="item.path"
+              :title="item.name"
+            >
+              <p class="title-two seticon">
+                {{ item.name }}
+              </p>
+            </a>
+            <!-- <nuxt-link
               class="myLink"
               :to="item.path"
               :title="item.name"
@@ -61,7 +70,7 @@
               <p class="title-two seticon">
                 {{ item.name }}
               </p>
-            </nuxt-link>
+            </nuxt-link> -->
 
             <ul
               v-if="listOne === true && item.name === '灌溉地管理'"
@@ -71,14 +80,22 @@
                 v-for="side of sideList1"
                 :key="side.name"
               >
-                <nuxt-link
+                <a
+                  :href="side.path"
+                  :title="side.name"
+                >
+                  <p class="title-two">
+                    {{ side.name }}
+                  </p>
+                </a>
+                <!-- <nuxt-link
                   :to="side.path"
                   :title="side.name"
                 >
                   <p class="title-two">
                     {{ side.name }}
                   </p>
-                </nuxt-link>
+                </nuxt-link> -->
               </li>
             </ul>
 
@@ -90,14 +107,22 @@
                 v-for="side of sideList2"
                 :key="side.name"
               >
-                <nuxt-link
+                <a
+                  :href="side.path"
+                  :title="side.name"
+                >
+                  <p class="title-two">
+                    {{ side.name }}
+                  </p>
+                </a>
+                <!-- <nuxt-link
                   :to="side.path"
                   :title="side.name"
                 >
                   <p class="title-two">
                     {{ side.name }}
                   </p>
-                </nuxt-link>
+                </nuxt-link> -->
               </li>
             </ul>
           </div>
@@ -113,61 +138,60 @@ export default {
     return {
       menuList: [
         {
-
           name: '首頁',
-          path: '/'
+          path: ''
         },
         {
           name: '作業基金土地管理',
-          path: '/fundLand'
+          path: 'fundLand'
         },
         {
           name: 'GIS地圖',
-          path: '/map'
+          path: 'map'
         },
         {
           name: '灌溉地管理',
-          path: '/irrigatedLand'
+          path: 'irrigatedLand'
         },
         {
           name: '系統管理',
-          path: '/system'
+          path: 'system'
         }
       ],
       sideList1: [
         {
           name: '灌溉地籍查詢',
-          path: '/irrigatedLand'
+          path: 'irrigatedLand'
         },
         {
           name: '停灌補償申報',
-          path: '/irrigatedLand/compensate'
+          path: 'irrigatedLand/compensate'
         },
         {
           name: '停灌資料異動',
-          path: '/irrigatedLand/dataChange'
+          path: 'irrigatedLand/dataChange'
         },
         {
           name: '統計報表',
-          path: '/irrigatedLand/report'
+          path: 'irrigatedLand/report'
         }
       ],
       sideList2: [
         {
           name: '帳號管理',
-          path: '/system'
+          path: 'system'
         },
         {
           name: '群組權限管理',
-          path: '/system/authority'
+          path: 'system/authority'
         },
         {
           name: '首頁資料管理',
-          path: '/system/editNews'
+          path: 'system/editNews'
         },
         {
           name: '系統使用量統計',
-          path: '/system/statistics'
+          path: 'system/statistics'
         }
       ],
       listOne: false,

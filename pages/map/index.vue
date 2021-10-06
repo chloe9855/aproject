@@ -1,13 +1,132 @@
 <template>
   <div class="wrapper">
     <div
-      id="mapNode"
       class="main"
       :class="{ 'reduceHeight': $store.state.hideFooter === true }"
     >
       <!--    -->
 
       <!-- <div
+        id="HeaderNode"
+        class="Headercolor"
+      >
+        <h1
+          id="Title"
+          class="Layoutcolor"
+        >
+          SuperGIS Map Viewer
+        </h1>
+        <h2
+          id="SubTitle"
+          class="Layoutcolor"
+        >
+          SubTitle
+        </h2>
+        <div
+          id="MobileToolCaller"
+          style="height:100%;"
+          onclick="staticCustom.Custom.init();"
+        >
+          <span style="display:inline-block;height:100%;vertical-align:middle;" />
+        </div>
+        <div
+          id="LayerTool"
+          style="height:100%;"
+          onclick="staticCustom.TOC.init();"
+        >
+          <span style="display:inline-block;height:100%;vertical-align:middle;" />
+        </div>
+      </div>
+      <canvas
+        id="tempcanvas"
+        width="80"
+        height="50"
+        style="display: none;"
+      />
+      <div id="mapNode" />
+      <div id="Tools">
+        <div
+          id="ZoomTools_Mobile"
+          class="Tools"
+        >
+          <div
+            id="mZoomIn"
+            class="Buttoncolor"
+            onclick="ZoomIn();"
+          />
+          <div
+            id="mZoomOut"
+            class="Buttoncolor"
+            onclick="ZoomOut();"
+          />
+          <div
+            id="mZoomHome"
+            class="Buttoncolor"
+            onclick="ResetZoom();"
+          />
+        </div>
+        <div
+          id="ZoomTools"
+          class="Tools"
+        >
+          <div
+            id="ZoomIn"
+            class="Tool Buttoncolor"
+            onclick="ZoomIn();"
+          />
+          <div
+            id="ZoomOut"
+            class="Tool Buttoncolor"
+            onclick="ZoomOut();"
+          />
+        </div>
+        <div
+          id="CustomTools"
+          class="Tools"
+        >
+          <div
+            id="CustomA"
+            class="Tool Buttoncolor"
+          />
+          <div
+            id="CustomB"
+            class="Tool Buttoncolor"
+          />
+          <div
+            id="CustomC"
+            class="Tool Buttoncolor"
+          />
+          <div
+            id="CustomD"
+            class="Tool Buttoncolor"
+          />
+        </div>
+        <div
+          id="IndexMap"
+          class="Tools On Buttoncolor"
+        >
+          <div id="IndexMapNode" />
+          <button
+            class="IndexMap_Arrow"
+            onclick="this.parentNode.classList.toggle('On');"
+          />
+        </div>
+        <div
+          id="SemiTransparentFooter"
+          class="FooterDisplayAtbottom NONE"
+        >
+
+          <div id="CoordTools">
+            <label id="Coordinate">NaN NaN</label>
+          </div>
+          <div
+            id="ScaleTools"
+            style="position: relative;width: 5.2cm;height: 28px;left: 20px;bottom:0;"
+          />
+        </div>
+      </div>
+
+      <div
         id="TOC"
         class="Drawer"
         style="display:none;"
@@ -21,13 +140,6 @@
           </div>
           <div id="TOCBody" />
         </div>
-      </div>
-      <div
-        id="IndexMap"
-        class="Tools On Buttoncolor"
-      >
-        <div id="IndexMapNode" />
-        <button class="IndexMap_Arrow" />
       </div> -->
 
       <!--  -->
