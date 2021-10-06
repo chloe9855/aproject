@@ -26,7 +26,7 @@
           :is-map="true"
           :is-search="true"
           :is-check="false"
-          @clickIcon="showDetailHandler"
+          @tableEvent="showDetailHandler"
         />
 
         <div

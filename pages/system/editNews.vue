@@ -23,6 +23,7 @@
       :is-edit="true"
       :is-del="true"
       class="w-90 news"
+      @tableEvent="changeGroup"
     />
 
     <div class="downloadTitle w-90">
@@ -113,7 +114,15 @@ export default {
     addFile (e) {
       if (e) {
         this.$store.commit('TOGGLE_POPUP_STATUS');
-        this.$store.commit('TOGGLE_POPUP_TYPE', { type: 'addFileData', title: '新增文件資料' });
+        this.$store.commit('TOGGLE_POPUP_TYPE', { type: 'file', title: '新增文件資料' });
+      }
+    },
+    changeGroup (e) {
+      if (e === 'isEdit') {
+        this.$store.commit('TOGGLE_POPUP_STATUS');
+        this.$store.commit('TOGGLE_POPUP_TYPE', { type: 'news', title: '編輯公告' });
+      } else if (e === 'isDel') {
+        console.log('isDel');
       }
     }
   }
