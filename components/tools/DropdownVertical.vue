@@ -11,18 +11,17 @@
         </span>
       </p>
     </div>
-    <select
-      v-model="selected"
-      :class="{'add_bg': bgColor}"
-    >
-      <option
-        v-for="(item, index) in options.option"
-        :key="index"
-        :value="item.value"
-      >
-        {{ item.title }}
-      </option>
-    </select>
+    <client-only>
+      <v-select
+        v-model="selected"
+        label="title"
+        code="value"
+        :clearable="false"
+        :options="option"
+        :class="{'add_bg': bgColor}"
+        class="w-100 inputSelect"
+      />
+    </client-only>
   </div>
 </template>
 
@@ -32,7 +31,7 @@ export default {
     options: {
       type: Object,
       default: () => {
-        return { option: [{ title: '選項1', value: '0' }, { title: '選項2', value: '1' }, { title: '選項3', value: '2' }] };
+        return { option: [{ label: '選項11', code: '0' }, { label: '選項2', code: '1' }, { label: '選項3', code: '2' }] };
       }
     },
     title: {
@@ -54,13 +53,14 @@ export default {
   },
   data: () => {
     return {
-      selected: ''
+      selected: '',
+      option: [{ title: '選項11', value: '0' }, { title: '選項2', value: '1' }, { title: '選項3', value: '2' }]
     };
   },
   name: 'DropdownVertical',
   watch: {
     selected (n, o) {
-      this.$emit('DropdownVal', n);
+      this.$emit('DropdownVal', n.value);
     }
   }
 };
@@ -68,6 +68,10 @@ export default {
 
 <style lang="scss" scoped>
 @import '~/assets/scss/input.scss';
+.inputSelect{
+  background-color: white;
+}
+
 .input-title {
     color: $header-black;
     flex: 1;

@@ -4,8 +4,7 @@
     <nuxt />
     <Popup
       :is-active="togglePopup"
-      title="編輯帳號"
-      type="editAccount"
+      :type="popupType"
     />
     <MaskTool :is-active="togglePopup" />
     <Footer />
@@ -28,6 +27,9 @@ export default {
   computed: {
     togglePopup () {
       return this.$store.state.popupState;
+    },
+    popupType () {
+      return this.$store.state.popupType;
     }
   }
 };

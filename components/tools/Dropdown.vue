@@ -3,18 +3,16 @@
     :class="sizing"
     class="input-box dropdown"
   >
-    <select
-      v-model="selected"
-      :class="{'add_bg': bgColor}"
-    >
-      <option
-        v-for="(item, index) in options.option"
-        :key="index"
-        :value="item.value"
-      >
-        {{ item.title }}
-      </option>
-    </select>
+    <client-only>
+      <v-select
+        v-model="selected"
+        label="title"
+        code="code"
+        :clearable="false"
+        :options="option"
+        class="w-100 inputSelect"
+      />
+    </client-only>
   </div>
 </template>
 
@@ -38,7 +36,8 @@ export default {
   },
   data: () => {
     return {
-      selected: ''
+      selected: '',
+      option: [{ label: '選項1', code: '0' }, { label: '選項2', code: '1' }, { label: '選項3', code: '2' }]
     };
   },
   name: 'Dropdown',

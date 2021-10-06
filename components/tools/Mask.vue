@@ -21,7 +21,7 @@ export default {
 
 .mask {
     background-color: rgba(0,0,0,0.5);
-    height: 100vh;
+    height:-webkit-fill-available;
     position: absolute;
     top: 0;
     left: 0;

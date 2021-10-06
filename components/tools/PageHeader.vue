@@ -119,9 +119,11 @@ export default {
   methods: {
     getBtnStatus (e) {
       this.btnStatus = e;
+      this.$emit('PHBtnStatus', e);
     },
     getSecBtnStatus (e) {
       this.btnSecStatus = e;
+      this.$emit('PHSecBtnStatus', e);
     }
   },
   computed: {

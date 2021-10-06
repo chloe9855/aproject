@@ -75,14 +75,14 @@
           <tr>
             <th
               v-show="isCheck"
-              class="checkColumn"
+              class="checkColumn checkBoxOption"
             >
               <input
-                id="all"
+                id="all1"
                 type="checkBox"
-                name="all"
+                name="all1"
                 value="all"
-              ><label for="all" />
+              ><label for="all1" />
             </th>
             <th
               v-for="( item, index ) in tableColumn.head"
@@ -106,6 +106,7 @@
             <td
               v-show="isCheck"
               :style="{'width':'35px'}"
+              class="checkBoxOption"
             >
               <input
                 :id="'a'+index"
@@ -619,7 +620,7 @@ export default {
       padding-top:29px;
     }
     &.tableTopS{
-      padding-top:0;
+      padding-top:5px;
     }
   }
 }

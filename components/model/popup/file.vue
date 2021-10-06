@@ -1,6 +1,6 @@
 <template>
   <div class="inputBox">
-    <InputVertical title="表單名稱" />
+    <InputVertical title="文件名稱" />
     <div class="buttonBox">
       <Button
         :name="'button-red'"
