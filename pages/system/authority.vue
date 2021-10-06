@@ -20,6 +20,7 @@
         :is-paginate="false"
         :is-edit="true"
         :is-del="true"
+        @tableEvent="changeGroup"
       />
     </div>
     <Search
@@ -75,10 +76,12 @@ export default {
         this.$store.commit('TOGGLE_POPUP_TYPE', { type: 'group', title: '新增群組' });
       }
     },
-    editGroup (e) {
-      if (e) {
+    changeGroup (e) {
+      if (e === 'isEdit') {
         this.$store.commit('TOGGLE_POPUP_STATUS');
         this.$store.commit('TOGGLE_POPUP_TYPE', { type: 'group', title: '編輯群組' });
+      } else if (e === 'isDel') {
+        console.log('isDel');
       }
     }
   },

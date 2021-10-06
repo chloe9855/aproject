@@ -19,12 +19,12 @@
       <component :is="componentInstance" />
       <div class="buttonBox">
         <Button
-          :name="'button-primary'"
-          :text="'確認'"
+          :name="'button-default'"
+          :text="'取消'"
         />
         <Button
-          :name="'button-default-disable'"
-          :text="'取消'"
+          :name="'button-primary'"
+          :text="'確認'"
         />
       </div>
     </div>
@@ -127,5 +127,8 @@ export default {
   display: flex;
   justify-content: flex-end;
   margin: 10px 5px;
+  .button_wrap{
+    margin-left: 5px;
+  }
 }
 </style>
