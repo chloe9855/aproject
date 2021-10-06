@@ -11,18 +11,14 @@
         </span>
       </p>
     </div>
-    <select
+    <v-select
       v-model="selected"
+      label="title"
+      code="value"
+      :options="option"
       :class="{'add_bg': bgColor}"
-    >
-      <option
-        v-for="(item, index) in options.option"
-        :key="index"
-        :value="item.value"
-      >
-        {{ item.title }}
-      </option>
-    </select>
+      class="w-100"
+    />
   </div>
 </template>
 
@@ -32,7 +28,7 @@ export default {
     options: {
       type: Object,
       default: () => {
-        return { option: [{ title: '選項1', value: '0' }, { title: '選項2', value: '1' }, { title: '選項3', value: '2' }] };
+        return { option: [{ label: '選項1', code: '0' }, { label: '選項2', code: '1' }, { label: '選項3', code: '2' }] };
       }
     },
     title: {
@@ -54,13 +50,14 @@ export default {
   },
   data: () => {
     return {
-      selected: ''
+      selected: '',
+      option: [{ title: '選項1', value: '0' }, { title: '選項2', value: '1' }, { title: '選項3', value: '2' }]
     };
   },
   name: 'DropdownVertical',
   watch: {
     selected (n, o) {
-      this.$emit('DropdownVal', n);
+      this.$emit('DropdownVal', n.value);
     }
   }
 };
