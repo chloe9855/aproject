@@ -108,10 +108,7 @@ export default {
   name: 'InputTool',
   methods: {
     filterData () {
-<<<<<<< HEAD
-=======
       this.filterBox = true;
->>>>>>> main
       this.$emit('inputValue', this.message);
     }
   },

@@ -38,11 +38,7 @@ export default {
   data: () => {
     return {
       selected: '',
-<<<<<<< HEAD
-      option: [{ label: '選項1', title: '0' }, { label: '選項2', title: '1' }, { label: '選項3', title: '2' }]
-=======
       option: [{ title: '選項11', value: '0' }, { title: '選項2', value: '1' }, { title: '選項3', value: '2' }]
->>>>>>> main
     };
   },
   name: 'Dropdown',
