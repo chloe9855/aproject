@@ -8,6 +8,7 @@
       icon="edit"
       title="首頁資料管理"
       class="w-90"
+      :is-border="true"
     />
     <SubTitleTool
       title="最新公告"
@@ -112,7 +113,7 @@ export default {
     addFile (e) {
       if (e) {
         this.$store.commit('TOGGLE_POPUP_STATUS');
-        this.$store.commit('TOGGLE_POPUP_TYPE', { type: 'addFile', title: '新增文件資料' });
+        this.$store.commit('TOGGLE_POPUP_TYPE', { type: 'addFileData', title: '新增文件資料' });
       }
     }
   }

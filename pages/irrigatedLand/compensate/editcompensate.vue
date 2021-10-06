@@ -14,6 +14,7 @@
         btn-name="button-primary-disable"
         btn-sec-text="新增"
         btn-sec-name="button-primary"
+        :is-border="true"
       />
       <SubTitleTool
         title="新增土地資料"

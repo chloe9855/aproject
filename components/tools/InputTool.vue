@@ -26,7 +26,6 @@
       :name="name"
       :type="inputType"
       :disabled="isDisable === true"
-      @input="filterData"
     >
     <img
       v-show="isAddIcon"
@@ -34,7 +33,7 @@
       class="input-icon"
     >
     <div
-      v-show="filterData"
+      v-show="filterBox"
       class="filterBox"
     >
       <ul>
@@ -107,6 +106,12 @@ export default {
     };
   },
   name: 'InputTool',
+  methods: {
+    filterData () {
+      this.filterBox = true;
+      this.$emit('inputValue', this.message);
+    }
+  },
   computed: {
     isError: function () {
       const defaultStatus = this.isWarn;
@@ -139,11 +144,6 @@ export default {
     message (n, o) {
       const data = { val: n, id: this.inputId };
       this.$emit('inputValue', data);
-    }
-  },
-  method: {
-    filterData () {
-      this.$emit('inputValue', this.message);
     }
   }
 };
