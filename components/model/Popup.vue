@@ -119,7 +119,7 @@ export default {
   }
 }
 .inputBox{
-  overflow-y: scroll;
+  overflow: auto;
   max-height: $vh-70;
 }
 
