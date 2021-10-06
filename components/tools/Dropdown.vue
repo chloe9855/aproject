@@ -7,9 +7,10 @@
       <v-select
         v-model="selected"
         label="title"
-        code="code"
+        code="value"
         :clearable="false"
         :options="option"
+        :class="{'add_bg': bgColor}"
         class="w-100 inputSelect"
       />
     </client-only>
@@ -37,7 +38,7 @@ export default {
   data: () => {
     return {
       selected: '',
-      option: [{ label: '選項1', code: '0' }, { label: '選項2', code: '1' }, { label: '選項3', code: '2' }]
+      option: [{ title: '選項11', value: '0' }, { title: '選項2', value: '1' }, { title: '選項3', value: '2' }]
     };
   },
   name: 'Dropdown',
@@ -51,6 +52,9 @@ export default {
 
 <style lang="scss" scoped>
 @import '~/assets/scss/input.scss';
+.inputSelect{
+  background-color: white;
+}
 
 .input-title {
     color: $header-black;

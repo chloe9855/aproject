@@ -13,6 +13,7 @@
         btn-text="新增群組"
         :btn-add="true"
         btn-name="button-add"
+        @PHBtnStatus="addGroup"
       />
       <TableTool
         :table-column="tableList"
@@ -67,6 +68,18 @@ export default {
   methods: {
     getToggleStatus (e) {
       this.toggleStatus = e;
+    },
+    addGroup (e) {
+      if (e) {
+        this.$store.commit('TOGGLE_POPUP_STATUS');
+        this.$store.commit('TOGGLE_POPUP_TYPE', { type: 'group', title: '新增群組' });
+      }
+    },
+    editGroup (e) {
+      if (e) {
+        this.$store.commit('TOGGLE_POPUP_STATUS');
+        this.$store.commit('TOGGLE_POPUP_TYPE', { type: 'group', title: '編輯群組' });
+      }
     }
   },
   computed: {
