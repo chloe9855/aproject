@@ -1,12 +1,7 @@
 <template>
   <div class="inputBox">
-    <InputVertical title="表單名稱" />
+    <InputVertical title="文件名稱" />
     <div class="buttonBox">
-      <Button
-        :name="'button-red'"
-        :text="'刪除所選'"
-        :add="true"
-      />
       <Button
         :name="'button-add'"
         :text="'新增檔案'"

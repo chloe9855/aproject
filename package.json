@@ -23,6 +23,7 @@
     "sass-loader": "^10.1.1",
     "vue-draggable-resizable": "^2.3.0",
     "vue-plain-pagination": "^0.3.0",
+    "vue-select": "^3.13.0",
     "vue-slider-component": "^3.2.14",
     "vue-sweetalert2": "^5.0.2",
     "vuejs-paginate": "^2.1.0"

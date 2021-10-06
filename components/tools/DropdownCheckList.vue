@@ -158,6 +158,7 @@ export default {
     width: 100%;
     background-color: #FFF;
     top: 38px;
+    z-index: 1000;
     &.onTitle{
       top: calc( 24px + 38px );
     }

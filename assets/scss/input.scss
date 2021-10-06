@@ -11,6 +11,33 @@
         width: 14px;
         height: 14px;
     }
+    .filterBox{
+        position: absolute;
+        background: #FFF;
+        width: $w-90;
+        top: 40px;
+        z-index: 1000;
+        padding: 10px 5%;
+        max-height: 150px;
+        overflow: auto;
+        ul{
+            li{
+                height: 20px;
+                line-height: 20px;
+                @include noto-sans-tc-14-regular;
+            }
+        }
+        &::-webkit-scrollbar{
+            width: 6px;
+            height: 6px;
+        }
+        &::-webkit-scrollbar-track{
+            background: #FFF;
+        }
+        &::-webkit-scrollbar-thumb{
+            background: #A1BFB8;
+        }
+    }
 }
 .input-title-box {
     margin-bottom: 2px;
@@ -107,5 +134,29 @@
     color: $caution-red;
     flex: 1;
     @include noto-sans-tc-16-regular;
+}
+
+.checkBoxOption{
+    input[type="checkbox"] {
+      display:none;
+    }
+    input[type="checkbox"] + label
+    {
+      background: #999;
+      height: 14px;
+      width: 14px;
+      display:inline-block;
+      margin: 0 5px;
+      cursor: pointer;
+    }
+    input[type="checkbox"]:checked + label
+    {
+      background: url("~/assets/img/check.svg");
+      height: 14px;
+      width: 14px;
+      display:inline-block;
+      margin: 0 5px;
+      cursor: pointer;
+    }
 }
 
