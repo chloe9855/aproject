@@ -14,7 +14,7 @@
   transition: opacity .1s;
 }
 .vs__spinner,
-.vs__spinner:after {
+.vs__spinner::after {
   border-radius: 50%;
   width: 5em;
   height: 5em;

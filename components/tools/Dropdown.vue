@@ -3,12 +3,16 @@
     :class="sizing"
     class="input-box dropdown"
   >
-    <v-select
-      v-model="selected"
-      label="title"
-      code="value"
-      :options="option"
-    />
+    <client-only>
+      <v-select
+        v-model="selected"
+        label="title"
+        code="code"
+        :clearable="false"
+        :options="option"
+        class="w-100 inputSelect"
+      />
+    </client-only>
   </div>
 </template>
 
