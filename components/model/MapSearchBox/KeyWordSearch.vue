@@ -1,7 +1,7 @@
 <template>
   <div class="out_wrap">
     <Dropdown-component
-      :options="dropList"
+      :options="member"
     />
     <InputTool-component
       :input-text="'輸入渠道關鍵字'"
@@ -28,22 +28,23 @@ export default {
   },
   data () {
     return {
-      dropList: {
-        option: [
-          {
-            title: '請選擇管理處',
-            value: 0
-          },
-          {
-            title: '選項1',
-            value: 1
-          },
-          {
-            title: '選項2',
-            value: 2
-          }
-        ]
-      }
+      // dropList: {
+      //   option: [
+      //     {
+      //       title: '請選擇管理處',
+      //       value: 0
+      //     },
+      //     {
+      //       title: '選項1',
+      //       value: 1
+      //     },
+      //     {
+      //       title: '選項2',
+      //       value: 2
+      //     }
+      //   ]
+      // }
+      member: { option: [{ title: '預設選項', value: '0' }, { title: '工作站人員', value: '1' }, { title: '管理人員', value: '2' }, { title: '民眾', value: '3' }] }
     };
   },
   name: 'KeyWordSearch'

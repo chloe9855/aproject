@@ -37,7 +37,7 @@ export default {
   data: () => {
     return {
       selected: '',
-      option: [{ label: '選項1', code: '0' }, { label: '選項2', code: '1' }, { label: '選項3', code: '2' }]
+      option: [{ label: '選項1', title: '0' }, { label: '選項2', title: '1' }, { label: '選項3', title: '2' }]
     };
   },
   name: 'Dropdown',
