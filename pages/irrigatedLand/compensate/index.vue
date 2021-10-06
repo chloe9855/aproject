@@ -13,6 +13,7 @@
         btn-text="停灌補償申報"
         :btn-add="true"
         btn-name="button-add"
+        @PHBtnStatus="toEditCompensate"
       />
       <TableTool
         :table-column="tableList"
@@ -98,6 +99,11 @@ export default {
   methods: {
     getToggleStatus (e) {
       this.toggleStatus = e;
+    },
+    toEditCompensate (e) {
+      if (e) {
+        this.$router.push({ path: '/irrigatedLand/compensate/editcompensate' });
+      }
     }
   },
   computed: {

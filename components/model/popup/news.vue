@@ -1,6 +1,7 @@
 <template>
   <div class="inputBox">
-    <InputVertical title="表單名稱" />
+    <InputVertical title="公告名稱" />
+    <Textarea title="公告內容" />
     <div class="buttonBox">
       <Button
         :name="'button-red'"
@@ -25,11 +26,14 @@
 import InputVertical from '~/components/tools/InputVertical.vue';
 import Button from '~/components/tools/Buttons.vue';
 import Table from '~/components/model/Table.vue';
+import Textarea from '~/components/tools/Textarea.vue';
+
 export default {
   components: {
-    InputVertical: InputVertical,
-    Button: Button,
-    Table: Table
+    InputVertical,
+    Button,
+    Table,
+    Textarea
   },
   data: () => {
     return {

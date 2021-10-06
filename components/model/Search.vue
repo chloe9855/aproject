@@ -13,7 +13,7 @@
     />
     <div class="buttonBox">
       <Button
-        :name="'button-primary-disable'"
+        :name="'button-default'"
         :text="'清除全部'"
       />
       <Button
@@ -122,9 +122,8 @@ export default {
 
 <style lang="scss" scoped>
 .searchBox{
-  padding: 0 15px;
   position: absolute;
-  width: 290px;
+  width: 320px;
   height: calc( 100vh - 66px );
   top: 66px;
   left:-320px;
@@ -150,6 +149,7 @@ export default {
   display: flex;
   justify-content: flex-end;
   margin-top: 20px;
+  padding-right: 15px;
   .button_wrap{
     padding-left: 5px;
   }

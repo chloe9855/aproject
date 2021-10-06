@@ -15,6 +15,7 @@
       btn-text="新增事件"
       :btn-add="true"
       btn-name="button-add"
+      @STbtnStatus="toEditCompensateEvent"
     />
     <TableTool
       :table-column="tableList"
@@ -57,6 +58,14 @@ export default {
     };
   },
   name: 'DataChange',
+  methods: {
+    toEditCompensateEvent (e) {
+      console.log(e);
+      if (e) {
+        this.$router.push({ path: '/irrigatedLand/compensate/editcompensateEvent' });
+      }
+    }
+  },
   computed: {
     boxWidth () {
       const setWidth = this.toggleStatus ? 'tg-75' : 'w-90';
