@@ -10,7 +10,9 @@
             v-for="item in tableData.head"
             :key="item.index"
           />
+          <th />
         </tr>
+
         <tr>
           <th
             v-for="item in tableData.head"
@@ -18,12 +20,15 @@
           >
             {{ item.title }}
           </th>
+          <th />
         </tr>
+
         <tr class="borderB">
           <th
             v-for="item in tableData.head"
             :key="item.index"
           />
+          <th />
         </tr>
       </thead>
       <tbody>
@@ -36,6 +41,14 @@
             :key="content.index"
           >
             {{ content }}
+          </td>
+          <td>
+            <div>
+              <img
+                class="mapicon"
+                :src="require('~/assets/img/map.svg')"
+              >
+            </div>
           </td>
         </tr>
       </tbody>
@@ -56,6 +69,12 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+
+  .mapicon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
 
   .hidee {
     height: 143px !important;
@@ -113,6 +132,7 @@ export default {
           line-height: 33px;
           height: 33px;
           padding: 2px 10px;
+          vertical-align: middle;
         }
     }
   }
