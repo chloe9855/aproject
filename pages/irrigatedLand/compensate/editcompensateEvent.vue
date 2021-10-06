@@ -14,6 +14,7 @@
       btn-sec-text="確定"
       :btn-sec-add="false"
       btn-sec-name="button-primary"
+      :is-border="true"
     />
     <SubTitleTool
       title="停灌補償申請事件綁定"

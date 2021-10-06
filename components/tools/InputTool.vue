@@ -33,7 +33,7 @@
       class="input-icon"
     >
     <div
-      v-show="filterData"
+      v-show="filterBox"
       class="filterBox"
     >
       <ul>
@@ -108,6 +108,10 @@ export default {
   name: 'InputTool',
   methods: {
     filterData () {
+<<<<<<< HEAD
+=======
+      this.filterBox = true;
+>>>>>>> main
       this.$emit('inputValue', this.message);
     }
   },

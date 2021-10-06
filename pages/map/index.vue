@@ -115,7 +115,6 @@
           id="SemiTransparentFooter"
           class="FooterDisplayAtbottom NONE"
         >
-
           <div id="CoordTools">
             <label id="Coordinate">NaN NaN</label>
           </div>
