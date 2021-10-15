@@ -5,7 +5,7 @@
       :key="typeItem.id"
       class="navtabs__btn"
       :class="{ 'current': current === typeItem.id }"
-      @click.stop="current = typeItem.id, $emit('current',typeItem.id)"
+      @click.stop="current = typeItem.id, $emit('current',typeItem.id), $emit('draw',typeItem.id)"
     >
       {{ typeItem.name }}
     </div>

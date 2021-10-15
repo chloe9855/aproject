@@ -1,388 +1,6 @@
-<template>
-  <div>
-    <!-- <div
-      id="HeaderNode"
-      class="Headercolor"
-    >
-      <img
-        id="WebMapperLogo"
-        alt=""
-        src="images/SuperGeo_logo.png"
-      >
-      <h1
-        id="Title"
-        class="Layoutcolor"
-      >
-        SuperGIS Map Viewer
-      </h1>
-      <h2
-        id="SubTitle"
-        class="Layoutcolor"
-      >
-        SubTitle
-      </h2>
-      <div
-        id="MobileToolCaller"
-        style="height:100%;"
-        onclick="staticCustom.Custom.init();"
-      >
-        <span style="display:inline-block;height:100%;vertical-align:middle;" />
-        <img
-          alt=""
-          style="vertical-align:middle;"
-          src="images/toolbox.png"
-        >
-      </div>
-      <div
-        id="LayerTool"
-        style="height:100%;"
-        onclick="staticCustom.TOC.init();"
-      >
-        <span style="display:inline-block;height:100%;vertical-align:middle;" />
-        <img
-          alt=""
-          style="vertical-align:middle;"
-          src="images/Layersbtn.png"
-        >
-      </div>
-    </div> -->
-    <canvas
-      id="tempcanvas"
-      width="80"
-      height="50"
-      style="display: none;"
-    />
-    <div id="mapNode" />
-    <!-- <div id="Tools"> -->
-    <!-- <div
-        id="ZoomTools_Mobile"
-        class="Tools"
-      >
-        <div
-          id="mZoomIn"
-          class="Buttoncolor"
-          onclick="ZoomIn();"
-        >
-          <img
-            alt=""
-            src="images/Mobile_Tools/Plus.png"
-            title="Zoom in"
-          >
-        </div>
-        <div
-          id="mZoomOut"
-          class="Buttoncolor"
-          onclick="ZoomOut();"
-        >
-          <img
-            alt=""
-            src="images/Mobile_Tools/Minus.png"
-            title="Zoom out"
-          >
-        </div>
-        <div
-          id="mZoomHome"
-          class="Buttoncolor"
-          onclick="ResetZoom();"
-        >
-          <img
-            alt=""
-            src="images/Mobile_Tools/Home.png"
-          >
-        </div>
-      </div> -->
-    <!-- <div
-        id="ZoomTools"
-        class="Tools"
-      >
-        <div
-          id="ZoomIn"
-          class="Tool Buttoncolor"
-          onclick="ZoomIn();"
-        >
-          <img
-            alt=""
-            src="images/Zoomin.png"
-            title="Zoom in"
-          >
-        </div>
-        <div
-          id="ZoomOut"
-          class="Tool Buttoncolor"
-          onclick="ZoomOut();"
-        >
-          <img
-            alt=""
-            src="images/Zoomout.png"
-            title="Zoom out"
-          >
-        </div>
-      </div> -->
-    <!-- <div
-        id="CustomTools"
-        class="Tools"
-      >
-        <div
-          id="CustomA"
-          class="Tool Buttoncolor"
-        />
-        <div
-          id="CustomB"
-          class="Tool Buttoncolor"
-        />
-        <div
-          id="CustomC"
-          class="Tool Buttoncolor"
-        />
-        <div
-          id="CustomD"
-          class="Tool Buttoncolor"
-        />
-      </div>
-      <div
-        id="IndexMap"
-        class="Tools On Buttoncolor"
-      >
-        <div id="IndexMapNode" />
-        <button
-          class="IndexMap_Arrow"
-          onclick="this.parentNode.classList.toggle('On');"
-        />
-      </div> -->
-    <!-- <div
-        id="SemiTransparentFooter"
-        class="FooterDisplayAtbottom NONE"
-      > -->
-    <div id="CoordTools">
-      <label id="Coordinate">NaN NaN</label>
-    </div>
-    <div
-      id="ScaleTools"
-      style="position: relative;width: 5.2cm;height: 28px;left: 20px;bottom:0;"
-    />
-    <!-- </div> -->
-    <!-- </div> -->
+@charset "UTF-8";
 
-    <!-- <div
-      id="TOC"
-      class="Drawer"
-      style="display:none;"
-    >
-      <div class="Frame">
-        <div
-          id="Header"
-          class="Headercolor"
-        >
-          <span class="Layoutcolor">Layers</span>
-        </div>
-        <div id="TOCBody" />
-      </div>
-    </div> -->
-  </div>
-</template>
-
-<script>
-export default {
-  head: {
-    script: [
-      {
-        src: 'scripts/Base.js',
-        async: true
-      },
-      {
-        src: 'scripts/OperationBase.js',
-        async: true
-      },
-      {
-        src: 'scripts/SuperGeoUtility.js',
-        async: true
-      },
-      {
-        src: 'scripts/AjaxAgent.js',
-        async: true
-      },
-      {
-        src: 'scripts/Framework.js',
-        async: true
-      },
-      {
-        src: 'scripts/MapBase.js',
-        async: true
-      },
-      {
-        src: 'scripts/Controls.js',
-        async: true
-      },
-      {
-        src: 'scripts/MapLayer.js',
-        async: true
-      },
-      {
-        src: 'scripts/Navigate.js',
-        async: true
-      },
-      {
-        src: 'scripts/CachedLayer.js',
-        async: true
-      },
-      {
-        src: 'scripts/OpenStreetMap.js',
-        async: true
-      },
-      {
-        src: 'scripts/ToolControls.js',
-        async: true
-      },
-      {
-        src: 'scripts/Tasks.js',
-        async: true
-      },
-      {
-        src: 'scripts/GFX.js',
-        async: true
-      },
-      {
-        src: 'scripts/FX.js',
-        async: true
-      },
-      {
-        src: 'scripts/Compass.js',
-        async: true
-      },
-      {
-        src: 'scripts/Tracker.js',
-        async: true
-      },
-      {
-        src: 'scripts/Geometry.js',
-        async: true
-      },
-      {
-        src: 'scripts/Symbol.js',
-        async: true
-      },
-      {
-        src: 'scripts/Draw.js',
-        async: true
-      },
-      {
-        src: 'scripts/Overview.js',
-        async: true
-      },
-      {
-        src: 'scripts/Bookmark.js',
-        async: true
-      },
-      {
-        src: 'scripts/TemplatePicker.js',
-        async: true
-      },
-      {
-        src: 'scripts/Layer.js',
-        async: true
-      },
-      {
-        src: 'scripts/TiledLayer.js',
-        async: true
-      },
-      {
-        src: 'scripts/TileLayer.js',
-        async: true
-      },
-      {
-        src: 'scripts/DynamicLayer.js',
-        async: true
-      },
-      {
-        src: 'scripts/Graphic.js',
-        async: true
-      },
-      {
-        src: 'scripts/GraphicsLayer.js',
-        async: true
-      },
-
-      {
-        src: 'scripts/OSMLayer.js',
-        async: true
-      },
-      {
-        src: 'scripts/BingTiledLayer.js',
-        async: true
-      },
-      {
-        src: 'scripts/Infowindow.js',
-        async: true
-      },
-      {
-        src: 'scripts/Mercator.js',
-        async: true
-      },
-      {
-        src: 'scripts/CoordSys.js',
-        async: true
-      },
-      {
-        src: 'scripts/PrintTool.js',
-        async: true
-      },
-      {
-        src: 'scripts/Process.js',
-        async: true
-      },
-      {
-        src: 'scripts/Query.js',
-        async: true
-      },
-      {
-        src: 'scripts/Edit.js',
-        async: true
-      },
-      {
-        src: 'scripts/UndoManager.js',
-        async: true
-      },
-      {
-        src: 'scripts/Request.js',
-        async: true
-      },
-      {
-        src: 'scripts/WMSLayer.js',
-        async: true
-      },
-      {
-        src: 'scripts/WMTSLayer.js',
-        async: true
-      },
-      {
-        src: 'scripts/Google.js',
-        async: true
-      },
-      {
-        src: 'scripts/Base64.js',
-        async: true
-      },
-      {
-        src: 'scripts/Projection.js',
-        async: true
-      },
-      // {
-      //   src: 'ServerGate/SGSGate.ashx?F=~/scripts/Framework.js',
-      //   async: true
-      // },
-      {
-        src: 'scripts/setMap.js',
-        async: true
-      }
-    ]
-  },
-  layout: 'nohf'
-};
-</script>
-
-<style lang="scss">
-
-  .sgContainer {
+.sgContainer {
   width: 100%;
   height: 100%;
   position: absolute;
@@ -404,6 +22,7 @@ export default {
   border: 1px solid #70aa70;
   border-radius: 4px;
   z-index: 9999;
+  font-family: 'Noto Sans TC', sans-serif;
 }
 
 .sgTooltip {
@@ -415,6 +34,7 @@ export default {
   border: 1px solid #70aa70;
   border-radius: 4px;
   z-index: 9999;
+  font-family: 'Noto Sans TC', sans-serif;
 }
 
 .level-pad {
@@ -592,7 +212,7 @@ export default {
 
 #mapNode {
   width: 100%;
-  height: calc(100% - 50px);
+  height: 100%;
   position: absolute;
   // top: 50px;
   overflow: hidden;
@@ -694,19 +314,16 @@ export default {
 }
 
 #CoordTools {
-  display: none;
   position: absolute;
   bottom: 10px;
-  left: 240px;
+  right: 0;
 }
 
 #CoordTools label {
   // text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
 }
 
-#ScaleTools {
-  display: none;
-}
+
 
 .viewcloss {
   position: absolute;
@@ -1498,6 +1115,16 @@ input[type='checkbox']:checked::after {
 }
 
 // Scalebar.css
+
+#ScaleTools {
+  position: absolute;
+  width: 5.2cm;
+  height: 28px;
+  display: inline-block;
+  bottom: 14px;
+  left: 14px;
+}
+
 .scalebar {
   width: 100%;
   height: 100%;
@@ -1511,7 +1138,7 @@ input[type='checkbox']:checked::after {
   height: 10px;
   position: absolute;
   top: 16px;
-  overflow: hidden;
+  // overflow: hidden;
   border: 1px solid black;
 }
 
@@ -1539,10 +1166,9 @@ input[type='checkbox']:checked::after {
 
 .scalebar > .barNumber > * {
   position: absolute;
-  font-size: 6pt;
-  color: white;
-  text-shadow: 1px 0 black, -1px 0 black, 0 1px black, 0 -1px black, 1px 1px black, -1px -1px black, -1px 1px black, 1px -1px black;
+  color: black;
   transform: translate(-50%, 0);
+  @include noto-sans-tc-9-regular;
 }
 .scalebar > .barNumber > *:nth-of-type(1) { left: 0%; }
 .scalebar > .barNumber > *:nth-of-type(2) { left: calc((100%) / 6); }
@@ -1554,9 +1180,8 @@ input[type='checkbox']:checked::after {
   position: absolute;
   top: 12px;
   left: calc(100% + 2px);
-  font-size: 10pt;
-  color: white;
-  text-shadow: 1px 0 black, -1px 0 black, 0 1px black, 0 -1px black, 1px 1px black, -1px -1px black, -1px 1px black, 1px -1px black;
+  color: #000;
+  @include noto-sans-tc-9-regular;
 }
 
 .scalebar > .barLine {
@@ -1596,5 +1221,3 @@ input[type='checkbox']:checked::after {
   text-shadow: 1px 0 white, -1px 0 white, 0 1px white, 0 -1px white, 1px 1px white, -1px -1px white, -1px 1px white, 1px -1px white;
   transform: translate(-50%, 0);
 }
-
-</style>

@@ -235,7 +235,7 @@ export default {
     justify-content: center;
     align-items: center;
     color: #3E9F88;
-    padding: 10px 0;
+    padding: 4px 0;
     @include noto-sans-tc-16-regular;
   }
 

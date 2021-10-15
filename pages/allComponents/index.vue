@@ -66,8 +66,9 @@
       />
       <Buttons-component
         :name="'button-round'"
-        :text="'新增圖層'"
+        :text="'canvas'"
         :round="true"
+        @click="addJPG"
       />
       <Buttons-component
         :name="'button-primary'"
@@ -99,6 +100,22 @@
       <br>
       <br>
       <TreeSelect-component />
+      <br>
+      <div
+        ref="capture"
+        style="padding: 10px; background: #f5da55"
+      >
+        <h4 style="color: #000; ">
+          Hello world!
+        </h4>
+      </div>
+
+      <div
+        ref="element2"
+        style="display: none; padding: 10px; background: #FFC0CB"
+      >
+        你看不到我
+      </div>
     </div>
   </div>
 </template>
@@ -170,6 +187,37 @@ export default {
       },
       currentPage: 1
     };
+  },
+  methods: {
+    addJPG () {
+      const node = this.$refs.capture;
+      console.log(node);
+
+      const node2 = this.$refs.element2;
+      console.log(node2);
+
+      html2canvas(node, { async: true, useCORS: true, allowTaint: false }).then(canvas => {
+        document.body.appendChild(canvas);
+      });
+
+      // domtoimage.toPng(node)
+      //   .then(function (dataUrl) {
+      //     const img = new Image();
+      //     img.src = dataUrl;
+      //     document.body.appendChild(img);
+      //   })
+      //   .catch(function (error) {
+      //     console.error('oops, something went wrong!', error);
+      //   });
+
+      // domtoimage.toJpeg(node2, { quality: 0.95 })
+      //   .then(function (dataUrl) {
+      //     const link = document.createElement('a');
+      //     link.download = 'my-image.jpg';
+      //     link.href = dataUrl;
+      //     link.click();
+      //   });
+    }
   }
 };
 </script>

@@ -3,6 +3,13 @@
 $font-family: 'Noto Sans TC', sans-serif;
 
 // Typographies
+@mixin noto-sans-tc-9-regular {
+  font-family: $font-family;
+  font-size: 9px;
+  font-weight: 400;
+  line-height: normal;
+}
+
 @mixin noto-sans-tc-10-regular {
   font-family: $font-family;
   font-size: 10px;

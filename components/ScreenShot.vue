@@ -14,6 +14,7 @@
       />
       <Buttons-component
         :text="'JPG下載'"
+        @click="$emit('addJPG')"
       />
     </div>
   </div>

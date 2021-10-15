@@ -7,5 +7,8 @@
     "javascript",
     "vue"
   ],
-  "vetur.validation.template": false
+  "vetur.validation.template": false,
+  "eslint.workingDirectories": [
+    {"mode": "auto"}
+  ]
 }

@@ -1,14 +1,18 @@
 module.exports = {
   env: {
     browser: true,
-    es2021: true
+    es6: true
   },
   extends: [
     'plugin:vue/recommended',
     'standard'
   ],
+  globals: {
+    Atomics: 'readonly',
+    SharedArrayBuffer: 'readonly'
+  },
   parserOptions: {
-    ecmaVersion: 12,
+    ecmaVersion: 2018,
     sourceType: 'module'
   },
   plugins: [
@@ -19,7 +23,9 @@ module.exports = {
       'error',
       'always'
     ],
+    'no-undef': ['off'],
     'no-console': ['off'],
+    // 'global-require': 0,
     'vue/require-default-prop': ['off'],
     'vue/order-in-components': ['error', {
       order: [
