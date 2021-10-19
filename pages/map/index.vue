@@ -7,10 +7,11 @@
       <!--    -->
 
       <canvas
-        id="tempcanvas"
-        width="80"
-        height="50"
-        style="display: none;"
+        id="canvas"
+        ref="mapCanvas"
+        class="canvasShot"
+        width="1500"
+        height="635"
       />
       <div
         id="mapNode"
@@ -20,8 +21,12 @@
         <label id="Coordinate">NaN NaN</label>
       </div> -->
       <div
-        id="ScaleTools"
-      />
+        class="scbar_wrap"
+      >
+        <div
+          id="ScaleTools"
+        />
+      </div>
 
       <!--  -->
       <Feature-component
@@ -302,7 +307,9 @@
       >
         <template #content>
           <ScreenShot-component
+            @update="payload => screenTitle = payload"
             @addJPG="downloadJPG"
+            @addPDF="downloadPDF"
           />
         </template>
       </DragBox-component>
@@ -406,6 +413,9 @@ export default {
       openOnce: true,
       openLine: true,
       drawTool: '',
+      // * 截圖
+      screenTitle: '',
+      screenImgSrc: '',
       layerOptions: {
         current: 0,
         typeList: [
@@ -704,9 +714,40 @@ export default {
     this.layerOptions.pointList = [...point.data];
     this.layerOptions.baseLayerList = [...base.data];
 
-    console.log(gogo());
+    // console.log(gogo());
+    // console.log(coco);
 
-    console.log(coco);
+    // * 載入canvas
+    const canvas = document.getElementsByTagName('canvas')[0];
+    const ctx = canvas.getContext('2d');
+
+    const getPixelRatio = function (ctx) {
+      const backingStore = ctx.backingStorePixelRatio ||
+        ctx.webkitBackingStorePixelRatio ||
+        ctx.mozBackingStorePixelRatio ||
+        ctx.msBackingStorePixelRatio ||
+        ctx.oBackingStorePixelRatio ||
+        ctx.backingStorePixelRatio || 1;
+      return (window.devicePixelRatio || 1) / backingStore;
+    };
+    const ratio = getPixelRatio(ctx);
+
+    canvas.style.width = canvas.width + 'px';
+    canvas.style.height = canvas.height + 'px';
+    canvas.width = canvas.width * ratio;
+    canvas.height = canvas.height * ratio;
+    ctx.scale(ratio, ratio);
+
+    // 加上指北針圖
+    // const imgObj = new Image();
+    // imgObj.src = require('~/assets/img/compass.png');
+    // imgObj.onload = function () {
+    //   ctx.drawImage(imgObj, 1300, 70);
+    // };
+
+    // ctx.font = '80px';
+    // ctx.fillStyle = '#999';
+    // ctx.fillText('Hello World!', 700, 10);
   },
   methods: {
     // * 控制視窗顯示
@@ -869,13 +910,148 @@ export default {
     // * @ 截圖工具：JPG下載
     downloadJPG () {
       const node = this.$refs.mapBox;
-      domtoimage.toJpeg(node, { quality: 0.95 })
-        .then(function (dataUrl) {
-          const link = document.createElement('a');
-          link.download = 'iamap.jpg';
-          link.href = dataUrl;
-          link.click();
+      const canvas = document.getElementsByTagName('canvas')[0];
+      const ctx = canvas.getContext('2d');
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      // 加邊框
+      ctx.strokeStyle = '#000000';
+      ctx.lineWidth = 1;
+      ctx.strokeRect(100, 48.5, 1300, 538);
+
+      // 加上地圖
+      const mapImg = new Image();
+      domtoimage.toPng(node, { quality: 0.95 })
+        .then((dataUrl) => {
+          mapImg.src = dataUrl;
         });
+      mapImg.style.border = '2px solid #EA0000';
+
+      mapImg.onload = function () {
+        ctx.drawImage(mapImg, 100, 48.5, 1300, 538);
+        console.log('地圖');
+      };
+
+      ctx.globalCompositeOperation = 'destination-over';
+
+      setTimeout(() => {
+        // 加上指北針圖
+        const imgObj = new Image();
+        imgObj.src = require('~/assets/img/compass.png');
+        imgObj.onload = function () {
+          ctx.drawImage(imgObj, 1250, 60);
+          console.log('指北針');
+        };
+
+        // 加標題
+        const textWidth = ctx.measureText(this.screenTitle).width;
+        ctx.font = '28px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillStyle = '#000000';
+        ctx.fillText(this.screenTitle, (canvas.width / 2) - (textWidth / 2) - 80, 30);
+
+        // 加比例尺
+        ctx.globalCompositeOperation = 'source-over';
+
+        const scale = document.getElementById('ScaleTools');
+        const scaleImg = new Image();
+        domtoimage.toPng(scale, { quality: 0.95 })
+          .then((dataUrl) => {
+            scaleImg.src = dataUrl;
+          });
+        scaleImg.onload = function () {
+          ctx.drawImage(scaleImg, 100, 550);
+          console.log('比例尺');
+        };
+
+        // 加日期
+        ctx.font = '13px sans-serif';
+        const date = new Date();
+        const nowDate = `列印時間 : ${date.getFullYear()}/${date.getMonth()}/${date.getDate()} ${date.getHours()}:${date.getMinutes()}`;
+        ctx.fillText(nowDate, 1290, 610);
+        console.log('日期');
+
+        // 加版權
+        ctx.fillText('地圖平台 : 農田水利署地理空間處理平台', 235, 610);
+      }, 2500);
+
+      setTimeout(() => {
+        canvas.toBlob(function (blob) {
+          saveAs(blob, 'iamap.jpg');
+          console.log('印出來');
+        });
+      }, 7000);
+    },
+    downloadPDF () {
+      const node = this.$refs.mapBox;
+      const canvas = document.getElementsByTagName('canvas')[0];
+      const ctx = canvas.getContext('2d');
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      // 加上地圖
+      const mapImg = new Image();
+      domtoimage.toPng(node, { quality: 0.95 })
+        .then((dataUrl) => {
+          mapImg.src = dataUrl;
+        });
+      mapImg.style.border = '2px solid #EA0000';
+
+      mapImg.onload = function () {
+        ctx.drawImage(mapImg, 100, 48.5, 1300, 538);
+        console.log('地圖');
+      };
+
+      ctx.globalCompositeOperation = 'destination-over';
+
+      setTimeout(() => {
+        // 加上指北針圖
+        const imgObj = new Image();
+        imgObj.src = require('~/assets/img/compass.png');
+        imgObj.onload = function () {
+          ctx.drawImage(imgObj, 1250, 60);
+          console.log('指北針');
+        };
+
+        // 加標題
+        const textWidth = ctx.measureText(this.screenTitle).width;
+        ctx.font = '28px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillStyle = '#000000';
+        ctx.fillText(this.screenTitle, (canvas.width / 2) - (textWidth / 2) - 80, 30);
+
+        // 加比例尺
+        ctx.globalCompositeOperation = 'source-over';
+
+        const scale = document.getElementById('ScaleTools');
+        const scaleImg = new Image();
+        domtoimage.toPng(scale, { quality: 0.95 })
+          .then((dataUrl) => {
+            scaleImg.src = dataUrl;
+          });
+        scaleImg.onload = function () {
+          ctx.drawImage(scaleImg, 100, 550);
+          console.log('比例尺');
+        };
+
+        // 加日期
+        ctx.font = '13px sans-serif';
+        const date = new Date();
+        const nowDate = `列印時間 : ${date.getFullYear()}/${date.getMonth()}/${date.getDate()} ${date.getHours()}:${date.getMinutes()}`;
+        ctx.fillText(nowDate, 1290, 610);
+        console.log('日期');
+
+        // 加版權
+        ctx.fillText('地圖平台 : 農田水利署地理空間處理平台', 235, 610);
+      }, 2500);
+
+      window.jsPDF = window.jspdf.jsPDF;
+      // eslint-disable-next-line new-cap
+      const doc = new jsPDF('l', 'px', [canvas.width, canvas.height]);
+      setTimeout(() => {
+        const image = canvas.toDataURL();
+        doc.addImage(image, 'JPEG', 0, 0, canvas.width, canvas.height);
+        doc.save('iamap.pdf');
+      }, 7000);
     },
     // * 回到全圖
     fullMapCtrl () {
@@ -918,6 +1094,17 @@ export default {
           myUnitNum = 1;
           this.drawTool.ActiveMeasureTool('LINESTRING');
         }
+        // 從測量視窗切換至其他視窗
+        if (value !== 'geoMeasureWindow' && this.openOnce === false) {
+          this.openLine = true;
+          this.drawTool.ClearMap();
+          this.drawTool.ActiveMeasureTool();
+        }
+        if (value === 'streetMapWindow') {
+          document.getElementsByTagName('body')[0].style.cursor = "url('images/pegman-cursor.png'), auto";
+        } else {
+          document.getElementsByTagName('body')[0].style.cursor = 'default';
+        }
       }
     }
   }
@@ -934,6 +1121,19 @@ export default {
   //   background-color: pink;
   //   z-index: -1;
   // }
+
+  .scbar_wrap {
+    position: absolute;
+    bottom: 14px;
+    left: 9px;
+  }
+
+  .canvasShot {
+    position: absolute;
+    left: 0;
+    top: 0;
+    z-index: -2000;
+  }
 
   .mapWrap {
 

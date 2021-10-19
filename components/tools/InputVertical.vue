@@ -37,6 +37,7 @@
       :name="name"
       :type="inputType"
       :disabled="isDisable === true"
+      @input="$emit('input', $event.target.value)"
     >
     <img
       v-show="isAddIcon"
@@ -92,6 +93,10 @@ export default {
     starSign: {
       type: String,
       default: ''
+    },
+    changeText: {
+      type: String,
+      default: ''
     }
   },
   data: () => {
@@ -134,6 +139,9 @@ export default {
   watch: {
     message (n, o) {
       this.$emit('inputValue', n);
+    },
+    changeText (value) {
+      this.message = value;
     }
   }
 };
