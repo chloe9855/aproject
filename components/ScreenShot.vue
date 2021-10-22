@@ -1,19 +1,24 @@
 <template>
   <div class="screen_wrap">
     <InputVertical-component
+      v-model="titleValue"
       name="請輸入地圖標題"
       title="地圖標題"
+      :change-text="titleValue"
     />
     <div class="bt_wrap">
       <Buttons-component
         :name="'button-default'"
         :text="'清除全部'"
+        @click="clearAll"
       />
       <Buttons-component
         :text="'PDF下載'"
+        @click="$emit('addPDF')"
       />
       <Buttons-component
         :text="'JPG下載'"
+        @click="$emit('addJPG')"
       />
     </div>
   </div>
@@ -27,6 +32,23 @@ export default {
   components: {
     'InputVertical-component': InputVertical,
     'Buttons-component': Buttons
+  },
+  data () {
+    return {
+      titleValue: ''
+    };
+  },
+  methods: {
+    clearAll () {
+      this.titleValue = '';
+    }
+  },
+  watch: {
+    titleValue: {
+      handler (value) {
+        this.$emit('update', value);
+      }
+    }
   }
 };
 </script>

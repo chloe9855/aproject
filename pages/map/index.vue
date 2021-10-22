@@ -1,39 +1,40 @@
 <template>
-  <div class="wrapper">
+  <div class="wrapper mapWrap">
     <div
-      id="mapNode"
       class="main"
       :class="{ 'reduceHeight': $store.state.hideFooter === true }"
     >
       <!--    -->
 
-      <!-- <div
-        id="TOC"
-        class="Drawer"
-        style="display:none;"
-      >
-        <div class="Frame">
-          <div
-            id="Header"
-            class="Headercolor"
-          >
-            <span class="Layoutcolor">Layers</span>
-          </div>
-          <div id="TOCBody" />
-        </div>
-      </div>
+      <canvas
+        id="canvas"
+        ref="mapCanvas"
+        class="canvasShot"
+        width="1500"
+        height="635"
+      />
       <div
-        id="IndexMap"
-        class="Tools On Buttoncolor"
-      >
-        <div id="IndexMapNode" />
-        <button class="IndexMap_Arrow" />
+        id="mapNode"
+        ref="mapBox"
+      />
+      <!-- <div id="CoordTools">
+        <label id="Coordinate">NaN NaN</label>
       </div> -->
+      <div
+        class="scbar_wrap"
+      >
+        <div
+          id="ScaleTools"
+        />
+      </div>
 
       <!--  -->
       <Feature-component
         :current="activeWindow"
         @select="payload => activeWindow = payload"
+        @zoomIn="zoomInCtrl"
+        @zoomOut="zoomOutCtrl"
+        @backFullPic="fullMapCtrl"
       />
 
       <!--     圖層工具     -->
@@ -191,7 +192,7 @@
                 name="value"
                 :placeholder="ogcOptions.holder"
               />
-              <div class="bt_wrap">
+              <div class="bt_wrapOGC">
                 <Buttons-component
                   :text="'取得服務'"
                   @click="getOgcHandler"
@@ -283,10 +284,17 @@
         v-if="ctrlDragBoxVisible('geoMeasureWindow')"
         :name="'測量工具'"
         :icon-name="'icon-geo-measure'"
-        @close="activeWindow = ''"
+        @close="closeMeasureWindow"
       >
         <template #content>
-          <GeoMeasure-component />
+          <GeoMeasure-component
+            :line-meter="drawTool.lineM"
+            :line-kilo="drawTool.lineKm"
+            :sur-meter="drawTool.surM"
+            :sur-kilo="drawTool.surKm"
+            @startDraw="startMeasure"
+            @clear="clearMeasureResult"
+          />
         </template>
       </DragBox-component>
 
@@ -298,7 +306,11 @@
         @close="activeWindow = ''"
       >
         <template #content>
-          <ScreenShot-component />
+          <ScreenShot-component
+            @update="payload => screenTitle = payload"
+            @addJPG="downloadJPG"
+            @addPDF="downloadPDF"
+          />
         </template>
       </DragBox-component>
 
@@ -329,7 +341,7 @@
         :class="{'hide_block': hideResult, 'show_block': !hideResult}"
       >
         <div
-          class="hide_button"
+          class="hide_button_bigTable"
           @click="hideResult = !hideResult"
         >
           <p
@@ -346,12 +358,6 @@
           </p>
         </div>
         <div class="table_wrap">
-          <!-- <Table-component
-            :table-column="searchResult.channel"
-            :is-check="false"
-            :is-map="true"
-            :is-paginate="false"
-          /> -->
           <ScrollTable-component
             :table-data="searchResult.channel"
             :hide="hideResult"
@@ -364,7 +370,6 @@
 </template>
 
 <script>
-// import Footer from '~/components/model/Footer';
 import NavTabs from '~/components/tools/NavTabs.vue';
 import Feature from '~/components/Feature.vue';
 import DragBox from '~/components/DragBox.vue';
@@ -376,12 +381,12 @@ import Buttons from '~/components/tools/Buttons.vue';
 import GeoMeasure from '~/components/GeoMeasure.vue';
 import ScreenShot from '~/components/ScreenShot.vue';
 import MapSearchBox from '~/components/MapSearchBox.vue';
-// import Table from '~/components/model/Table.vue';
 import ScrollTable from '~/components/tools/ScrollTable.vue';
+// import * as myModule1 from '~/scripts/Base.js';
+// import * as myModule2 from '~/scripts/Query.js';
 
 export default {
   components: {
-    // 'Footer-component': Footer,
     'NavTabs-component': NavTabs,
     'Feature-component': Feature,
     'DragBox-component': DragBox,
@@ -394,16 +399,23 @@ export default {
     'ScreenShot-component': ScreenShot,
     'MapSearchBox-component': MapSearchBox,
     'ScrollTable-component': ScrollTable
-    // 'Table-component': Table
   },
   data () {
     return {
+      mymap: '',
       // * 目前所選取的功能視窗
       activeWindow: '',
       searchResult: {
         channel: ''
       },
       hideResult: false,
+      // * 測量視窗
+      openOnce: true,
+      openLine: true,
+      drawTool: '',
+      // * 截圖
+      screenTitle: '',
+      screenImgSrc: '',
       layerOptions: {
         current: 0,
         typeList: [
@@ -491,6 +503,14 @@ export default {
     };
   },
   // layout: 'map',
+  // head: {
+  //   script: [
+  //     {
+  //       src: 'scripts/setMap.js',
+  //       async: true
+  //     }
+  //   ]
+  // },
   // head: {
   //   script: [
   //     {
@@ -590,6 +610,14 @@ export default {
   //       async: true
   //     },
   //     {
+  //       src: 'scripts/TiledLayer.js',
+  //       async: true
+  //     },
+  //     {
+  //       src: 'scripts/TileLayer.js',
+  //       async: true
+  //     },
+  //     {
   //       src: 'scripts/DynamicLayer.js',
   //       async: true
   //     },
@@ -601,10 +629,7 @@ export default {
   //       src: 'scripts/GraphicsLayer.js',
   //       async: true
   //     },
-  //     {
-  //       src: 'scripts/TileLayer.js',
-  //       async: true
-  //     },
+
   //     {
   //       src: 'scripts/OSMLayer.js',
   //       async: true
@@ -688,6 +713,41 @@ export default {
     this.layerOptions.lineList = [...line.data];
     this.layerOptions.pointList = [...point.data];
     this.layerOptions.baseLayerList = [...base.data];
+
+    // console.log(gogo());
+    // console.log(coco);
+
+    // * 載入canvas
+    const canvas = document.getElementsByTagName('canvas')[0];
+    const ctx = canvas.getContext('2d');
+
+    const getPixelRatio = function (ctx) {
+      const backingStore = ctx.backingStorePixelRatio ||
+        ctx.webkitBackingStorePixelRatio ||
+        ctx.mozBackingStorePixelRatio ||
+        ctx.msBackingStorePixelRatio ||
+        ctx.oBackingStorePixelRatio ||
+        ctx.backingStorePixelRatio || 1;
+      return (window.devicePixelRatio || 1) / backingStore;
+    };
+    const ratio = getPixelRatio(ctx);
+
+    canvas.style.width = canvas.width + 'px';
+    canvas.style.height = canvas.height + 'px';
+    canvas.width = canvas.width * ratio;
+    canvas.height = canvas.height * ratio;
+    ctx.scale(ratio, ratio);
+
+    // 加上指北針圖
+    // const imgObj = new Image();
+    // imgObj.src = require('~/assets/img/compass.png');
+    // imgObj.onload = function () {
+    //   ctx.drawImage(imgObj, 1300, 70);
+    // };
+
+    // ctx.font = '80px';
+    // ctx.fillStyle = '#999';
+    // ctx.fillText('Hello World!', 700, 10);
   },
   methods: {
     // * 控制視窗顯示
@@ -695,12 +755,41 @@ export default {
       // @DragBox：電腦版可以在畫面上任意移動的 component
       return this.activeWindow === payload;
     },
+    // * @ 測量圖形
+    startMeasure (id) {
+      // 長度測量
+      if (id === 0) {
+        drawTypee = 'LINESTRING';
+        myUnit = 'Meters';
+        myUnitNum = 1;
+        this.drawTool.ActiveMeasureTool('LINESTRING');
+      }
+      // 面積測量
+      if (id === 1) {
+        this.openLine = false;
+        drawTypee = 'POLYGON';
+        myUnit = 'Square Meters';
+        myUnitNum = 1;
+        this.drawTool.ActiveMeasureTool('POLYGON');
+      }
+    },
+    // * @ 測量圖形：關閉測量視窗
+    closeMeasureWindow () {
+      this.activeWindow = '';
+      this.openLine = true;
+      this.drawTool.ClearMap();
+      this.drawTool.ActiveMeasureTool();
+    },
+    // * @ 測量圖形：清除所有測量圖形
+    clearMeasureResult () {
+      this.drawTool.ClearMap();
+    },
     // * @ 左側搜尋
     searchHandler () {
       const data = require('~/static/channel.json');
       this.searchResult.channel = data;
     },
-    // * @ 清除搜尋結果
+    // * @ 左側搜尋：清除搜尋結果
     clearSearchResult () {
       this.searchResult.channel = '';
       this.hideResult = false;
@@ -817,7 +906,169 @@ export default {
     // * @ 圖層工具：OGC介接 清除全部
     clearOgcLayer () {
       this.ogcOptions.layerList = [];
+    },
+    // * @ 截圖工具：JPG下載
+    downloadJPG () {
+      const node = this.$refs.mapBox;
+      const canvas = document.getElementsByTagName('canvas')[0];
+      const ctx = canvas.getContext('2d');
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      // 加邊框
+      ctx.strokeStyle = '#000000';
+      ctx.lineWidth = 1;
+      ctx.strokeRect(100, 48.5, 1300, 538);
+
+      // 加上地圖
+      const mapImg = new Image();
+      domtoimage.toPng(node, { quality: 0.95 })
+        .then((dataUrl) => {
+          mapImg.src = dataUrl;
+        });
+      mapImg.style.border = '2px solid #EA0000';
+
+      mapImg.onload = function () {
+        ctx.drawImage(mapImg, 100, 48.5, 1300, 538);
+        console.log('地圖');
+      };
+
+      ctx.globalCompositeOperation = 'destination-over';
+
+      setTimeout(() => {
+        // 加上指北針圖
+        const imgObj = new Image();
+        imgObj.src = require('~/assets/img/compass.png');
+        imgObj.onload = function () {
+          ctx.drawImage(imgObj, 1250, 60);
+          console.log('指北針');
+        };
+
+        // 加標題
+        const textWidth = ctx.measureText(this.screenTitle).width;
+        ctx.font = '28px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillStyle = '#000000';
+        ctx.fillText(this.screenTitle, (canvas.width / 2) - (textWidth / 2) - 80, 30);
+
+        // 加比例尺
+        ctx.globalCompositeOperation = 'source-over';
+
+        const scale = document.getElementById('ScaleTools');
+        const scaleImg = new Image();
+        domtoimage.toPng(scale, { quality: 0.95 })
+          .then((dataUrl) => {
+            scaleImg.src = dataUrl;
+          });
+        scaleImg.onload = function () {
+          ctx.drawImage(scaleImg, 100, 550);
+          console.log('比例尺');
+        };
+
+        // 加日期
+        ctx.font = '13px sans-serif';
+        const date = new Date();
+        const nowDate = `列印時間 : ${date.getFullYear()}/${date.getMonth()}/${date.getDate()} ${date.getHours()}:${date.getMinutes()}`;
+        ctx.fillText(nowDate, 1290, 610);
+        console.log('日期');
+
+        // 加版權
+        ctx.fillText('地圖平台 : 農田水利署地理空間處理平台', 235, 610);
+      }, 2500);
+
+      setTimeout(() => {
+        canvas.toBlob(function (blob) {
+          saveAs(blob, 'iamap.jpg');
+          console.log('印出來');
+        });
+      }, 7000);
+    },
+    downloadPDF () {
+      const node = this.$refs.mapBox;
+      const canvas = document.getElementsByTagName('canvas')[0];
+      const ctx = canvas.getContext('2d');
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      // 加上地圖
+      const mapImg = new Image();
+      domtoimage.toPng(node, { quality: 0.95 })
+        .then((dataUrl) => {
+          mapImg.src = dataUrl;
+        });
+      mapImg.style.border = '2px solid #EA0000';
+
+      mapImg.onload = function () {
+        ctx.drawImage(mapImg, 100, 48.5, 1300, 538);
+        console.log('地圖');
+      };
+
+      ctx.globalCompositeOperation = 'destination-over';
+
+      setTimeout(() => {
+        // 加上指北針圖
+        const imgObj = new Image();
+        imgObj.src = require('~/assets/img/compass.png');
+        imgObj.onload = function () {
+          ctx.drawImage(imgObj, 1250, 60);
+          console.log('指北針');
+        };
+
+        // 加標題
+        const textWidth = ctx.measureText(this.screenTitle).width;
+        ctx.font = '28px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillStyle = '#000000';
+        ctx.fillText(this.screenTitle, (canvas.width / 2) - (textWidth / 2) - 80, 30);
+
+        // 加比例尺
+        ctx.globalCompositeOperation = 'source-over';
+
+        const scale = document.getElementById('ScaleTools');
+        const scaleImg = new Image();
+        domtoimage.toPng(scale, { quality: 0.95 })
+          .then((dataUrl) => {
+            scaleImg.src = dataUrl;
+          });
+        scaleImg.onload = function () {
+          ctx.drawImage(scaleImg, 100, 550);
+          console.log('比例尺');
+        };
+
+        // 加日期
+        ctx.font = '13px sans-serif';
+        const date = new Date();
+        const nowDate = `列印時間 : ${date.getFullYear()}/${date.getMonth()}/${date.getDate()} ${date.getHours()}:${date.getMinutes()}`;
+        ctx.fillText(nowDate, 1290, 610);
+        console.log('日期');
+
+        // 加版權
+        ctx.fillText('地圖平台 : 農田水利署地理空間處理平台', 235, 610);
+      }, 2500);
+
+      window.jsPDF = window.jspdf.jsPDF;
+      // eslint-disable-next-line new-cap
+      const doc = new jsPDF('l', 'px', [canvas.width, canvas.height]);
+      setTimeout(() => {
+        const image = canvas.toDataURL();
+        doc.addImage(image, 'JPEG', 0, 0, canvas.width, canvas.height);
+        doc.save('iamap.pdf');
+      }, 7000);
+    },
+    // * 回到全圖
+    fullMapCtrl () {
+      pMapBase.ZoomMapTo(pMapBase.getExtent());
+      pMapBase.RefreshMap(true);
+    },
+    // * 放大
+    zoomInCtrl () {
+      ZoomIn();
+    },
+    // * 縮小
+    zoomOutCtrl () {
+      ZoomOut();
     }
+  },
+  computed: {
+
   },
   watch: {
     'searchResult.channel': {
@@ -828,12 +1079,41 @@ export default {
           this.$store.commit('HIDE_FOOTER_CTRL', false);
         }
       }
+    },
+    activeWindow: {
+      handler (value) {
+        // 只會載入一次 new MeasureTool
+        if (value === 'geoMeasureWindow' && this.openOnce === true) {
+          this.openOnce = false;
+          this.drawTool = new MeasureTool('', pMapBase);
+        }
+        // 打開測量視窗預設啟動長度測量
+        if (value === 'geoMeasureWindow' && this.openLine === true) {
+          drawTypee = 'LINESTRING';
+          myUnit = 'Meters';
+          myUnitNum = 1;
+          this.drawTool.ActiveMeasureTool('LINESTRING');
+        }
+        // 從測量視窗切換至其他視窗
+        if (value !== 'geoMeasureWindow' && this.openOnce === false) {
+          this.openLine = true;
+          this.drawTool.ClearMap();
+          this.drawTool.ActiveMeasureTool();
+        }
+        if (value === 'streetMapWindow') {
+          document.getElementsByTagName('body')[0].style.cursor = "url('images/pegman-cursor.png'), auto";
+        } else {
+          document.getElementsByTagName('body')[0].style.cursor = 'default';
+        }
+      }
     }
   }
 };
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
+
+  @import '~/assets/scss/components/_map.scss';
 
   // .map {
   //   width: 100%;
@@ -842,13 +1122,28 @@ export default {
   //   z-index: -1;
   // }
 
-  .border_bot {
+  .scbar_wrap {
+    position: absolute;
+    bottom: 14px;
+    left: 9px;
+  }
+
+  .canvasShot {
+    position: absolute;
+    left: 0;
+    top: 0;
+    z-index: -2000;
+  }
+
+  .mapWrap {
+
+    .border_bot {
     height: 1px;
     background: $light-green;
     width: calc(100% - 4.5px);
   }
 
-  .hide_button {
+  .hide_button_bigTable {
     background: $main-green;
     text-align: center;
     width: 250px;
@@ -904,13 +1199,14 @@ export default {
     height: calc(100vh - 86px);
     overflow: hidden;
     z-index: 0;
-    background: pink;
+    // background: pink;
   }
 
   .layerwindow {
     width: 363px;
     max-height: 440.2px;
     overflow-y: auto;
+    overflow-x: hidden;
   }
 
   .layer__list {
@@ -960,7 +1256,7 @@ export default {
     }
   }
 
-  .bt_wrap {
+  .bt_wrapOGC {
     display: flex;
     justify-content: flex-end;
     padding-bottom: 10px;
@@ -968,7 +1264,7 @@ export default {
   }
 
   .button-primary , .button-default {
-    width: 64px;
+    // width: 64px;
 
     .button-text {
       font-weight: 100;
@@ -984,7 +1280,7 @@ export default {
 
     textarea {
       resize: none;
-      width: 380px;
+      width: 359px;
       height: 58px;
       border-radius: 5px;
       border: 1px solid #959595;
@@ -1069,6 +1365,9 @@ export default {
 
     .bt_wrap {
       border: none;
+      display: flex;
+      justify-content: flex-end;
+      padding-bottom: 10px;
     }
   }
 
@@ -1112,5 +1411,7 @@ export default {
     cursor: pointer;
   }
 }
+
+  }
 
 </style>

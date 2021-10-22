@@ -1,5 +1,8 @@
 <template>
-  <div class="fea_wrap">
+  <div
+    id="feaid"
+    class="fea_wrap"
+  >
     <div class="container">
       <div
         class="feature__btn"
@@ -41,15 +44,24 @@
         <div class="icon_print" />
         <span>截圖</span>
       </div>
-      <div class="feature__btn">
+      <div
+        class="feature__btn"
+        @click.stop="$emit('backFullPic')"
+      >
         <div class="icon_home" />
         <span>全圖</span>
       </div>
-      <div class="feature__btn">
+      <div
+        class="feature__btn"
+        @click.stop="$emit('zoomIn')"
+      >
         <div class="icon_zoomin" />
         <span>放大</span>
       </div>
-      <div class="feature__btn">
+      <div
+        class="feature__btn"
+        @click.stop="$emit('zoomOut')"
+      >
         <div class="icon_zoomout" />
         <span>縮小</span>
       </div>

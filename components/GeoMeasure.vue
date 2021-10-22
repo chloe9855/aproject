@@ -4,6 +4,7 @@
       :type-list="geoOptions.typeList"
       :selected="geoOptions.current"
       @current="payload => geoOptions.current = payload"
+      @draw="(id) => { $emit('startDraw', id) }"
     />
     <div class="geo_content">
       <div v-if="geoOptions.current === 0">
@@ -15,8 +16,8 @@
             測量距離
           </div>
           <div class="nblock">
-            <p>0.00公尺</p>
-            <p>0.00公里</p>
+            <p> {{ lineMeter }} 公尺</p>
+            <p> {{ lineKilo }} 公里</p>
           </div>
         </div>
       </div>
@@ -29,8 +30,8 @@
             測量面積
           </div>
           <div class="nblock">
-            <p>700,132.13平方公尺</p>
-            <p>70.01公頃</p>
+            <p> {{ surMeter }} 平方公尺</p>
+            <p> {{ surKilo }} 公頃</p>
           </div>
         </div>
       </div>
@@ -38,6 +39,7 @@
         <Buttons-component
           :name="'button-default'"
           :text="'清除全部'"
+          @click="$emit('clear')"
         />
       </div>
     </div>
@@ -52,6 +54,12 @@ export default {
   components: {
     'NavTabs-component': NavTabs,
     'Buttons-component': Buttons
+  },
+  props: {
+    lineMeter: String,
+    lineKilo: String,
+    surMeter: String,
+    surKilo: String
   },
   data () {
     return {
