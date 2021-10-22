@@ -189,13 +189,21 @@
                 服務路徑
               </p>
               <textarea
+                v-if="ogcOptions.current === 0"
+                ref="wms"
+                name="value"
+                :placeholder="ogcOptions.holder"
+              />
+              <textarea
+                v-if="ogcOptions.current === 1"
+                ref="wmts"
                 name="value"
                 :placeholder="ogcOptions.holder"
               />
               <div class="bt_wrapOGC">
                 <Buttons-component
                   :text="'取得服務'"
-                  @click="getOgcHandler"
+                  @click="getOgcHandler(ogcOptions.current)"
                 />
               </div>
 
@@ -204,18 +212,7 @@
                 class="ogc_table1"
               >
                 <div class="og_title">
-                  <div class="theme_checkbox">
-                    <input
-                      id="c1"
-                      type="checkbox"
-                    >
-                    <label
-                      for="c1"
-                      class="title"
-                    >
-                      圖層名稱
-                    </label>
-                  </div>
+                  圖層名稱
                 </div>
                 <div class="og_item_wrap theme_scrollbar">
                   <div
@@ -226,12 +223,14 @@
                     <div class="theme_checkbox">
                       <input
                         :id="ogItem.id"
+                        v-model="ogItem.visible"
                         type="checkbox"
+                        @click="selectMe(ogItem.id)"
                       >
                       <label
                         :for="ogItem.id"
                       >
-                        {{ ogItem.name }}
+                        {{ ogItem.title }}
                       </label>
                     </div>
                   </div>
@@ -259,6 +258,7 @@
                 />
                 <Buttons-component
                   :text="'加入圖層'"
+                  @click="addOgcLayer(ogcOptions.current)"
                 />
               </div>
               <div />
@@ -416,6 +416,9 @@ export default {
       // * 截圖
       screenTitle: '',
       screenImgSrc: '',
+      // * 街景
+      streetMap: '',
+      openOnceStreet: true,
       layerOptions: {
         current: 0,
         typeList: [
@@ -449,6 +452,7 @@ export default {
         surfaceList: [],
         baseLayerList: []
       },
+      // * OGC介接
       ogcOptions: {
         current: 0,
         typeList: [
@@ -464,6 +468,8 @@ export default {
         holder: 'https://irrggis2.aerc.org.tw/arcgis/services/Aerc/03Ia/MapServer/WMSServer',
         layerList: []
       },
+      wmTsLayer: '',
+      wmsLayer: '',
       shpOptions: {
         current: 0,
         typeList: [
@@ -716,6 +722,7 @@ export default {
 
     // console.log(gogo());
     // console.log(coco);
+    // this.getTest();
 
     // * 載入canvas
     const canvas = document.getElementsByTagName('canvas')[0];
@@ -737,19 +744,24 @@ export default {
     canvas.width = canvas.width * ratio;
     canvas.height = canvas.height * ratio;
     ctx.scale(ratio, ratio);
-
-    // 加上指北針圖
-    // const imgObj = new Image();
-    // imgObj.src = require('~/assets/img/compass.png');
-    // imgObj.onload = function () {
-    //   ctx.drawImage(imgObj, 1300, 70);
-    // };
-
-    // ctx.font = '80px';
-    // ctx.fillStyle = '#999';
-    // ctx.fillText('Hello World!', 700, 10);
   },
   methods: {
+    getTest () {
+      fetch('http://192.168.3.112/aerc/rest/login', {
+
+        method: 'POST',
+        headers: new Headers({
+          'Content-Type': 'application/json'
+        }),
+        mode: 'no-cors'
+      }).then((response) => {
+        return response.json();
+      }).then((data) => {
+        console.log(data);
+      }).catch((err) => {
+        console.log('錯誤:', err);
+      });
+    },
     // * 控制視窗顯示
     ctrlDragBoxVisible (payload) {
       // @DragBox：電腦版可以在畫面上任意移動的 component
@@ -900,11 +912,121 @@ export default {
       this.shpOptions.layerList = [];
     },
     // * @ 圖層工具：OGC介接 取得服務
-    getOgcHandler () {
-      this.ogcOptions.layerList = this.testData;
+    getOgcHandler (current) {
+      // this.ogcOptions.layerList = this.testData;
+      // const wmsUrl = this.$refs.wms.value;
+      // const wmtsUrl = this.$refs.wmts.value;
+
+      // WMS
+      if (current === 0) {
+        this.wmsLayer = new sg.layers.WMSLayer('https://wms.nlsc.gov.tw/wms', {
+          imageFormat: 'image/png',
+          loadEffect: true,
+          loaded: () => {
+            this.ogcLayerCtrl(current);
+          }
+        });
+      }
+
+      // WMTS
+      if (current === 1) {
+        this.wmTsLayer = new sg.layers.WMTSLayer('https://wmts.nlsc.gov.tw/wmts', {
+          serviceMode: 'KVP',
+          loadEffect: true,
+          loaded: () => {
+            this.ogcLayerCtrl(current);
+          }
+        });
+      }
+
+      // pMapBase.AddLayer(this.wmTsLayer);
+    },
+    // * 圖層工具：OGC介接 取得WMS服務且載入完成後 進行處理
+    ogcLayerCtrl (current) {
+      // WMS
+      if (current === 0) {
+        this.wmsLayer.resourceInfo.layer.layers.forEach((item, index) => {
+          const result = {
+            title: item.title,
+            id: index,
+            visible: false,
+            name: item.name
+          };
+          this.ogcOptions.layerList.push(result);
+        });
+
+        this.wmsLayer.visibleLayers = [];
+      }
+
+      // WMTS
+      if (current === 1) {
+        this.wmTsLayer.resourceInfo.layers.forEach((item, index) => {
+          const result = {
+            title: item.title,
+            id: Math.random(),
+            visible: false,
+            name: item.identifier
+          };
+          this.ogcOptions.layerList.push(result);
+        });
+
+        this.wmTsLayer.visibleLayers = [];
+      }
+
+      // pMapBase.AddLayer(this.wmsLayer);
+    },
+    // * 圖層工具：OGC介接 單選checkbox
+    selectMe (id) {
+      this.ogcOptions.layerList.forEach((item) => {
+        item.visible = false;
+      });
+      this.ogcOptions.layerList.forEach((item) => {
+        if (item.id === id) {
+          item.visible = true;
+        }
+      });
+    },
+    // * 圖層工具：OGC介接 加入WMS圖層
+    addOgcLayer (current) {
+      // WMS
+      if (current === 0) {
+        // 加入前先清除之前的圖層
+        this.wmsLayer.visibleLayers = [];
+        // pMapBase.RemoveLayer(this.wmsLayer);
+        // pMapBase.RemoveLayer(this.wmTsLayer);
+
+        this.ogcOptions.layerList.forEach((item) => {
+          if (item.visible === true) {
+            this.wmsLayer.visibleLayers.push(item.name);
+          }
+        });
+
+        pMapBase.AddLayer(this.wmsLayer);
+        pMapBase.RefreshMap(true);
+      }
+
+      // WMTS
+      if (current === 1) {
+        // 加入前先清除之前的圖層
+        this.wmTsLayer.visibleLayers = [];
+        // pMapBase.RemoveLayer(this.wmsLayer);
+        // pMapBase.RemoveLayer(this.wmTsLayer);
+
+        this.ogcOptions.layerList.forEach((item) => {
+          if (item.visible === true) {
+            this.wmTsLayer.visibleLayers.push(item.name);
+            this.wmTsLayer.layerInfo.identifier = item.name;
+          }
+        });
+
+        pMapBase.AddLayer(this.wmTsLayer);
+        pMapBase.RefreshMap(true);
+      }
     },
     // * @ 圖層工具：OGC介接 清除全部
     clearOgcLayer () {
+      pMapBase.RemoveLayer(this.wmsLayer);
+      pMapBase.RemoveLayer(this.wmTsLayer);
       this.ogcOptions.layerList = [];
     },
     // * @ 截圖工具：JPG下載
@@ -925,7 +1047,6 @@ export default {
         .then((dataUrl) => {
           mapImg.src = dataUrl;
         });
-      mapImg.style.border = '2px solid #EA0000';
 
       mapImg.onload = function () {
         ctx.drawImage(mapImg, 100, 48.5, 1300, 538);
@@ -982,6 +1103,7 @@ export default {
         });
       }, 7000);
     },
+    // * @ 截圖工具：PDF下載
     downloadPDF () {
       const node = this.$refs.mapBox;
       const canvas = document.getElementsByTagName('canvas')[0];
@@ -1100,10 +1222,18 @@ export default {
           this.drawTool.ClearMap();
           this.drawTool.ActiveMeasureTool();
         }
+        // 開啟街景工具
+        if (value === 'streetMapWindow' && this.openOnceStreet === true) {
+          this.streetMap = new GoogleStreetMap();
+          this.openOnceStreet = false;
+        }
         if (value === 'streetMapWindow') {
           document.getElementsByTagName('body')[0].style.cursor = "url('images/pegman-cursor.png'), auto";
+          this.streetMap.openStrMap(true);
         } else {
+          this.streetMap = new GoogleStreetMap();
           document.getElementsByTagName('body')[0].style.cursor = 'default';
+          this.streetMap.openStrMap(false);
         }
       }
     }
