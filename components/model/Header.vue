@@ -40,7 +40,9 @@
           <p @click="openSettingAccount">
             帳號設定
           </p>
-          <p>登出</p>
+          <p @click="logoutAccount">
+            登出
+          </p>
         </div>
       </div>
 
@@ -133,6 +135,7 @@
 </template>
 
 <script>
+import axios from 'axios';
 export default {
   data () {
     return {
@@ -222,6 +225,17 @@ export default {
       this.$store.commit('TOGGLE_POPUP_STATUS');
       this.$store.commit('TOGGLE_POPUP_TYPE', { type: 'editAccount', title: '新增帳號' });
       this.showBox = !this.showBox;
+    },
+    logoutAccount () {
+      const userRequest = axios.create({
+        baseURL: 'http://192.168.3.112'
+      });
+      userRequest.get('/aerc/rest/SignOnStatus').then((r) => {
+        // redirect('/login');
+        this.$router.push('/login');
+      }).catch((e) => {
+        console.log(e);
+      });
     }
   },
   computed: {

@@ -66,7 +66,8 @@ export default {
     };
   },
   name: 'Main',
-  layout: 'main'
+  layout: 'main',
+  middleware: 'routerAuth'
 };
 </script>
 <style lang="scss">

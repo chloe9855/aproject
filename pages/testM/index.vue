@@ -1326,9 +1326,9 @@ input[type='checkbox']:checked::after {
   background-color: #ccc;
 }
 
-.sgInfoWindow .even-attribute
+/* .sgInfoWindow .even-attribute
 {
-}
+} */
 
 .sgInfoWindow .attribute-name {
   font-weight: bold;
