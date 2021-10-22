@@ -123,10 +123,10 @@
 .flexBox{
     width: $w-100;
     display: flex;
-    .flex-left{
+    &.flex-left{
         justify-content:flex-start !important;
     }
-    .flex-right{
+    &.flex-right{
         justify-content:flex-end !important;
     }
     .flex-1{

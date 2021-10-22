@@ -51,6 +51,9 @@
     "stylelint-config-standard": "^22.0.0",
     "vue2-datepicker": "^3.10.1"
   },
+  "eslintConfig": {
+    "parser": "babel-eslint"
+  },
   "description": "## Build Setup",
   "main": ".eslintrc.js",
   "repository": {

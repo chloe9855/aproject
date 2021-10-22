@@ -9,7 +9,7 @@
       </div>
       <div>
         WGS84：<span id="coorWGS84">0,0</span> &emsp;
-        TWD97：<span id="coorTWD97">0,0</span>  
+        TWD97：<span id="coorTWD97">0,0</span>
       </div>
     </footer>
 
