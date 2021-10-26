@@ -20,8 +20,6 @@
                 name="all"
                 value="all"
               ><label for="all" />
-                name="allChecked1"
-              ><label for="allChecked1" />
             </th>
           </tr>
         </thead>
