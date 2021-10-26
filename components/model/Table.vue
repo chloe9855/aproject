@@ -34,10 +34,8 @@
             >
               <input
                 :id="'a'+index"
-                v-model="checkList"
+                v-model="isCheckedAll"
                 type="checkbox"
-                :name="'a'+index"
-                :value="item.val"
               ><label :for="'a'+index" />
             </td>
           </tr>
@@ -79,9 +77,8 @@
             >
               <input
                 :id="checkAllId"
-                type="checkBox"
-                :name="checkAllId"
-                :value="checkAllId"
+                v-model="isCheckedAll"
+                type="checkbox"
               ><label :for="checkAllId" />
             </th>
             <th
@@ -407,7 +404,7 @@ export default {
       dateListId: [],
       tableColumnBody: [],
       getPage: 1,
-      selectedAll: false
+      isCheckedAll: false
     };
   },
   name: 'TableTool',
@@ -519,6 +516,18 @@ export default {
     },
     inputList: function (n) {
       this.$emit('tableInput', n);
+    },
+    isCheckedAll: function (n) {
+      const list = this.tableColumn;
+      let allArr = [];
+      if (n) {
+        list.body.forEach(function (item) {
+          allArr.push(item.val);
+        });
+      } else {
+        allArr = [];
+      }
+      this.checkList = allArr;
     }
   }
 };
