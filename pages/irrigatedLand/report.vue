@@ -86,6 +86,10 @@ export default {
   }
   .selectList:nth-child(1) {
     margin-right: 5px;
+    flex: 3;
+  }
+  .selectList:nth-child(2) {
+    flex: 2;
   }
 }
 </style>

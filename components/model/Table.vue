@@ -20,6 +20,8 @@
                 name="all"
                 value="all"
               ><label for="all" />
+                name="allChecked1"
+              ><label for="allChecked1" />
             </th>
           </tr>
         </thead>
@@ -78,11 +80,11 @@
               class="checkColumn checkBoxOption"
             >
               <input
-                id="all1"
+                :id="checkAllId"
                 type="checkBox"
-                name="all1"
-                value="all"
-              ><label for="all1" />
+                :name="checkAllId"
+                :value="checkAllId"
+              ><label :for="checkAllId" />
             </th>
             <th
               v-for="( item, index ) in tableColumn.head"
@@ -109,12 +111,12 @@
               class="checkBoxOption"
             >
               <input
-                :id="'a'+index"
+                :id="item.val"
                 v-model="checkList"
                 type="checkbox"
-                :name="'a'+index"
+                :name="item.val"
                 :value="item.val"
-              ><label :for="'a'+index" />
+              ><label :for="item.val" />
             </td>
             <td
               v-for="( text, textIndex ) in item.title"
@@ -132,26 +134,27 @@
               />
               <Input
                 v-else-if="typeof text === 'object' && text.type === 'input'"
-                :key="item.id"
-                :input-id="item.id"
+                :key="textIndex"
+                :input-id="textIndex"
                 :input-text="text.title"
                 @inputValue="inputVal"
               />
               <Dropdown
                 v-else-if="typeof text === 'object' && text.type === 'dropdown'"
-                :key="item.id"
-                :input-id="item.id"
+                :key="textIndex"
+                :input-id="textIndex"
                 :input-text="text.title"
               />
               <DatePicker
                 v-else-if="typeof text === 'object' && text.type === 'date'"
-                :key="item.id"
-                :input-id="item.id"
+                :key="textIndex"
+                :input-id="textIndex"
                 :type="text.dateType"
                 :value-type="text.valueType"
                 @DateValue="dateVal"
               />
               <span v-else>{{ text }}</span>
+              <span v-if="text.attachText!==''">{{ text.attachText }}</span>
             </td>
             <td
               v-if="optionLength > 0 && isScrollTable"
@@ -340,6 +343,7 @@ export default {
       type: Object,
       default: () => {
         return {
+          name: '',
           head: [],
           body: []
         };
@@ -404,11 +408,14 @@ export default {
       dateList: [],
       dateListId: [],
       tableColumnBody: [],
-      getPage: 1
+      getPage: 1,
+      selectedAll: false
     };
   },
   name: 'TableTool',
   mounted: function () {
+    console.log(this.allChecked1);
+    console.log(this.allChecked2);
     this.getPageNum(1);
   },
   methods: {
@@ -465,6 +472,9 @@ export default {
         return false;
       }
     },
+    // attachText: function(){
+
+    // },
     optionLength: function () {
       const edit = this.isEdit;
       const del = this.isDel;
@@ -499,6 +509,10 @@ export default {
     dataNum: function () {
       const data = this.tableColumn.body;
       return data.length;
+    },
+    checkAllId: function () {
+      const name = this.tableColumn.name;
+      return name ? name + 'All' : 'allchecked2';
     }
   },
   watch: {

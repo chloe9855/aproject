@@ -5,7 +5,6 @@
       <Button
         :name="'button-red'"
         :text="'刪除所選'"
-        :add="true"
       />
       <Button
         :name="'button-add'"
@@ -34,15 +33,16 @@ export default {
   data: () => {
     return {
       tableList: {
+        name: 'addTable',
         head: [
           { title: '檔案名稱' },
           { title: '檔案' }
         ],
         body: [
-          { val: 0, title: [{ type: 'input' }, { type: 'btn' }] },
-          { val: 1, title: [{ type: 'input' }, { type: 'btn' }] },
-          { val: 2, title: [{ type: 'input' }, { type: 'btn' }] },
-          { val: 3, title: [{ type: 'input' }, { type: 'btn' }] }
+          { val: 'addTable1', title: [{ type: 'input' }, { type: 'btn' }] },
+          { val: 'addTable2', title: [{ type: 'input' }, { type: 'btn' }] },
+          { val: 'addTable3', title: [{ type: 'input' }, { type: 'btn' }] },
+          { val: 'addTable4', title: [{ type: 'input' }, { type: 'btn' }] }
         ]
       }
     };
