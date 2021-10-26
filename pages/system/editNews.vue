@@ -8,6 +8,7 @@
       icon="edit"
       title="首頁資料管理"
       class="w-90"
+      :is-bg="true"
       :is-border="true"
     />
     <SubTitleTool

@@ -8,6 +8,7 @@
       class="tableBox tableCheck"
       :class="[!!tableColumn.topHead?'tableTopL':'tableTopS']"
     >
+      {{ isScrollCheckedAll }}
       <table>
         <thead>
           <tr>
@@ -398,19 +399,19 @@ export default {
   data: () => {
     return {
       checkList: [],
+      checkScrollList: [],
       inputList: [],
       inputListId: [],
       dateList: [],
       dateListId: [],
       tableColumnBody: [],
       getPage: 1,
-      isCheckedAll: false
+      isCheckedAll: false,
+      isScrollCheckedAll: false
     };
   },
   name: 'TableTool',
   mounted: function () {
-    console.log(this.allChecked1);
-    console.log(this.allChecked2);
     this.getPageNum(1);
   },
   methods: {
@@ -467,9 +468,6 @@ export default {
         return false;
       }
     },
-    // attachText: function(){
-
-    // },
     optionLength: function () {
       const edit = this.isEdit;
       const del = this.isDel;
@@ -528,6 +526,19 @@ export default {
         allArr = [];
       }
       this.checkList = allArr;
+    },
+    isScrollCheckedAll: function (n) {
+      // const list = this.tableColumn;
+      // let allArr = [];
+      // if (n) {
+      //   list.body.forEach(function (item) {
+      //     allArr.push(item.val);
+      //   });
+      // } else {
+      //   allArr = [];
+      // }
+      // this.checkScrollList = allArr;
+      console.log(n);
     }
   }
 };

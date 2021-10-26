@@ -15,6 +15,7 @@
         btn-sec-text="新增"
         btn-sec-name="button-primary"
         :is-border="true"
+        :is-bg="true"
       />
       <SubTitleTool
         title="新增土地資料"
@@ -61,10 +62,6 @@
         :option="RequisitionDqata2"
       />
     </div>
-    <Search
-      type="irrigatedLandSearch"
-      @toggleStatus="getToggleStatus"
-    />
   </div>
 </template>
 
@@ -73,7 +70,6 @@ import TableTool from '~/components/model/Table.vue';
 import Requisition from '~/components/model/editList/Requisition.vue';
 import PageHeader from '~/components/tools/PageHeader.vue';
 import BreadCrumbTool from '~/components/tools/BreadCrumbTool.vue';
-import Search from '~/components/model/Search.vue';
 import SubTitleTool from '~/components/tools/SubTitleTool.vue';
 
 export default {
@@ -81,13 +77,13 @@ export default {
     PageHeader,
     TableTool,
     BreadCrumbTool,
-    Search,
     SubTitleTool,
     Requisition
   },
   data () {
     return {
       tableList: {
+        name:'editCompensate',
         topHead: [
           { title: '土地資料', col: 4 },
           { title: '農田水利資料', col: 2 },
@@ -141,7 +137,7 @@ export default {
   },
   computed: {
     componentInstance () {
-      return () => import('~/components/model/editList/AddLand');
+      return () =>import('~/components/model/editList/AddLand');
     },
     boxWidth () {
       const setWidth = this.toggleStatus ? 'tg-75' : 'w-90';
@@ -268,7 +264,7 @@ export default {
 .content_block {
     width: calc(100% - 372px);
     transition: ease-in-out 0.4s;
-    height: 100%;
+    height: calc(100% + 50px);
     margin: 0 5%;
 }
 .grow {

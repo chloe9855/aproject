@@ -25,7 +25,7 @@ module.exports = {
     ],
     'no-undef': ['off'],
     'no-console': ['off'],
-    // 'global-require': 0,
+    'global-require': 0,
     'vue/require-default-prop': ['off'],
     'vue/order-in-components': ['error', {
       order: [
