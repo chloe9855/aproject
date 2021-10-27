@@ -114,7 +114,7 @@ export default {
   },
   name: 'InputHorizontal',
   mounted: function () {
-    this.titleLength = (this.$refs.inputTitle.clientWidth + 20) + 'px';
+    this.titleLength = (this.$refs.inputTitle.clientWidth + 30) + 'px';
   },
   computed: {
     isError: function () {

@@ -75,7 +75,7 @@ export default {
 </script>
 <style lang="scss">
 .mainContent{
-  height: calc( 100vh - 145px);
+  height: calc( 100vh - 50px);
   @include scrollBar;
 }
 .news{
