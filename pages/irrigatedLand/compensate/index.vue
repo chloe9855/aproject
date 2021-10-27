@@ -15,19 +15,21 @@
         btn-name="button-add"
         @PHBtnStatus="toEditCompensate"
       />
-      <TableTool
-        :table-column="tableList"
-        :is-paginate="true"
-        :is-edit="true"
-        :is-print="true"
-        :is-scroll-table="true"
-        :is-toggle="toggleStatus"
-        :column-min-width="80"
-      />
-      <div
-        class="calNoteBox w-90"
-      >
-        <CalNote />
+      <div class="content_box">
+        <TableTool
+          :table-column="tableList"
+          :is-paginate="true"
+          :is-edit="true"
+          :is-print="true"
+          :is-scroll-table="true"
+          :is-toggle="toggleStatus"
+          :column-min-width="80"
+        />
+        <div
+          class="calNoteBox w-90"
+        >
+          <CalNote />
+        </div>
       </div>
     </div>
     <Search
@@ -139,10 +141,13 @@ export default {
 .content_block {
     width: calc(100% - 372px);
     transition: ease-in-out 0.4s;
-    height:100%;
     margin : 0 5%;
 }
 .grow {
   width: 90%;
+}
+.content_box{
+  height: calc( 100vh - 180px);
+  @include scrollBar;
 }
 </style>

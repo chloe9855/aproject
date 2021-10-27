@@ -10,8 +10,9 @@
       class="w-90"
       tips="列印日期:110年8月3日"
       :is-border="true"
+      :is-sticky="true"
     />
-    <div class="w-90 treeListBox">
+    <div class="w-90 treeListBox content_box">
       <div class="flexBox selectList">
         <SubTitleTool
           title="單位:桃園管理處"
@@ -74,6 +75,9 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
+.content_box{
+  height: calc( 100vh - 200px );
+}
 .treeListBox{
   margin: 1em auto !important;
   display: flex;

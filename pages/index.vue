@@ -3,25 +3,28 @@
     <PageHeader
       icon="news"
       class="w-90"
+      :is-sticky="true"
     />
-    <TableTool
-      :table-column="tableList"
-      :is-paginate="false"
-      class="w-90 news"
-    />
-    <PageHeader
-      icon="download"
-      class="w-90"
-    />
-    <div class="downloadArea w-90">
+    <div class="mainContent">
       <TableTool
-        :table-column="tableData"
+        :table-column="tableList"
         :is-paginate="false"
+        class="w-90 news"
       />
-      <TableTool
-        :table-column="tableData"
-        :is-paginate="false"
+      <PageHeader
+        icon="download"
+        class="w-90"
       />
+      <div class="downloadArea w-90">
+        <TableTool
+          :table-column="tableData"
+          :is-paginate="false"
+        />
+        <TableTool
+          :table-column="tableData"
+          :is-paginate="false"
+        />
+      </div>
     </div>
   </div>
 </template>
@@ -71,6 +74,10 @@ export default {
 };
 </script>
 <style lang="scss">
+.mainContent{
+  height: calc( 100vh - 145px);
+  @include scrollBar;
+}
 .news{
   &.tableTool{
     flex:1;
@@ -96,10 +103,10 @@ export default {
   margin: 0 auto;
   .tableTool{
     flex:1;
+    background: white;
   }
   .tableTool:nth-child(1){
     margin-right: 1em !important;
   }
 }
-
 </style>

@@ -11,7 +11,10 @@
         icon="bungalow"
         title="灌溉地籍查詢與統計"
       />
-      <div v-if=" toggleCurrent === 0 ">
+      <div
+        v-if=" toggleCurrent === 0 "
+        class="content_box"
+      >
         <TableTool
           :table-column="tableList"
           :is-paginate="true"
@@ -25,7 +28,10 @@
           <CalNote />
         </div>
       </div>
-      <div v-else-if=" toggleCurrent === 1 ">
+      <div
+        v-else-if="toggleCurrent === 1"
+        class="irrigatedLand"
+      >
         <NormalTable
           v-if="columnList.length >= 1"
           :list="columnList"
@@ -69,8 +75,8 @@ export default {
           { title: '工作站' },
           { title: '水利小組' },
           { title: '水利小組面積㎡' },
-          { title: '水利小組轄區農地地籍面積㎡' },
-          { title: '水利小組轄區農地灌溉面積㎡' }
+          { title: '水利小組轄區 農地地籍面積㎡' },
+          { title: '水利小組轄區 農地灌溉面積㎡' }
         ],
         body: [
           { title: ['XX分處鹿草工作站', '山子腳', '山子腳-山腳', 'XXX小組', '2,050', '2,050', '2,050'] },
@@ -206,10 +212,14 @@ export default {
   margin: 0 auto;
 }
 .content_block {
-    width: calc(100% - 372px);
-    transition: ease-in-out 0.4s;
-    height:100%;
-    margin : 0 5%;
+  width: calc(100% - 372px);
+  transition: ease-in-out 0.4s;
+  height:100%;
+  margin : 0 5%;
+}
+.content_box{
+  height: calc( 100vh - 175px );
+  @include scrollBar;
 }
 .grow {
   width: 90%;

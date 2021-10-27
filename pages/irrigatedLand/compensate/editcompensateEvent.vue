@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="content_box">
     <BreadCrumbTool
       :class="boxWidth"
       :options="BreadCrumb"
@@ -26,6 +26,7 @@
       :is-paginate="false"
       :is-del="true"
       :class="boxWidth"
+      class="editcompensateEventBind"
     />
     <SubTitleTool
       title="行政院農業委員會農田水利署停灌補償金申請書(二聯單)付款"
@@ -84,7 +85,7 @@ export default {
           { title: '開放申請區域' }
         ],
         body: [
-          { title: [{ type: 'input' }, { type: 'date' }, { type: 'date' }, { type: 'dropdown' }] }
+          { title: [{ type: 'input' }, { type: 'date' }, { type: 'date' }, { type: 'dropdownTreeList' }] }
         ]
       },
       tableList2: {
@@ -116,6 +117,9 @@ export default {
 };
 </script>
 <style lang="scss">
+.content_box{
+  height: calc( 100vh - 88px );
+}
 .tableTool{
   .tableContent{
     table{
@@ -123,6 +127,11 @@ export default {
         text-align: left !important;
       }
     }
+  }
+}
+.editcompensateEventBind{
+  .tableBox{
+    overflow: initial !important;
   }
 }
 </style>

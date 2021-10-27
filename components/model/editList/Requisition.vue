@@ -65,9 +65,10 @@ export default {
     .listTitle{
         padding-right: 2em;
         min-width: 100px;
+        margin-left: 10px;
     }
     div{
-        line-height: 40px;
+        line-height: 20px;
         text-align: left;
         font-family: Noto Sans TC;
         font-style: normal;
@@ -75,6 +76,7 @@ export default {
         font-size: 16px;
         align-items: center;
         color: #494949;
+        margin: 1px 0;
     }
 }
 </style>

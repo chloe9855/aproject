@@ -52,7 +52,8 @@ export default {
   }
 
   .foot_wrap {
-    position: absolute;
+    //position: absolute;
+    position: sticky;
     bottom: 0;
     width: 100%;
   }

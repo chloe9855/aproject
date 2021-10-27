@@ -12,35 +12,26 @@
       </p>
     </div>
     <div
-      class="dropItem"
+      class="dropItem w-100"
       :class="{listOpen:istoggle,isUp:getType}"
       @click="toggleList"
     >
       {{ options.option[0].title }}
     </div>
-    <ul
+    <TreeSelect
       v-show="istoggle"
       class="dropList"
       :class="{up:getType,onTitle:isTitle}"
-    >
-      <li
-        v-for="(item , index) in options.option"
-        :key="index"
-      >
-        <input
-          :id="index"
-          v-model="dataArr"
-          type="checkbox"
-          :name="index"
-          :value="item.value"
-        ><label :for="index" /><span>{{ item.title }}</span>
-      </li>
-    </ul>
+    />
   </div>
 </template>
 
 <script>
+import TreeSelect from '~/components/tools/TreeSelect';
 export default {
+  components: {
+    TreeSelect
+  },
   props: {
     options: {
       type: Object,
@@ -113,13 +104,14 @@ export default {
   justify-content: center;
   position: relative;
   .dropItem{
+    position: absolute;
     background-color: white;
     border-radius: 5px;
-    padding: 10px 9px;
+    padding: 0 8px;
     flex: 1;
-    border: 1px solid #959595;
+    border: 1px solid #cdcdcd;
     align-self: stretch;
-    color: #959595;
+    color: #cdcdcd;
     cursor: pointer;
     user-select:none;
     background-image: url("~/assets/img/dropdown.svg");
@@ -156,9 +148,11 @@ export default {
     left: 0;
     border: 1px solid #959595;
     width: 100%;
+    min-width: 200px;
     background-color: #FFF;
-    top: 38px;
+    top: 18px;
     z-index: 1000;
+    padding-left: 10px;
     &.onTitle{
       top: calc( 24px + 38px );
     }
@@ -175,12 +169,12 @@ export default {
       }
       input[type="checkbox"] + label
       {
+        background: #999;
         height: 14px;
         width: 14px;
-        display: inline-block;
+        display:inline-block;
         margin: 0 5px;
         cursor: pointer;
-        @include checkbox;
       }
       input[type="checkbox"]:checked + label
       {

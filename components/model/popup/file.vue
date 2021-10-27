@@ -5,7 +5,6 @@
       <Button
         :name="'button-red'"
         :text="'刪除所選'"
-        :add="true"
       />
       <Button
         :name="'button-add'"

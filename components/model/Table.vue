@@ -8,7 +8,6 @@
       class="tableBox tableCheck"
       :class="[!!tableColumn.topHead?'tableTopL':'tableTopS']"
     >
-      {{ isScrollCheckedAll }}
       <table>
         <thead>
           <tr>
@@ -16,11 +15,12 @@
               class="checkBoxOption"
             >
               <input
-                id="all"
-                type="checkBox"
-                name="all"
-                value="all"
-              ><label for="all" />
+                :id="'s-'+checkAllId"
+                v-model="isScrollCheckedAll"
+                :name="'s-'+checkAllId"
+                type="checkbox"
+              >
+              <label :for="'s-'+checkAllId" />
             </th>
           </tr>
         </thead>
@@ -34,10 +34,12 @@
               class="checkBoxOption"
             >
               <input
-                :id="'a'+index"
-                v-model="isCheckedAll"
+                :id="'s-'+item.val"
+                v-model="checkScrollList"
                 type="checkbox"
-              ><label :for="'a'+index" />
+                :name="item.val"
+                :value="item.val"
+              ><label :for="'s-'+item.val" />
             </td>
           </tr>
         </tbody>
@@ -53,7 +55,10 @@
         :class="{'noWrap': noWrap }"
       >
         <thead>
-          <tr v-if="!!tableColumn.topHead">
+          <tr
+            v-if="!!tableColumn.topHead"
+            class="topHeadBox"
+          >
             <th
               v-show="isCheck"
               class="checkColumn"
@@ -85,6 +90,7 @@
             <th
               v-for="( item, index ) in tableColumn.head"
               :key="index"
+              :class="{isRightBorder:setRightBorder(index)}"
             >
               {{ item.title }}
             </th>
@@ -99,7 +105,6 @@
           <tr
             v-for="( item, index ) in tableColumnBody"
             :key="index"
-            :ref="'tabletd'+index"
           >
             <td
               v-show="isCheck"
@@ -117,6 +122,7 @@
             <td
               v-for="( text, textIndex ) in item.title"
               :key="textIndex"
+              :class="{isRightBorder:setRightBorder(textIndex)}"
             >
               <Tag
                 v-if="tagList.indexOf(text)>-1"
@@ -149,14 +155,15 @@
                 :value-type="text.valueType"
                 @DateValue="dateVal"
               />
+              <DropdownTreeList v-else-if="typeof text === 'object' && text.type === 'dropdownTreeList'" />
               <span v-else>{{ text }}</span>
               <span v-if="text.attachText!==''">{{ text.attachText }}</span>
             </td>
-            <td
+            <!-- <td
               v-if="optionLength > 0 && isScrollTable"
               :colspan="optionLength"
               :style="{'min-width': (optionLength*35)+'px'}"
-            />
+            /> -->
             <td
               v-show="isEdit && !isScrollTable"
               class="editOption"
@@ -319,6 +326,7 @@ import Button from '~/components/tools/Buttons';
 import Input from '~/components/tools/InputTool';
 import DatePicker from '~/components/tools/DatePicker';
 import Dropdown from '~/components/tools/Dropdown';
+import DropdownTreeList from '~/components/tools/DropdownTreeList.vue';
 export default {
   components: {
     Paginate,
@@ -326,7 +334,8 @@ export default {
     Button,
     Input,
     DatePicker,
-    Dropdown
+    Dropdown,
+    DropdownTreeList
   },
   props: {
     options: {
@@ -340,6 +349,7 @@ export default {
       default: () => {
         return {
           name: '',
+          topHead: [],
           head: [],
           body: []
         };
@@ -503,6 +513,22 @@ export default {
       const data = this.tableColumn.body;
       return data.length;
     },
+    setRightBorder () {
+      return function (a) {
+        const headTopList = this.tableColumn.topHead;
+        let num = -1;
+        let result;
+        if (headTopList) {
+          headTopList.forEach(function (item, i) {
+            num += item.col;
+            if (a === num) {
+              result = true;
+            }
+          });
+        }
+        return result;
+      };
+    },
     checkAllId: function () {
       const name = this.tableColumn.name;
       return name ? name + 'All' : 'allchecked2';
@@ -528,17 +554,16 @@ export default {
       this.checkList = allArr;
     },
     isScrollCheckedAll: function (n) {
-      // const list = this.tableColumn;
-      // let allArr = [];
-      // if (n) {
-      //   list.body.forEach(function (item) {
-      //     allArr.push(item.val);
-      //   });
-      // } else {
-      //   allArr = [];
-      // }
-      // this.checkScrollList = allArr;
-      console.log(n);
+      const list = this.tableColumn;
+      let allArr = [];
+      if (n) {
+        list.body.forEach(function (item) {
+          allArr.push(item.val);
+        });
+      } else {
+        allArr = [];
+      }
+      this.checkScrollList = allArr;
     }
   }
 };
@@ -573,10 +598,13 @@ export default {
             padding: 0 10px;
             text-align:left;
             line-height: 24px !important;
-            @include noto-sans-tc-16-bold;
-            &.topHead{
-              border:1px solid #c4ded8;
-            }
+            word-break: keep-all;
+            @include noto-sans-tc-16-medium;
+        }
+        .topHeadBox{
+          th{
+            border-right:1px solid #c4ded8;
+          }
         }
     }
     tbody{
@@ -606,6 +634,7 @@ export default {
     top:1px;
     background: #fff;
     border-left:1px solid $light-green;
+    border-right:1px solid #C4DED8;
     padding-top:18px ;
     table{
       border:none;
@@ -691,12 +720,12 @@ export default {
   }
   input[type="checkbox"] + label
   {
-    background: #999;
     height: 14px;
     width: 14px;
     display:inline-block;
     margin: 0 5px;
     cursor: pointer;
+    @include checkbox;
   }
   input[type="checkbox"]:checked + label
   {
@@ -727,5 +756,8 @@ export default {
   th{
     min-width: 150px;
   }
+}
+.isRightBorder{
+  border-right:1px solid $light-green;
 }
 </style>
