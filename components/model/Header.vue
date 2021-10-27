@@ -142,16 +142,16 @@ export default {
           path: ''
         },
         {
-          name: '作業基金土地管理',
-          path: 'fundLand'
+          name: '灌溉地管理',
+          path: 'irrigatedLand'
         },
         {
-          name: 'GIS地圖',
+          name: '地理資訊圖台',
           path: 'map'
         },
         {
-          name: '灌溉地管理',
-          path: 'irrigatedLand'
+          name: '作業基金土地管理',
+          path: 'fundLand'
         },
         {
           name: '系統管理',
