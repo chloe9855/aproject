@@ -6,7 +6,6 @@
       <Button
         :name="'button-red'"
         :text="'刪除所選'"
-        :add="true"
       />
       <Button
         :name="'button-add'"
@@ -38,15 +37,16 @@ export default {
   data: () => {
     return {
       tableList: {
+        name: 'addNews',
         head: [
-          { title: '檔案名稱' },
-          { title: '檔案' }
+          { title: '連結名稱' },
+          { title: '連結網址' }
         ],
         body: [
-          { val: 0, title: [{ type: 'input' }, { type: 'btn' }] },
-          { val: 1, title: [{ type: 'input' }, { type: 'btn' }] },
-          { val: 2, title: [{ type: 'input' }, { type: 'btn' }] },
-          { val: 3, title: [{ type: 'input' }, { type: 'btn' }] }
+          { val: 'news1', title: [{ type: 'input' }, { type: 'input' }] },
+          { val: 'news2', title: [{ type: 'input' }, { type: 'input' }] },
+          { val: 'news3', title: [{ type: 'input' }, { type: 'input' }] },
+          { val: 'news4', title: [{ type: 'input' }, { type: 'input' }] }
         ]
       }
     };
@@ -63,5 +63,8 @@ export default {
   display: flex;
   justify-content: flex-end;
   margin: 10px 0;
+  .button_wrap:first-child{
+    margin: 0 0.25em;
+  }
 }
 </style>

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="">
     <div
       class="content_block"
       :class="[growDiv,boxWidth]"
@@ -14,13 +14,17 @@
         :btn-add="true"
         btn-name="button-add"
       />
-      <TableTool
-        :table-column="tableList"
-        :is-paginate="true"
-        :is-edit="true"
-        :is-del="true"
-        :is-scroll-table="true"
-      />
+      <div
+        class="content_box"
+      >
+        <TableTool
+          :table-column="tableList"
+          :is-paginate="true"
+          :is-edit="true"
+          :is-del="true"
+          :is-scroll-table="true"
+        />
+      </div>
     </div>
     <Search
       type="userAcctSearch"
@@ -127,6 +131,10 @@ export default {
     transition: ease-in-out 0.4s;
     height:100%;
     margin : 0 5%;
+}
+.content_box{
+  height: calc( 100vh - 180px );
+  @include scrollBar;
 }
 .grow {
   width: 90%;

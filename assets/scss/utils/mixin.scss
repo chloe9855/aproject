@@ -94,3 +94,22 @@ $font-family: 'Noto Sans TC', sans-serif;
   font-weight: 500;
   line-height: normal;
 }
+
+@mixin checkbox{
+  border: 1px solid #959595;
+  border-radius: 3px;
+}
+
+@mixin scrollBar{
+  overflow: auto;
+  &::-webkit-scrollbar{
+    width: 6px;
+    height: 6px;
+  }
+  &::-webkit-scrollbar-track{
+    background: #FFF;
+  }
+  &::-webkit-scrollbar-thumb{
+    background: #A1BFB8;
+  }
+}

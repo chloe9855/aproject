@@ -8,7 +8,9 @@
       icon="edit"
       title="首頁資料管理"
       class="w-90"
+      :is-bg="true"
       :is-border="true"
+      :is-sticky="true"
     />
     <SubTitleTool
       title="最新公告"

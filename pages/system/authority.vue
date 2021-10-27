@@ -15,13 +15,17 @@
         btn-name="button-add"
         @PHBtnStatus="addGroup"
       />
-      <TableTool
-        :table-column="tableList"
-        :is-paginate="false"
-        :is-edit="true"
-        :is-del="true"
-        @tableEvent="changeGroup"
-      />
+      <div
+        class="content_box"
+      >
+        <TableTool
+          :table-column="tableList"
+          :is-paginate="false"
+          :is-edit="true"
+          :is-del="true"
+          @tableEvent="changeGroup"
+        />
+      </div>
     </div>
     <Search
       type="userAcctSearch"
@@ -137,6 +141,10 @@ export default {
     transition: ease-in-out 0.4s;
     height:100%;
     margin : 0 5%;
+}
+.content_box{
+  height: calc( 100vh - 175px );
+  @include scrollBar;
 }
 .grow {
   width: 90%;

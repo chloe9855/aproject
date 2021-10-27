@@ -34,7 +34,16 @@
         :type="inputType"
         :disabled="isDisable === true"
       >
-      <InputTool v-show="isSecondInput" />
+      <input
+        v-show="isSecondInput"
+        v-model="secondMessage"
+        class="inputType secondInput"
+        :class="[{inputError:isError,isIcon:isAddIcon,verification:isVerification}]"
+        :placeholder="inputText"
+        :name="name"
+        :type="inputType"
+        :disabled="isDisable === true"
+      >
       <img
         v-show="isAddIcon"
         :src="iconImg"
@@ -46,11 +55,7 @@
 </template>
 
 <script>
-import InputTool from '~/components/tools/InputTool';
 export default {
-  components: {
-    InputTool
-  },
   props: {
     name: {
       type: String,
@@ -100,6 +105,7 @@ export default {
   data: () => {
     return {
       message: '',
+      secondMessage: '',
       titleLength: '80px',
       RegExpType: {
         code8: '^.{8}$'
@@ -108,7 +114,7 @@ export default {
   },
   name: 'InputHorizontal',
   mounted: function () {
-    this.titleLength = (this.$refs.inputTitle.clientWidth + 20) + 'px';
+    this.titleLength = (this.$refs.inputTitle.clientWidth + 30) + 'px';
   },
   computed: {
     isError: function () {
@@ -162,7 +168,8 @@ export default {
 .input-title {
   color: $header-black;
   margin-right: 10px;
-  min-width: 120px;
+  margin-left: 10px ;
+  min-width: 110px;
   @include noto-sans-tc-16-medium;
 }
 .input-error {
@@ -176,5 +183,8 @@ export default {
 }
 .verification{
   max-width: 105px;
+}
+.secondInput{
+  width: 80px;
 }
 </style>

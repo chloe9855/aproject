@@ -11,60 +11,60 @@
         icon="edit"
         title="編輯停灌補償申請單"
         btn-text="取消"
-        btn-name="button-primary-disable"
+        btn-name="button-default"
         btn-sec-text="新增"
         btn-sec-name="button-primary"
+        :btn-sec-add="false"
         :is-border="true"
+        :is-bg="true"
+        :is-sticky="true"
       />
-      <SubTitleTool
-        title="新增土地資料"
+        <SubTitleTool
+          title="新增土地資料"
+          class="w-90"
+        />
+        <component
+          :is="componentInstance"
+          class="w-90 openAddBox"
+          :option="checkList"
+          :class="[{isToggle:toggleStatus},test]"
+          @clear="boxToggle"
+        />
+        <SubTitleTool
+          title="土地資料(填寫單位:桃園管理處)"
+          class="w-90"
+          btn-text="新增土地資料"
+          :btn-add="true"
+          @STbtnStatus="boxToggle"
+        />
+        <TableTool
+          :table-column="tableList"
+          :is-paginate="false"
+          class="w-90"
+          :is-del="true"
+          :is-scroll-table="true"
+        />
+        <SubTitleTool
+          title="申請人資料"
+          class="w-90"
+        />
+        <div
+          class="w-90"
+          style="margin:0 auto"
+        >
+          <input type="checkbox">確定為本人申請
+        </div>
+        <Requisition
         class="w-90"
-      />
-      <component
-        :is="componentInstance"
-        class="w-90 openAddBox"
-        :option="checkList"
-        :class="[{isToggle:toggleStatus},test]"
-        @clear="boxToggle"
-      />
-      <SubTitleTool
-        title="土地資料(填寫單位:桃園管理處)"
+          :class="[{isToggle:toggleStatus}]"
+          :option="RequisitionDqata1"
+        />
+        <Requisition
         class="w-90"
-        btn-text="新增土地資料"
-        @STbtnStatus="boxToggle"
-      />
-      <TableTool
-        :table-column="tableList"
-        :is-paginate="false"
-        class="w-90"
-        :is-del="true"
-        :is-scroll-table="true"
-      />
-      <SubTitleTool
-        title="申請人資料"
-        class="w-90"
-      />
-      <div
-        class="w-90"
-        style="margin:0 auto"
-      >
-        <input type="checkbox">確定為本人申請
+          :class="[{isToggle:toggleStatus}]"
+          :option="RequisitionDqata2"
+        />
       </div>
-      <Requisition
-        class="w-90"
-        :class="[{isToggle:toggleStatus}]"
-        :option="RequisitionDqata1"
-      />
-      <Requisition
-        class="w-90"
-        :class="[{isToggle:toggleStatus}]"
-        :option="RequisitionDqata2"
-      />
-    </div>
-    <Search
-      type="irrigatedLandSearch"
-      @toggleStatus="getToggleStatus"
-    />
   </div>
 </template>
 
@@ -73,7 +73,6 @@ import TableTool from '~/components/model/Table.vue';
 import Requisition from '~/components/model/editList/Requisition.vue';
 import PageHeader from '~/components/tools/PageHeader.vue';
 import BreadCrumbTool from '~/components/tools/BreadCrumbTool.vue';
-import Search from '~/components/model/Search.vue';
 import SubTitleTool from '~/components/tools/SubTitleTool.vue';
 
 export default {
@@ -81,13 +80,13 @@ export default {
     PageHeader,
     TableTool,
     BreadCrumbTool,
-    Search,
     SubTitleTool,
     Requisition
   },
   data () {
     return {
       tableList: {
+        name:'editCompensate',
         topHead: [
           { title: '土地資料', col: 4 },
           { title: '農田水利資料', col: 2 },
@@ -157,7 +156,7 @@ export default {
   }
 };
 </script>
-<style lang="scss">
+<style lang="scss" scoped>
 .calNoteBox{
     display: flex;
     justify-content:flex-end;
@@ -196,7 +195,7 @@ export default {
 }
 .requisitionBox{
   background: #EFF4F3;
-  padding: 10px;
+  margin: 0 5%;
   .flex-3{
     margin: 2px 0;
     .input-title{
@@ -268,7 +267,7 @@ export default {
 .content_block {
     width: calc(100% - 372px);
     transition: ease-in-out 0.4s;
-    height: 100%;
+    height: calc(100% + 50px);
     margin: 0 5%;
 }
 .grow {
@@ -282,5 +281,19 @@ export default {
 .closeBox{
   height: 0;
   display: none;
+}
+.editcompensateContent{
+  overflow:auto;
+  height: calc( 100vh - 240px);
+  &::-webkit-scrollbar{
+    width: 6px;
+    height: 6px;
+  }
+  &::-webkit-scrollbar-track{
+    background: #FFF;
+  }
+  &::-webkit-scrollbar-thumb{
+    background: #A1BFB8;
+  }
 }
 </style>

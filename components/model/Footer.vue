@@ -9,7 +9,7 @@
       </div>
       <div>
         WGS84：<span id="coorWGS84">0,0</span> &emsp;
-        TWD97：<span id="coorTWD97">0,0</span>  
+        TWD97：<span id="coorTWD97">0,0</span>
       </div>
     </footer>
 
@@ -52,7 +52,8 @@ export default {
   }
 
   .foot_wrap {
-    position: absolute;
+    //position: absolute;
+    position: sticky;
     bottom: 0;
     width: 100%;
   }

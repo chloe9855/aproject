@@ -1524,12 +1524,12 @@ export default {
   }
   input[type="checkbox"] + label
   {
-    background: #999;
     height: 14px;
     width: 14px;
     display:inline-block;
     margin: 0 5px;
     cursor: pointer;
+    @include checkbox;
   }
   input[type="checkbox"]:checked + label
   {

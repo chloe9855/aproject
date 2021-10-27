@@ -290,6 +290,6 @@ export default {
     }
   },
   server: {
-    host: 'localhost'
+    host: '192.168.1.103'
   }
 };

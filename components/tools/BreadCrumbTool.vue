@@ -92,6 +92,10 @@ export default {
 .breadcrumb{
   display: flex;
   margin: 0.5em auto;
+  position: sticky;
+  top: 0;
+  background: white;
+  z-index: 100;
   ol{
     li{
       line-height: 23px;

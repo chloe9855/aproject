@@ -14,10 +14,12 @@
       <InputHorizontal
         title="帳號"
         is-icon="account"
+        @inputValue="getAccount"
       />
       <InputHorizontal
         title="密碼"
         is-icon="lock"
+        @inputValue="getPassword"
       />
       <div class="verification flexBox">
         <InputHorizontal
@@ -30,28 +32,67 @@
           class="flex-1"
         >
       </div>
-      <div class="loginBtn">
-        <nuxt-link to="/">
-          登入
-        </nuxt-link>
+      <div
+        class="loginBtn"
+        @click="login"
+      >
+        登入
+      </div>
+      <div class="flexBox flex-right">
+        <span
+          @click="forgetPassWord"
+        >忘記密碼</span>
       </div>
     </div>
   </div>
 </template>
 
-<script>
+<script crossorigin="anonymous">
 import InputHorizontal from '~/components/tools/InputHorizontal.vue';
+import { loginReq } from '~/api/login';
+// import axios from 'axios';
 export default {
   components: {
     InputHorizontal
   },
   data () {
     return {
-      title: '農田水利灌溉管理整合雲系統'
+      title: '農田水利灌溉管理整合雲系統',
+      account: '',
+      password: ''
     };
   },
   name: 'Login',
-  layout: 'login'
+  layout: 'login',
+  middleware: 'routerAuth',
+  meta: {
+    requiresAuth: true
+  },
+  methods: {
+    login () {
+      const data = `account=${this.account}&password=${this.password}`;
+      loginReq(data).then((r) => {
+        console.log(r);
+        this.$router.push('/');
+      }).catch((e) => {
+        console.log(e);
+        this.$router.push('/');
+      });
+    },
+    forgetPassWord () {
+      console.log('test');
+    },
+    getAccount (e) {
+      if (e) {
+        this.account = e;
+      }
+    },
+    getPassword (e) {
+      if (e) {
+        this.password = e;
+      }
+    }
+  }
 };
 </script>
 <style lang="scss" scoped>

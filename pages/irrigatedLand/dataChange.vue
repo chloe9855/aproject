@@ -9,20 +9,24 @@
       title="停灌資料異動"
       :class="boxWidth"
     />
-    <SubTitleTool
-      title="停灌補償申請事件設定"
-      :class="boxWidth"
-      btn-text="新增事件"
-      :btn-add="true"
-      btn-name="button-add"
-      @STbtnStatus="toEditCompensateEvent"
-    />
-    <TableTool
-      :table-column="tableList"
-      :is-paginate="false"
-      :is-edit="true"
-      :class="boxWidth"
-    />
+    <div
+      class="content_box"
+    >
+      <SubTitleTool
+        title="停灌補償申請事件設定"
+        :class="boxWidth"
+        btn-text="新增事件"
+        :btn-add="true"
+        btn-name="button-add"
+        @STbtnStatus="toEditCompensateEvent"
+      />
+      <TableTool
+        :table-column="tableList"
+        :is-paginate="false"
+        :is-edit="true"
+        :class="boxWidth"
+      />
+    </div>
   </div>
 </template>
 
@@ -75,6 +79,10 @@ export default {
 };
 </script>
 <style lang="scss">
+.content_box{
+  height: calc( 100vh - 175px );
+  @include scrollBar;
+}
 .calNoteBox{
     display: flex;
     justify-content:flex-end;

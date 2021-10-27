@@ -1,7 +1,7 @@
 <template>
   <div
     class="page-header"
-    :class="{isBorder:isBorder}"
+    :class="{isBorder:isBorder,isBg:isBg,isSticky:isSticky}"
   >
     <div
       v-show="isArrow"
@@ -65,6 +65,14 @@ export default {
       default: ''
     },
     isBorder: {
+      type: Boolean,
+      default: false
+    },
+    isBg: {
+      type: Boolean,
+      default: false
+    },
+    isSticky: {
       type: Boolean,
       default: false
     },
@@ -169,6 +177,15 @@ export default {
   margin: 0.5em auto;
   &.isBorder{
     border-bottom:1px solid #C4DED8;
+  }
+  &.isBg{
+    background: white;
+  }
+  &.isSticky{
+    position: sticky;
+    top: 20px;
+    z-index: 100;
+    background: white;
   }
 }
 .arrow {

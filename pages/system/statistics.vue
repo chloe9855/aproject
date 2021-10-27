@@ -13,7 +13,11 @@
         btn-text="資料下載"
         btn-name="button-primary"
       />
-      <ToggleList />
+      <div
+        class="content_box"
+      >
+        <ToggleList />
+      </div>
     </div>
     <Search
       type="usageAmountSearch"
@@ -104,6 +108,10 @@ export default {
     transition: ease-in-out 0.4s;
     height:100%;
     margin : 0 5%;
+}
+.content_box{
+  height: calc( 100vh - 180px );
+  @include scrollBar;
 }
 .grow {
   width: 90%;

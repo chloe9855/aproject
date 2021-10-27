@@ -1254,6 +1254,10 @@ input[type='checkbox']::after {
   cursor: pointer;
 }
 
+input[type='checkbox']:checked::after {
+  // content: url(../images/hook.png);
+}
+
 // InfoWindow.css
 .sgInfoWindow {
   position: absolute;
@@ -1321,6 +1325,10 @@ input[type='checkbox']::after {
 .sgInfoWindow .odd-attribute {
   background-color: #ccc;
 }
+
+/* .sgInfoWindow .even-attribute
+{
+} */
 
 .sgInfoWindow .attribute-name {
   font-weight: bold;
