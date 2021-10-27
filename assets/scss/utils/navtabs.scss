@@ -53,8 +53,12 @@
 
 
 .theme_checkbox {
+  position: relative;
+
   input {
   position: absolute; // take it out of document flow
+  bottom: 0;
+  left: -2px;
   opacity: 0; // hide it
 
     & + label {
@@ -66,7 +70,8 @@
     // Box.
     & + label::before {
       content: '';
-      margin-right: 7px;
+      // margin-right: 7px;
+      margin-right: 13px;
       margin-bottom: -2px;
       display: inline-block;
       width: 13px;

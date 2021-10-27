@@ -10,6 +10,7 @@ module.exports = {
     'font-family-no-missing-generic-family-keyword': null,
     'declaration-block-no-shorthand-property-overrides': null,
     'no-descending-specificity': null,
-    'no-empty-source': null
+    'no-empty-source': null,
+    'block-no-empty': null
   }
 };

@@ -94,6 +94,10 @@ export default {
           searchData: {}
         };
       }
+    },
+    changeText: {
+      type: String,
+      default: ''
     }
   },
   data: () => {
@@ -144,6 +148,9 @@ export default {
     message (n, o) {
       const data = { val: n, id: this.inputId };
       this.$emit('inputValue', data);
+    },
+    changeText (value) {
+      this.message = value;
     }
   }
 };
