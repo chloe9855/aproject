@@ -61,7 +61,7 @@ export default {
         },
         {
           id: 4,
-          name: 'GIS地圖',
+          name: '地理資訊圖台',
           num: 1000,
           bar: { barLength: 20, barColor: 'red', barWidth: 'bold' },
           node: [
@@ -71,7 +71,7 @@ export default {
               bar: { barLength: 10, barColor: 'red', barWidth: 'thin' }
             },
             {
-              name: 'GIS地圖',
+              name: '地理資訊圖台',
               num: 17,
               bar: { barLength: 50, barColor: 'red', barWidth: 'thin' }
             }

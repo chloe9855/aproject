@@ -9,7 +9,7 @@ export default {
   },
   target: 'static',
   router: {
-    base: '/IRCloud'
+    base: '/IRCloud/'
   },
 
   // Global page headers: https://go.nuxtjs.dev/config-head

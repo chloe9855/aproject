@@ -3,7 +3,7 @@
     {
       "id": "475335", 
       "layer_index": "4541", 
-      "name": "地段", 
+      "LayerTitle": "地段", 
       "type": [{"name": "河川水源","visible": true, "pic":"river", "id":"145411"},
                {"name": "支線","visible": true, "pic":"zhi", "id":"14522"}
       ],
@@ -14,7 +14,7 @@
     {
       "id": "5235354",
       "layer_index": "2545",
-      "name": "地籍",
+      "LayerTitle": "地籍",
       "type": [{"name": "中央管區域排水","visible": true, "pic":"center", "id":"154577"},
                {"name": "市管區排","visible": true, "pic":"county", "id":"18458"},
                {"name": "取入","visible": true, "pic":"in", "id":"14599"},
@@ -27,7 +27,7 @@
     {
       "id": "35589",
       "layer_index": "533",
-      "name": "村里界",
+      "LayerTitle": "村里界",
       "type": ["黃色"],
       "pic":["yellow-block"],
       "visible": true,
@@ -36,7 +36,7 @@
     {
       "id": "856824",
       "layer_index": "453",
-      "name": "期作別",
+      "LayerTitle": "期作別",
       "type": ["藍色"],
       "pic":["yellow-block"],
       "visible": true,
@@ -45,7 +45,7 @@
     {
       "id": "858645",
       "layer_index": "5558",
-      "name": "埤塘",
+      "LayerTitle": "埤塘",
       "type": ["粉紅色"],
       "pic":["yellow-block"],
       "visible": true,
@@ -54,7 +54,7 @@
     {
       "id": "755835",
       "layer_index": "7556",
-      "name": "臺灣通用電子地圖(不含等高線)",
+      "LayerTitle": "臺灣通用電子地圖(不含等高線)",
       "type": ["綠色"],
       "pic":["yellow-block"],
       "visible": true,
@@ -63,7 +63,7 @@
     {
       "id": "65356",
       "layer_index": "752",
-      "name": "臺灣通用電子地圖(套疊等高線)",
+      "LayerTitle": "臺灣通用電子地圖(套疊等高線)",
       "type": ["紫色"],
       "pic":["yellow-block"],
       "visible": true,
