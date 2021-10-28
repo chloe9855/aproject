@@ -148,6 +148,7 @@ export default {
 }
 .content_box{
   height: calc( 100vh - 180px);
+  padding-right: 0.5em;
   @include scrollBar;
 }
 </style>

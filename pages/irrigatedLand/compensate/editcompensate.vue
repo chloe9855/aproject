@@ -196,6 +196,7 @@ export default {
 .requisitionBox{
   background: #EFF4F3;
   margin: 0 5%;
+  padding: 0.25em;
   .flex-3{
     margin: 2px 0;
     .input-title{
@@ -276,6 +277,7 @@ export default {
 .openAddBox{
   height: auto;
   display: block;
+  padding: 0.5em 0.25em;
   transition: ease-in-out 0.4s;
 }
 .closeBox{

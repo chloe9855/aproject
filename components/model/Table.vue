@@ -752,6 +752,11 @@ export default {
     min-width: 120px;
   }
 }
+.minWidth130{
+  th{
+    min-width: 130px;
+  }
+}
 .minWidth150{
   th{
     min-width: 150px;

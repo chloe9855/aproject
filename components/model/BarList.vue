@@ -107,11 +107,11 @@ ul{
     font-size: 16px;
     color: #494949;
     .id{
-        flex:1;
+        flex:2;
         position:relative;
     }
     .item{
-        flex:2;
+        flex:3;
     }
     .bar{
         flex:15;
