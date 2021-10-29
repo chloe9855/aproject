@@ -146,7 +146,7 @@ export default {
         },
         {
           name: '灌溉地管理',
-          path: 'irrigatedLand'
+          path: 'irrigatedLand/irrigateLandManagement'
         },
         {
           name: '地理資訊圖台',
@@ -158,13 +158,13 @@ export default {
         },
         {
           name: '系統管理',
-          path: 'system'
+          path: 'system/accountManagement'
         }
       ],
       sideList1: [
         {
           name: '灌溉地籍查詢',
-          path: 'irrigatedLand'
+          path: 'irrigatedLand/irrigateLandManagement'
         },
         {
           name: '停灌補償申報',
@@ -182,7 +182,7 @@ export default {
       sideList2: [
         {
           name: '帳號管理',
-          path: 'system'
+          path: 'system/accountManagement'
         },
         {
           name: '群組權限管理',
@@ -228,11 +228,13 @@ export default {
     },
     logoutAccount () {
       const userRequest = axios.create({
-        baseURL: 'http://192.168.3.112'
+        baseURL: 'http://192.168.3.112',
+        withCredentials: true
       });
       userRequest.get('/aerc/rest/SignOnStatus').then((r) => {
         // redirect('/login');
-        this.$router.push('/login');
+        console.log(e);
+        // this.$router.push('/login');
       }).catch((e) => {
         console.log(e);
       });

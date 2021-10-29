@@ -33,7 +33,7 @@
       </div>
     </div>
     <Search
-      type="irrigatedLandSearch"
+      type="compensateSearch"
       @toggleStatus="getToggleStatus"
     />
   </div>
