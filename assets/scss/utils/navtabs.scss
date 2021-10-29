@@ -7,6 +7,17 @@
   height: 32px;
   padding: 10px 0;
 }
+@media all and (max-width: $pcl-media) {
+  .navtabs__header {
+    height: 40px;
+    padding: 0;
+  }
+  .navtabs__btn{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+}
 
 .navtabs__btn {
   flex-grow: 1;
@@ -14,6 +25,7 @@
   border-bottom: 5px solid rgba(226, 228, 228, 1);
   width: 100%;
   cursor: pointer;
+  line-height: 1 !important;
   @include noto-sans-tc-16-medium;
   
   &.current {

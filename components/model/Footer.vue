@@ -53,7 +53,7 @@ export default {
 
   .foot_wrap {
     //position: absolute;
-    position: sticky;
+    position: fixed;
     bottom: 0;
     width: 100%;
   }

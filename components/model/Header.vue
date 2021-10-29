@@ -430,7 +430,7 @@ export default {
 //   height: 100%;
 // }
 
-.submenu-group:nth-child(4) {
+.submenu-group:nth-child(2) {
   .seticon::after {
     content: '';
     background: url('~/assets/img/arrow-icon.svg') no-repeat center/contain;

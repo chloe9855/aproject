@@ -100,7 +100,7 @@ export default {
     display: flex;
     align-content: center;
     height: $vh-80;
-    padding-top: $vh-20;
+    padding-top: calc( 20vh - 21px );
     align-items:center;
     flex-direction: column;
     .mainLogo{
@@ -135,6 +135,9 @@ export default {
               max-width: 100px;
             }
         }
+        .input-box{
+          margin: 0.5em 0;
+        }
         .loginBtn{
             margin: 1vh 0;
             background: #3E9F88;
@@ -142,6 +145,7 @@ export default {
             text-align: center;
             padding: 6px 15px;
             cursor: pointer;
+            color: white;
             a{
               color:#FFF;
               padding: 6px 8em;
@@ -149,7 +153,7 @@ export default {
             @include noto-sans-tc-18-medium;
             &:active,&:hover,&.focus{
               background-color: #21705d;
-              color: white;
+              color: black;
             }
         }
     }

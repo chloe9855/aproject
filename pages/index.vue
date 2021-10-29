@@ -4,6 +4,7 @@
       icon="news"
       class="w-90"
       :is-sticky="true"
+      :is-bread-crumb="false"
     />
     <div class="mainContent">
       <TableTool
@@ -75,8 +76,8 @@ export default {
 </script>
 <style lang="scss">
 .mainContent{
-  height: calc( 100vh - 50px);
-  @include scrollBar;
+  overflow:hidden;
+  padding-bottom: 5vh;
 }
 .news{
   &.tableTool{

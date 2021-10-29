@@ -244,6 +244,9 @@ export default {
   display: flex;
   justify-content: flex-end;
   margin-top: 20px;
+  .button_wrap{
+    min-width: none;
+  }
 }
 .listBox{
     display: flex;
@@ -283,6 +286,9 @@ export default {
         }
         @include pcxs-width{
           flex-wrap: wrap;
+        }
+        .check-input-box{
+          margin: 2.5px 0;
         }
     }
 }

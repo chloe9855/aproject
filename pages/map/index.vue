@@ -1366,7 +1366,8 @@ export default {
 
   .layerwindow {
     width: 363px;
-    max-height: 440.2px;
+    //max-height: 440.2px;
+    max-height: 400px;
     overflow-y: auto;
     overflow-x: hidden;
   }

@@ -1,7 +1,7 @@
 <template>
   <div
     class="page-header"
-    :class="{isBorder:isBorder,isBg:isBg,isSticky:isSticky}"
+    :class="{isBorder:isBorder,isBg:isBg,isSticky:isSticky,isBreadCrumb:!isBreadCrumb}"
   >
     <div
       v-show="isArrow"
@@ -75,6 +75,10 @@ export default {
     isSticky: {
       type: Boolean,
       default: false
+    },
+    isBreadCrumb: {
+      type: Boolean,
+      default: true
     },
     isArrow: {
       type: Boolean,
@@ -186,6 +190,9 @@ export default {
     top: 20px;
     z-index: 100;
     background: white;
+  }
+  &.isBreadCrumb{
+    top: 0;
   }
 }
 .arrow {
