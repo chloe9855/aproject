@@ -44,6 +44,7 @@ export default {
   .table_block {
     // width: 512px;
     height: 480px;
+    max-height: calc( 100vh - 200px );
     overflow-y: auto;
     overflow-x: hidden;
     color: #494949;

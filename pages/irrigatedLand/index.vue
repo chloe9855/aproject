@@ -30,7 +30,7 @@
       </div>
       <div
         v-else-if="toggleCurrent === 1"
-        class="irrigatedLand"
+        class="irrigatedLand content_box"
       >
         <NormalTable
           v-if="columnList.length >= 1"
@@ -218,6 +218,7 @@ export default {
   margin : 0 5%;
 }
 .content_box{
+  padding-right: 0.5em;
   height: calc( 100vh - 175px );
   @include scrollBar;
 }

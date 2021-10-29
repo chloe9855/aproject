@@ -9,7 +9,7 @@ export default {
   },
   target: 'static',
   router: {
-    base: '/testyy/'
+    base: '/IRCloud/'
   },
 
   // Global page headers: https://go.nuxtjs.dev/config-head
@@ -290,6 +290,6 @@ export default {
     }
   },
   server: {
-    host: '192.168.1.103'
+    host: 'localhost'
   }
 };

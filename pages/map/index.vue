@@ -382,8 +382,6 @@ import GeoMeasure from '~/components/GeoMeasure.vue';
 import ScreenShot from '~/components/ScreenShot.vue';
 import MapSearchBox from '~/components/MapSearchBox.vue';
 import ScrollTable from '~/components/tools/ScrollTable.vue';
-// import * as myModule1 from '~/scripts/Base.js';
-// import * as myModule2 from '~/scripts/Query.js';
 
 export default {
   components: {
@@ -419,6 +417,7 @@ export default {
       // * 街景
       streetMap: '',
       openOnceStreet: true,
+      // * 圖層工具
       layerOptions: {
         current: 0,
         typeList: [
@@ -452,6 +451,7 @@ export default {
         surfaceList: [],
         baseLayerList: []
       },
+      allBaseLayer: [],
       // * OGC介接
       ogcOptions: {
         current: 0,
@@ -470,6 +470,7 @@ export default {
       },
       wmTsLayer: '',
       wmsLayer: '',
+      // * 臨時展繪
       shpOptions: {
         current: 0,
         typeList: [
@@ -483,29 +484,7 @@ export default {
           }
         ],
         layerList: []
-      },
-      testData: [
-        {
-          name: 'yayayaya',
-          id: 0
-        },
-        {
-          name: 'lsls',
-          id: 1
-        },
-        {
-          name: 'dfzsg',
-          id: 2
-        },
-        {
-          name: 'fdgdg',
-          id: 3
-        },
-        {
-          name: 'ghfdh',
-          id: 4
-        }
-      ]
+      }
     };
   },
   // layout: 'map',
@@ -711,18 +690,17 @@ export default {
   //   ]
   // },
   mounted () {
+    this.getBaseLayer();
+
     const point = require('~/static/pointLayer.json');
     const line = require('~/static/lineLayer.json');
     const surface = require('~/static/surfaceLayer.json');
-    const base = require('~/static/baseLayer.json');
     this.layerOptions.surfaceList = [...surface.data];
     this.layerOptions.lineList = [...line.data];
     this.layerOptions.pointList = [...point.data];
-    this.layerOptions.baseLayerList = [...base.data];
 
     // console.log(gogo());
     // console.log(coco);
-    // this.getTest();
 
     // * 載入canvas
     const canvas = document.getElementsByTagName('canvas')[0];
@@ -746,21 +724,50 @@ export default {
     ctx.scale(ratio, ratio);
   },
   methods: {
-    getTest () {
-      fetch('http://192.168.3.112/aerc/rest/login', {
-
-        method: 'POST',
+    // * @ 圖層工具：底圖切換API
+    getBaseLayer () {
+      fetch('http://192.168.3.112/AERC/rest/Layer', {
+        method: 'GET',
         headers: new Headers({
           'Content-Type': 'application/json'
-        }),
-        mode: 'no-cors'
+        })
       }).then((response) => {
         return response.json();
       }).then((data) => {
         console.log(data);
+        this.layerOptions.baseLayerList = data;
+        this.layerOptions.baseLayerList.forEach((item, index) => {
+          item.id = item.Layer_sno;
+          item.visible = false;
+          item.opacity = 50;
+          if (item.LayerName === 'EMAP5_OPENDATA') {
+            item.visible = true;
+          }
+
+          if (item.LayerTitle === '段籍圖') {
+            item.LayerName = 'LANDSECT';
+          }
+          // 載入底圖
+          this.loadAllBaseLayer(item.LayerName, index);
+        });
       }).catch((err) => {
         console.log('錯誤:', err);
       });
+    },
+    loadAllBaseLayer (layerName, index) {
+      this.allBaseLayer.push(new sg.layers.WMTSLayer('https://wmts.nlsc.gov.tw/wmts', {
+        serviceMode: 'KVP',
+        loadEffect: true
+      }));
+
+      setTimeout(() => {
+        this.allBaseLayer[index].layerInfo.identifier = layerName;
+        pMapBase.AddLayer(this.allBaseLayer[index]);
+        if (layerName !== 'EMAP5_OPENDATA') {
+          this.allBaseLayer[index].hide();
+        }
+        pMapBase.RefreshMap(true);
+      }, 2000);
     },
     // * 控制視窗顯示
     ctrlDragBoxVisible (payload) {
@@ -807,7 +814,7 @@ export default {
       this.hideResult = false;
     },
     // * @ 圖層工具：切換圖層 顯示/隱藏
-    layerVisibleCtrl ($event, id, category) {
+    layerVisibleCtrl ($event, id, category, layerName) {
       console.log(id);
       console.log($event);
       if (category === 'pointList') {
@@ -822,9 +829,17 @@ export default {
         const index = this.layerOptions.surfaceList.findIndex(item => item.id === id);
         this.layerOptions.surfaceList[index].visible = $event;
       }
+      // 底圖切換
       if (category === 'baseLayer') {
         const index = this.layerOptions.baseLayerList.findIndex(item => item.id === id);
         this.layerOptions.baseLayerList[index].visible = $event;
+
+        if ($event === true) {
+          this.allBaseLayer[index].show();
+        } else {
+          this.allBaseLayer[index].hide();
+        }
+        pMapBase.RefreshMap(true);
       }
       if (category === 'shpitem') {
         const index = this.shpOptions.layerList.findIndex(item => item.id === id);
@@ -888,9 +903,12 @@ export default {
         const index = this.layerOptions.surfaceList.findIndex(item => item.id === id);
         this.layerOptions.surfaceList[index].opacity = value;
       }
+      // 底圖切換
       if (category === 'baseLayer') {
         const index = this.layerOptions.baseLayerList.findIndex(item => item.id === id);
         this.layerOptions.baseLayerList[index].opacity = value;
+        this.allBaseLayer[index].setOpacity(value / 100);
+        pMapBase.RefreshMap(true);
       }
       if (category === 'shpitem') {
         const index = this.shpOptions.layerList.findIndex(item => item.id === id);
@@ -913,7 +931,6 @@ export default {
     },
     // * @ 圖層工具：OGC介接 取得服務
     getOgcHandler (current) {
-      // this.ogcOptions.layerList = this.testData;
       // const wmsUrl = this.$refs.wms.value;
       // const wmtsUrl = this.$refs.wmts.value;
 
@@ -923,7 +940,7 @@ export default {
           imageFormat: 'image/png',
           loadEffect: true,
           loaded: () => {
-            this.ogcLayerCtrl(current);
+            this.ogcLayerCtrl(0);
           }
         });
       }
@@ -934,7 +951,7 @@ export default {
           serviceMode: 'KVP',
           loadEffect: true,
           loaded: () => {
-            this.ogcLayerCtrl(current);
+            this.ogcLayerCtrl(1);
           }
         });
       }
@@ -991,36 +1008,50 @@ export default {
       // WMS
       if (current === 0) {
         // 加入前先清除之前的圖層
-        this.wmsLayer.visibleLayers = [];
-        // pMapBase.RemoveLayer(this.wmsLayer);
-        // pMapBase.RemoveLayer(this.wmTsLayer);
-
-        this.ogcOptions.layerList.forEach((item) => {
-          if (item.visible === true) {
-            this.wmsLayer.visibleLayers.push(item.name);
-          }
-        });
-
-        pMapBase.AddLayer(this.wmsLayer);
+        pMapBase.RemoveLayer(this.wmsLayer);
+        pMapBase.RemoveLayer(this.wmTsLayer);
         pMapBase.RefreshMap(true);
+        this.wmsLayer = new sg.layers.WMSLayer('https://wms.nlsc.gov.tw/wms', {
+          imageFormat: 'image/png',
+          loadEffect: true
+        });
+        this.wmsLayer.visibleLayers = [];
+
+        setTimeout(() => {
+          this.ogcOptions.layerList.forEach((item) => {
+            if (item.visible === true) {
+              this.wmsLayer.visibleLayers.push(item.name);
+            }
+          });
+
+          pMapBase.AddLayer(this.wmsLayer);
+          pMapBase.RefreshMap(true);
+        }, 1000);
       }
 
       // WMTS
       if (current === 1) {
         // 加入前先清除之前的圖層
-        this.wmTsLayer.visibleLayers = [];
-        // pMapBase.RemoveLayer(this.wmsLayer);
-        // pMapBase.RemoveLayer(this.wmTsLayer);
-
-        this.ogcOptions.layerList.forEach((item) => {
-          if (item.visible === true) {
-            this.wmTsLayer.visibleLayers.push(item.name);
-            this.wmTsLayer.layerInfo.identifier = item.name;
-          }
-        });
-
-        pMapBase.AddLayer(this.wmTsLayer);
+        pMapBase.RemoveLayer(this.wmsLayer);
+        pMapBase.RemoveLayer(this.wmTsLayer);
         pMapBase.RefreshMap(true);
+        this.wmTsLayer = new sg.layers.WMTSLayer('https://wmts.nlsc.gov.tw/wmts', {
+          serviceMode: 'KVP',
+          loadEffect: true
+        });
+        this.wmTsLayer.visibleLayers = [];
+
+        setTimeout(() => {
+          this.ogcOptions.layerList.forEach((item) => {
+            if (item.visible === true) {
+              this.wmTsLayer.visibleLayers.push(item.name);
+              this.wmTsLayer.layerInfo.identifier = item.name;
+            }
+          });
+
+          pMapBase.AddLayer(this.wmTsLayer);
+          pMapBase.RefreshMap(true);
+        }, 1000);
       }
     },
     // * @ 圖層工具：OGC介接 清除全部
@@ -1028,6 +1059,7 @@ export default {
       pMapBase.RemoveLayer(this.wmsLayer);
       pMapBase.RemoveLayer(this.wmTsLayer);
       this.ogcOptions.layerList = [];
+      pMapBase.RefreshMap(true);
     },
     // * @ 截圖工具：JPG下載
     downloadJPG () {
@@ -1334,7 +1366,8 @@ export default {
 
   .layerwindow {
     width: 363px;
-    max-height: 440.2px;
+    //max-height: 440.2px;
+    max-height: 400px;
     overflow-y: auto;
     overflow-x: hidden;
   }

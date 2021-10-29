@@ -56,12 +56,27 @@
           class="flex-2"
           @click="toggleOwnerList"
         />
-        <TableTool
+        <div
           v-show="statusOwnerList"
-          :table-column="ownerList"
-          :is-paginate="false"
           class="ownerList"
-        />
+        >
+          <TableTool
+            :table-column="ownerList"
+            :is-paginate="false"
+          />
+          <div class="flexBox ownerBtnBox">
+            <Button
+              :name="'button-default'"
+              :text="'取消'"
+              @click="toggleOwnerList"
+            />
+            <Button
+              :name="'button-primary'"
+              :text="'確定'"
+              @click="toggleOwnerList"
+            />
+          </div>
+        </div>
         <div class="tips flex-16">
           <span>已選擇2位所有權人</span>
         </div>
@@ -132,7 +147,6 @@
       <Button
         :name="'button-primary'"
         :text="'確認新增'"
-        :add="true"
         @click="$emit('search', options.current)"
       />
     </div>
@@ -230,6 +244,9 @@ export default {
   display: flex;
   justify-content: flex-end;
   margin-top: 20px;
+  .button_wrap{
+    min-width: none;
+  }
 }
 .listBox{
     display: flex;
@@ -256,7 +273,7 @@ export default {
         align-items: center;
         color: #494949;
         div{
-            margin: 0 2.5px;
+            margin: 0 5px 0 0;
         }
         @include pc-width{
           flex-wrap: wrap;
@@ -269,6 +286,9 @@ export default {
         }
         @include pcxs-width{
           flex-wrap: wrap;
+        }
+        .check-input-box{
+          margin: 2.5px 0;
         }
     }
 }
@@ -308,5 +328,11 @@ export default {
 }
 .ownerBox{
   position: relative;
+}
+.ownerBtnBox{
+  justify-content: flex-end;
+  .button_wrap{
+    min-width: auto;
+  }
 }
 </style>

@@ -9,13 +9,13 @@
           class="arrow_pic"
           @click="showBlock = !showBlock"
         >
-        <span>{{ item.name }}</span>
+        <span>{{ item.LayerTitle }}</span>
       </div>
       <div class="wrap2">
         <ViewCheckBox-component
           :id="item.id"
           :visible="item.visible"
-          @change="($event, id) => { $emit('changeVisible', $event, id, category) }"
+          @change="($event, id) => { $emit('changeVisible', $event, id, category, item.LayerName) }"
         />
         <SliderBar-component
           :id="item.id"
