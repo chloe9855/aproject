@@ -26,10 +26,12 @@
           title="驗證碼"
           class="flex-1"
           :is-verification="true"
+          @inputValue="getCaptcha"
         />
         <img
-          :src="require('~/assets/img/verification.jpg')"
+          :src="verifyImg"
           class="flex-1"
+          @click="Verify"
         >
       </div>
       <div
@@ -46,10 +48,10 @@
     </div>
   </div>
 </template>
-
 <script crossorigin="anonymous">
 import InputHorizontal from '~/components/tools/InputHorizontal.vue';
 import { loginReq } from '~/api/login';
+import axios from 'axios';
 // import axios from 'axios';
 export default {
   components: {
@@ -59,7 +61,9 @@ export default {
     return {
       title: '農田水利灌溉管理整合雲系統',
       account: '',
-      password: ''
+      password: '',
+      verifyImg: '',
+      captcha: ''
     };
   },
   name: 'Login',
@@ -68,9 +72,25 @@ export default {
   meta: {
     requiresAuth: true
   },
+  mounted () {
+    this.Verify();
+    // $cookies.set('theme','default');
+  },
   methods: {
+    Verify () {
+      const userVerify = axios.create({
+        baseURL: 'http://192.168.3.112',
+        withCredentials: true
+      });
+      userVerify.get('/AERC/rest/Verify').then((r) => {
+        console.log(r);
+        this.verifyImg = r.data;
+      }).catch((e) => {
+        console.log(e);
+      });
+    },
     login () {
-      const data = `account=${this.account}&password=${this.password}`;
+      const data = `account=${this.account}&password=${this.password}&captcha=${this.captcha}`;
       loginReq(data).then((r) => {
         console.log(r);
         this.$router.push('/');
@@ -90,6 +110,11 @@ export default {
     getPassword (e) {
       if (e) {
         this.password = e;
+      }
+    },
+    getCaptcha (e) {
+      if (e) {
+        this.captcha = e;
       }
     }
   }
