@@ -5,7 +5,8 @@
 export const state = () => ({
   hideFooter: false,
   popupState: false,
-  popupType: { type: 'editAccount', title: '請設定查詢作業標題' }
+  popupType: { type: 'editAccount', title: '請設定查詢作業標題' },
+  mouseEventMin: 0
 });
 
 // * ==========================================================================
@@ -23,5 +24,8 @@ export const mutations = {
   TOGGLE_POPUP_TYPE (state, payload) {
     state.popupType.title = payload.title;
     state.popupType.type = payload.type;
+  },
+  SET_LOUOUT_COUNTDOWN (state, payload) {
+    state.mouseEventMin = payload.min;
   }
 };

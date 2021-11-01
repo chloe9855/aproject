@@ -31,7 +31,7 @@
         <img
           :src="verifyImg"
           class="flex-1"
-          @click="Verify"
+          @click="init"
         >
       </div>
       <div
@@ -50,8 +50,11 @@
 </template>
 <script crossorigin="anonymous">
 import InputHorizontal from '~/components/tools/InputHorizontal.vue';
-import { loginReq } from '~/api/login';
+// import { loginReq } from '~/api/login';
 import axios from 'axios';
+import Vue from 'vue';
+import VueCookies from 'vue-cookies';
+Vue.prototype.$cookies = VueCookies;
 // import axios from 'axios';
 export default {
   components: {
@@ -62,7 +65,7 @@ export default {
       title: '農田水利灌溉管理整合雲系統',
       account: '',
       password: '',
-      verifyImg: '',
+      verifyImg: 'img/test.png',
       captcha: ''
     };
   },
@@ -73,31 +76,60 @@ export default {
     requiresAuth: true
   },
   mounted () {
-    this.Verify();
-    // $cookies.set('theme','default');
+    // this.Verify();
+    this.init();
+    this.$cookies.set('theme', '000');
   },
   methods: {
     Verify () {
       const userVerify = axios.create({
-        baseURL: 'http://192.168.3.112',
-        withCredentials: true
+        baseURL: 'http://192.168.3.112'
       });
       userVerify.get('/AERC/rest/Verify').then((r) => {
-        console.log(r);
+        console.log(r.data);
         this.verifyImg = r.data;
       }).catch((e) => {
         console.log(e);
       });
     },
+    init () {
+      const url = 'http://192.168.3.112/aerc/rest/verify';
+      const xmlHttp = new XMLHttpRequest();
+      xmlHttp.open('GET', url, true);
+      const $this = this;
+      xmlHttp.onreadystatechange = function () {
+        if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
+          const data = xmlHttp.response;
+          const dataTrim = data.replace(/["']/g, '');
+          $this.verifyImg = dataTrim;
+        }
+      };
+      xmlHttp.send();
+    },
     login () {
-      const data = `account=${this.account}&password=${this.password}&captcha=${this.captcha}`;
-      loginReq(data).then((r) => {
-        console.log(r);
-        this.$router.push('/');
-      }).catch((e) => {
-        console.log(e);
-        this.$router.push('/');
-      });
+      // const data = `account=${this.account}&password=${this.password}&captcha=${this.captcha}`;
+      // loginReq(data).then((r) => {
+      //   console.log(r);
+      //   // this.$router.push('/');
+      // }).catch((e) => {
+      //   console.log(e);
+      //   // this.$router.push('/');
+      // });
+
+      const acc = this.account;
+      const psw = this.password;
+      const code = this.captcha;
+
+      const url = 'http://192.168.3.112/aerc/rest/login';
+      const xmlHttp = new XMLHttpRequest();
+      xmlHttp.open('POST', url, true);
+      xmlHttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+      xmlHttp.withCredentials = true;
+      xmlHttp.onload = function () {
+        console.log(this.responseText);
+        // $this.$router.push('/');
+      };
+      xmlHttp.send('account=' + acc + '&password=' + psw + '&captcha=' + code);
     },
     forgetPassWord () {
       console.log('test');
@@ -178,7 +210,6 @@ export default {
             @include noto-sans-tc-18-medium;
             &:active,&:hover,&.focus{
               background-color: #21705d;
-              color: black;
             }
         }
     }

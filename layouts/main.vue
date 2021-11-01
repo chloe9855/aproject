@@ -1,5 +1,10 @@
 <template>
-  <div class="mainArea">
+  <div
+    class="mainArea"
+    @mouseover="listenEventLogout"
+    @mouseout="listenEventLogout"
+    @click="listenEventLogout"
+  >
     <Header />
     <nuxt />
     <Popup
@@ -16,13 +21,38 @@ import Header from '~/components/model/Header';
 import Footer from '~/components/model/Footer';
 import Popup from '~/components/model/Popup.vue';
 import MaskTool from '~/components/tools/Mask.vue';
-
 export default {
   components: {
     Header,
     Footer,
     Popup,
     MaskTool
+  },
+  data: () => {
+    return {
+      setMin: 0
+    };
+  },
+  mounted () {
+    this.countDownLogout();
+  },
+  methods: {
+    listenEventLogout (e) {
+      this.$store.commit('SET_LOUOUT_COUNTDOWN', { min: 0 });
+      this.setMin = 0;
+    },
+    countDownLogout () {
+      setTimeout(() => {
+        this.setMin += 1000;
+        this.$store.commit('SET_LOUOUT_COUNTDOWN', { min: this.setMin });
+        if (this.setMin <= 10000) {
+          this.countDownLogout();
+          console.log(this.setMin);
+        } else {
+          alert('登出');
+        }
+      }, 1000);
+    }
   },
   computed: {
     togglePopup () {

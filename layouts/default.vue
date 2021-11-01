@@ -26,8 +26,30 @@ export default {
   },
   data () {
     return {
-      onPopup: false
+      onPopup: false,
+      setMin: 0
     };
+  },
+  mounted () {
+    this.countDownLogout();
+  },
+  methods: {
+    listenEventLogout (e) {
+      this.$store.commit('SET_LOUOUT_COUNTDOWN', { min: 0 });
+      this.setMin = 0;
+    },
+    countDownLogout () {
+      setTimeout(() => {
+        this.setMin += 1000;
+        this.$store.commit('SET_LOUOUT_COUNTDOWN', { min: this.setMin });
+        if (this.setMin <= 10000) {
+          this.countDownLogout();
+          console.log(this.setMin);
+        } else {
+          alert('登出');
+        }
+      }, 1000);
+    }
   },
   computed: {
     togglePopup () {
