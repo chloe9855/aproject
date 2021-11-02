@@ -13,6 +13,7 @@
         btn-text="新增帳號"
         :btn-add="true"
         btn-name="button-add"
+        @PHBtnStatus="addAccount"
       />
       <div
         class="content_box"
@@ -23,7 +24,7 @@
           :is-edit="true"
           :is-del="true"
           :is-scroll-table="true"
-          column-min-width="150"
+          :column-min-width="150"
         />
       </div>
     </div>
@@ -78,6 +79,13 @@ export default {
   methods: {
     getToggleStatus (e) {
       this.toggleStatus = e;
+    },
+    addAccount (e) {
+      if (e) {
+        console.log(e);
+        this.$store.commit('TOGGLE_POPUP_STATUS');
+        this.$store.commit('TOGGLE_POPUP_TYPE', { type: 'addAccount', title: '新增帳號' });
+      }
     }
   },
   computed: {

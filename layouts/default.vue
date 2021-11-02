@@ -1,5 +1,10 @@
 <template>
-  <div class="mainArea">
+  <div
+    class="mainArea"
+    @mouseover="listenEventLogout"
+    @mouseout="listenEventLogout"
+    @click="listenEventLogout"
+  >
     <Header />
     <nuxt />
     <Footer />
@@ -42,7 +47,7 @@ export default {
       setTimeout(() => {
         this.setMin += 1000;
         this.$store.commit('SET_LOUOUT_COUNTDOWN', { min: this.setMin });
-        if (this.setMin <= 10000) {
+        if (this.setMin <= 1200000) {
           this.countDownLogout();
           console.log(this.setMin);
         } else {

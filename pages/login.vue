@@ -42,23 +42,32 @@
       </div>
       <div class="flexBox flex-right">
         <span
+          class="forgetPassWord"
           @click="forgetPassWord"
         >忘記密碼</span>
       </div>
     </div>
+    <AlertBox
+      v-show="isforgetPassWord"
+      :cancel-button="true"
+      title="忘記密碼怎麼辦?"
+      box-icon="warning"
+      text="寄送重設密碼於註冊信箱請前往信箱重設密碼"
+    />
   </div>
 </template>
 <script crossorigin="anonymous">
 import InputHorizontal from '~/components/tools/InputHorizontal.vue';
+import AlertBox from '~/components/tools/AlertBox.vue';
 // import { loginReq } from '~/api/login';
 import axios from 'axios';
 import Vue from 'vue';
 import VueCookies from 'vue-cookies';
 Vue.prototype.$cookies = VueCookies;
-// import axios from 'axios';
 export default {
   components: {
-    InputHorizontal
+    InputHorizontal,
+    AlertBox
   },
   data () {
     return {
@@ -66,7 +75,8 @@ export default {
       account: '',
       password: '',
       verifyImg: 'img/test.png',
-      captcha: ''
+      captcha: '',
+      isforgetPassWord: false
     };
   },
   name: 'Login',
@@ -132,7 +142,7 @@ export default {
       xmlHttp.send('account=' + acc + '&password=' + psw + '&captcha=' + code);
     },
     forgetPassWord () {
-      console.log('test');
+      this.isforgetPassWord = true;
     },
     getAccount (e) {
       if (e) {
@@ -174,7 +184,7 @@ export default {
         align-items: center;
         text-align: center;
         letter-spacing: 0.09em;
-        margin-bottom: 2vh;
+        margin-bottom: 0.25vh;
         font-size: 28px !important;
         @include noto-sans-tc-24-medium;
     }
@@ -213,5 +223,9 @@ export default {
             }
         }
     }
+}
+.forgetPassWord{
+  color: #3E9F88;
+  @include noto-sans-tc-16-medium;
 }
 </style>

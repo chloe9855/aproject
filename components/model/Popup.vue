@@ -21,6 +21,7 @@
         <Button
           :name="'button-default'"
           :text="'取消'"
+          @click="toggleStatus"
         />
         <Button
           :name="'button-primary'"

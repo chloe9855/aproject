@@ -33,15 +33,16 @@ export default {
   data: () => {
     return {
       tableList: {
+        name: 'file',
         head: [
           { title: '檔案名稱' },
           { title: '檔案' }
         ],
         body: [
-          { val: 0, title: [{ type: 'input' }, { type: 'btn' }] },
-          { val: 1, title: [{ type: 'input' }, { type: 'btn' }] },
-          { val: 2, title: [{ type: 'input' }, { type: 'btn' }] },
-          { val: 3, title: [{ type: 'input' }, { type: 'btn' }] }
+          { val: 'file0', title: [{ type: 'input' }, { type: 'btn' }] },
+          { val: 'file1', title: [{ type: 'input' }, { type: 'btn' }] },
+          { val: 'file2', title: [{ type: 'input' }, { type: 'btn' }] },
+          { val: 'file3', title: [{ type: 'input' }, { type: 'btn' }] }
         ]
       }
     };
