@@ -15,7 +15,7 @@
       />
       <InputVertical
         name="inputName"
-        title="請輸入密碼"
+        title="請再次輸入密碼"
         input-text="請輸入8-12碼英數組合，注意大小寫"
         error-tip="輸入文字格式錯誤"
         is-warn="code8"
