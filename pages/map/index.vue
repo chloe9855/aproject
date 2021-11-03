@@ -121,7 +121,7 @@
               class="layer__list"
             >
               <div
-                v-for="item in layerOptions.baseLayerList"
+                v-for="item in layerOptions.baseLayerList.slice().reverse()"
                 :key="item.id"
                 class="layer__item"
               >
@@ -152,8 +152,15 @@
                   :name="'button-add'"
                   :text="'新增圖層'"
                   :add="true"
-                  @click="addShpLayer"
+                  @click="$refs.upfile.click()"
                 />
+                <input
+                  id="upfile"
+                  ref="upfile"
+                  type="file"
+                  style="display: none;"
+                  @change="fileUploader(shpOptions.current)"
+                >
               </div>
 
               <div v-if="shpOptions.layerList.length >= 1">
@@ -382,6 +389,7 @@ import GeoMeasure from '~/components/GeoMeasure.vue';
 import ScreenShot from '~/components/ScreenShot.vue';
 import MapSearchBox from '~/components/MapSearchBox.vue';
 import ScrollTable from '~/components/tools/ScrollTable.vue';
+import JSZip from 'jszip';
 
 export default {
   components: {
@@ -483,7 +491,8 @@ export default {
             id: 1
           }
         ],
-        layerList: []
+        layerList: [],
+        kmlLayer: ''
       }
     };
   },
@@ -739,7 +748,7 @@ export default {
         this.layerOptions.baseLayerList.forEach((item, index) => {
           item.id = item.Layer_sno;
           item.visible = false;
-          item.opacity = 50;
+          item.opacity = 100;
           if (item.LayerName === 'EMAP5_OPENDATA') {
             item.visible = true;
           }
@@ -747,14 +756,23 @@ export default {
           if (item.LayerTitle === '段籍圖') {
             item.LayerName = 'LANDSECT';
           }
-          // 載入底圖
-          this.loadAllBaseLayer(item.LayerName, index);
+
+          // 載入底圖 wmts
+          if (item.LayerType === '1') {
+            this.loadAllBaseLayerTS(item.LayerName, index);
+          }
+
+          // 載入底圖 wms
+          if (item.LayerType === '2') {
+            this.loadAllBaseLayer(item.LayerName, index);
+          }
         });
       }).catch((err) => {
         console.log('錯誤:', err);
       });
     },
-    loadAllBaseLayer (layerName, index) {
+    //* 載入底圖 wmts
+    loadAllBaseLayerTS (layerName, index) {
       this.allBaseLayer.push(new sg.layers.WMTSLayer('https://wmts.nlsc.gov.tw/wmts', {
         serviceMode: 'KVP',
         loadEffect: true
@@ -762,6 +780,23 @@ export default {
 
       setTimeout(() => {
         this.allBaseLayer[index].layerInfo.identifier = layerName;
+        pMapBase.AddLayer(this.allBaseLayer[index]);
+        if (layerName !== 'EMAP5_OPENDATA') {
+          this.allBaseLayer[index].hide();
+        }
+        pMapBase.RefreshMap(true);
+      }, 2000);
+    },
+    //* 載入底圖 wms
+    loadAllBaseLayer (layerName, index) {
+      this.allBaseLayer.push(new sg.layers.WMSLayer('https://wms.nlsc.gov.tw/wms', {
+        imageFormat: 'image/png',
+        loadEffect: true
+      }));
+
+      setTimeout(() => {
+        this.allBaseLayer[index].visibleLayers = [];
+        this.allBaseLayer[index].visibleLayers[0] = layerName;
         pMapBase.AddLayer(this.allBaseLayer[index]);
         if (layerName !== 'EMAP5_OPENDATA') {
           this.allBaseLayer[index].hide();
@@ -844,6 +879,8 @@ export default {
       if (category === 'shpitem') {
         const index = this.shpOptions.layerList.findIndex(item => item.id === id);
         this.shpOptions.layerList[index].visible = $event;
+
+        this.shpOptions.kmlLayer.putVisible($event);
       }
     },
     // * @ 圖層工具：單一支線圖層 顯示/隱藏
@@ -913,10 +950,14 @@ export default {
       if (category === 'shpitem') {
         const index = this.shpOptions.layerList.findIndex(item => item.id === id);
         this.shpOptions.layerList[index].opacity = value;
+        this.shpOptions.kmlLayer.setOpacity(value / 100);
+        pMapBase.RefreshMap(true);
       }
     },
     // * @ 圖層工具：臨時展繪 新增圖層
     addShpLayer () {
+      // document.getElementById('upfile').click();
+
       const result = {
         id: '5623355',
         name: '縣市界',
@@ -925,9 +966,59 @@ export default {
       };
       this.shpOptions.layerList.push(result);
     },
+    // * @ 圖層工具：臨時展繪 新增圖層
+    fileUploader (current) {
+      const newFile = document.getElementById('upfile').files[0];
+      const type = newFile.name.substring(newFile.name.length - 3, newFile.name.length);
+      const fileName = newFile.name.substring(0, newFile.name.length - 4);
+      console.log(newFile);
+      console.log(`${current},${type}`);
+
+      // if (type !== 'kml' && type !== 'kmz') {
+      //   return;
+      // }
+
+      // const newZip = new JSZip();
+      // newZip.loadAsync(newFile)
+      //   .then((zip) => {
+      //     console.log(zip);
+      //   });
+      // console.log(878787);
+
+      SuperGIS.LoadModules(['scripts/MVTData.js', 'vector_tile.js', 'pbf.js', 'scripts/KML.js', 'scripts/Collada.js'], () => {
+        this.shpOptions.kmlLayer = new sg.layers.KMLLayer(null, { data: newFile });
+        pMapBase.AddLayer(this.shpOptions.kmlLayer);
+        const result = {
+          id: Math.random(),
+          name: fileName,
+          visible: true,
+          opacity: 100
+        };
+        this.shpOptions.layerList.push(result);
+        // this.zoomToLayer(this.shpOptions.kmlLayer);
+      });
+
+      pMapBase.RefreshMap(true);
+    },
     // * @ 圖層工具：臨時展繪 刪除圖層
     deleteShpLayer () {
       this.shpOptions.layerList = [];
+      pMapBase.RemoveLayer(this.shpOptions.kmlLayer);
+      pMapBase.RefreshMap(true);
+    },
+    zoomToLayer (layer) {
+      const top = layer.getTop();
+      const left = layer.getLeft();
+      const bottom = layer.getBottom();
+      const right = layer.getRight();
+      const extent = new sg.geometry.Extent();
+      extent.xmax = right;
+      extent.xmin = left;
+      extent.ymax = top;
+      extent.ymin = bottom;
+
+      MapBase.ZoomMapTo(extent);
+      MapBase.RefreshMap(true);
     },
     // * @ 圖層工具：OGC介接 取得服務
     getOgcHandler (current) {
