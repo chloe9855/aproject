@@ -63,6 +63,7 @@
           <TableTool
             :table-column="ownerList"
             :is-paginate="false"
+            @DropdownVal="ownerListData"
           />
           <div class="flexBox ownerBtnBox">
             <Button
@@ -97,25 +98,17 @@
       <div class="listTitle">
         申請類別
       </div>
-      <div class="flexBox">
-        <CheckInput
-          name="a1"
-          text="態樣1(93000)"
-        /><CheckInput
-          name="a2"
-          text="態樣2(93000)"
-        /><CheckInput
-          name="a3"
-          text="態樣3(93000)"
-        />
-      </div>
+      <CheckInput
+        name="category"
+        @checkInputVal="getCategory"
+      />
     </div>
     <div class="listBox Box5">
       <div class="listTitle">
         作物備註
       </div>
       <div class="flexBox">
-        <InputTool />
+        <InputTool @inputValue="cropNote" />
       </div>
     </div>
     <div class="listBox Box6">
@@ -128,12 +121,12 @@
           :key="index"
         >
           <input
-            :id="index"
+            :id="item.value"
             v-model="dataArr"
             type="checkbox"
-            :name="index"
+            :name="item.value"
             :value="item.value"
-          ><label :for="index" /><span>{{ item.title }}</span>
+          ><label :for="item.value" /><span>{{ item.title }}</span>
         </span>
       </div>
     </div>
@@ -147,7 +140,7 @@
       <Button
         :name="'button-primary'"
         :text="'確認新增'"
-        @click="$emit('search', options.current)"
+        @click="addCompensate"
       />
     </div>
   </div>
@@ -198,7 +191,6 @@ export default {
     return {
       member: { option: [{ title: '預設選項', value: '0' }, { title: '工作站人員', value: '1' }, { title: '管理人員', value: '2' }, { title: '民眾', value: '3' }] },
       statusOwnerList: false,
-      owner: '',
       options: {
         current: 0,
         typeList: [
@@ -212,18 +204,45 @@ export default {
           }
         ]
       },
-      dataArr: []
+      dataArr: [],
+      note: '',
+      owner: '',
+      category: '',
+      categoryContent: ''
     };
   },
   name: 'LandSearch',
   methods: {
-    getOwner (item) {
-      this.owner = item;
-    },
     toggleOwnerList () {
-      console.log(this.statusOwnerList);
       this.statusOwnerList = !this.statusOwnerList;
-      console.log(this.statusOwnerList);
+    },
+    cropNote (e) {
+      if (e) {
+        this.note = e;
+      }
+    },
+    ownerListData (e) {
+      if (e) {
+        this.owner = e;
+      }
+    },
+    getCategory (e) {
+      if (e) {
+        this.category = e.ischeck;
+        this.categoryContent = e.text;
+      }
+    },
+    addCompensate () {
+      const result = {};
+      if (this.note)result.note = this.note;
+      if (this.category)result.category = this.category;
+      if (this.categoryContent)result.categoryContent = this.categoryContent;
+      if (this.dataArr[0])result.attachment1 = this.dataArr[0];
+      if (this.dataArr[1])result.attachment2 = this.dataArr[1];
+      if (this.dataArr[2])result.attachment3 = this.dataArr[2];
+      if (this.dataArr[3])result.attachment4 = this.dataArr[3];
+      if (this.dataArr[4])result.attachment5 = this.dataArr[4];
+      console.log(result);
     }
   },
   computed: {
