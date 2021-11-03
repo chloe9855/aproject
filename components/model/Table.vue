@@ -538,6 +538,9 @@ export default {
     checkList: function (n) {
       this.$emit('DropdownVal', n);
     },
+    checkScrollList: function (n) {
+      this.$emit('DropdownVal', n);
+    },
     inputList: function (n) {
       this.$emit('tableInput', n);
     },
@@ -570,7 +573,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
+@import '~/assets/scss/input.scss';
 .noWrap {
   white-space: nowrap;
 }
@@ -711,32 +714,7 @@ export default {
   background-position: center;
   background-color: #eff3f2;
 }
-.checkBoxOption,.editOption,.delOption,.printOption,.mapOption,.searchOption{
-  width: 30px;
-}
-.checkBoxOption{
-  input[type="checkbox"] {
-    display:none;
-  }
-  input[type="checkbox"] + label
-  {
-    height: 14px;
-    width: 14px;
-    display:inline-block;
-    margin: 0 5px;
-    cursor: pointer;
-    @include checkbox;
-  }
-  input[type="checkbox"]:checked + label
-  {
-    background: url("~/assets/img/check.svg");
-    height: 14px;
-    width: 14px;
-    display:inline-block;
-    margin: 0 5px;
-    cursor: pointer;
-  }
-}
+
 .minWidth80{
   th{
     min-width: 80px;

@@ -19,52 +19,57 @@
         :is-bg="true"
         :is-sticky="true"
       />
-        <SubTitleTool
-          title="新增土地資料"
-          class="w-90"
-        />
-        <component
-          :is="componentInstance"
-          class="w-90 openAddBox"
-          :option="checkList"
-          :class="[{isToggle:toggleStatus},test]"
-          @clear="boxToggle"
-        />
-        <SubTitleTool
-          title="土地資料(填寫單位:桃園管理處)"
-          class="w-90"
-          btn-text="新增土地資料"
-          :btn-add="true"
-          @STbtnStatus="boxToggle"
-        />
-        <TableTool
-          :table-column="tableList"
-          :is-paginate="false"
-          class="w-90"
-          :is-del="true"
-          :is-scroll-table="true"
-        />
-        <SubTitleTool
-          title="申請人資料"
-          class="w-90"
-        />
-        <div
-          class="w-90"
-          style="margin:0 auto"
-        >
-          <input type="checkbox">確定為本人申請
-        </div>
-        <Requisition
+      <SubTitleTool
+        title="新增土地資料"
         class="w-90"
-          :class="[{isToggle:toggleStatus}]"
-          :option="RequisitionDqata1"
-        />
-        <Requisition
+      />
+      <component
+        :is="componentInstance"
+        class="w-90 openAddBox"
+        :option="checkList"
+        :class="[{isToggle:toggleStatus},test]"
+        @clear="boxToggle"
+      />
+      <SubTitleTool
+        title="土地資料(填寫單位:桃園管理處)"
         class="w-90"
-          :class="[{isToggle:toggleStatus}]"
-          :option="RequisitionDqata2"
-        />
+        btn-text="新增土地資料"
+        :btn-add="true"
+        @STbtnStatus="boxToggle"
+      />
+      <TableTool
+        :table-column="tableList"
+        :is-paginate="false"
+        class="w-90"
+        :is-del="true"
+        :is-scroll-table="true"
+      />
+      <SubTitleTool
+        title="申請人資料"
+        class="w-90"
+      />
+      <div
+        class="w-90 checkBoxOption"
+        style="margin:0 auto"
+      >
+        <input
+          id="self"
+          type="checkbox"
+          name="self"
+          value="self"
+        >確定為本人申請<label for="self" />
       </div>
+      <Requisition
+        class="w-90"
+        :class="[{isToggle:toggleStatus}]"
+        :option="RequisitionDqata1"
+      />
+      <Requisition
+        class="w-90"
+        :class="[{isToggle:toggleStatus}]"
+        :option="RequisitionDqata2"
+      />
+    </div>
   </div>
 </template>
 
@@ -74,6 +79,7 @@ import Requisition from '~/components/model/editList/Requisition.vue';
 import PageHeader from '~/components/tools/PageHeader.vue';
 import BreadCrumbTool from '~/components/tools/BreadCrumbTool.vue';
 import SubTitleTool from '~/components/tools/SubTitleTool.vue';
+import AddLand from '~/components/model/editList/AddLand.vue';
 
 export default {
   components: {
@@ -81,12 +87,13 @@ export default {
     TableTool,
     BreadCrumbTool,
     SubTitleTool,
-    Requisition
+    Requisition,
+    AddLand
   },
   data () {
     return {
       tableList: {
-        name:'editCompensate',
+        name: 'editCompensate',
         topHead: [
           { title: '土地資料', col: 4 },
           { title: '農田水利資料', col: 2 },
@@ -111,14 +118,14 @@ export default {
           { title: '檢附資料' }
         ],
         body: [
-          { val: 0, title: ['XX縣', 'XX鄉', 'XX段', '2,503,882', 'xx工作站', '2,506,555', '陳XX', '1/3', '公同共有', '小大', 'XX', '2,506', 'XXXXXX', '1,2,3,4'] },
-          { val: 1, title: ['XX縣', 'XX鄉', 'XX段', '2,503,882', 'xx工作站', '2,506,555', '陳XX', '1/3', '公同共有', '小大', 'XX', '2,506', 'XXXXXX', '1,2,3'] },
-          { val: 2, title: ['XX縣', 'XX鄉', 'XX段', '2,503,882', 'xx工作站', '2,506,555', '陳XX', '1/3', '公同共有', '小大', 'XX', '2,506', 'XXXXXX', '1,2'] },
-          { val: 3, title: ['XX縣', 'XX鄉', 'XX段', '2,503,882', 'xx工作站', '2,506,555', '陳XX', '1/3', '公同共有', '小大', 'XX', '2,506', 'XXXXXX', '1,2,3,4'] },
-          { val: 4, title: ['XX縣', 'XX鄉', 'XX段', '2,503,882', 'xx工作站', '2,506,555', '陳XX', '1/3', '公同共有', '小大', 'XX', '2,506', 'XXXXXX', '1'] },
-          { val: 5, title: ['XX縣', 'XX鄉', 'XX段', '2,503,882', 'xx工作站', '2,506,555', '陳XX', '1/3', '公同共有', '小大', 'XX', '2,506', 'XXXXXX', '1,2,3'] },
-          { val: 6, title: ['XX縣', 'XX鄉', 'XX段', '2,503,882', 'xx工作站', '2,506,555', '陳XX', '1/3', '公同共有', '小大', 'XX', '2,506', 'XXXXXX', '1,2'] },
-          { val: 7, title: ['XX縣', 'XX鄉', 'XX段', '2,503,882', 'xx工作站', '2,506,555', '陳XX', '1/3', '公同共有', '小大', 'XX', '2,506', 'XXXXXX', '1,2,3,4'] }
+          { val: 'editCompensate0', title: ['XX縣', 'XX鄉', 'XX段', '2,503,882', 'xx工作站', '2,506,555', '陳XX', '1/3', '公同共有', '小大', 'XX', '2,506', 'XXXXXX', '1,2,3,4'] },
+          { val: 'editCompensate1', title: ['XX縣', 'XX鄉', 'XX段', '2,503,882', 'xx工作站', '2,506,555', '陳XX', '1/3', '公同共有', '小大', 'XX', '2,506', 'XXXXXX', '1,2,3'] },
+          { val: 'editCompensate2', title: ['XX縣', 'XX鄉', 'XX段', '2,503,882', 'xx工作站', '2,506,555', '陳XX', '1/3', '公同共有', '小大', 'XX', '2,506', 'XXXXXX', '1,2'] },
+          { val: 'editCompensate3', title: ['XX縣', 'XX鄉', 'XX段', '2,503,882', 'xx工作站', '2,506,555', '陳XX', '1/3', '公同共有', '小大', 'XX', '2,506', 'XXXXXX', '1,2,3,4'] },
+          { val: 'editCompensate4', title: ['XX縣', 'XX鄉', 'XX段', '2,503,882', 'xx工作站', '2,506,555', '陳XX', '1/3', '公同共有', '小大', 'XX', '2,506', 'XXXXXX', '1'] },
+          { val: 'editCompensate5', title: ['XX縣', 'XX鄉', 'XX段', '2,503,882', 'xx工作站', '2,506,555', '陳XX', '1/3', '公同共有', '小大', 'XX', '2,506', 'XXXXXX', '1,2,3'] },
+          { val: 'editCompensate6', title: ['XX縣', 'XX鄉', 'XX段', '2,503,882', 'xx工作站', '2,506,555', '陳XX', '1/3', '公同共有', '小大', 'XX', '2,506', 'XXXXXX', '1,2'] },
+          { val: 'editCompensate7', title: ['XX縣', 'XX鄉', 'XX段', '2,503,882', 'xx工作站', '2,506,555', '陳XX', '1/3', '公同共有', '小大', 'XX', '2,506', 'XXXXXX', '1,2,3,4'] }
         ]
       },
       checkList: { data: [{ title: '全選', value: 'addAll' }, { title: '1.身分證(正反)影本', value: 'add0' }, { title: '2.金融帳戶影本', value: 'add1' }, { title: '3.附件一:切結書', value: 'add2' }, { title: '4.附件二:實耕者證明文件', value: 'add3' }, { title: '5.代理委任書:(授權書或同意書)', value: 'add4' }] },
@@ -140,7 +147,7 @@ export default {
   },
   computed: {
     componentInstance () {
-      return () => import('~/components/model/editList/AddLand');
+      return 'AddLand';
     },
     boxWidth () {
       const setWidth = this.toggleStatus ? 'tg-75' : 'w-90';
@@ -157,6 +164,7 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
+@import '~/assets/scss/input.scss';
 .calNoteBox{
     display: flex;
     justify-content:flex-end;

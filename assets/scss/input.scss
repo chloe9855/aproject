@@ -55,7 +55,7 @@
     height: 15.83px;
 }
 .vector {
-    width: 100%;
+    //width: 100%;
     align-self: stretch;
     object-fit: cover;
 }
@@ -138,6 +138,7 @@
 }
 
 .checkBoxOption{
+    @include noto-sans-tc-16-regular;
     input[type="checkbox"] {
       display:none;
     }

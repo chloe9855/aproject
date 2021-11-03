@@ -1,66 +1,27 @@
 <template>
   <div class="flexBox">
     <div
+      v-for="(item,index) in checkObject.obj"
+      :key="index"
       class="check-input-box flexBox"
       :class="sizing"
     >
       <div class="flex-1 flexCheckBox checkBoxOption">
         <input
-          id="category01"
+          :id="item.id"
           v-model="isCheck"
           type="radio"
           :name="name"
-          value="category01"
-        ><label for="category01" />
-        {{ text1 }}<span>面積(㎡)</span>
+          :value="item.id"
+        ><label :for="item.id" />
+        {{ item.text }}<span>面積(㎡)</span>
       </div>
       <InputTool
         class="flex-1"
-        :is-disable="setDisable('category01')"
+        :is-disable="setDisable(item.id)"
         @inputValue="checkText"
       />
     </div>
-    <div
-      class="check-input-box flexBox"
-      :class="sizing"
-    >
-      <div class="flex-1 flexCheckBox checkBoxOption">
-        <input
-          id="category02"
-          v-model="isCheck"
-          type="radio"
-          :name="name"
-          value="category02"
-        ><label for="category02" />
-        {{ text2 }}<span>面積(㎡)</span>
-      </div>
-      <InputTool
-        class="flex-1"
-        :is-disable="setDisable('category02')"
-        @inputValue="checkText"
-      />
-    </div>
-    <div
-      class="check-input-box flexBox"
-      :class="sizing"
-    >
-      <div class="flex-1 flexCheckBox checkBoxOption">
-        <input
-          id="category03"
-          v-model="isCheck"
-          type="radio"
-          :name="name"
-          value="category03"
-        ><label for="category03" />
-        {{ text3 }}<span>面積(㎡)</span>
-      </div>
-      <InputTool
-        class="flex-1"
-        :is-disable="setDisable('category03')"
-        @inputValue="checkText"
-      />
-    </div>
-    {{ isCheck }}
   </div>
 </template>
 
@@ -91,9 +52,9 @@ export default {
   data: () => {
     return {
       isCheck: '',
-      text1: '態樣1(93000)',
-      text2: '態樣2(93000)',
-      text3: '態樣3(93000)'
+      checkObject: {
+        obj: [{ id: 'category01', text: '態樣1(93000)' }, { id: 'category02', text: '態樣2(93000)' }, { id: 'category03', text: '態樣3(93000)' }]
+      }
     };
   },
   name: 'CheckInputTool',
