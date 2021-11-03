@@ -1,5 +1,8 @@
 <template>
-  <div class="loginBox">
+  <div
+    class="loginBox"
+    @keyup.enter="login"
+  >
     <div
       class="mainLogo"
     >
@@ -74,7 +77,7 @@ export default {
       title: '農田水利灌溉管理整合雲系統',
       account: '',
       password: '',
-      verifyImg: 'img/test.png',
+      verifyImg: '',
       captcha: '',
       isforgetPassWord: false
     };

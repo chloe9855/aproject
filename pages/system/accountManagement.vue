@@ -23,7 +23,7 @@
           :is-edit="true"
           :is-del="true"
           :is-scroll-table="true"
-          column-min-width="150"
+          :column-min-width="150"
         />
       </div>
     </div>

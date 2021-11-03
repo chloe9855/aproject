@@ -82,7 +82,6 @@ export default {
     },
     addAccount (e) {
       if (e) {
-        console.log(e);
         this.$store.commit('TOGGLE_POPUP_STATUS');
         this.$store.commit('TOGGLE_POPUP_TYPE', { type: 'addAccount', title: '新增帳號' });
       }
