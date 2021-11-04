@@ -6,6 +6,7 @@
       :is-sticky="true"
       :is-bread-crumb="false"
     />
+    <!-- {{ tableList1 }} -->
     <div class="mainContent">
       <TableTool
         :table-column="tableList"
@@ -33,6 +34,7 @@
 <script>
 import TableTool from '~/components/model/Table.vue';
 import PageHeader from '~/components/tools/PageHeader.vue';
+import { getBulletin } from '~/api/bulletin';
 
 export default {
   components: {
@@ -41,6 +43,7 @@ export default {
   },
   data () {
     return {
+      result: {},
       tableList: {
         head: [
           { title: '公告名稱' },
@@ -71,7 +74,37 @@ export default {
   },
   name: 'Main',
   layout: 'main',
-  middleware: 'routerAuth'
+  middleware: 'routerAuth',
+  async asyncData () {
+    return getBulletin().then(({ data }) => ({
+      result: data
+    }));
+  },
+  mounted () {
+    console.log(this.result);
+  },
+  methods: {
+    getBulletinData () {
+      getBulletin().then((r) => {
+        console.log(r);
+      }).catch((e) => {
+        console.log(e);
+      });
+    }
+  },
+  computed: {
+    // tableList1 () {
+    //   const data = this.result.data;
+    //   const arr = {};
+    //   const head = [];
+    //   data.forEach(item => {
+    //     head.push({ title: item });
+    //   });
+    //   arr.head = head;
+    //   console.log(arr);
+    //   return arr;
+    // }
+  }
 };
 </script>
 <style lang="scss">

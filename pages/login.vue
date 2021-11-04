@@ -34,7 +34,7 @@
         <img
           :src="verifyImg"
           class="flex-1"
-          @click="init"
+          @click="Verify"
         >
       </div>
       <div
@@ -62,8 +62,7 @@
 <script crossorigin="anonymous">
 import InputHorizontal from '~/components/tools/InputHorizontal.vue';
 import AlertBox from '~/components/tools/AlertBox.vue';
-// import { loginReq } from '~/api/login';
-import axios from 'axios';
+import { loginReq, getVerify } from '~/api/login';
 import Vue from 'vue';
 import VueCookies from 'vue-cookies';
 Vue.prototype.$cookies = VueCookies;
@@ -89,60 +88,28 @@ export default {
     requiresAuth: true
   },
   mounted () {
-    // this.Verify();
-    this.init();
-    this.$cookies.set('theme', '000');
+    this.Verify();
   },
   methods: {
     Verify () {
-      const userVerify = axios.create({
-        baseURL: 'http://192.168.3.112'
-      });
-      userVerify.get('/AERC/rest/Verify').then((r) => {
-        console.log(r.data);
+      getVerify().then((r) => {
         this.verifyImg = r.data;
       }).catch((e) => {
         console.log(e);
       });
     },
-    init () {
-      const url = 'http://192.168.3.112/aerc/rest/verify';
-      const xmlHttp = new XMLHttpRequest();
-      xmlHttp.open('GET', url, true);
-      const $this = this;
-      xmlHttp.onreadystatechange = function () {
-        if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
-          const data = xmlHttp.response;
-          const dataTrim = data.replace(/["']/g, '');
-          $this.verifyImg = dataTrim;
-        }
-      };
-      xmlHttp.send();
-    },
     login () {
-      // const data = `account=${this.account}&password=${this.password}&captcha=${this.captcha}`;
-      // loginReq(data).then((r) => {
-      //   console.log(r);
-      //   // this.$router.push('/');
-      // }).catch((e) => {
-      //   console.log(e);
-      //   // this.$router.push('/');
-      // });
-
-      const acc = this.account;
-      const psw = this.password;
-      const code = this.captcha;
-
-      const url = 'http://192.168.3.112/aerc/rest/login';
-      const xmlHttp = new XMLHttpRequest();
-      xmlHttp.open('POST', url, true);
-      xmlHttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-      xmlHttp.withCredentials = true;
-      xmlHttp.onload = function () {
-        console.log(this.responseText);
-        // $this.$router.push('/');
-      };
-      xmlHttp.send('account=' + acc + '&password=' + psw + '&captcha=' + code);
+      const data = `account=${this.account}&password=${this.password}&captcha=${this.captcha}`;
+      loginReq(data).then((r) => {
+        if (r.data[0].status) {
+          this.$store.commit('SET_USER_INFO', { userInfo: r.data[0] });
+          this.$router.push('/');
+        } else {
+          console.log('驗證碼錯誤');
+        }
+      }).catch((e) => {
+        console.log(e);
+      });
     },
     forgetPassWord () {
       this.isforgetPassWord = true;

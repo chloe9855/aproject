@@ -6,7 +6,8 @@ export const state = () => ({
   hideFooter: false,
   popupState: false,
   popupType: { type: 'editAccount', title: '請設定查詢作業標題' },
-  mouseEventMin: 0
+  mouseEventMin: 0,
+  userInfo: {}
 });
 
 // * ==========================================================================
@@ -27,5 +28,8 @@ export const mutations = {
   },
   SET_LOUOUT_COUNTDOWN (state, payload) {
     state.mouseEventMin = payload.min;
+  },
+  SET_USER_INFO (state, payload) {
+    state.userInfo = payload.userInfo;
   }
 };

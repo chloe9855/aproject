@@ -19,7 +19,7 @@
         </div>
         <div class="account">
           <p class="name">
-            王大明
+            {{ $store.state.userInfo.name }}
           </p>
           <div
             class="account-icon"
@@ -39,6 +39,9 @@
         >
           <p @click="openSettingAccount">
             帳號設定
+          </p>
+          <p @click="loginStatus">
+            登入狀態
           </p>
           <p @click="logoutAccount">
             登出
@@ -135,7 +138,8 @@
 </template>
 
 <script>
-import axios from 'axios';
+import { signOnStatus, logout } from '~/api/login';
+import { mapState } from 'vuex';
 export default {
   data () {
     return {
@@ -204,6 +208,9 @@ export default {
 
     };
   },
+  mounted () {
+    console.log(this.userInfo);
+  },
   methods: {
     mouseOver (payload) {
       if (payload === '灌溉地管理') {
@@ -227,18 +234,23 @@ export default {
       this.showBox = !this.showBox;
     },
     logoutAccount () {
-      const userRequest = axios.create({
-        baseURL: 'http://192.168.3.112',
-        withCredentials: true
-      });
-      userRequest.get('/aerc/rest/SignOnStatus').then((r) => {
-        // redirect('/login');
-        console.log(e);
-        // this.$router.push('/login');
+      logout().then((r) => {
+        console.log(r);
+        this.$router.push('/login');
       }).catch((e) => {
         console.log(e);
       });
-    }
+    },
+    loginStatus () {
+      signOnStatus().then((r) => {
+        console.log(r);
+      }).catch((e) => {
+        console.log(e);
+      });
+    },
+    ...mapState([
+      'userInfo'
+    ])
   },
   computed: {
     togglePopup () {

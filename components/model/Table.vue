@@ -155,6 +155,11 @@
                 :value-type="text.valueType"
                 @DateValue="dateVal"
               />
+              <TableLink
+                v-else-if="typeof text === 'object' && text.type === 'link'"
+                :key="textIndex"
+                :link="text.title"
+              />
               <DropdownTreeList v-else-if="typeof text === 'object' && text.type === 'dropdownTreeList'" />
               <span v-else>{{ text }}</span>
               <span v-if="text.attachText!==''">{{ text.attachText }}</span>
@@ -326,6 +331,7 @@ import Button from '~/components/tools/Buttons';
 import Input from '~/components/tools/InputTool';
 import DatePicker from '~/components/tools/DatePicker';
 import Dropdown from '~/components/tools/Dropdown';
+import TableLink from '~/components/tools/TableLink';
 import DropdownTreeList from '~/components/tools/DropdownTreeList.vue';
 export default {
   components: {
@@ -335,6 +341,7 @@ export default {
     Input,
     DatePicker,
     Dropdown,
+    TableLink,
     DropdownTreeList
   },
   props: {
