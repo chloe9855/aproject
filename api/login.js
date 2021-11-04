@@ -5,11 +5,11 @@ export function loginReq (data) {
 }
 
 export function getVerify () {
-  return request.get('/AERC/rest/Verify');
+  return request.post('/AERC/rest/Verify');
 }
 
-export function SignOnStatus () {
-  return request.post('/AERC/rest/SignOnStatus');
+export function signOnStatus () {
+  return request.get('/AERC/rest/SignOnStatus');
 }
 
 export function logout () {
