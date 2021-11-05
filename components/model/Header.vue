@@ -208,8 +208,12 @@ export default {
 
     };
   },
+  // middleware: 'routerAuth',
+  // meta: {
+  //   requiresAuth: true
+  // },
   mounted () {
-    console.log(this.userInfo);
+    // console.log(this.userInfo);
   },
   methods: {
     mouseOver (payload) {
@@ -235,7 +239,7 @@ export default {
     },
     logoutAccount () {
       logout().then((r) => {
-        console.log(r);
+        this.$store.commit('SET_USER_INFO', { userInfo: {} });
         this.$router.push('/login');
       }).catch((e) => {
         console.log(e);

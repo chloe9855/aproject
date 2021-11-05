@@ -196,9 +196,9 @@ export default {
       const node2 = this.$refs.element2;
       console.log(node2);
 
-      html2canvas(node, { async: true, useCORS: true, allowTaint: false }).then(canvas => {
-        document.body.appendChild(canvas);
-      });
+      // html2canvas(node, { async: true, useCORS: true, allowTaint: false }).then(canvas => {
+      //   document.body.appendChild(canvas);
+      // });
 
       // domtoimage.toPng(node)
       //   .then(function (dataUrl) {

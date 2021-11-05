@@ -36,6 +36,7 @@ export default {
       setMin: 0
     };
   },
+  middleware: 'routerAuth',
   mounted () {
     this.countDownLogout();
   },

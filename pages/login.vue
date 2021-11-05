@@ -84,9 +84,6 @@ export default {
   name: 'Login',
   layout: 'login',
   middleware: 'routerAuth',
-  meta: {
-    requiresAuth: true
-  },
   mounted () {
     this.Verify();
   },

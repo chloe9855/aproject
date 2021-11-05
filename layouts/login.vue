@@ -11,7 +11,8 @@ import Footer from '~/components/model/Footer';
 export default {
   components: {
     Footer
-  }
+  },
+  middleware: 'routerAuth'
 };
 </script>
 <style lang="scss" scoped>

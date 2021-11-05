@@ -158,7 +158,7 @@
               <TableLink
                 v-else-if="typeof text === 'object' && text.type === 'link'"
                 :key="textIndex"
-                :link="text.title"
+                :link="text"
               />
               <DropdownTreeList v-else-if="typeof text === 'object' && text.type === 'dropdownTreeList'" />
               <span v-else>{{ text }}</span>

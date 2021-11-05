@@ -35,6 +35,7 @@
 import TableTool from '~/components/model/Table.vue';
 import PageHeader from '~/components/tools/PageHeader.vue';
 import { getBulletin } from '~/api/bulletin';
+import { tableData } from '~/publish/tableData';
 
 export default {
   components: {
@@ -43,7 +44,7 @@ export default {
   },
   data () {
     return {
-      result: {},
+      result: [],
       tableList: {
         head: [
           { title: '公告名稱' },
@@ -53,8 +54,8 @@ export default {
         ],
         body: [
           { title: ['系統維修更新(字多呈現)', '於xx/xx上午將進行系統維修更新，請避開該時段使用於xx/xx上午將進行系統維修更新，請避開該時段使用於xx/xx上午將進行系統維修更新，請避開該時段使用於xx/xx上午將進行系統維修更新，請避開該時段使用於xx/xx上午將進行系統維修更新，請避開該時段使用', '2012/12/17', '連結1,連結2,連結3,連結4,連結5,連結6,連結7'] },
-          { title: ['109年第2期停灌申請開始辦理', '依據XXX公告，公告類地區工作站可以相關規定進行停灌作業申請辦理', '2012/12/17', '連結1'] },
-          { title: ['系統維修更新', '於xx/xx上午將進行系統維修更新，請避開該時段使用', '2012/12/17', '連結1'] },
+          { title: ['109年第2期停灌申請開始辦理', '依據XXX公告，公告類地區工作站可以相關規定進行停灌作業申請辦理', '2012/12/17', { type: 'link', data: ['./login', './login'] }] },
+          { title: ['系統維修更新', '於xx/xx上午將進行系統維修更新，請避開該時段使用', '2012/12/17', { type: 'input' }] },
           { title: ['109年第1期停灌申請開始辦理', '依據XXX公告，公告類地區工作站可以相關規定進行停灌作業申請辦理', '2012/12/17', '連結1'] }
         ]
       },
@@ -77,34 +78,20 @@ export default {
   middleware: 'routerAuth',
   async asyncData () {
     return getBulletin().then(({ data }) => ({
-      result: data
+      tableList: {
+        head: [
+          { title: '公告名稱' },
+          { title: '公告內容' },
+          { title: '發布時間' },
+          { title: '相關連結' }
+        ],
+        body: tableData(data)
+      }
     }));
   },
-  mounted () {
-    console.log(this.result);
-  },
   methods: {
-    getBulletinData () {
-      getBulletin().then((r) => {
-        console.log(r);
-      }).catch((e) => {
-        console.log(e);
-      });
-    }
   },
-  computed: {
-    // tableList1 () {
-    //   const data = this.result.data;
-    //   const arr = {};
-    //   const head = [];
-    //   data.forEach(item => {
-    //     head.push({ title: item });
-    //   });
-    //   arr.head = head;
-    //   console.log(arr);
-    //   return arr;
-    // }
-  }
+  computed: {}
 };
 </script>
 <style lang="scss">

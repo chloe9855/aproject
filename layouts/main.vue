@@ -34,6 +34,7 @@ export default {
       setMin: 0
     };
   },
+  middleware: 'routerAuth',
   mounted () {
     console.log(this.$store.state.userInfo);
     this.countDownLogout();
@@ -49,7 +50,7 @@ export default {
         this.$store.commit('SET_LOUOUT_COUNTDOWN', { min: this.setMin });
         if (this.setMin <= 1200000) {
           this.countDownLogout();
-          console.log(this.setMin);
+          // console.log(this.setMin);
         } else {
           logout().then((r) => {
             this.$router.push('/login');

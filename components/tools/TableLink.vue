@@ -1,13 +1,12 @@
 <template>
-  <span>
-    <nuxt-link
-      v-for="{item,index} in link"
+  <div>
+    <span
+      v-for="(item,index) in link.data"
       :key="index"
-      :to="item"
     >
-      連結{{ index }}
-    </nuxt-link>
-  </span>
+      <nuxt-link :to="item">連結{{ index }}</nuxt-link>
+    </span>
+  </div>
 </template>
 
 <script>
