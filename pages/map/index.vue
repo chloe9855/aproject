@@ -65,7 +65,6 @@
                 <LayerItem-component
                   category="pointList"
                   :item="item"
-                  :drop-down="true"
                   @changeVisible="layerVisibleCtrl"
                   @changeBranchVisible="branchVisibleCtrl"
                   @setAllVisible="allPointCtrl"
@@ -86,7 +85,6 @@
                 <LayerItem-component
                   category="lineList"
                   :item="item"
-                  :drop-down="true"
                   @changeVisible="layerVisibleCtrl"
                   @changeBranchVisible="branchVisibleCtrl"
                   @setAllVisible="allLineCtrl"
@@ -107,7 +105,6 @@
                 <LayerItem-component
                   category="surfaceList"
                   :item="item"
-                  :drop-down="true"
                   @changeVisible="layerVisibleCtrl"
                   @changeBranchVisible="branchVisibleCtrl"
                   @setAllVisible="allSurfaceCtrl"
@@ -372,6 +369,22 @@
           <div class="border_bot" />
         </div>
       </div>
+
+      <!-- 彈窗lightbox -->
+      <AlertBox-component
+        v-if="formatBox === true"
+        title="上傳格式錯誤，請重新上傳"
+        box-icon="warning"
+        @close="formatBox = false"
+        @confirm="formatBox = false"
+      />
+      <AlertBox-component
+        v-if="sizeBox === true"
+        title="上傳檔案大小以8MB為限，請重新上傳"
+        box-icon="warning"
+        @close="sizeBox = false"
+        @confirm="sizeBox = false"
+      />
     </div>
   </div>
 </template>
@@ -389,6 +402,7 @@ import GeoMeasure from '~/components/GeoMeasure.vue';
 import ScreenShot from '~/components/ScreenShot.vue';
 import MapSearchBox from '~/components/MapSearchBox.vue';
 import ScrollTable from '~/components/tools/ScrollTable.vue';
+import AlertBox from '~/components/tools/AlertBox.vue';
 import JSZip from 'jszip';
 
 export default {
@@ -404,7 +418,8 @@ export default {
     'GeoMeasure-component': GeoMeasure,
     'ScreenShot-component': ScreenShot,
     'MapSearchBox-component': MapSearchBox,
-    'ScrollTable-component': ScrollTable
+    'ScrollTable-component': ScrollTable,
+    'AlertBox-component': AlertBox
   },
   data () {
     return {
@@ -425,6 +440,8 @@ export default {
       // * 街景
       streetMap: '',
       openOnceStreet: true,
+      // * 開啟圖層工具
+      openOnceLa: true,
       // * 圖層工具
       layerOptions: {
         current: 0,
@@ -459,6 +476,7 @@ export default {
         surfaceList: [],
         baseLayerList: []
       },
+      allVectors: '',
       allBaseLayer: [],
       // * OGC介接
       ogcOptions: {
@@ -478,6 +496,9 @@ export default {
       },
       wmTsLayer: '',
       wmsLayer: '',
+      // * 臨時展繪的lightbox
+      formatBox: false,
+      sizeBox: false,
       // * 臨時展繪
       shpOptions: {
         current: 0,
@@ -700,13 +721,14 @@ export default {
   // },
   mounted () {
     this.getBaseLayer();
+    // this.getVectorTile();
 
-    const point = require('~/static/pointLayer.json');
-    const line = require('~/static/lineLayer.json');
-    const surface = require('~/static/surfaceLayer.json');
-    this.layerOptions.surfaceList = [...surface.data];
-    this.layerOptions.lineList = [...line.data];
-    this.layerOptions.pointList = [...point.data];
+    // const point = require('~/static/pointLayer.json');
+    // const line = require('~/static/lineLayer.json');
+    // const surface = require('~/static/surfaceLayer.json');
+    // this.layerOptions.surfaceList = [...surface.data];
+    // this.layerOptions.lineList = [...line.data];
+    // this.layerOptions.pointList = [...point.data];
 
     // console.log(gogo());
     // console.log(coco);
@@ -733,6 +755,41 @@ export default {
     ctx.scale(ratio, ratio);
   },
   methods: {
+    getVectorTile () {
+      SuperGIS.LoadModules(['scripts/MVTData.js', 'vector_tile.js', 'pbf.js', 'scripts/KML.js', 'scripts/Collada.js'], () => {
+        this.allVectors = new sg.layers.VectorMBTLayer('http://192.168.3.112/mapcache/01', {
+          loaded: () => {
+            // // MBT.Style["01_Period"].visible = false;
+            // this.allVectors.Style['01_Grp'].visible = false;
+            // // MBT.Style["01_Stn"].visible = false;
+            // // MBT.Style["01_Ia"].visible = false;
+            // this.allVectors.Style['01_Canal'].visible = false;
+            // // MBT.Style["01_Cons"].visible = false;
+            // this.allVectors.updateStyle(this.allVectors.Style);
+            this.loadVectors();
+          }
+        });
+        // pMapBase.AddLayer(this.allVectors);
+        // pMapBase.RefreshMap(true);
+        // pMapBase.AddLayer(MBT = new sg.layers.VectorMBTLayer('http://192.168.3.112/mapcache/01', {
+        //   loaded: function () {
+        //     // MBT.Style["01_Period"].visible = false;
+        //     MBT.Style['01_Grp'].visible = false;
+        //     // MBT.Style["01_Stn"].visible = false;
+        //     // MBT.Style["01_Ia"].visible = false;
+        //     MBT.Style['01_Canal'].visible = false;
+        //     // MBT.Style["01_Cons"].visible = false;
+        //     MBT.updateStyle(MBT.Style);
+        //   }
+        // }));
+      });
+    },
+    loadVectors () {
+      this.allVectors.Style['01_Grp'].visible = false;
+      this.allVectors.updateStyle(this.allVectors.Style);
+      pMapBase.AddLayer(this.allVectors);
+      pMapBase.RefreshMap(true);
+    },
     // * @ 圖層工具：底圖切換API
     getBaseLayer () {
       fetch('http://192.168.3.112/AERC/rest/Layer', {
@@ -855,14 +912,26 @@ export default {
       if (category === 'pointList') {
         const index = this.layerOptions.pointList.findIndex(item => item.id === id);
         this.layerOptions.pointList[index].visible = $event;
+
+        MBT.Style[layerName].visible = $event;
+        MBT.updateStyle(MBT.Style);
+        pMapBase.RefreshMap(true);
       }
       if (category === 'lineList') {
         const index = this.layerOptions.lineList.findIndex(item => item.id === id);
         this.layerOptions.lineList[index].visible = $event;
+
+        MBT.Style[layerName].visible = $event;
+        MBT.updateStyle(MBT.Style);
+        pMapBase.RefreshMap(true);
       }
       if (category === 'surfaceList') {
         const index = this.layerOptions.surfaceList.findIndex(item => item.id === id);
         this.layerOptions.surfaceList[index].visible = $event;
+
+        MBT.Style[layerName].visible = $event;
+        MBT.updateStyle(MBT.Style);
+        pMapBase.RefreshMap(true);
       }
       // 底圖切換
       if (category === 'baseLayer') {
@@ -969,21 +1038,38 @@ export default {
     // * @ 圖層工具：臨時展繪 新增圖層
     fileUploader (current) {
       const newFile = document.getElementById('upfile').files[0];
+      if (newFile === undefined) { return; }
       const type = newFile.name.substring(newFile.name.length - 3, newFile.name.length);
       const fileName = newFile.name.substring(0, newFile.name.length - 4);
+      const fileSize = newFile.size;
+
       console.log(newFile);
       console.log(`${current},${type}`);
 
-      // if (type !== 'kml' && type !== 'kmz') {
-      //   return;
-      // }
+      if (type !== 'kml' && type !== 'kmz') {
+        this.formatBox = true;
+        return;
+      }
+      if (fileSize > 8388608) {
+        this.sizeBox = true;
+        return;
+      }
 
+      // 先移除舊的檔案
+      pMapBase.RemoveLayer(this.shpOptions.kmlLayer);
+      pMapBase.RefreshMap(true);
+      this.shpOptions.layerList = [];
+
+      // const newArr = [];
       // const newZip = new JSZip();
       // newZip.loadAsync(newFile)
       //   .then((zip) => {
       //     console.log(zip);
+      //     Object.keys(zip.files).forEach((key) => {
+      //       newArr.push(zip.files[key]);
+      //       console.log(newArr);
+      //     });
       //   });
-      // console.log(878787);
 
       SuperGIS.LoadModules(['scripts/MVTData.js', 'vector_tile.js', 'pbf.js', 'scripts/KML.js', 'scripts/Collada.js'], () => {
         this.shpOptions.kmlLayer = new sg.layers.KMLLayer(null, { data: newFile });
@@ -995,7 +1081,9 @@ export default {
           opacity: 100
         };
         this.shpOptions.layerList.push(result);
-        // this.zoomToLayer(this.shpOptions.kmlLayer);
+        this.zoomToLayer(this.shpOptions.kmlLayer);
+
+        this.shpOptions.kmlLayer = new sg.layers.KMLLayer(null, { data: newFile });
       });
 
       pMapBase.RefreshMap(true);
@@ -1007,18 +1095,9 @@ export default {
       pMapBase.RefreshMap(true);
     },
     zoomToLayer (layer) {
-      const top = layer.getTop();
-      const left = layer.getLeft();
-      const bottom = layer.getBottom();
-      const right = layer.getRight();
-      const extent = new sg.geometry.Extent();
-      extent.xmax = right;
-      extent.xmin = left;
-      extent.ymax = top;
-      extent.ymin = bottom;
-
-      MapBase.ZoomMapTo(extent);
-      MapBase.RefreshMap(true);
+      const extent = layer.extent;
+      pMapBase.ZoomMapTo(extent);
+      pMapBase.RefreshMap(true);
     },
     // * @ 圖層工具：OGC介接 取得服務
     getOgcHandler (current) {
@@ -1357,6 +1436,57 @@ export default {
           this.streetMap = new GoogleStreetMap();
           document.getElementsByTagName('body')[0].style.cursor = 'default';
           this.streetMap.openStrMap(false);
+        }
+        // 點線面圖資載入
+        if (value === 'switchLayersWindow' && this.openOnceLa === true) {
+          Object.keys(MBT.Style).forEach((key) => {
+            console.log(key);
+            const mName = key.substring(3);
+            const result = {
+              id: Math.random(),
+              LayerName: key,
+              visible: true,
+              opacity: 100,
+              LayerTitle: ''
+            };
+            if (mName === 'Cons') {
+              result.LayerTitle = '水工構造物';
+              this.layerOptions.pointList.push(result);
+            }
+            if (mName === 'Canal') {
+              result.LayerTitle = '渠道';
+              this.layerOptions.lineList.push(result);
+            }
+            if (mName === 'Ia') {
+              result.LayerTitle = '管理處';
+              this.layerOptions.surfaceList.push(result);
+            }
+            if (mName === 'Mng') {
+              result.LayerTitle = '管理分處';
+              this.layerOptions.surfaceList.push(result);
+            }
+            if (mName === 'Stn') {
+              result.LayerTitle = '工作站';
+              this.layerOptions.surfaceList.push(result);
+            }
+            if (mName === 'Grp') {
+              result.LayerTitle = '小組';
+              this.layerOptions.surfaceList.push(result);
+            }
+            if (mName === 'Rot') {
+              result.LayerTitle = '輪區';
+              this.layerOptions.surfaceList.push(result);
+            }
+            if (mName === 'Period') {
+              result.LayerTitle = '期作別';
+              this.layerOptions.surfaceList.push(result);
+            }
+            if (mName === 'Pool') {
+              result.LayerTitle = '埤塘';
+              this.layerOptions.surfaceList.push(result);
+            }
+          });
+          this.openOnceLa = false;
         }
       }
     }

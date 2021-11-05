@@ -33,11 +33,11 @@
           v-if="searchResult.landNo !== ''"
           class="landno_wrap"
         >
-          <NavTabs
+          <!-- <NavTabs
             :type-list="options.typeList"
             :selected="options.current"
             @current="payload => options.current = payload"
-          />
+          /> -->
           <NormalTable
             :list="searchResult.landNo"
             sizing="h-432"
@@ -69,11 +69,11 @@
           />
         </div>
 
-        <NavTabs
+        <!-- <NavTabs
           :type-list="options.typeList"
           :selected="options.current"
           @current="payload => options.current = payload"
-        />
+        /> -->
         <NormalTable
           v-if="columnList.length >= 1"
           :list="columnList"
@@ -89,7 +89,7 @@ import BreadCrumbTool from '~/components/tools/BreadCrumbTool';
 import PageHeader from '~/components/tools/PageHeader.vue';
 import Table from '~/components/model/Table.vue';
 import NormalTable from '~/components/model/NormalTable.vue';
-import NavTabs from '~/components/tools/NavTabs.vue';
+// import NavTabs from '~/components/tools/NavTabs.vue';
 import Buttons from '~/components/tools/Buttons.vue';
 
 export default {
@@ -99,7 +99,7 @@ export default {
     PageHeader: PageHeader,
     Table: Table,
     NormalTable: NormalTable,
-    NavTabs: NavTabs,
+    // NavTabs: NavTabs,
     Buttons: Buttons
   },
   data () {
@@ -227,13 +227,13 @@ export default {
     searchHandler (type) {
       this.clearAllHandler();
       if (type === 0) {
-        const data = require('~/static/land.json');
-        this.searchResult.authority = data;
+        const datas = require('~/static/singleLand.json');
+        this.searchResult.landNo = datas.data;
       }
 
       if (type === 1) {
-        const datas = require('~/static/singleLand.json');
-        this.searchResult.landNo = datas.data;
+        const data = require('~/static/land.json');
+        this.searchResult.authority = data;
       }
     },
     clearAllHandler () {
@@ -310,6 +310,7 @@ export default {
   .btn_wrap {
     display: flex;
     justify-content: flex-end;
+    margin-bottom: 13px;
   }
 
   .landno_wrap {

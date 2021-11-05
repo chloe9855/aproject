@@ -9,7 +9,7 @@
         label="title"
         code="value"
         :clearable="false"
-        :options="option"
+        :options="options"
         :class="{'add_bg': bgColor}"
         class="w-100 inputSelect"
       />
@@ -21,9 +21,9 @@
 export default {
   props: {
     options: {
-      type: Object,
+      type: Array,
       default: () => {
-        return { option: [{ title: '選項1', value: '0' }, { title: '選項2', value: '1' }, { title: '選項3', value: '2' }] };
+        return [{ title: '選項1', value: '0' }, { title: '選項2', value: '1' }, { title: '選項3', value: '2' }];
       }
     },
     sizing: {
@@ -38,7 +38,7 @@ export default {
   data: () => {
     return {
       selected: '',
-      option: [{ title: '選項11', value: '0' }, { title: '選項2', value: '1' }, { title: '選項3', value: '2' }]
+      option: []
     };
   },
   name: 'Dropdown',

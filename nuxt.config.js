@@ -214,6 +214,10 @@ export default {
         src: 'scripts/KMLLayer.js',
         async: true
       },
+      {
+        src: 'scripts/VectorTiledLayer.js',
+        async: true
+      },
       // {
       //   src: 'http://192.168.3.112/ServerGate/SGSGate.ashx?F=~/scripts/Framework.js',
       //   async: true
