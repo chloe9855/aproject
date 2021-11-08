@@ -38,6 +38,7 @@ import compensateSearch from '~/components/model/searchBox/compensateSearch';
 import irrigatedLandSearch from '~/components/model/searchBox/irrigatedLandSearch';
 import landSearch from '~/components/model/searchBox/landSearch';
 import userAcctSearch from '~/components/model/searchBox/userAcctSearch';
+import groupUserAcctSearch from '~/components/model/searchBox/groupUserAcctSearch';
 import systemSearch from '~/components/model/searchBox/systemSearch';
 import usageAmountSearch from '~/components/model/searchBox/usageAmountSearch';
 export default {
@@ -49,7 +50,8 @@ export default {
     landSearch,
     userAcctSearch,
     systemSearch,
-    usageAmountSearch
+    usageAmountSearch,
+    groupUserAcctSearch
   },
   props: {
     tableColumn: {
@@ -111,6 +113,9 @@ export default {
           title = '作業基金土地查詢';
           break;
         case 'userAcctSearch':
+          title = '使用者帳號查詢';
+          break;
+        case 'groupUserAcctSearch':
           title = '使用者帳號查詢';
           break;
         case 'systemSearch':

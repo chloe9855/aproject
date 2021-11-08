@@ -28,7 +28,7 @@
       </div>
     </div>
     <Search
-      type="userAcctSearch"
+      type="groupUserAcctSearch"
       @toggleStatus="getToggleStatus"
     />
   </div>
@@ -39,6 +39,8 @@ import TableTool from '~/components/model/Table.vue';
 import PageHeader from '~/components/tools/PageHeader.vue';
 import BreadCrumbTool from '~/components/tools/BreadCrumbTool.vue';
 import Search from '~/components/model/Search.vue';
+import { getGroup } from '~/api/group';
+import { groupData } from '~/publish/groupData';
 
 export default {
   components: {
@@ -70,6 +72,25 @@ export default {
     };
   },
   name: 'Authority',
+  async asyncData () {
+    return getGroup().then((r) => ({
+      tableList: {
+        head: [
+          { title: '群組名稱' },
+          { title: '最後變更日期' }
+        ],
+        body: groupData(r.data)
+      }
+    })).catch(e => {
+      console.log(e);
+    });
+  },
+  mounted: () => {
+    getGroup().then(r => {
+      console.log(r.data);
+      groupData(r.data);
+    });
+  },
   methods: {
     getToggleStatus (e) {
       this.toggleStatus = e;

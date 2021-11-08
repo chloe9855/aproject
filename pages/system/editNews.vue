@@ -60,6 +60,8 @@ import TableTool from '~/components/model/Table.vue';
 import SubTitleTool from '~/components/tools/SubTitleTool.vue';
 import PageHeader from '~/components/tools/PageHeader.vue';
 import BreadCrumbTool from '~/components/tools/BreadCrumbTool.vue';
+import { editNewsData } from '~/publish/editNewsData';
+import { getBulletin } from '~/api/bulletin';
 
 export default {
   components: {
@@ -100,6 +102,21 @@ export default {
     };
   },
   name: 'EditNews',
+  async asyncData () {
+    return getBulletin().then(({ data }) => ({
+      tableList: {
+        head: [
+          { title: '公告名稱' },
+          { title: '公告內容' },
+          { title: '發布時間' },
+          { title: '相關連結' }
+        ],
+        body: editNewsData(data)
+      }
+    })).catch(e => {
+      console.log(e);
+    });
+  },
   methods: {
     addNews (e) {
       if (e) {

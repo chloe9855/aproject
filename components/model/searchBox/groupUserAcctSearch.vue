@@ -5,20 +5,6 @@
       :options="member"
       @DropdownVal="getGroup"
     />
-    <DropdownVertical
-      title="管理處"
-      :options="member"
-      @DropdownVal="getManagement"
-    />
-    <DropdownVertical
-      title="工作站"
-      :options="member"
-      @DropdownVal="getSite"
-    />
-    <InputVertical
-      title="姓名"
-      @inputValue="getName"
-    />
     <DatePicker
       title="上次登入起始時間"
       @DateValue="startTime"
@@ -31,13 +17,11 @@
 </template>
 
 <script>
-import InputVertical from '~/components/tools/InputVertical.vue';
 import DropdownVertical from '~/components/tools/DropdownVertical.vue';
 import DatePicker from '~/components/tools/DatePicker.vue';
 export default {
   components: {
     DropdownVertical: DropdownVertical,
-    InputVertical: InputVertical,
     DatePicker: DatePicker
   },
   props: {},
@@ -46,34 +30,16 @@ export default {
       member: { option: [{ title: '預設選項', value: '0' }, { title: '工作站人員', value: '1' }, { title: '管理人員', value: '2' }, { title: '民眾', value: '3' }] },
       searchObj: {
         group: '',
-        management: '',
-        site: '',
-        name: '',
         startTime: '',
         endTime: ''
       }
     };
   },
-  name: 'UserAcctSearch',
+  name: 'GroupUserAcctSearch',
   methods: {
     getGroup (e) {
       if (e) {
         this.searchObj.group = e;
-      }
-    },
-    getManagement (e) {
-      if (e) {
-        this.searchObj.management = e;
-      }
-    },
-    getSite (e) {
-      if (e) {
-        this.searchObj.site = e;
-      }
-    },
-    getName (e) {
-      if (e) {
-        this.searchObj.name = e;
       }
     },
     startTime (e) {
