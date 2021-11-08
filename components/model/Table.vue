@@ -130,25 +130,25 @@
                 :text="text"
               />
               <Button
-                v-else-if="typeof text === 'object' && text.type === 'btn'"
+                v-else-if="tableType(text)&&typeof text === 'object' && text.type === 'btn'"
                 :name="'button-primary'"
                 :text="text.title"
               />
               <Input
-                v-else-if="typeof text === 'object' && text.type === 'input'"
+                v-else-if="tableType(text)&&typeof text === 'object' && text.type === 'input'"
                 :key="textIndex"
                 :input-id="textIndex"
                 :input-text="text.title"
                 @inputValue="inputVal"
               />
               <Dropdown
-                v-else-if="typeof text === 'object' && text.type === 'dropdown'"
+                v-else-if="tableType(text)&&typeof text === 'object' && text.type === 'dropdown'"
                 :key="textIndex"
                 :input-id="textIndex"
                 :input-text="text.title"
               />
               <DatePicker
-                v-else-if="typeof text === 'object' && text.type === 'date'"
+                v-else-if="tableType(text)&&typeof text === 'object' && text.type === 'date'"
                 :key="textIndex"
                 :input-id="textIndex"
                 :type="text.dateType"
@@ -156,13 +156,13 @@
                 @DateValue="dateVal"
               />
               <TableLink
-                v-else-if="typeof text === 'object' && text.type === 'link'"
+                v-else-if="tableType(text)&&typeof text === 'object' && text.type === 'link'"
                 :key="textIndex"
                 :link="text"
               />
-              <DropdownTreeList v-else-if="typeof text === 'object' && text.type === 'dropdownTreeList'" />
+              <DropdownTreeList v-else-if="tableType(text)&&typeof text === 'object' && text.type === 'dropdownTreeList'" />
               <span v-else>{{ text }}</span>
-              <span v-if="text.attachText!==''">{{ text.attachText }}</span>
+              <span v-if="tableType(text)&&text.attachText!==''">{{ text.attachText }}</span>
             </td>
             <!-- <td
               v-if="optionLength > 0 && isScrollTable"
@@ -430,6 +430,8 @@ export default {
   name: 'TableTool',
   mounted: function () {
     this.getPageNum(1);
+    console.log('table');
+    console.log(this.tableColumn);
   },
   methods: {
     inputVal (e) { // 取得INPUT內容
@@ -539,6 +541,18 @@ export default {
     checkAllId: function () {
       const name = this.tableColumn.name;
       return name ? name + 'All' : 'allchecked2';
+    },
+    tableType: function () {
+      return function (text) {
+        /** do something */
+        let result;
+        if (typeof text === 'string' || text === null) {
+          result = '';
+        } else {
+          result = true;
+        }
+        return result;
+      };
     }
   },
   watch: {
@@ -745,6 +759,21 @@ export default {
 .minWidth150{
   th{
     min-width: 150px;
+  }
+}
+.minWidth160{
+  th{
+    min-width: 160px;
+  }
+}
+.minWidth170{
+  th{
+    min-width: 170px;
+  }
+}
+.minWidth180{
+  th{
+    min-width: 180px;
   }
 }
 .isRightBorder{
