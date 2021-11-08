@@ -22,7 +22,16 @@
       <Marker-component />
       <br>
       <br>
-      <AlertBox-component />
+      <AlertBox-component
+        v-if="modal1"
+        title="gooddddddddddddddd"
+        text="寄送重設密碼於註冊信箱"
+        box-icon="success"
+        :cancel-button="true"
+        :add-input="true"
+        @close="modal1 = false"
+        @confirm="modal1 = false"
+      />
       <br>
       <br>
       <Buttons-component />
@@ -48,7 +57,8 @@
       />
       <Buttons-component
         :name="'button-red'"
-        :text="'新增圖層'"
+        :text="'開啟AlertBox'"
+        @click="modal1 = true"
       />
       <Buttons-component
         :name="'button-red-disable'"
@@ -89,6 +99,7 @@
         @nowPage="payload => currentPage = payload"
       />
       <br>
+
       <br>
       <SwitchOn-component />
       <br>
@@ -151,6 +162,7 @@ export default {
   },
   data () {
     return {
+      modal1: false,
       options: {
         current: 0,
         typeList: [

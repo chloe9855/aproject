@@ -206,8 +206,20 @@ export default {
         src: 'scripts/Projection.js',
         async: true
       },
+      {
+        src: 'scripts/GroupLayer.js',
+        async: true
+      },
+      {
+        src: 'scripts/KMLLayer.js',
+        async: true
+      },
+      {
+        src: 'scripts/VectorTiledLayer.js',
+        async: true
+      },
       // {
-      //   src: 'ServerGate/SGSGate.ashx?F=~/scripts/Framework.js',
+      //   src: 'http://192.168.3.112/ServerGate/SGSGate.ashx?F=~/scripts/Framework.js',
       //   async: true
       // },
       {

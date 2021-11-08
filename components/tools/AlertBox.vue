@@ -1,9 +1,10 @@
 <template>
-  <div style="display: inline-block;">
+  <div class="maskk">
     <div class="modal">
       <img
         class="close"
         :src="require('~/assets/img/close-icon.svg')"
+        @click="$emit('close')"
       >
       <div
         class="icon"
@@ -12,6 +13,17 @@
       <p class="title">
         {{ title }}
       </p>
+
+      <div class="input_wrap">
+        <InputTool-component
+          v-if="addInput === true"
+          sizing="w-310"
+          input-text="請輸入帳號"
+          error-tip="無此帳號，請重新輸入"
+          is-warn="code8"
+        />
+      </div>
+
       <p class="text">
         {{ text }}
       </p>
@@ -19,10 +31,14 @@
         <div
           v-if="cancelButton === true"
           class="msg-btn cancel"
+          @click="$emit('close')"
         >
           取消
         </div>
-        <div class="msg-btn">
+        <div
+          class="msg-btn"
+          @click="$emit('confirm')"
+        >
           確定
         </div>
       </div>
@@ -31,7 +47,12 @@
 </template>
 
 <script>
+import InputTool from '~/components/tools/InputTool.vue';
+
 export default {
+  components: {
+    'InputTool-component': InputTool
+  },
   props: {
     cancelButton: {
       type: Boolean,
@@ -49,6 +70,10 @@ export default {
       type: String,
       default: 'warning'
       // warning, error, success
+    },
+    addInput: {
+      type: Boolean,
+      default: false
     }
   },
   data () {
@@ -71,6 +96,19 @@ export default {
     flex-direction: column;
     align-items: center;
     position: relative;
+  }
+
+  .maskk {
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: rgba(0, 0, 0, 0.2);
+    z-index: 999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
   .close {
@@ -154,6 +192,10 @@ export default {
     text-align: center;
     cursor: pointer;
     @include noto-sans-tc-16-medium;
-}
+  }
+
+  .input_wrap {
+    margin: 12px 0;
+  }
 
 </style>

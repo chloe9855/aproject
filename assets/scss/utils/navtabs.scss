@@ -10,7 +10,7 @@
 @media all and (max-width: $pcl-media) {
   .navtabs__header {
     height: 40px;
-    padding: 0;
+    padding: 0 0 10px; 
   }
   .navtabs__btn{
     display: flex;
