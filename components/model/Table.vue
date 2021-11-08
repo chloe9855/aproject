@@ -162,7 +162,7 @@
               />
               <DropdownTreeList v-else-if="tableType(text)&&typeof text === 'object' && text.type === 'dropdownTreeList'" />
               <span v-else>{{ text }}</span>
-              <span v-if="tableType(text)&&text.attachText!==''">{{ text.attachText }}</span>
+              <span v-if="tableType(text)&&isAttachText(text)">{{ text.attachText }}</span>
             </td>
             <!-- <td
               v-if="optionLength > 0 && isScrollTable"
@@ -546,12 +546,22 @@ export default {
       return function (text) {
         /** do something */
         let result;
-        if (typeof text === 'string' || text === null) {
+        if (text === 'string' || text === null) {
           result = '';
         } else {
           result = true;
         }
         return result;
+      };
+    },
+    isAttachText: function () {
+      return function (text) {
+        /** do something */
+        if (text.attachText !== '') {
+          return true;
+        } else {
+          return false;
+        }
       };
     }
   },
