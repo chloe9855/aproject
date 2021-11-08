@@ -240,6 +240,8 @@ export default {
     logoutAccount () {
       logout().then((r) => {
         this.$store.commit('SET_USER_INFO', { userInfo: {} });
+        sessionStorage.setItem('loginStatus', 0);
+        this.$cookies.set('ASP.NET_SessionId', '');
         this.$router.push('/login');
       }).catch((e) => {
         console.log(e);

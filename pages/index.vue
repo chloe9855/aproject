@@ -87,7 +87,9 @@ export default {
         ],
         body: tableData(data)
       }
-    }));
+    })).catch(e => {
+      console.log(e);
+    });
   },
   methods: {
   },

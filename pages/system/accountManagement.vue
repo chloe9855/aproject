@@ -13,6 +13,7 @@
         btn-text="新增帳號"
         :btn-add="true"
         btn-name="button-add"
+        @PHBtnStatus="addAccount"
       />
       <div
         class="content_box"
@@ -78,6 +79,12 @@ export default {
   methods: {
     getToggleStatus (e) {
       this.toggleStatus = e;
+    },
+    addAccount (e) {
+      if (e) {
+        this.$store.commit('TOGGLE_POPUP_STATUS');
+        this.$store.commit('TOGGLE_POPUP_TYPE', { type: 'addAccount', title: '新增帳號' });
+      }
     }
   },
   computed: {

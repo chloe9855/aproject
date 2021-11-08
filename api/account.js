@@ -1,7 +1,7 @@
 import request from '~/service';
 
-export function getAccount (data) {
-  return request.get('/aerc/rest/Account', data);
+export function getAccount () {
+  return request.get('/aerc/rest/Account');
 }
 
 export function editAccount () {
