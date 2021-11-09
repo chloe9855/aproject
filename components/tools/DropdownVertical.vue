@@ -17,7 +17,8 @@
         label="title"
         code="value"
         :clearable="false"
-        :options="option"
+        :options="options"
+        :placeholder="placeholders"
         :class="{'add_bg': bgColor}"
         class="w-100 inputSelect"
       />
@@ -29,9 +30,9 @@
 export default {
   props: {
     options: {
-      type: Object,
+      type: Array,
       default: () => {
-        return { option: [{ label: '選項11', code: '0' }, { label: '選項2', code: '1' }, { label: '選項3', code: '2' }] };
+        return [{ title: '選項1', value: '0' }, { title: '選項2', value: '1' }, { title: '選項3', value: '2' }];
       }
     },
     title: {
@@ -49,6 +50,10 @@ export default {
     starSign: {
       type: String,
       default: ''
+    },
+    placeholders: {
+      type: String,
+      default: '請選擇'
     }
   },
   data: () => {

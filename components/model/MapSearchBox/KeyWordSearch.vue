@@ -2,6 +2,7 @@
   <div class="out_wrap">
     <Dropdown-component
       :options="member"
+      :placeholders="'請選擇管理處'"
     />
     <InputTool-component
       :input-text="'輸入渠道關鍵字'"

@@ -110,7 +110,16 @@
       <CalNote-component :date-note="true" />
       <br>
       <br>
-      <TreeSelect-component />
+
+      <div
+        v-for="mItem in iaOptions"
+        :key="mItem.id"
+      >
+        <TreeSelect-component
+          :my-item="mItem"
+        />
+      </div>
+
       <br>
       <div
         ref="capture"
@@ -197,7 +206,27 @@ export default {
           }
         ]
       },
-      currentPage: 1
+      currentPage: 1,
+      iaOptions: [
+        {
+          id: 1,
+          ia: '嘉南管理處',
+          stn: [
+            { title: '南基工作站', no: 555, grp: [{ name: '北北水利小組', no: 111 }, { name: 'uu水利小組', no: 5414 }, { name: 'yy水利小組', no: 657 }] },
+            { title: 'uu工作站', no: 475, grp: [{ name: 'ee水利小組', no: 888 }, { name: 'tt水利小組', no: 755 }, { name: 'll水利小組', no: 442 }] },
+            { title: 'oo工作站', no: 588, grp: [{ name: 'ii水利小組', no: 463 }, { name: 'aa水利小組', no: 774 }, { name: 'fg水利小組', no: 521 }] }
+          ]
+        },
+        {
+          id: 2,
+          ia: '宜蘭管理處',
+          stn: [
+            { title: 'mm工作站', no: 86, grp: [{ name: 'tt水利小組', no: 45 }, { name: 'ui利小組', no: 466 }, { name: 'yy水利小組', no: 51 }] },
+            { title: 'ii工作站', no: 76, grp: [{ name: 'ei水利小組', no: 12 }, { name: 'ti水利小組', no: 255 }, { name: 'lu水利小組', no: 88 }] },
+            { title: 'pop工作站', no: 99, grp: [{ name: 'io水利小組', no: 13 }, { name: 'ao水利小組', no: 356 }, { name: 'fi水利小組', no: 100 }] }
+          ]
+        }
+      ]
     };
   },
   methods: {

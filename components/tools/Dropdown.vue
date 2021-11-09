@@ -10,6 +10,7 @@
         code="value"
         :clearable="false"
         :options="options"
+        :placeholder="placeholders"
         :class="{'add_bg': bgColor}"
         class="w-100 inputSelect"
       />
@@ -33,6 +34,10 @@ export default {
     bgColor: {
       type: Boolean,
       default: false
+    },
+    placeholders: {
+      type: String,
+      default: '請選擇'
     }
   },
   data: () => {

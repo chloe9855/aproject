@@ -59,7 +59,7 @@ export default {
     border-radius: 5px;
     padding: 0 0 10px;
     box-shadow: 0 0 14px 0 rgba(137, 137, 137, 0.19);
-    overflow: hidden;
+    // overflow: hidden;
   }
 
   .drag_header {
@@ -69,6 +69,7 @@ export default {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    border-radius: 5px;
     @include noto-sans-tc-20-medium;
 
     .content {
