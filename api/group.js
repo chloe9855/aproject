@@ -1,9 +1,8 @@
 import request from '~/service';
 
-export function getGroup (id) {
-  console.log(id);
-  // return request.get(`/AERC/rest/Group?ID=${id}`);
-  return request.get('/AERC/rest/Group');
+export function getGroup (Ia) {
+  const groupRequest = Ia ? `/aerc/rest/Group?ID=${Ia}` : '/aerc/rest/Group';
+  return request.get(groupRequest);
 }
 
 export function editGroup (id, data) {

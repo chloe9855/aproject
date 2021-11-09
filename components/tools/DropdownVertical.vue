@@ -11,13 +11,14 @@
         </span>
       </p>
     </div>
+    {{ options.data }}
     <client-only>
       <v-select
         v-model="selected"
         label="title"
         code="value"
         :clearable="false"
-        :options="options"
+        :options="option"
         :placeholder="placeholders"
         :class="{'add_bg': bgColor}"
         class="w-100 inputSelect"
@@ -54,6 +55,10 @@ export default {
     placeholders: {
       type: String,
       default: '請選擇'
+    },
+    defaultData: {
+      type: String,
+      default: ''
     }
   },
   data: () => {
@@ -66,6 +71,11 @@ export default {
   watch: {
     selected (n, o) {
       this.$emit('DropdownVal', n);
+    },
+    defaultData (n) {
+      if (n !== '') {
+        this.selected = n;
+      }
     }
   }
 };
