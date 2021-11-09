@@ -1,120 +1,57 @@
 <template>
-  <div class="tree_wrap">
-    <div class="title_wrap">
-      <img
-        class="arrow"
-        :src="picSrc"
-        @click="picToggler(myItem.id)"
-      >
-
-      <div class="theme_checkbox">
-        <input
-          :id="myItem.id"
-          type="checkbox"
-        >
-        <label
-          class="title"
-          :for="myItem.id"
-        >
-          {{ myItem.ia }}
-        </label>
-      </div>
-    </div>
-
+  <div>
     <div
-      :class="`block-${myItem.id}`"
-      class="block11"
+      v-for="mItem in allOptions"
+      :key="mItem.id"
     >
-      <div
-        v-for="sItem in myItem.stn"
-        :key="sItem.no"
-        class="block1"
-      >
-        <TreeSelect2
-          :s-item="sItem"
-        />
-      </div>
-      <!-- <div
-        v-for="sItem in myItem.stn"
-        :key="sItem.no"
-        class="block1"
-      >
-        <div class="title_wrap">
-          <img
-            class="arrow"
-            :src="picSrc2"
-            @click="picToggler2(sItem.no)"
-          >
-          <div class="theme_checkbox">
-            <input
-              :id="sItem.no"
-              type="checkbox"
-            >
-            <label
-              class="title"
-              :for="sItem.no"
-            >
-              {{ sItem.title }}
-            </label>
-          </div>
-        </div>
-
-        <div
-          :class="`block22-${sItem.no}`"
-          class="block2"
-        >
-          <div
-            v-for="gItem in sItem.grp"
-            :key="gItem.no"
-            class="title_wrap"
-          >
-            <div class="theme_checkbox">
-              <input
-                :id="gItem.no"
-                type="checkbox"
-              >
-              <label
-                class="title"
-                :for="gItem.no"
-              >
-                {{ gItem.name }}
-              </label>
-            </div>
-          </div>
-        </div>
-      </div> -->
+      <TreeSelect55
+        :my-item="mItem"
+      />
     </div>
   </div>
 </template>
 
 <script>
-import TreeSelect2 from '~/components/tools/TreeSelect2.vue';
+import TreeSelect55 from '~/components/tools/TreeSelect55.vue';
 
 export default {
   components: {
-    TreeSelect2: TreeSelect2
+    TreeSelect55: TreeSelect55
   },
   props: {
-    myItem: {
-      type: Object
+    allOptions: {
+      type: Array,
+      default: () => {
+        return [
+          {
+            id: 1,
+            ia: '嘉南管理處',
+            stn: [
+              { title: '南基工作站', no: 555, grp: [{ name: '北北水利小組', no: 111 }, { name: 'uu水利小組', no: 5414 }, { name: 'yy水利小組', no: 657 }] },
+              { title: 'uu工作站', no: 475, grp: [{ name: 'ee水利小組', no: 888 }, { name: 'tt水利小組', no: 755 }, { name: 'll水利小組', no: 442 }] },
+              { title: 'oo工作站', no: 588, grp: [{ name: 'ii水利小組', no: 463 }, { name: 'aa水利小組', no: 774 }, { name: 'fg水利小組', no: 521 }] }
+            ]
+          },
+          {
+            id: 2,
+            ia: '宜蘭管理處',
+            stn: [
+              { title: 'mm工作站', no: 86, grp: [{ name: 'tt水利小組', no: 45 }, { name: 'ui利小組', no: 466 }, { name: 'yy水利小組', no: 51 }] },
+              { title: 'ii工作站', no: 76, grp: [{ name: 'ei水利小組', no: 12 }, { name: 'ti水利小組', no: 255 }, { name: 'lu水利小組', no: 88 }] },
+              { title: 'pop工作站', no: 99, grp: [{ name: 'io水利小組', no: 13 }, { name: 'ao水利小組', no: 356 }, { name: 'fi水利小組', no: 100 }] }
+            ]
+          }
+        ];
+      }
     }
   },
   data () {
     return {
-      picSrc: require('~/assets/img/up-arrow.svg')
 
     };
   },
   methods: {
-    picToggler (id) {
-      if (this.picSrc === require('~/assets/img/up-arrow.svg')) {
-        this.picSrc = require('~/assets/img/down-arrow.svg');
-        document.querySelector(`.block-${id}`).style.display = 'block';
-      } else {
-        this.picSrc = require('~/assets/img/up-arrow.svg');
-        document.querySelector(`.block-${id}`).style.display = 'none';
-      }
-    }
+
   }
 };
 </script>

@@ -171,7 +171,6 @@ import DropdownVertical from '~/components/tools/DropdownVertical.vue';
 import Buttons from '~/components/tools/Buttons.vue';
 import SwitchTabs from '~/components/tools/SwitchTabs.vue';
 import InputTool from '~/components/tools/InputTool.vue';
-import axios from 'axios';
 
 export default {
   components: {

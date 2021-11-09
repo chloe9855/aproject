@@ -403,7 +403,7 @@ import ScreenShot from '~/components/ScreenShot.vue';
 import MapSearchBox from '~/components/MapSearchBox.vue';
 import ScrollTable from '~/components/tools/ScrollTable.vue';
 import AlertBox from '~/components/tools/AlertBox.vue';
-import JSZip from 'jszip';
+// import JSZip from 'jszip';
 
 export default {
   components: {
