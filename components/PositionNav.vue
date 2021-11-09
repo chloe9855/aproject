@@ -8,23 +8,27 @@
     <div class="pos_content">
       <div v-if="posOptions.current === 0">
         <DropdownVertical-component
-          :options="dropListA1"
+          :options="allDropList.Ia"
           :title="'管理處'"
+          @DropdownVal="(value) => { nextListHandler(value, 'Mng'), selectHandler(value, 'Ia') }"
         />
         <DropdownVertical-component
-          :options="dropListA1"
+          :options="allDropList.Mng"
           :title="'管理分處'"
           :bg-color="true"
+          @DropdownVal="(value) => { nextListHandler(value, 'Stn'), selectHandler(value, 'Mng') }"
         />
         <DropdownVertical-component
-          :options="dropListA1"
+          :options="allDropList.Stn"
           :title="'工作站'"
           :bg-color="true"
+          @DropdownVal="(value) => { nextListHandler(value, 'Grp'), selectHandler(value, 'Stn') }"
         />
         <DropdownVertical-component
-          :options="dropListA1"
+          :options="allDropList.Grp"
           :title="'水利小組'"
           :bg-color="true"
+          @DropdownVal="(value) => { nextListHandler(value, 'Grp'), selectHandler(value, 'Grp') }"
         />
         <div class="bt_wrap">
           <Buttons-component
@@ -39,21 +43,22 @@
 
       <div v-if="posOptions.current === 1">
         <DropdownVertical-component
-          :options="dropListA1"
+          :options="countyList.County"
           :title="'縣市'"
+          @DropdownVal="(value) => { nextCountHandler(value, 'Town') }"
         />
         <DropdownVertical-component
-          :options="dropListA1"
+          :options="countyList.Town"
           :title="'鄉鎮市區'"
           :bg-color="true"
         />
         <DropdownVertical-component
-          :options="dropListA1"
+          :options="dropListA2"
           :title="'地段'"
           :bg-color="true"
         />
         <DropdownVertical-component
-          :options="dropListA1"
+          :options="dropListA2"
           :title="'地號'"
           :bg-color="true"
         />
@@ -166,6 +171,7 @@ import DropdownVertical from '~/components/tools/DropdownVertical.vue';
 import Buttons from '~/components/tools/Buttons.vue';
 import SwitchTabs from '~/components/tools/SwitchTabs.vue';
 import InputTool from '~/components/tools/InputTool.vue';
+import axios from 'axios';
 
 export default {
   components: {
@@ -220,22 +226,34 @@ export default {
           }
         ]
       },
-      dropListA1: {
-        option: [
-          {
-            title: '請選擇管理處',
-            value: 0
-          },
-          {
-            title: '選項1',
-            value: 1
-          },
-          {
-            title: '選項2',
-            value: 2
-          }
-        ]
-      }
+      allDropList: {
+        Ia: [{
+          title: '宜蘭01',
+          value: 1
+        }],
+        Mng: [],
+        Stn: [],
+        Grp: []
+      },
+      countyList: {
+        County: [],
+        Town: []
+      },
+      dropListA2: [
+        {
+          title: '請選擇管理處',
+          value: 0
+        },
+        {
+          title: '選項1',
+          value: 1
+        },
+        {
+          title: '選項2',
+          value: 2
+        }
+      ]
+
     };
   },
   mounted () {
@@ -243,6 +261,8 @@ export default {
     proj4.defs('EPSG:4326', '+proj=longlat +datum=WGS84 +no_defs');
     proj4.defs('EPSG:3826', '+proj=tmerc +lat_0=0 +lon_0=121 +k=0.9999 +x_0=250000 +y_0=0 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs');
     proj4.defs('EPSG:3857', '+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +wktext  +no_defs');
+
+    this.getCountyData();
   },
   methods: {
     // * @ 坐標定位 : 清除全部
@@ -306,6 +326,81 @@ export default {
       const tData = proj4(EPSG4326, EPSG3826, [this.locate.wgsX, this.locate.wgsY]);
       this.transCoor.twdX = tData[0].toFixed(2);
       this.transCoor.twdY = tData[1].toFixed(2);
+    },
+    // * 取得縣市資料
+    getCountyData () {
+      fetch('http://192.168.3.112/AERC/rest/County', {
+        method: 'POST',
+        headers: new Headers({
+          'Content-Type': 'application/json'
+        }),
+        body: JSON.stringify({
+
+        })
+      }).then((response) => {
+        return response.json();
+      }).then((data) => {
+        console.log(data);
+
+        data.forEach((item) => {
+          item.value = item.FID;
+          item.title = item.COUNTYNAME;
+        });
+        this.countyList.County = data;
+      }).catch((err) => {
+        console.log(err);
+      });
+    },
+    // * 點擊選單 抓出下一排選項的所有清單
+    nextListHandler (value, nextType) {
+      console.log(`${value},${nextType}`);
+
+      fetch(`http://192.168.3.112/AERC/rest/${nextType}/admin5`, {
+        method: 'POST',
+        headers: new Headers({
+          'Content-Type': 'application/json'
+        }),
+        body: JSON.stringify({
+          Ia: '01'
+        })
+      }).then((response) => {
+        if (response.status === 403) {
+          this.allDropList[nextType] = [{ title: '不拘', value: 'none' }];
+          return Promise.reject(response);
+        }
+        return response.json();
+      }).then((jsonData) => {
+        console.log(jsonData);
+
+        jsonData.forEach((item) => {
+          item.value = item.FID;
+          item.title = item.Stn_cns;
+        });
+        this.allDropList[nextType] = jsonData;
+      }).catch((err) => {
+        console.log(err);
+      });
+    },
+    // * 點選清單中的其中一筆 繪製圖形+定位過去
+    selectHandler (value, myType) {
+      if (value === 'none') { return; }
+
+      fetch(`http://192.168.3.112/AERC/rest/${myType}/admin5`, {
+        method: 'POST',
+        headers: new Headers({
+          'Content-Type': 'application/json'
+        }),
+        body: JSON.stringify({
+          Ia: '01',
+          FID: value
+        })
+      }).then((response) => {
+        return response.json();
+      }).then((jsonData) => {
+        console.log(jsonData);
+      }).catch((err) => {
+        console.log(err);
+      });
     }
   }
 };

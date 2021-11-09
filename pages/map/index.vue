@@ -996,18 +996,28 @@ export default {
       this.layerOptions.surfaceList[index].allShow = $event;
     },
     // * @ 圖層工具：透明度調整
-    layerOpacityCtrl (id, value, category) {
+    layerOpacityCtrl (id, value, category, layerName) {
+      // console.log(layerName);
       if (category === 'pointList') {
         const index = this.layerOptions.pointList.findIndex(item => item.id === id);
         this.layerOptions.pointList[index].opacity = value;
+
+        MBT.Style[layerName].style = { opacity: value / 100 };
+        MBT.updateStyle(MBT.Style);
       }
       if (category === 'lineList') {
         const index = this.layerOptions.lineList.findIndex(item => item.id === id);
         this.layerOptions.lineList[index].opacity = value;
+
+        MBT.Style[layerName].style = { opacity: value / 100 };
+        MBT.updateStyle(MBT.Style);
       }
       if (category === 'surfaceList') {
         const index = this.layerOptions.surfaceList.findIndex(item => item.id === id);
         this.layerOptions.surfaceList[index].opacity = value;
+
+        MBT.Style[layerName].style = { opacity: value / 100 };
+        MBT.updateStyle(MBT.Style);
       }
       // 底圖切換
       if (category === 'baseLayer') {

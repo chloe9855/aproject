@@ -20,7 +20,7 @@
         <SliderBar-component
           :id="item.id"
           :value="item.opacity"
-          @update="(id, value) => { $emit('updateOpacity', id, value, category) }"
+          @update="(id, value) => { $emit('updateOpacity', id, value, category, item.LayerName) }"
         />
       </div>
     </div>

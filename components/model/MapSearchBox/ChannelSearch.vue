@@ -2,6 +2,7 @@
   <div class="out_wrap">
     <Dropdown-component
       :options="dropList"
+      :placeholders="'請選擇管理處'"
     />
     <InputTool-component
       :input-text="'輸入渠道關鍵字或是點擊地圖'"
@@ -87,22 +88,7 @@ export default {
   },
   data () {
     return {
-      dropList: {
-        option: [
-          {
-            title: '請選擇管理處',
-            value: 0
-          },
-          {
-            title: '選項1',
-            value: 1
-          },
-          {
-            title: '選項2',
-            value: 2
-          }
-        ]
-      }
+      dropList: [{ title: '01 宜蘭', value: '1' }]
     };
   },
   name: 'ChannelSearch'

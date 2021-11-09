@@ -3,93 +3,117 @@
     <div class="title_wrap">
       <img
         class="arrow"
-        :src="arrowHandler1"
-        @click="showBlock1 = !showBlock1"
+        :src="picSrc"
+        @click="picToggler(myItem.id)"
       >
 
       <div class="theme_checkbox">
         <input
-          id="ttt1"
+          :id="myItem.id"
           type="checkbox"
         >
         <label
           class="title"
-          for="ttt1"
+          :for="myItem.id"
         >
-          XXX管理處
+          {{ myItem.ia }}
         </label>
       </div>
     </div>
 
     <div
-      v-if="showBlock1"
-      class="block1"
+      :class="`block-${myItem.id}`"
+      class="block11"
     >
-      <div class="title_wrap">
-        <img
-          class="arrow"
-          :src="arrowHandler2"
-          @click="showBlock2 = !showBlock2"
-        >
-        <div class="theme_checkbox">
-          <input
-            id="ttt2"
-            type="checkbox"
-          >
-          <label
-            class="title"
-            for="ttt2"
-          >
-            XXX工作站
-          </label>
-        </div>
-      </div>
-
       <div
-        v-if="showBlock2"
-        class="block2"
+        v-for="sItem in myItem.stn"
+        :key="sItem.no"
+        class="block1"
       >
-        <div
-          v-for="item in options"
-          :key="item.id"
-          class="title_wrap"
-        >
+        <TreeSelect2
+          :s-item="sItem"
+        />
+      </div>
+      <!-- <div
+        v-for="sItem in myItem.stn"
+        :key="sItem.no"
+        class="block1"
+      >
+        <div class="title_wrap">
+          <img
+            class="arrow"
+            :src="picSrc2"
+            @click="picToggler2(sItem.no)"
+          >
           <div class="theme_checkbox">
             <input
-              :id="item.id"
+              :id="sItem.no"
               type="checkbox"
             >
             <label
               class="title"
-              :for="item.id"
+              :for="sItem.no"
             >
-              {{ item.name }}
+              {{ sItem.title }}
             </label>
           </div>
         </div>
-      </div>
+
+        <div
+          :class="`block22-${sItem.no}`"
+          class="block2"
+        >
+          <div
+            v-for="gItem in sItem.grp"
+            :key="gItem.no"
+            class="title_wrap"
+          >
+            <div class="theme_checkbox">
+              <input
+                :id="gItem.no"
+                type="checkbox"
+              >
+              <label
+                class="title"
+                :for="gItem.no"
+              >
+                {{ gItem.name }}
+              </label>
+            </div>
+          </div>
+        </div>
+      </div> -->
     </div>
   </div>
 </template>
 
 <script>
+import TreeSelect2 from '~/components/tools/TreeSelect2.vue';
+
 export default {
+  components: {
+    TreeSelect2: TreeSelect2
+  },
+  props: {
+    myItem: {
+      type: Object
+    }
+  },
   data () {
     return {
-      showBlock1: false,
-      showBlock2: false,
-      options: [{ name: 'AA水利小組', id: '0' }, { name: 'BB水利小組', id: '1' }]
+      picSrc: require('~/assets/img/up-arrow.svg')
+
     };
   },
   methods: {
-
-  },
-  computed: {
-    arrowHandler1 () {
-      return (this.showBlock1 === false) ? require('~/assets/img/up-arrow.svg') : require('~/assets/img/down-arrow.svg');
-    },
-    arrowHandler2 () {
-      return (this.showBlock2 === false) ? require('~/assets/img/up-arrow.svg') : require('~/assets/img/down-arrow.svg');
+    picToggler (id) {
+      if (this.picSrc === require('~/assets/img/up-arrow.svg')) {
+        this.picSrc = require('~/assets/img/down-arrow.svg');
+        document.querySelector(`.block-${id}`).style.display = 'block';
+      } else {
+        this.picSrc = require('~/assets/img/up-arrow.svg');
+        document.querySelector(`.block-${id}`).style.display = 'none';
+      }
     }
   }
 };
@@ -97,14 +121,20 @@ export default {
 
 <style lang="scss" scoped>
 
+  .block11 {
+    display: none;
+  }
+
   .tree_wrap {
     display: inline-block;
     color: $word-black;
+    width: 200px;
     @include noto-sans-tc-16-regular-line16;
 
     .title_wrap {
       display: flex;
       align-items: center;
+      width: 150px;
 
       .arrow {
       cursor: pointer;
@@ -121,6 +151,7 @@ export default {
 
     .block2 {
       padding: 8px 0 8px 36px;
+      display: none;
       .title_wrap {
         padding-bottom: 8px;
       }
