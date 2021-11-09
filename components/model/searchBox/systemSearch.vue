@@ -20,7 +20,7 @@ export default {
   props: {},
   data: () => {
     return {
-      member: { option: [{ title: '預設選項', value: '0' }, { title: '工作站人員', value: '1' }, { title: '管理人員', value: '2' }, { title: '民眾', value: '3' }] }
+      member: [{ title: '預設選項', value: '0' }, { title: '工作站人員', value: '1' }, { title: '管理人員', value: '2' }, { title: '民眾', value: '3' }]
     };
   },
   name: 'SystemSearch'

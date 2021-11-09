@@ -111,14 +111,9 @@
       <br>
       <br>
 
-      <div
-        v-for="mItem in iaOptions"
-        :key="mItem.id"
-      >
-        <TreeSelect-component
-          :my-item="mItem"
-        />
-      </div>
+      <TreeSelect-component
+        :all-options="iaOptions"
+      />
 
       <br>
       <div
