@@ -18,14 +18,20 @@
         class="w-90"
       />
       <div class="downloadArea w-90">
-        <TableTool
-          :table-column="tableData"
-          :is-paginate="false"
-        />
-        <TableTool
-          :table-column="tableData"
-          :is-paginate="false"
-        />
+        <div class="w-50 pr_2">
+          <SubTitleTool title="相關表單資料" />
+          <TableTool
+            :table-column="tableData"
+            :is-paginate="false"
+          />
+        </div>
+        <div class="w-50">
+          <SubTitleTool title="相關文件資料" />
+          <TableTool
+            :table-column="tableData"
+            :is-paginate="false"
+          />
+        </div>
       </div>
     </div>
   </div>
@@ -34,13 +40,15 @@
 <script>
 import TableTool from '~/components/model/Table.vue';
 import PageHeader from '~/components/tools/PageHeader.vue';
+import SubTitleTool from '~/components/tools/SubTitleTool.vue';
 import { getBulletin } from '~/api/bulletin';
 import { tableData } from '~/publish/tableData';
 
 export default {
   components: {
     PageHeader,
-    TableTool
+    TableTool,
+    SubTitleTool
   },
   data () {
     return {
@@ -130,6 +138,9 @@ export default {
   }
   .tableTool:nth-child(1){
     margin-right: 1em !important;
+  }
+  .pr_2{
+    padding-right: 2em;
   }
 }
 </style>

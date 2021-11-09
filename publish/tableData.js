@@ -7,7 +7,9 @@ export function tableData (data) {
     titleObj.push(element.content);
     titleObj.push(element.publishtime);
     titleObj.push(linkObj);
-    body.push({ title: titleObj });
+    if (element.status) {
+      body.push({ title: titleObj });
+    }
   });
   console.log('body:');
   console.log(body);
