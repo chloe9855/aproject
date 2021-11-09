@@ -14,10 +14,15 @@
     />
     <SubTitleTool
       title="最新公告"
-      btn-text="新增公告"
-      :btn-add="true"
+      :btn-text="delBtn"
+      :btn-add="false"
+      btn-name="button-red"
+      btn-sec-text="新增公告"
+      :btn-sec-add="true"
+      btn-sec-name="button-add"
       class="w-90"
       @STbtnStatus="addNews"
+      @STbtnSecStatus="addNews"
     />
     <TableTool
       :table-column="tableList"
@@ -26,6 +31,7 @@
       :is-del="true"
       class="w-90 news"
       @tableEvent="changeGroup"
+      @checkList="getTableCheck"
     />
 
     <div class="downloadTitle w-90">
@@ -98,7 +104,8 @@ export default {
           { title: ['XXXX資料須填寫XXXX表單', '資料填寫表單 '] }
         ]
       },
-      BreadCrumb: ['系統管理', '首頁資料管理']
+      BreadCrumb: ['系統管理', '首頁資料管理'],
+      delBtn: ''
     };
   },
   name: 'EditNews',
@@ -119,6 +126,7 @@ export default {
   },
   methods: {
     addNews (e) {
+      console.log(e);
       if (e) {
         this.$store.commit('TOGGLE_POPUP_STATUS');
         this.$store.commit('TOGGLE_POPUP_TYPE', { type: 'news', title: '新增公告' });
@@ -142,6 +150,15 @@ export default {
         this.$store.commit('TOGGLE_POPUP_TYPE', { type: 'news', title: '編輯公告' });
       } else if (e === 'isDel') {
         console.log('isDel');
+      }
+    },
+    getTableCheck (e) {
+      if (e) {
+        if (e.length > 1) {
+          this.delBtn = '多筆刪除';
+        } else {
+          this.delBtn = '';
+        };
       }
     }
   }

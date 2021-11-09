@@ -10,10 +10,14 @@
       <PageHeader
         icon="farmer"
         title="帳號管理"
-        btn-text="新增帳號"
-        :btn-add="true"
-        btn-name="button-add"
+        :btn-text="delBtn"
+        :btn-add="false"
+        btn-name="button-red"
+        btn-sec-text="新增帳號"
+        :btn-sec-add="true"
+        btn-sec-name="button-add"
         @PHBtnStatus="addAccount"
+        @PHSecBtnStatus="addAccount"
       />
       <div
         class="content_box"
@@ -26,6 +30,7 @@
           :is-scroll-table="true"
           :column-min-width="160"
           @tableEvent="getTableEvent"
+          @checkScrollList="getTableCheck"
         />
       </div>
     </div>
@@ -76,7 +81,8 @@ export default {
       },
       BreadCrumb: ['系統管理', '帳號管理'],
       toggleStatus: false,
-      editItem: {}
+      editItem: {},
+      delBtn: ''
     };
   },
   name: 'Account',
@@ -108,6 +114,7 @@ export default {
       this.toggleStatus = e;
     },
     addAccount (e) {
+      console.log(e);
       if (e) {
         this.$store.commit('TOGGLE_POPUP_STATUS');
         this.$store.commit('TOGGLE_POPUP_TYPE', { type: 'addAccount', title: '新增帳號' });
@@ -124,6 +131,15 @@ export default {
             console.log('isDel');
             break;
         }
+      }
+    },
+    getTableCheck (e) {
+      if (e) {
+        if (e.length > 1) {
+          this.delBtn = '多筆刪除';
+        } else {
+          this.delBtn = '';
+        };
       }
     }
   },

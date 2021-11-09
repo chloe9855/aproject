@@ -567,10 +567,10 @@ export default {
   },
   watch: {
     checkList: function (n) {
-      this.$emit('DropdownVal', n);
+      this.$emit('checkList', n);
     },
     checkScrollList: function (n) {
-      this.$emit('DropdownVal', n);
+      this.$emit('checkScrollList', n);
     },
     inputList: function (n) {
       this.$emit('tableInput', n);

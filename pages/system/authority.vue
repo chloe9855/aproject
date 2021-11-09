@@ -10,10 +10,14 @@
       <PageHeader
         icon="slider"
         title="群組權限管理"
-        btn-text="新增群組"
-        :btn-add="true"
-        btn-name="button-add"
-        @PHBtnStatus="addGroup"
+        :btn-text="delBtn"
+        :btn-add="false"
+        btn-name="button-red"
+        btn-sec-text="新增群組"
+        :btn-sec-add="true"
+        btn-sec-name="button-add"
+        @PHBtnStatus="addAccount"
+        @PHSecBtnStatus="addGroup"
       />
       <div
         class="content_box"
@@ -23,6 +27,7 @@
           :is-paginate="false"
           :is-edit="true"
           :is-del="true"
+          @checkList="getTableCheck"
           @tableEvent="changeGroup"
         />
       </div>
@@ -68,7 +73,8 @@ export default {
         ]
       },
       BreadCrumb: ['系統管理', '群組權限管理'],
-      toggleStatus: false
+      toggleStatus: false,
+      delBtn: ''
     };
   },
   name: 'Authority',
@@ -107,6 +113,15 @@ export default {
         this.$store.commit('TOGGLE_POPUP_TYPE', { type: 'group', title: '編輯群組' });
       } else if (e === 'isDel') {
         console.log('isDel');
+      }
+    },
+    getTableCheck (e) {
+      if (e) {
+        if (e.length > 1) {
+          this.delBtn = '多筆刪除';
+        } else {
+          this.delBtn = '';
+        };
       }
     }
   },
