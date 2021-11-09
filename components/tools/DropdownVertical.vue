@@ -65,7 +65,7 @@ export default {
   name: 'DropdownVertical',
   watch: {
     selected (n, o) {
-      this.$emit('DropdownVal', n.value);
+      this.$emit('DropdownVal', n);
     }
   }
 };

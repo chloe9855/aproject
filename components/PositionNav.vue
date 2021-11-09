@@ -10,25 +10,25 @@
         <DropdownVertical-component
           :options="allDropList.Ia"
           :title="'管理處'"
-          @DropdownVal="(value) => { nextListHandler(value, 'Mng'), selectHandler(value, 'Ia') }"
+          @DropdownVal="(payload) => { nextListHandler(payload, 'Mng'), selectHandler(payload, 'Ia') }"
         />
         <DropdownVertical-component
           :options="allDropList.Mng"
           :title="'管理分處'"
           :bg-color="true"
-          @DropdownVal="(value) => { nextListHandler(value, 'Stn'), selectHandler(value, 'Mng') }"
+          @DropdownVal="(payload) => { nextListHandler(payload, 'Stn'), selectHandler(payload, 'Mng') }"
         />
         <DropdownVertical-component
           :options="allDropList.Stn"
           :title="'工作站'"
           :bg-color="true"
-          @DropdownVal="(value) => { nextListHandler(value, 'Grp'), selectHandler(value, 'Stn') }"
+          @DropdownVal="(payload) => { nextListHandler(payload, 'Grp'), selectHandler(payload, 'Stn') }"
         />
         <DropdownVertical-component
           :options="allDropList.Grp"
           :title="'水利小組'"
           :bg-color="true"
-          @DropdownVal="(value) => { nextListHandler(value, 'Grp'), selectHandler(value, 'Grp') }"
+          @DropdownVal="(payload) => { nextListHandler(payload, 'Grp'), selectHandler(payload, 'Grp') }"
         />
         <div class="bt_wrap">
           <Buttons-component
@@ -45,7 +45,7 @@
         <DropdownVertical-component
           :options="countyList.County"
           :title="'縣市'"
-          @DropdownVal="(value) => { nextCountHandler(value, 'Town') }"
+          @DropdownVal="(payload) => { nextCountHandler(payload, 'Town') }"
         />
         <DropdownVertical-component
           :options="countyList.Town"
@@ -352,8 +352,19 @@ export default {
       });
     },
     // * 點擊選單 抓出下一排選項的所有清單
-    nextListHandler (value, nextType) {
-      console.log(`${value},${nextType}`);
+    nextListHandler (payload, nextType) {
+      console.log(`${payload},${nextType}`);
+
+      const obj = {};
+      if (nextType === 'Mng') {
+        obj = { Ia: '01' };
+      }
+      if (nextType === 'Stn' && payload.value !== 'none') {
+        obj = { Ia: '01', Mng: payload.Mng };
+      }
+      if (nextType === 'Stn' && payload.value === 'none') {
+        obj = { Ia: '01' };
+      }
 
       fetch(`http://192.168.3.112/AERC/rest/${nextType}/admin5`, {
         method: 'POST',
@@ -382,8 +393,8 @@ export default {
       });
     },
     // * 點選清單中的其中一筆 繪製圖形+定位過去
-    selectHandler (value, myType) {
-      if (value === 'none') { return; }
+    selectHandler (payload, myType) {
+      if (payload.value === 'none') { return; }
 
       fetch(`http://192.168.3.112/AERC/rest/${myType}/admin5`, {
         method: 'POST',
@@ -392,7 +403,7 @@ export default {
         }),
         body: JSON.stringify({
           Ia: '01',
-          FID: value
+          FID: payload.FID
         })
       }).then((response) => {
         return response.json();
