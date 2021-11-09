@@ -1,6 +1,5 @@
 <template>
   <div class="inputBox theme_scrollbar">
-    {{ account }}
     <InputVertical
       :default-data="account.name"
       title="姓名"
@@ -50,7 +49,12 @@
       title="備註"
       :default-data="account.note"
     />
-    <DropdownVertical title="群組" />
+    <DropdownVertical
+      :option-data="groupList"
+      :default-data="account.groupname"
+      :default-value="account.groupno"
+      title="群組"
+    />
     <div class="box">
       <span>帳號啟用</span>
       <Tag text="驗證中" />
@@ -65,6 +69,7 @@ import Button from '~/components/tools/Buttons.vue';
 import Tag from '~/components/tools/Tag.vue';
 import { getAccount } from '~/api/account';
 import { getGroup } from '~/api/group';
+import { groupListData, iaListData, stnListData } from '~/publish/groupListData';
 
 export default {
   components: {
@@ -77,7 +82,11 @@ export default {
     return {
       onPassword: false,
       account: {},
-      group: {}
+      group: {},
+      iaList: [],
+      groupList: [],
+      stnList: [],
+      test: ''
     };
   },
   name: 'EditAccount',
@@ -88,13 +97,15 @@ export default {
       console.log(e);
     });
   },
-  mounted () {
-    // console.log(this.$store.state.popupType);
+  created () {
     getAccount(this.$store.state.userInfo.id).then(r => {
       this.account = r.data[0];
-      getGroup(r.data[0].ia).then(r => {
-        console.log(r);
-        this.group = r;
+      getGroup(r.data[0].ia).then(g => {
+        this.group = g;
+        this.iaList = iaListData(g);
+        this.groupList = groupListData(g);
+        this.test = r.data[0].groupname;
+        this.stnList = stnListData(g);
       }).catch(e => {
         console.log(e);
       });

@@ -14,6 +14,7 @@
     <client-only>
       <v-select
         v-model="selected"
+        :value="selectVal"
         label="title"
         code="value"
         :clearable="false"
@@ -58,23 +59,33 @@ export default {
     defaultData: {
       type: String,
       default: ''
+    },
+    defaultValue: {
+      type: String,
+      default: ''
     }
   },
   data: () => {
     return {
       selected: '',
+      selectVal: '',
       option: [{ title: '選項11', value: '0' }, { title: '選項2', value: '1' }, { title: '選項3', value: '2' }]
     };
   },
   name: 'DropdownVertical',
+  mounted () {
+  },
+  methods: {
+  },
   watch: {
     selected (n, o) {
       this.$emit('DropdownVal', n);
     },
-    defaultData (n) {
-      if (n !== '') {
-        this.selected = n;
-      }
+    defaultData (n, o) {
+      this.selected = n;
+    },
+    defaultValue (n, o) {
+      this.selectVal = n;
     }
   }
 };
