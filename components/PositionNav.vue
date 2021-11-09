@@ -51,11 +51,13 @@
           :options="countyList.Town"
           :title="'鄉鎮市區'"
           :bg-color="true"
+          @DropdownVal="(payload) => { nextCountHandler(payload, 'Section') }"
         />
         <DropdownVertical-component
           :options="dropListA2"
           :title="'地段'"
           :bg-color="true"
+          @DropdownVal="(payload) => { nextCountHandler(payload, 'Sec5cov') }"
         />
         <DropdownVertical-component
           :options="dropListA2"
@@ -236,7 +238,9 @@ export default {
       },
       countyList: {
         County: [],
-        Town: []
+        Town: [],
+        Section: [],
+        Sec5cov: []
       },
       dropListA2: [
         {
@@ -350,32 +354,26 @@ export default {
         console.log(err);
       });
     },
-    // * 點擊選單 抓出下一排選項的所有清單
-    nextListHandler (payload, nextType) {
-      console.log(`${payload},${nextType}`);
-
-      const obj = {};
-      if (nextType === 'Mng') {
-        obj = { Ia: '01' };
+    // * 取得鄉鎮市區 地段 地籍資料
+    nextCountHandler (payload, nextType) {
+      let myObj = {};
+      if (nextType === 'Town') {
+        myObj = { COUNTYID: payload.COUNTYID };
       }
-      if (nextType === 'Stn' && payload.value !== 'none') {
-        obj = { Ia: '01', Mng: payload.Mng };
-      }
-      if (nextType === 'Stn' && payload.value === 'none') {
-        obj = { Ia: '01' };
+      if (nextType === 'Section') {
+        myObj = { CountyID: payload.COUNTYID, TownID: payload.TOWNID };
       }
 
-      fetch(`http://192.168.3.112/AERC/rest/${nextType}/admin5`, {
+      fetch(`http://192.168.3.112/AERC/rest/${nextType}`, {
         method: 'POST',
         headers: new Headers({
           'Content-Type': 'application/json'
         }),
-        body: JSON.stringify({
-          Ia: '01'
-        })
+        body: JSON.stringify(myObj)
       }).then((response) => {
         if (response.status === 403) {
-          this.allDropList[nextType] = [{ title: '不拘', value: 'none' }];
+          this.countyList[nextType] = [{ title: '不拘', value: 'none' }];
+
           return Promise.reject(response);
         }
         return response.json();
@@ -384,7 +382,76 @@ export default {
 
         jsonData.forEach((item) => {
           item.value = item.FID;
-          item.title = item.Stn_cns;
+          if (nextType === 'Town') { item.title = item.TOWNNAME; }
+          if (nextType === 'Section') { item.title = item.Sec_cns; }
+          // if (nextType === 'Sec5cov') { item.title = item.Sec_cns; }
+        });
+
+        this.countyList[nextType] = jsonData;
+      }).catch((err) => {
+        console.log(err);
+      });
+    },
+    // * 點擊選單 抓出下一排選項的所有清單
+    nextListHandler (payload, nextType) {
+      console.log(payload);
+      console.log(nextType);
+
+      let myObj = {};
+      if (nextType === 'Mng') {
+        myObj = { Ia: '01' };
+      }
+      if (nextType === 'Stn') {
+        myObj = { Ia: '01', Mng: payload.Mng };
+      }
+      if (nextType === 'Grp') {
+        myObj = { Ia: '01', Mng: payload.Mng, Stn: payload.Stn };
+      }
+      // if (nextType === 'Stn' && this.allDropList.Mng[0].value !== 'none') {
+      //   myObj = { Ia: '01', Mng: payload.Mng };
+      // }
+      // if (nextType === 'Stn' && this.allDropList.Mng[0].value === 'none') {
+      //   myObj = { Ia: '01' };
+      // }
+      // if (nextType === 'Grp' && this.allDropList.Mng[0].value !== 'none' && this.allDropList.Stn[0].value !== 'none') {
+      //   myObj = { Ia: '01', Mng: payload.Mng, Stn: payload.Stn };
+      // }
+      // if (nextType === 'Grp' && this.allDropList.Mng[0].value === 'none' && this.allDropList.Stn[0].value !== 'none') {
+      //   myObj = { Ia: '01', Stn: payload.Stn };
+      // }
+      // if (nextType === 'Grp' && this.allDropList.Mng[0].value !== 'none' && this.allDropList.Stn[0].value === 'none') {
+      //   myObj = { Ia: '01', Mng: payload.Mng };
+      // }
+      // if (nextType === 'Grp' && this.allDropList.Mng[0].value === 'none' && this.allDropList.Stn[0].value === 'none') {
+      //   myObj = { Ia: '01' };
+      // }
+
+      fetch(`http://192.168.3.112/AERC/rest/${nextType}/admin5`, {
+        method: 'POST',
+        headers: new Headers({
+          'Content-Type': 'application/json'
+        }),
+        body: JSON.stringify(myObj)
+      }).then((response) => {
+        if (response.status === 403) {
+          this.allDropList[nextType] = [{ title: '不拘', value: 'none' }];
+          if (nextType === 'Mng') {
+            this.allDropList[nextType] = [{ title: '不拘', value: 'none', Mng: 0 }];
+          }
+          if (nextType === 'Stn') {
+            this.allDropList[nextType] = [{ title: '不拘', value: 'none', Stn: 0 }];
+          }
+          return Promise.reject(response);
+        }
+        return response.json();
+      }).then((jsonData) => {
+        console.log(jsonData);
+
+        jsonData.forEach((item) => {
+          item.value = item.FID;
+          if (nextType === 'Mng') { item.title = item.Mng_cns; }
+          if (nextType === 'Stn') { item.title = item.Stn_cns; }
+          if (nextType === 'Grp') { item.title = item.Grp_cns; }
         });
         this.allDropList[nextType] = jsonData;
       }).catch((err) => {
@@ -395,15 +462,23 @@ export default {
     selectHandler (payload, myType) {
       if (payload.value === 'none') { return; }
 
+      let myObj = {};
+      if (myType === 'Mng') {
+        myObj = { Ia: '01', FID: payload.FID };
+      }
+      if (myType === 'Stn') {
+        myObj = { Ia: '01', Mng: payload.Mng, FID: payload.FID };
+      }
+      if (myType === 'Grp') {
+        myObj = { Ia: '01', Mng: payload.Mng, Stn: payload.Stn, FID: payload.FID };
+      }
+
       fetch(`http://192.168.3.112/AERC/rest/${myType}/admin5`, {
         method: 'POST',
         headers: new Headers({
           'Content-Type': 'application/json'
         }),
-        body: JSON.stringify({
-          Ia: '01',
-          FID: payload.FID
-        })
+        body: JSON.stringify(myObj)
       }).then((response) => {
         return response.json();
       }).then((jsonData) => {
