@@ -37,13 +37,26 @@
       :name="name"
       :type="inputType"
       :disabled="isDisable === true"
-      @input="$emit('input', $event.target.value)"
     >
     <img
       v-show="isAddIcon"
       :src="iconImg"
       class="input-icon"
     >
+    <div
+      v-show="filterBox"
+      class="filterBox vertical"
+    >
+      <ul>
+        <li
+          v-for="(item, index) in filterList"
+          :key="index"
+          @click="selectFilter(item)"
+        >
+          {{ item }}
+        </li>
+      </ul>
+    </div>
   </div>
 </template>
 
@@ -97,6 +110,12 @@ export default {
     changeText: {
       type: String,
       default: ''
+    },
+    searchInput: {
+      type: Array,
+      default: () => {
+        return [];
+      }
     }
   },
   data: () => {
@@ -104,10 +123,20 @@ export default {
       message: '',
       RegExpType: {
         code8: '^.{8}$'
-      }
+      },
+      filterBox: false,
+      filterList: [],
+      isCloseFilter: false
     };
   },
   name: 'InputVertical',
+  methods: {
+    selectFilter (item) {
+      this.message = item;
+      this.filterBox = false;
+      this.isCloseFilter = true;
+    }
+  },
   computed: {
     isError: function () {
       const defaultStatus = this.isWarn;
@@ -137,8 +166,15 @@ export default {
     }
   },
   watch: {
-    message (n, o) {
+    message (n) {
       this.$emit('inputValue', n);
+      const events = this.searchInput;
+      const fileList = events.filter(function (event) {
+        return event.indexOf(n) > -1 && n !== '';
+      });
+      this.filterList = fileList;
+      this.filterBox = fileList.length > 0 && !this.isCloseFilter;
+      this.isCloseFilter = false;
     },
     changeText (value) {
       this.message = value;

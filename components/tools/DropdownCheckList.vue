@@ -16,7 +16,7 @@
       :class="{listOpen:istoggle,isUp:getType}"
       @click="toggleList"
     >
-      {{ options.option[0].title }}
+      {{ options[0].title }}
     </div>
     <ul
       v-show="istoggle"
