@@ -38,8 +38,9 @@
     >
       <ul>
         <li
-          v-for="(item, index) in searchInput"
+          v-for="(item, index) in filterList"
           :key="index"
+          @click="selectFilter(item)"
         >
           {{ item }}
         </li>
@@ -88,11 +89,9 @@ export default {
       default: 0
     },
     searchInput: {
-      type: Object,
+      type: Array,
       default: () => {
-        return {
-          searchData: {}
-        };
+        return [];
       }
     },
     changeText: {
@@ -106,7 +105,9 @@ export default {
       RegExpType: {
         code8: '^.{8}$'
       },
-      filterBox: false
+      filterBox: false,
+      filterList: [],
+      isCloseFilter: false
     };
   },
   name: 'InputTool',
@@ -114,6 +115,11 @@ export default {
     filterData () {
       this.filterBox = true;
       this.$emit('inputValue', this.message);
+    },
+    selectFilter (item) {
+      this.message = item;
+      this.filterBox = false;
+      this.isCloseFilter = true;
     }
   },
   computed: {
@@ -145,9 +151,16 @@ export default {
     }
   },
   watch: {
-    message (n, o) {
+    message (n) {
       const data = { val: n, id: this.inputId };
       this.$emit('inputValue', data);
+      const events = this.searchInput;
+      const fileList = events.filter(function (event) {
+        return event.indexOf(n) > -1 && n !== '';
+      });
+      this.filterList = fileList;
+      this.filterBox = fileList.length > 0 && !this.isCloseFilter;
+      this.isCloseFilter = false;
     },
     changeText (value) {
       this.message = value;

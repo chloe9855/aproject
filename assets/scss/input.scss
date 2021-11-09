@@ -15,11 +15,20 @@
         position: absolute;
         background: #FFF;
         width: $w-90;
-        top: 40px;
+        top: 36px;
         z-index: 1000;
         padding: 10px 5%;
         max-height: 150px;
         overflow: auto;
+        border: 1px solid #959595;
+        &.vertical{
+            top:60px;
+        }
+        &.horizontal{
+            width: $w-50;
+            top:60px;
+            right: 0;
+        }
         ul{
             li{
                 height: 20px;

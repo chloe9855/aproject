@@ -50,6 +50,20 @@
         class="input-icon"
         :style="{ left : titleLength }"
       >
+      <div
+        v-show="filterBox"
+        class="filterBox horizontal"
+      >
+        <ul>
+          <li
+            v-for="(item, index) in filterList"
+            :key="index"
+            @click="selectFilter(item)"
+          >
+            {{ item }}
+          </li>
+        </ul>
+      </div>
     </div>
   </div>
 </template>
@@ -100,6 +114,12 @@ export default {
     isSecondInput: {
       type: Boolean,
       default: false
+    },
+    searchInput: {
+      type: Array,
+      default: () => {
+        return [];
+      }
     }
   },
   data: () => {
@@ -109,12 +129,22 @@ export default {
       titleLength: '80px',
       RegExpType: {
         code8: '^.{8}$'
-      }
+      },
+      filterBox: false,
+      filterList: [],
+      isCloseFilter: false
     };
   },
   name: 'InputHorizontal',
   mounted: function () {
     this.titleLength = (this.$refs.inputTitle.clientWidth + 30) + 'px';
+  },
+  methods: {
+    selectFilter (item) {
+      this.message = item;
+      this.filterBox = false;
+      this.isCloseFilter = true;
+    }
   },
   computed: {
     isError: function () {
@@ -145,8 +175,15 @@ export default {
     }
   },
   watch: {
-    message (n, o) {
+    message (n) {
       this.$emit('inputValue', n);
+      const events = this.searchInput;
+      const fileList = events.filter(function (event) {
+        return event.indexOf(n) > -1 && n !== '';
+      });
+      this.filterList = fileList;
+      this.filterBox = fileList.length > 0 && !this.isCloseFilter;
+      this.isCloseFilter = false;
     }
   }
 };
