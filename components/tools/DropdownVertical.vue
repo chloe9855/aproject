@@ -11,14 +11,13 @@
         </span>
       </p>
     </div>
-    {{ options.data }}
     <client-only>
       <v-select
         v-model="selected"
         label="title"
         code="value"
         :clearable="false"
-        :options="option"
+        :options="optionData"
         :placeholder="placeholders"
         :class="{'add_bg': bgColor}"
         class="w-100 inputSelect"
@@ -30,7 +29,7 @@
 <script>
 export default {
   props: {
-    options: {
+    optionData: {
       type: Array,
       default: () => {
         return [{ title: '選項1', value: '0' }, { title: '選項2', value: '1' }, { title: '選項3', value: '2' }];

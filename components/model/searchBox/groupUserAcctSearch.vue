@@ -2,7 +2,7 @@
   <div class="inputBox">
     <DropdownVertical
       title="群組"
-      :options="member"
+      :option-data="member"
       @DropdownVal="getGroup"
     />
     <DatePicker
@@ -19,6 +19,9 @@
 <script>
 import DropdownVertical from '~/components/tools/DropdownVertical.vue';
 import DatePicker from '~/components/tools/DatePicker.vue';
+import { getGroup } from '~/api/group';
+import { groupListData } from '~/publish/groupListData';
+import { getAccount } from '~/api/account';
 export default {
   components: {
     DropdownVertical: DropdownVertical,
@@ -36,6 +39,18 @@ export default {
     };
   },
   name: 'GroupUserAcctSearch',
+  mounted () {
+    getAccount(this.$store.state.userInfo.id).then(r => {
+      this.account = r.data[0];
+      getGroup(r.data[0].ia).then(g => {
+        this.member = groupListData(g);
+      }).catch(e => {
+        console.log(e);
+      });
+    }).catch(e => {
+      console.log(e);
+    });
+  },
   methods: {
     getGroup (e) {
       if (e) {

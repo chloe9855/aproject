@@ -30,6 +30,7 @@
     />
     <DropdownVertical
       title="群組"
+      :option-data="groupList"
       @DropdownVal="setGroup"
     />
   </div>
@@ -38,6 +39,9 @@
 <script>
 import InputVertical from '~/components/tools/InputVertical.vue';
 import DropdownVertical from '~/components/tools/DropdownVertical.vue';
+import { groupListData, iaListData, stnListData } from '~/publish/groupListData';
+import { getAccount } from '~/api/account';
+import { getGroup } from '~/api/group';
 export default {
   components: {
     InputVertical,
@@ -55,10 +59,27 @@ export default {
         email: '',
         text: '',
         group: ''
-      }
+      },
+      iaList: [],
+      groupList: [],
+      stnList: []
     };
   },
   name: 'AddAccount',
+  mounted () {
+    getAccount(this.$store.state.userInfo.id).then(r => {
+      this.account = r.data[0];
+      getGroup(r.data[0].ia).then(g => {
+        this.iaList = iaListData(g);
+        this.groupList = groupListData(g);
+        this.stnList = stnListData(g);
+      }).catch(e => {
+        console.log(e);
+      });
+    }).catch(e => {
+      console.log(e);
+    });
+  },
   methods: {
     restorePassword () {
       this.onPassword = !this.onPassword;

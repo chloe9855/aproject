@@ -2,12 +2,12 @@
   <div class="inputBox">
     <DropdownVertical
       title="群組"
-      :options="member"
+      :option-data="groupList"
       @DropdownVal="getGroup"
     />
     <DropdownVertical
       title="管理處"
-      :options="member"
+      :option-data="iaList"
       @DropdownVal="getManagement"
     />
     <DropdownVertical
@@ -34,6 +34,9 @@
 import InputVertical from '~/components/tools/InputVertical.vue';
 import DropdownVertical from '~/components/tools/DropdownVertical.vue';
 import DatePicker from '~/components/tools/DatePicker.vue';
+import { groupListData, iaListData } from '~/publish/groupListData';
+import { getAccount } from '~/api/account';
+import { getGroup } from '~/api/group';
 export default {
   components: {
     DropdownVertical: DropdownVertical,
@@ -51,10 +54,25 @@ export default {
         startTime: '',
         endTime: ''
       },
-      member: [{ title: '預設選項', value: '0' }, { title: '工作站人員', value: '1' }, { title: '管理人員', value: '2' }, { title: '民眾', value: '3' }]
+      member: [{ title: '預設選項', value: '0' }, { title: '工作站人員', value: '1' }, { title: '管理人員', value: '2' }, { title: '民眾', value: '3' }],
+      iaList: [],
+      group: []
     };
   },
   name: 'UserAcctSearch',
+  mounted () {
+    getAccount(this.$store.state.userInfo.id).then(r => {
+      this.account = r.data[0];
+      getGroup(r.data[0].ia).then(g => {
+        this.iaList = iaListData(g);
+        this.groupList = groupListData(g);
+      }).catch(e => {
+        console.log(e);
+      });
+    }).catch(e => {
+      console.log(e);
+    });
+  },
   methods: {
     getGroup (e) {
       if (e) {
