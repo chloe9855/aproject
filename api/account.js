@@ -1,7 +1,8 @@
 import request from '~/service';
 
-export function getAccount () {
-  return request.get('/aerc/rest/Account');
+export function getAccount (id) {
+  const accountRequest = id ? `/aerc/rest/Account?ID=${id}` : '/aerc/rest/Account';
+  return request.get(accountRequest);
 }
 
 export function editAccount () {

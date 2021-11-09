@@ -9,7 +9,7 @@ export function editNewsData (data) {
     titleObj.push(linkObj);
     body.push({ val: index, title: titleObj });
   });
-  console.log('body:');
+  console.log('body111:');
   console.log(body);
   return body;
 }

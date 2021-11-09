@@ -25,6 +25,7 @@
           :is-del="true"
           :is-scroll-table="true"
           :column-min-width="160"
+          @tableEvent="getTableEvent"
         />
       </div>
     </div>
@@ -74,7 +75,8 @@ export default {
         ]
       },
       BreadCrumb: ['系統管理', '帳號管理'],
-      toggleStatus: false
+      toggleStatus: false,
+      editItem: {}
     };
   },
   name: 'Account',
@@ -96,9 +98,8 @@ export default {
       console.log(e);
     });
   },
-  mounted: () => {
+  mounted () {
     getAccount().then(r => {
-      console.log(r.data);
       accountData(r.data);
     });
   },
@@ -110,6 +111,19 @@ export default {
       if (e) {
         this.$store.commit('TOGGLE_POPUP_STATUS');
         this.$store.commit('TOGGLE_POPUP_TYPE', { type: 'addAccount', title: '新增帳號' });
+      }
+    },
+    getTableEvent (e) {
+      if (e) {
+        switch (e.event) {
+          case 'isEdit':
+            this.$store.commit('TOGGLE_POPUP_STATUS');
+            this.$store.commit('TOGGLE_POPUP_TYPE', { type: 'editAccount', title: '編輯帳號', editId: e.item.title[0] });
+            break;
+          case 'isDel':
+            console.log('isDel');
+            break;
+        }
       }
     }
   },

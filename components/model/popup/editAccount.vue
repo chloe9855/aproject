@@ -30,7 +30,7 @@
     <InputVertical title="備註" />
     <DropdownVertical title="群組" />
     <div class="box">
-      <span>帳號啟用1{{ account }}</span>
+      <span>帳號啟用</span>
       <Tag text="驗證中" />
     </div>
   </div>
@@ -41,7 +41,7 @@ import InputVertical from '~/components/tools/InputVertical.vue';
 import DropdownVertical from '~/components/tools/DropdownVertical.vue';
 import Button from '~/components/tools/Buttons.vue';
 import Tag from '~/components/tools/Tag.vue';
-import { signOnStatus } from '~/api/login';
+// import { signOnStatus } from '~/api/login';
 import { getAccount } from '~/api/account';
 
 export default {
@@ -54,27 +54,23 @@ export default {
   data: () => {
     return {
       onPassword: false,
-      account: ''
+      account: {}
     };
   },
   name: 'EditAccount',
-  async asyncData () {
-    return signOnStatus().then(({ data }) => ({
-      account: data
-    })).catch(e => {
-      console.log(e);
-    });
-  },
-  mounted: () => {
-    getAccount().then(r => {
-      console.log(r);
+  // async asyncData () {
+  //   return getAccount(this.$store.state.userInfo.id).then(({ data }) => ({
+  //     account: data
+  //   })).catch(e => {
+  //     console.log(e);
+  //   });
+  // },
+  mounted () {
+    console.log(this.$store.state.popupType);
+    getAccount(this.$store.state.userInfo.id).then(r => {
+      this.account = r.data[0];
     }).catch(e => {
       console.log(e);
-    });
-    signOnStatus().then(a => {
-      console.log(a);
-    }).catch(t => {
-      console.log(t);
     });
   },
   methods: {

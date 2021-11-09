@@ -255,7 +255,7 @@
               v-show="isEdit"
               class="editOption"
             >
-              <div @click="sendEvent('isEdit')">
+              <div @click="sendEvent('isEdit',item)">
                 <img
                   alt=""
                   class="vector"
@@ -267,7 +267,7 @@
               v-show="isDel"
               class="delOption"
             >
-              <div @click="sendEvent('isDel')">
+              <div @click="sendEvent('isDel',item)">
                 <img
                   alt=""
                   class="vector"
@@ -279,7 +279,7 @@
               v-show="isPrint"
               class="printOption"
             >
-              <div @click="sendEvent('isPrint')">
+              <div @click="sendEvent('isPrint',item)">
                 <img
                   alt=""
                   class="vector"
@@ -291,7 +291,7 @@
               v-show="isMap"
               class="mapOption"
             >
-              <div @click="sendEvent('isMap')">
+              <div @click="sendEvent('isMap',item)">
                 <img
                   alt=""
                   class="vector"
@@ -303,7 +303,7 @@
               v-show="isSearch"
               class="searchOption"
             >
-              <div @click="sendEvent('isSearch')">
+              <div @click="sendEvent('isSearch',item)">
                 <img
                   alt=""
                   class="vector"
@@ -474,8 +474,8 @@ export default {
         }
       });
     },
-    sendEvent (e) {
-      this.$emit('tableEvent', e);
+    sendEvent (e, item) {
+      this.$emit('tableEvent', { event: e, item: item });
     }
   },
   computed: {

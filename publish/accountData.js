@@ -19,7 +19,7 @@ export function accountData (data) {
   data.forEach((element, index) => {
     const titleObj = [];
     titleObj.push(element.account);
-    titleObj.push(element.groupname);
+    titleObj.push(element.name);
     titleObj.push(element.ianame);
     titleObj.push(element.ia);
     titleObj.push(element.groupname);

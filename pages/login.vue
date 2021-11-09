@@ -99,7 +99,7 @@ export default {
       const data = `account=${this.account}&password=${this.password}&captcha=${this.captcha}`;
       loginReq(data).then((r) => {
         if (r.data[0].status) {
-          this.$store.commit('SET_USER_INFO', { userInfo: r.data[0] });
+          // this.$store.commit('SET_USER_INFO', { userInfo: r.data[0] });
           sessionStorage.setItem('loginStatus', r.data[0].status);
           this.$router.push('/');
         } else {
