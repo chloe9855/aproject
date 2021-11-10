@@ -53,6 +53,7 @@
         <div class="menu-list">
           <div
             v-for="item of menuList"
+            v-show="isLimit(item.name)"
             :key="item.name"
             class="submenu-group"
             @mouseover="mouseOver(item.name)"
@@ -141,9 +142,10 @@
 </template>
 
 <script>
-import { signOnStatus, logout } from '~/api/login';
+import { signOnStatus } from '~/api/login';
 import { mapState } from 'vuex';
 import { headerLimit } from '~/publish/headerLimit';
+import { getLogout } from '~/publish/getLogout';
 export default {
   data () {
     return {
@@ -244,14 +246,7 @@ export default {
       this.showBox = !this.showBox;
     },
     logoutAccount () {
-      logout().then((r) => {
-        this.$store.commit('SET_USER_INFO', { userInfo: {} });
-        sessionStorage.setItem('loginStatus', 0);
-        this.$cookies.set('ASP.NET_SessionId', '');
-        this.$router.push('/login');
-      }).catch((e) => {
-        console.log(e);
-      });
+      getLogout(this);
     },
     loginStatus () {
       signOnStatus().then((r) => {
@@ -263,15 +258,10 @@ export default {
     },
     isLimit (item) {
       const r = this.userInfo;
-      return headerLimit(r, item);
-      // return false;
-      // let result;
-      // this.userInfo.then((r) => {
-      //   console.log(headerLimit(r, tag));
-      //   return headerLimit(r, tag);
-      // }).catch((e) => {
-      //   result = true;
-      // });
+      if (r.data) {
+        console.log(this.userInfo.data[0]);
+        return headerLimit(r, item);
+      };
     },
     ...mapState([
       'userInfo'

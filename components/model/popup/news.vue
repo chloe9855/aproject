@@ -17,6 +17,7 @@
       :table-column="tableList"
       :is-paginate="false"
       :is-del="true"
+      @inputData="getInputData"
     />
   </div>
 </template>
@@ -43,13 +44,20 @@ export default {
           { title: '連結網址' }
         ],
         body: [
-          { val: 'news1', title: [{ type: 'input' }, { type: 'input' }] },
-          { val: 'news2', title: [{ type: 'input' }, { type: 'input' }] },
-          { val: 'news3', title: [{ type: 'input' }, { type: 'input' }] },
-          { val: 'news4', title: [{ type: 'input' }, { type: 'input' }] }
+          { val: 'news1', title: [{ type: 'input', key: 'a0' }, { type: 'input', key: 'b0' }] },
+          { val: 'news2', title: [{ type: 'input', key: 'a1' }, { type: 'input', key: 'b1' }] },
+          { val: 'news3', title: [{ type: 'input', key: 'a2' }, { type: 'input', key: 'b2' }] },
+          { val: 'news4', title: [{ type: 'input', key: 'a3' }, { type: 'input', key: 'b3' }] }
         ]
       }
     };
+  },
+  methods: {
+    getInputData (e) {
+      if (e) {
+        console.log(e);
+      }
+    }
   },
   computed: {}
 };

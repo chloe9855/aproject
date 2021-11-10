@@ -21,7 +21,7 @@ import Header from '~/components/model/Header';
 import Footer from '~/components/model/Footer';
 import Popup from '~/components/model/Popup.vue';
 import MaskTool from '~/components/tools/Mask.vue';
-import { logout } from '~/api/login';
+import { getLogout } from '~/publish/getLogout';
 
 export default {
   components: {
@@ -53,11 +53,7 @@ export default {
           this.countDownLogout();
           console.log(this.setMin);
         } else {
-          logout().then((r) => {
-            this.$router.push('/login');
-          }).catch((e) => {
-            console.log(e);
-          });
+          getLogout(this);
         }
       }, 1000);
     }

@@ -136,8 +136,7 @@
               />
               <Input
                 v-else-if="tableType(text)&&typeof text === 'object' && text.type === 'input'"
-                :key="textIndex"
-                :input-id="textIndex"
+                :input-id="text.key"
                 :input-text="text.title"
                 @inputValue="inputVal"
               />
@@ -458,6 +457,7 @@ export default {
           }
         });
       }
+      this.$emit('inputData', arr);
     },
     getPageNum (e) { // 換頁取得DATA
       this.getPage = e;
