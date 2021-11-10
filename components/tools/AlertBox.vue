@@ -4,7 +4,7 @@
       <img
         class="close"
         :src="require('~/assets/img/close-icon.svg')"
-        @click="$emit('close')"
+        @click="$emit('close',true)"
       >
       <div
         class="icon"
@@ -32,13 +32,13 @@
         <div
           v-if="cancelButton === true"
           class="msg-btn cancel"
-          @click="$emit('close')"
+          @click="$emit('close',true)"
         >
           取消
         </div>
         <div
           class="msg-btn"
-          @click="$emit('confirm',inputValue)"
+          @click="$emit('confirm',{status:true,value:inputValue})"
         >
           確定
         </div>

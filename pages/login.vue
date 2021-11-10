@@ -58,6 +58,15 @@
       box-icon="warning"
       text="寄送重設密碼於註冊信箱請前往信箱重設密碼"
       @confirm="sendForgetPassword"
+      @close="closeForgetPassWord"
+    />
+    <AlertBox
+      v-show="loginError"
+      :title="loginErrorTitle"
+      box-icon="warning"
+      :text="loginErrorText"
+      @confirm="closeAlert"
+      @close="closeAlert"
     />
   </div>
 </template>
@@ -80,7 +89,10 @@ export default {
       password: '',
       verifyImg: '',
       captcha: '',
-      isforgetPassWord: false
+      isforgetPassWord: false,
+      loginError: false,
+      loginErrorTitle: '',
+      loginErrorText: ''
     };
   },
   name: 'Login',
@@ -101,7 +113,6 @@ export default {
       const data = `account=${this.account}&password=${this.password}&captcha=${this.captcha}`;
       loginReq(data).then((r) => {
         if (r.data[0].status) {
-          // this.$store.commit('SET_USER_INFO', { userInfo: r.data[0] });
           sessionStorage.setItem('loginStatus', r.data[0].status);
           this.$router.push('/');
         } else {
@@ -109,7 +120,21 @@ export default {
         }
       }).catch((e) => {
         console.log(e);
+        this.loginErrorTitle = '登入錯誤';
+        this.loginErrorText = '請確認帳號密碼是否正確';
+        this.loginError = true;
       });
+    },
+    closeForgetPassWord (e) {
+      if (e) {
+        this.isforgetPassWord = false;
+      };
+    },
+    closeAlert (e) {
+      console.log(e);
+      if (e) {
+        this.loginError = false;
+      };
     },
     forgetPassWord () {
       this.isforgetPassWord = true;
@@ -130,11 +155,11 @@ export default {
       }
     },
     sendForgetPassword (e) {
-      console.log(e);
       if (e) {
-        const data = `mail=${e.val}`;
+        const data = `account=${e.value.val}`;
         forgetPassword(data).then(r => {
           console.log(r);
+          this.isforgetPassWord = false;
         }).catch(e => {
           console.log(e);
         });
