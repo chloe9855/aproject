@@ -6,6 +6,9 @@
     >
       <TreeSelect55
         :my-item="mItem"
+        @changeIa="iaHandler"
+        @changeStn="stnHandler"
+        @changeGrp="grpHandler"
       />
     </div>
   </div>
@@ -26,19 +29,21 @@ export default {
           {
             id: 1,
             ia: '嘉南管理處',
+
             stn: [
-              { title: '南基工作站', no: 555, grp: [{ name: '北北水利小組', no: 111 }, { name: 'uu水利小組', no: 5414 }, { name: 'yy水利小組', no: 657 }] },
-              { title: 'uu工作站', no: 475, grp: [{ name: 'ee水利小組', no: 888 }, { name: 'tt水利小組', no: 755 }, { name: 'll水利小組', no: 442 }] },
-              { title: 'oo工作站', no: 588, grp: [{ name: 'ii水利小組', no: 463 }, { name: 'aa水利小組', no: 774 }, { name: 'fg水利小組', no: 521 }] }
+              { title: '南基工作站', no: 555, grp: [{ name: '北北水利小組', no: 111, isChecked: false }, { name: 'uu水利小組', no: 541, isChecked: false4 }, { name: 'yy水利小組', no: 657, isChecked: false }] },
+              { title: 'uu工作站', no: 475, grp: [{ name: 'ee水利小組', no: 888, isChecked: false }, { name: 'tt水利小組', no: 755, isChecked: false }, { name: 'll水利小組', no: 442, isChecked: false }] },
+              { title: 'oo工作站', no: 588, grp: [{ name: 'ii水利小組', no: 463, isChecked: false }, { name: 'aa水利小組', no: 774, isChecked: false }, { name: 'fg水利小組', no: 521, isChecked: false }] }
             ]
           },
           {
             id: 2,
             ia: '宜蘭管理處',
+
             stn: [
-              { title: 'mm工作站', no: 86, grp: [{ name: 'tt水利小組', no: 45 }, { name: 'ui利小組', no: 466 }, { name: 'yy水利小組', no: 51 }] },
-              { title: 'ii工作站', no: 76, grp: [{ name: 'ei水利小組', no: 12 }, { name: 'ti水利小組', no: 255 }, { name: 'lu水利小組', no: 88 }] },
-              { title: 'pop工作站', no: 99, grp: [{ name: 'io水利小組', no: 13 }, { name: 'ao水利小組', no: 356 }, { name: 'fi水利小組', no: 100 }] }
+              { title: 'mm工作站', no: 86, grp: [{ name: 'tt水利小組', no: 45, isChecked: false }, { name: 'ui利小組', no: 466, isChecked: false }, { name: 'yy水利小組', no: 51, isChecked: false }] },
+              { title: 'ii工作站', no: 76, grp: [{ name: 'ei水利小組', no: 12, isChecked: false }, { name: 'ti水利小組', no: 255, isChecked: false }, { name: 'lu水利小組', no: 88, isChecked: false }] },
+              { title: 'pop工作站', no: 99, grp: [{ name: 'io水利小組', no: 13, isChecked: false }, { name: 'ao水利小組', no: 356, isChecked: false }, { name: 'fi水利小組', no: 100, isChecked: false }] }
             ]
           }
         ];
@@ -50,8 +55,19 @@ export default {
 
     };
   },
-  methods: {
+  mounted () {
 
+  },
+  methods: {
+    iaHandler ($event, name) {
+      this.$emit('select', $event, name);
+    },
+    stnHandler ($event, name) {
+      this.$emit('select', $event, name);
+    },
+    grpHandler ($event, name) {
+      this.$emit('select', $event, name);
+    }
   }
 };
 </script>

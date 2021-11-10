@@ -54,6 +54,10 @@ export default {
     placeholders: {
       type: String,
       default: '請選擇'
+    },
+    changeText: {
+      type: String,
+      default: ''
     }
   },
   data: () => {
@@ -66,6 +70,9 @@ export default {
   watch: {
     selected (n, o) {
       this.$emit('DropdownVal', n);
+    },
+    changeText (value) {
+      this.message = value;
     }
   }
 };

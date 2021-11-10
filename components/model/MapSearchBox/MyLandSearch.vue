@@ -6,7 +6,7 @@
       @current="payload => options.current = payload"
     />
     <div
-      v-if="options.current === 0"
+      v-show="options.current === 0"
       class="landNum"
     >
       <DropdownVertical
@@ -31,7 +31,7 @@
       />
     </div>
     <div
-      v-if="options.current === 1"
+      v-show="options.current === 1"
       class="landUnit"
     >
       <DropdownVertical
@@ -117,7 +117,7 @@ export default {
 .buttonBox{
   display: flex;
   justify-content: flex-end;
-  margin-top: 20px;
+  margin-top: 10px;
   padding-right: 20px;
   .button_wrap{
     padding-left: 5px;

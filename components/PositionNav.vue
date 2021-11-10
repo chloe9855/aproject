@@ -6,7 +6,7 @@
       @current="payload => posOptions.current = payload"
     />
     <div class="pos_content">
-      <div v-if="posOptions.current === 0">
+      <div v-show="posOptions.current === 0">
         <DropdownVertical-component
           :options="allDropList.Ia"
           :title="'管理處'"
@@ -41,7 +41,7 @@
         </div>
       </div>
 
-      <div v-if="posOptions.current === 1">
+      <div v-show="posOptions.current === 1">
         <DropdownVertical-component
           :options="countyList.County"
           :title="'縣市'"

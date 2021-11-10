@@ -11,6 +11,7 @@
         <input
           :id="myItem.id"
           type="checkbox"
+          @change="$emit('changeIa', $event.target.checked, myItem.ia)"
         >
         <label
           class="title"
@@ -32,6 +33,8 @@
       >
         <TreeSelect2
           :s-item="sItem"
+          @changeStn="($event, name) => { $emit('changeStn', $event, name) }"
+          @changeGrp="($event, name) => { $emit('changeGrp', $event, name) }"
         />
       </div>
     </div>
