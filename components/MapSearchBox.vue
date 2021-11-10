@@ -9,11 +9,13 @@
         :selected="barOptions.current"
         @current="payload => barOptions.current = payload"
       />
-      <component
-        :is="componentInstance"
-        @channelSearch="$emit('search')"
-        @clear="$emit('clear')"
-      />
+      <keep-alive>
+        <component
+          :is="componentInstance"
+          @channelSearch="$emit('search')"
+          @clear="$emit('clear')"
+        />
+      </keep-alive>
     </div>
     <div
       v-if="columnList.length >= 1 && (barOptions.current === 0 || barOptions.current === 3)"

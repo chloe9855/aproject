@@ -63,6 +63,10 @@ export default {
     defaultValue: {
       type: String,
       default: ''
+    },
+    changeText: {
+      type: String,
+      default: ''
     }
   },
   data: () => {
@@ -86,6 +90,9 @@ export default {
     },
     defaultValue (n, o) {
       this.selectVal = n;
+    },
+    changeText (value) {
+      this.message = value;
     }
   }
 };

@@ -10,6 +10,7 @@
         <input
           :id="sItem.no"
           type="checkbox"
+          @change="$emit('changeStn', $event.target.checked, sItem.title)"
         >
         <label
           class="title"
@@ -33,6 +34,7 @@
           <input
             :id="gItem.no"
             type="checkbox"
+            @change="$emit('changeGrp', $event.target.checked, gItem.name)"
           >
           <label
             class="title"
