@@ -53,16 +53,18 @@
     <AlertBox
       v-show="isforgetPassWord"
       :cancel-button="true"
+      :add-input="true"
       title="忘記密碼怎麼辦?"
       box-icon="warning"
       text="寄送重設密碼於註冊信箱請前往信箱重設密碼"
+      @confirm="sendForgetPassword"
     />
   </div>
 </template>
 <script crossorigin="anonymous">
 import InputHorizontal from '~/components/tools/InputHorizontal.vue';
 import AlertBox from '~/components/tools/AlertBox.vue';
-import { loginReq, getVerify } from '~/api/login';
+import { loginReq, getVerify, forgetPassword } from '~/api/login';
 import Vue from 'vue';
 import VueCookies from 'vue-cookies';
 Vue.prototype.$cookies = VueCookies;
@@ -125,6 +127,17 @@ export default {
     getCaptcha (e) {
       if (e) {
         this.captcha = e;
+      }
+    },
+    sendForgetPassword (e) {
+      console.log(e);
+      if (e) {
+        const data = `mail=${e.val}`;
+        forgetPassword(data).then(r => {
+          console.log(r);
+        }).catch(e => {
+          console.log(e);
+        });
       }
     }
   }

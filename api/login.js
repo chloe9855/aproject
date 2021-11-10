@@ -15,3 +15,7 @@ export function signOnStatus () {
 export function logout () {
   return request.post('/AERC/rest/Logout');
 }
+
+export function forgetPassword (data) {
+  return request.post('/AERC/rest/Password', data);
+}

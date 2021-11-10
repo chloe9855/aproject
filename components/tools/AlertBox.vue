@@ -21,6 +21,7 @@
           input-text="請輸入帳號"
           error-tip="無此帳號，請重新輸入"
           is-warn="code8"
+          @inputValue="getInputValue"
         />
       </div>
 
@@ -37,7 +38,7 @@
         </div>
         <div
           class="msg-btn"
-          @click="$emit('confirm')"
+          @click="$emit('confirm',inputValue)"
         >
           確定
         </div>
@@ -78,8 +79,15 @@ export default {
   },
   data () {
     return {
-
+      inputValue: ''
     };
+  },
+  methods: {
+    getInputValue (e) {
+      if (e) {
+        this.inputValue = e;
+      }
+    }
   }
 };
 </script>

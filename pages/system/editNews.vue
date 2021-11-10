@@ -164,8 +164,7 @@ export default {
       }
     },
     delMNews () {
-      console.log('del');
-      const data = `bulletinsno=${this.delData}&status=1`;
+      const data = 'bulletinsno=[5,6]&status=1';
       editBulletin(data).then(r => {
         console.log(r);
       }).catch(e => {
