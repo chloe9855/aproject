@@ -63,7 +63,9 @@
               :href="item.path"
               :title="item.name"
             >
-              <p class="title-two seticon">
+              <p
+                class="title-two seticon"
+              >
                 {{ item.name }}
               </p>
             </a>
@@ -83,6 +85,7 @@
             >
               <li
                 v-for="side of sideList1"
+                v-show="isLimit(side.name)"
                 :key="side.name"
               >
                 <a
@@ -140,6 +143,7 @@
 <script>
 import { signOnStatus, logout } from '~/api/login';
 import { mapState } from 'vuex';
+import { headerLimit } from '~/publish/headerLimit';
 export default {
   data () {
     return {
@@ -204,16 +208,18 @@ export default {
       listOne: false,
       listOnee: false,
       listTwo: false,
-      showBox: false
-
+      showBox: false,
+      userInfo: {},
+      showTag: false
     };
   },
   // middleware: 'routerAuth',
   // meta: {
   //   requiresAuth: true
   // },
-  mounted () {
+  created () {
     // console.log(this.userInfo);
+    this.loginStatus();
   },
   methods: {
     mouseOver (payload) {
@@ -249,10 +255,23 @@ export default {
     },
     loginStatus () {
       signOnStatus().then((r) => {
-        console.log(r);
+        this.userInfo = r;
+        // headerLimit(this.userInfo);
       }).catch((e) => {
         console.log(e);
       });
+    },
+    isLimit (item) {
+      const r = this.userInfo;
+      return headerLimit(r, item);
+      // return false;
+      // let result;
+      // this.userInfo.then((r) => {
+      //   console.log(headerLimit(r, tag));
+      //   return headerLimit(r, tag);
+      // }).catch((e) => {
+      //   result = true;
+      // });
     },
     ...mapState([
       'userInfo'
