@@ -3,15 +3,22 @@
     <InputVertical title="文件名稱" />
     <div class="buttonBox">
       <Button
+        v-show="delBtn"
+        :name="'button-red'"
+        :text="'刪除所選'"
+      />
+      <Button
         :name="'button-add'"
         :text="'新增檔案'"
         :add="true"
       />
     </div>
     <Table
+      :key="num"
       :table-column="tableList"
       :is-paginate="false"
       :is-del="true"
+      @checkList="getTableCheck"
     />
   </div>
 </template>
@@ -41,6 +48,17 @@ export default {
         ]
       }
     };
+  },
+  methods: {
+    getTableCheck (e) {
+      if (e) {
+        if (e.length > 1) {
+          this.delBtn = true;
+        } else {
+          this.delBtn = false;
+        };
+      }
+    }
   },
   computed: {}
 };

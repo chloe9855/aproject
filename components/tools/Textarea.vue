@@ -16,8 +16,10 @@
       </p>
     </div>
     <textarea
+      v-model="textContent"
       class="w-100"
       :class="inputHeight"
+      @input="sendTextContent"
     />
   </div>
 </template>
@@ -44,10 +46,15 @@ export default {
   },
   data () {
     return {
-
+      textContent: ''
     };
   },
   name: 'Datepicker',
+  methods: {
+    sendTextContent () {
+      this.$emit('textContent', this.textContent);
+    }
+  },
   computed: {
     isTitle: function () {
       const title = this.title;

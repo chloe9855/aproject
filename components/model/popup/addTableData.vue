@@ -3,6 +3,7 @@
     <InputVertical title="表單名稱" />
     <div class="buttonBox">
       <Button
+        v-show="delBtn"
         :name="'button-red'"
         :text="'刪除所選'"
       />
@@ -10,12 +11,15 @@
         :name="'button-add'"
         :text="'新增檔案'"
         :add="true"
+        @click="addFile"
       />
     </div>
     <Table
+      :key="num"
       :table-column="tableList"
       :is-paginate="false"
       :is-del="true"
+      @checkList="getTableCheck"
     />
   </div>
 </template>
@@ -39,13 +43,27 @@ export default {
           { title: '檔案' }
         ],
         body: [
-          { val: 'addTable1', title: [{ type: 'input' }, { type: 'btn' }] },
-          { val: 'addTable2', title: [{ type: 'input' }, { type: 'btn' }] },
-          { val: 'addTable3', title: [{ type: 'input' }, { type: 'btn' }] },
-          { val: 'addTable4', title: [{ type: 'input' }, { type: 'btn' }] }
+          { val: 'addTable0', title: [{ type: 'input', key: 'a0' }, { type: 'btn', key: 'b0' }] }
         ]
-      }
+      },
+      delBtn: false,
+      num: 0
     };
+  },
+  methods: {
+    getTableCheck (e) {
+      if (e) {
+        if (e.length > 1) {
+          this.delBtn = true;
+        } else {
+          this.delBtn = false;
+        };
+      }
+    },
+    addFile () {
+      this.num += 1;
+      this.tableList.body.push({ val: `addTable${this.num}`, title: [{ type: 'input', key: `a${this.num}` }, { type: 'btn', key: `b${this.num}` }] });
+    }
   },
   computed: {}
 };
