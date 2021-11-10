@@ -786,6 +786,11 @@ export default {
     min-width: 180px;
   }
 }
+.minWidth200{
+  th{
+    min-width: 200px;
+  }
+}
 .isRightBorder{
   border-right:1px solid $light-green;
 }

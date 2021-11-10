@@ -21,7 +21,7 @@
       :btn-sec-add="true"
       btn-sec-name="button-add"
       class="w-90"
-      @STbtnStatus="addNews"
+      @STbtnStatus="delMNews"
       @STbtnSecStatus="addNews"
     />
     <TableTool
@@ -67,7 +67,7 @@ import SubTitleTool from '~/components/tools/SubTitleTool.vue';
 import PageHeader from '~/components/tools/PageHeader.vue';
 import BreadCrumbTool from '~/components/tools/BreadCrumbTool.vue';
 import { editNewsData } from '~/publish/editNewsData';
-import { getBulletin } from '~/api/bulletin';
+import { getBulletin, editBulletin } from '~/api/bulletin';
 
 export default {
   components: {
@@ -105,7 +105,8 @@ export default {
         ]
       },
       BreadCrumb: ['系統管理', '首頁資料管理'],
-      delBtn: ''
+      delBtn: '',
+      delData: []
     };
   },
   name: 'EditNews',
@@ -154,12 +155,22 @@ export default {
     },
     getTableCheck (e) {
       if (e) {
+        this.delData = e;
         if (e.length > 1) {
           this.delBtn = '多筆刪除';
         } else {
           this.delBtn = '';
         };
       }
+    },
+    delMNews () {
+      console.log('del');
+      const data = `bulletinsno=${this.delData}&status=1`;
+      editBulletin(data).then(r => {
+        console.log(r);
+      }).catch(e => {
+        console.log(e);
+      });
     }
   }
 
