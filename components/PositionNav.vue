@@ -10,30 +10,35 @@
         <DropdownVertical-component
           :options="allDropList.Ia"
           :title="'管理處'"
-          @DropdownVal="(payload) => { nextListHandler(payload, 'Mng'), selectHandler(payload, 'Ia') }"
+          :change-text="clearCanals1"
+          @DropdownVal="(payload) => { nextListHandler(payload, 'Mng'), selectHandler(payload, 'Ia'), clearCanals1 = false }"
         />
         <DropdownVertical-component
           :options="allDropList.Mng"
           :title="'管理分處'"
           :bg-color="true"
-          @DropdownVal="(payload) => { nextListHandler(payload, 'Stn'), selectHandler(payload, 'Mng') }"
+          :change-text="clearCanals2"
+          @DropdownVal="(payload) => { nextListHandler(payload, 'Stn'), selectHandler(payload, 'Mng'), clearCanals2 = false }"
         />
         <DropdownVertical-component
           :options="allDropList.Stn"
           :title="'工作站'"
           :bg-color="true"
-          @DropdownVal="(payload) => { nextListHandler(payload, 'Grp'), selectHandler(payload, 'Stn') }"
+          :change-text="clearCanals3"
+          @DropdownVal="(payload) => { nextListHandler(payload, 'Grp'), selectHandler(payload, 'Stn'), clearCanals3 = false }"
         />
         <DropdownVertical-component
           :options="allDropList.Grp"
           :title="'水利小組'"
           :bg-color="true"
-          @DropdownVal="(payload) => { nextListHandler(payload, 'Grp'), selectHandler(payload, 'Grp') }"
+          :change-text="clearCanals4"
+          @DropdownVal="(payload) => { nextListHandler(payload, 'Grp'), selectHandler(payload, 'Grp'), clearCanals4 = false }"
         />
         <div class="bt_wrap">
           <Buttons-component
             :name="'button-default'"
             :text="'清除全部'"
+            @click="clearCanalHandler"
           />
           <Buttons-component
             :text="'定位'"
@@ -94,13 +99,13 @@
             <InputTool-component
               v-model="locate.twdX"
               :input-text="'TWD97-X(ex:304253)'"
-              :change-text="locate.twdX"
+              :alter-coor="locate.twdX"
               @inputValue="payload => locate.twdX = payload.val"
             />
             <InputTool-component
               v-model="locate.twdY"
               :input-text="'TWD97-Y(ex:2761400)'"
-              :change-text="locate.twdY"
+              :alter-coor="locate.twdY"
               @inputValue="payload => locate.twdY = payload.val"
             />
           </div>
@@ -132,13 +137,13 @@
             <InputTool-component
               v-model="locate.wgsX"
               :input-text="'WGS84-經度(ex:121.5373)'"
-              :change-text="locate.wgsX"
+              :alter-coor="locate.wgsX"
               @inputValue="payload => locate.wgsX = payload.val"
             />
             <InputTool-component
               v-model="locate.wgsY"
               :input-text="'WGS84-緯度(ex:24.9595)'"
-              :change-text="locate.wgsY"
+              :alter-coor="locate.wgsY"
               @inputValue="payload => locate.wgsY = payload.val"
             />
           </div>
@@ -184,6 +189,7 @@ export default {
   },
   data () {
     return {
+      // * 坐標定位
       drawPoint: '',
       transCoor: {
         twdX: '',
@@ -227,6 +233,7 @@ export default {
           }
         ]
       },
+      // * 灌溉定位
       allDropList: {
         Ia: [{
           title: '宜蘭01',
@@ -236,6 +243,11 @@ export default {
         Stn: [],
         Grp: []
       },
+      clearCanals1: false,
+      clearCanals2: false,
+      clearCanals3: false,
+      clearCanals4: false,
+      // * 地籍定位
       countyList: {
         County: [],
         Town: [],
@@ -330,7 +342,7 @@ export default {
       this.transCoor.twdX = tData[0].toFixed(2);
       this.transCoor.twdY = tData[1].toFixed(2);
     },
-    // * 取得縣市資料
+    // * @ 地籍定位 : 取得縣市資料
     getCountyData () {
       fetch('http://192.168.3.112/AERC/rest/County', {
         method: 'POST',
@@ -354,7 +366,7 @@ export default {
         console.log(err);
       });
     },
-    // * 取得鄉鎮市區 地段 地籍資料
+    // * @ 地籍定位 : 取得鄉鎮市區 地段 地籍資料
     nextCountHandler (payload, nextType) {
       let myObj = {};
       if (nextType === 'Town') {
@@ -392,7 +404,18 @@ export default {
         console.log(err);
       });
     },
-    // * 點擊選單 抓出下一排選項的所有清單
+    // * @ 灌溉定位 : 清除全部
+    clearCanalHandler () {
+      this.clearCanals1 = true;
+      this.clearCanals2 = true;
+      this.clearCanals3 = true;
+      this.clearCanals4 = true;
+      this.allDropList.Grp = [];
+      // this.allDropList.Ia = [];
+      this.allDropList.Mng = [];
+      this.allDropList.Stn = [];
+    },
+    // * @ 灌溉定位 : 點擊選單 抓出下一排選項的所有清單
     nextListHandler (payload, nextType) {
       console.log(payload);
       console.log(nextType);
@@ -458,7 +481,7 @@ export default {
         console.log(err);
       });
     },
-    // * 點選清單中的其中一筆 繪製圖形+定位過去
+    // * @ 灌溉定位: 點選清單中的其中一筆 繪製圖形+定位過去
     selectHandler (payload, myType) {
       if (payload.value === 'none') { return; }
 

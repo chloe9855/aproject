@@ -65,8 +65,8 @@ export default {
       default: ''
     },
     changeText: {
-      type: String,
-      default: ''
+      type: Boolean,
+      default: false
     }
   },
   data: () => {
@@ -92,7 +92,9 @@ export default {
       this.selectVal = n;
     },
     changeText (value) {
-      this.message = value;
+      if (value === true) {
+        this.selected = '';
+      }
     }
   }
 };

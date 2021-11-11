@@ -3,16 +3,20 @@
     <Dropdown-component
       :options="member"
       :placeholders="'請選擇管理處'"
+      :change-text="clearText"
       @DropdownVal="getCanalLists"
     />
     <InputTool-component
       :input-text="'輸入渠道關鍵字'"
       :search-input="canalList"
+      :change-text="clearKeyText"
+      @inputValue="searchCanal"
     />
     <div class="bt_wrap">
       <Buttons-component
         :name="'button-default'"
         :text="'清除全部'"
+        @click="clearAllHandler"
       />
     </div>
   </div>
@@ -32,12 +36,23 @@ export default {
   data () {
     return {
       member: [{ title: '01 宜蘭', value: '1' }],
-      canalList: []
+      allCanalList: [],
+      canalList: [],
+      clearText: false,
+      clearKeyText: false
     };
   },
   name: 'KeyWordSearch',
   methods: {
+    clearAllHandler () {
+      this.clearText = true;
+      this.clearKeyText = true;
+      this.$emit('clearKeyword');
+    },
+    // * 取得該管理處的所有渠道
     getCanalLists (payload) {
+      this.clearText = false;
+
       fetch('http://192.168.3.112/AERC/rest/Canal/admin5', {
         method: 'POST',
         headers: new Headers({
@@ -54,8 +69,38 @@ export default {
         return response.json();
       }).then((jsonData) => {
         console.log(jsonData);
+        this.allCanalList = jsonData;
+
         const nameList = jsonData.map(item => item.Sys_cns);
         this.canalList = nameList;
+      }).catch((err) => {
+        console.log(err);
+      });
+    },
+    // * 取得特定渠道之資料+圖形
+    searchCanal (payload) {
+      this.clearKeyText = false;
+
+      const myItem = this.allCanalList.filter(item => item.Sys_cns === payload.val);
+      if (myItem.length < 1) {
+        return;
+      }
+      console.log(myItem);
+
+      fetch('http://192.168.3.112/AERC/rest/Canal/admin5', {
+        method: 'POST',
+        headers: new Headers({
+          'Content-Type': 'application/json'
+        }),
+        body: JSON.stringify({
+          Ia: '01',
+          FID: myItem[0].FID
+        })
+      }).then((response) => {
+        return response.json();
+      }).then((jsonData) => {
+        console.log(jsonData);
+        this.$emit('keywordSearch', jsonData);
       }).catch((err) => {
         console.log(err);
       });

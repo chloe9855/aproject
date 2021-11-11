@@ -20,6 +20,7 @@
     </div>
     <input
       v-model="message"
+      autocomplete="off"
       class="inputType"
       :class="{inputError:isError,isIcon:isAddIcon}"
       :placeholder="inputText"
@@ -95,6 +96,10 @@ export default {
       }
     },
     changeText: {
+      type: Boolean,
+      default: false
+    },
+    alterCoor: {
       type: String,
       default: ''
     }
@@ -163,6 +168,11 @@ export default {
       this.isCloseFilter = false;
     },
     changeText (value) {
+      if (value === true) {
+        this.message = '';
+      }
+    },
+    alterCoor (value) {
       this.message = value;
     }
   }
