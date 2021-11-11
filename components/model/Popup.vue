@@ -16,15 +16,21 @@
           @click="toggleStatus"
         >
       </div>
-      <component :is="componentInstance" />
+      <component
+        :is="componentInstance"
+        :is-submit="sumbitData"
+        @submitSuccess="getSubmit"
+      />
       <div class="buttonBox">
         <Button
           :name="'button-default'"
           :text="'取消'"
+          @click="toggleStatus"
         />
         <Button
           :name="'button-primary'"
           :text="'確認'"
+          @click="sumbit"
         />
       </div>
     </div>
@@ -34,10 +40,35 @@
 <script>
 import InputVertical from '~/components/tools/InputVertical';
 import Button from '~/components/tools/Buttons.vue';
+
+import addAccount from '~/components/model/popup/addAccount';
+import addFile from '~/components/model/popup/addFile';
+import addFileData from '~/components/model/popup/addFileData';
+import addGroup from '~/components/model/popup/addGroup';
+import addTableData from '~/components/model/popup/addTableData';
+import edit from '~/components/model/popup/edit';
+import editAccount from '~/components/model/popup/editAccount';
+import editTableData from '~/components/model/popup/editTableData';
+import file from '~/components/model/popup/file';
+import group from '~/components/model/popup/group';
+import news from '~/components/model/popup/news';
+import tableData from '~/components/model/popup/tableData';
 export default {
   components: {
     InputVertical,
-    Button
+    Button,
+    addAccount,
+    addFile,
+    addFileData,
+    addGroup,
+    addTableData,
+    edit,
+    editAccount,
+    editTableData,
+    file,
+    group,
+    news,
+    tableData
   },
   props: {
     icon: {
@@ -54,19 +85,31 @@ export default {
     }
   },
   data: () => {
-    return {};
+    return {
+      sumbitData: false
+    };
   },
   name: 'Popup',
   methods: {
     toggleStatus () {
       this.$store.commit('TOGGLE_POPUP_STATUS');
       this.$store.commit('TOGGLE_POPUP_TYPE', { type: 'addTableData', title: '編輯內容' });
+    },
+    sumbit () {
+      this.sumbitData = true;
+    },
+    getSubmit () {
+      this.toggleStatus();
     }
   },
   computed: {
+    // componentInstance () {
+    //   const popupType = this.$store.state.popupType.type;
+    //   return () => import(`~/components/model/popup/${popupType}`);
+    // },
     componentInstance () {
-      const popupType = this.$store.state.popupType.type;
-      return () => import(`~/components/model/popup/${popupType}`);
+      const searchType = this.$store.state.popupType.type;
+      return searchType;
     },
     iconUrl () {
       const popupIcon = this.icon;

@@ -19,7 +19,7 @@
         </div>
         <div class="account">
           <p class="name">
-            王大明
+            {{ $store.state.userInfo.name }}
           </p>
           <div
             class="account-icon"
@@ -40,6 +40,9 @@
           <p @click="openSettingAccount">
             帳號設定
           </p>
+          <!-- <p @click="loginStatus">
+            登入狀態
+          </p> -->
           <p @click="logoutAccount">
             登出
           </p>
@@ -50,6 +53,7 @@
         <div class="menu-list">
           <div
             v-for="item of menuList"
+            v-show="isLimit(item.name)"
             :key="item.name"
             class="submenu-group"
             @mouseover="mouseOver(item.name)"
@@ -60,7 +64,9 @@
               :href="item.path"
               :title="item.name"
             >
-              <p class="title-two seticon">
+              <p
+                class="title-two seticon"
+              >
                 {{ item.name }}
               </p>
             </a>
@@ -80,6 +86,7 @@
             >
               <li
                 v-for="side of sideList1"
+                v-show="isLimit(side.name)"
                 :key="side.name"
               >
                 <a
@@ -135,7 +142,10 @@
 </template>
 
 <script>
-import axios from 'axios';
+import { signOnStatus } from '~/api/login';
+import { mapState } from 'vuex';
+import { headerLimit } from '~/publish/headerLimit';
+import { getLogout } from '~/publish/getLogout';
 export default {
   data () {
     return {
@@ -200,9 +210,18 @@ export default {
       listOne: false,
       listOnee: false,
       listTwo: false,
-      showBox: false
-
+      showBox: false,
+      userInfo: {},
+      showTag: false
     };
+  },
+  // middleware: 'routerAuth',
+  // meta: {
+  //   requiresAuth: true
+  // },
+  created () {
+    // console.log(this.userInfo);
+    this.loginStatus();
   },
   methods: {
     mouseOver (payload) {
@@ -223,22 +242,30 @@ export default {
     },
     openSettingAccount () {
       this.$store.commit('TOGGLE_POPUP_STATUS');
-      this.$store.commit('TOGGLE_POPUP_TYPE', { type: 'editAccount', title: '新增帳號' });
+      this.$store.commit('TOGGLE_POPUP_TYPE', { type: 'editAccount', title: '編輯帳號' });
       this.showBox = !this.showBox;
     },
     logoutAccount () {
-      const userRequest = axios.create({
-        baseURL: 'http://192.168.3.112',
-        withCredentials: true
-      });
-      userRequest.get('/aerc/rest/SignOnStatus').then((r) => {
-        // redirect('/login');
-        console.log(e);
-        // this.$router.push('/login');
+      getLogout(this);
+    },
+    loginStatus () {
+      signOnStatus().then((r) => {
+        this.userInfo = r;
+        // headerLimit(this.userInfo);
       }).catch((e) => {
         console.log(e);
       });
-    }
+    },
+    isLimit (item) {
+      const r = this.userInfo;
+      if (r.data) {
+        console.log(this.userInfo.data[0]);
+        return headerLimit(r, item);
+      };
+    },
+    ...mapState([
+      'userInfo'
+    ])
   },
   computed: {
     togglePopup () {

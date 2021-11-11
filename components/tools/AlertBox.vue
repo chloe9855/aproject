@@ -4,7 +4,7 @@
       <img
         class="close"
         :src="require('~/assets/img/close-icon.svg')"
-        @click="$emit('close')"
+        @click="$emit('close',true)"
       >
       <div
         class="icon"
@@ -19,8 +19,9 @@
           v-if="addInput === true"
           sizing="w-310"
           input-text="請輸入帳號"
-          error-tip="無此帳號，請重新輸入"
-          is-warn="code8"
+          :error-tip="tips"
+          :is-warn="warnRule"
+          @inputValue="getInputValue"
         />
       </div>
 
@@ -31,13 +32,13 @@
         <div
           v-if="cancelButton === true"
           class="msg-btn cancel"
-          @click="$emit('close')"
+          @click="$emit('close',true)"
         >
           取消
         </div>
         <div
           class="msg-btn"
-          @click="$emit('confirm')"
+          @click="$emit('confirm',{status:true,value:inputValue})"
         >
           確定
         </div>
@@ -66,6 +67,10 @@ export default {
       type: String,
       default: '我是警示文字'
     },
+    tips: {
+      type: String,
+      default: ''
+    },
     boxIcon: {
       type: String,
       default: 'warning'
@@ -74,12 +79,23 @@ export default {
     addInput: {
       type: Boolean,
       default: false
+    },
+    warnRule: {
+      type: String,
+      default: ''
     }
   },
   data () {
     return {
-
+      inputValue: ''
     };
+  },
+  methods: {
+    getInputValue (e) {
+      if (e) {
+        this.inputValue = e;
+      }
+    }
   }
 };
 </script>

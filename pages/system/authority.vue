@@ -10,10 +10,14 @@
       <PageHeader
         icon="slider"
         title="群組權限管理"
-        btn-text="新增群組"
-        :btn-add="true"
-        btn-name="button-add"
-        @PHBtnStatus="addGroup"
+        :btn-text="delBtn"
+        :btn-add="false"
+        btn-name="button-red"
+        btn-sec-text="新增群組"
+        :btn-sec-add="true"
+        btn-sec-name="button-add"
+        @PHBtnStatus="addAccount"
+        @PHSecBtnStatus="addGroup"
       />
       <div
         class="content_box"
@@ -23,12 +27,13 @@
           :is-paginate="false"
           :is-edit="true"
           :is-del="true"
+          @checkList="getTableCheck"
           @tableEvent="changeGroup"
         />
       </div>
     </div>
     <Search
-      type="userAcctSearch"
+      type="groupUserAcctSearch"
       @toggleStatus="getToggleStatus"
     />
   </div>
@@ -39,6 +44,8 @@ import TableTool from '~/components/model/Table.vue';
 import PageHeader from '~/components/tools/PageHeader.vue';
 import BreadCrumbTool from '~/components/tools/BreadCrumbTool.vue';
 import Search from '~/components/model/Search.vue';
+import { getGroup } from '~/api/group';
+import { groupData } from '~/publish/groupData';
 
 export default {
   components: {
@@ -66,10 +73,30 @@ export default {
         ]
       },
       BreadCrumb: ['系統管理', '群組權限管理'],
-      toggleStatus: false
+      toggleStatus: false,
+      delBtn: ''
     };
   },
   name: 'Authority',
+  async asyncData () {
+    return getGroup().then((r) => ({
+      tableList: {
+        head: [
+          { title: '群組名稱' },
+          { title: '最後變更日期' }
+        ],
+        body: groupData(r.data)
+      }
+    })).catch(e => {
+      console.log(e);
+    });
+  },
+  mounted: () => {
+    getGroup().then(r => {
+      console.log(r.data);
+      groupData(r.data);
+    });
+  },
   methods: {
     getToggleStatus (e) {
       this.toggleStatus = e;
@@ -86,6 +113,15 @@ export default {
         this.$store.commit('TOGGLE_POPUP_TYPE', { type: 'group', title: '編輯群組' });
       } else if (e === 'isDel') {
         console.log('isDel');
+      }
+    },
+    getTableCheck (e) {
+      if (e) {
+        if (e.length > 1) {
+          this.delBtn = '多筆刪除';
+        } else {
+          this.delBtn = '';
+        };
       }
     }
   },

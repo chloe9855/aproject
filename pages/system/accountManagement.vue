@@ -10,9 +10,14 @@
       <PageHeader
         icon="farmer"
         title="帳號管理"
-        btn-text="新增帳號"
-        :btn-add="true"
-        btn-name="button-add"
+        :btn-text="delBtn"
+        :btn-add="false"
+        btn-name="button-red"
+        btn-sec-text="新增帳號"
+        :btn-sec-add="true"
+        btn-sec-name="button-add"
+        @PHBtnStatus="addAccount"
+        @PHSecBtnStatus="addAccount"
       />
       <div
         class="content_box"
@@ -23,7 +28,9 @@
           :is-edit="true"
           :is-del="true"
           :is-scroll-table="true"
-          column-min-width="150"
+          :column-min-width="150"
+          @tableEvent="getTableEvent"
+          @checkScrollList="getTableCheck"
         />
       </div>
     </div>
@@ -39,6 +46,8 @@ import TableTool from '~/components/model/Table.vue';
 import PageHeader from '~/components/tools/PageHeader.vue';
 import BreadCrumbTool from '~/components/tools/BreadCrumbTool.vue';
 import Search from '~/components/model/Search.vue';
+import { getAccount } from '~/api/account';
+import { accountData } from '~/publish/accountData';
 
 export default {
   components: {
@@ -56,7 +65,7 @@ export default {
           { title: '管理處' },
           { title: '工作站' },
           { title: '權限群組' },
-          { title: '上次登入時間' },
+          { title: '上次登入時間', minW: 'minWidth150' },
           { title: '狀態' }
         ],
         body: [
@@ -71,13 +80,67 @@ export default {
         ]
       },
       BreadCrumb: ['系統管理', '帳號管理'],
-      toggleStatus: false
+      toggleStatus: false,
+      editItem: {},
+      delBtn: ''
     };
   },
   name: 'Account',
+  async asyncData () {
+    return getAccount().then((r) => ({
+      tableList: {
+        head: [
+          { title: '帳號' },
+          { title: '姓名' },
+          { title: '管理處' },
+          { title: '工作站' },
+          { title: '權限群組' },
+          { title: '上次登入時間', setW: 'setWidth200' },
+          { title: '狀態' }
+        ],
+        body: accountData(r.data)
+      }
+    })).catch(e => {
+      console.log(e);
+    });
+  },
+  mounted () {
+    getAccount().then(r => {
+      accountData(r.data);
+    });
+  },
   methods: {
     getToggleStatus (e) {
       this.toggleStatus = e;
+    },
+    addAccount (e) {
+      console.log(e);
+      if (e) {
+        this.$store.commit('TOGGLE_POPUP_STATUS');
+        this.$store.commit('TOGGLE_POPUP_TYPE', { type: 'addAccount', title: '新增帳號' });
+      }
+    },
+    getTableEvent (e) {
+      if (e) {
+        switch (e.event) {
+          case 'isEdit':
+            this.$store.commit('TOGGLE_POPUP_STATUS');
+            this.$store.commit('TOGGLE_POPUP_TYPE', { type: 'editAccount', title: '編輯帳號', editId: e.item.title[0] });
+            break;
+          case 'isDel':
+            console.log('isDel');
+            break;
+        }
+      }
+    },
+    getTableCheck (e) {
+      if (e) {
+        if (e.length > 1) {
+          this.delBtn = '多筆刪除';
+        } else {
+          this.delBtn = '';
+        };
+      }
     }
   },
   computed: {

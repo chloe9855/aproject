@@ -1,6 +1,6 @@
 export default {
   // Target: https://go.nuxtjs.dev/config-target
-  mode: 'universal',
+  mode: 'spa',
   vue: {
     config: {
       devtools: true,
@@ -9,7 +9,7 @@ export default {
   },
   target: 'static',
   router: {
-    base: '/testyy/'
+    base: '/IRCloud/'
   },
 
   // Global page headers: https://go.nuxtjs.dev/config-head

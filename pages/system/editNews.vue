@@ -14,10 +14,15 @@
     />
     <SubTitleTool
       title="最新公告"
-      btn-text="新增公告"
-      :btn-add="true"
+      :btn-text="delBtn"
+      :btn-add="false"
+      btn-name="button-red"
+      btn-sec-text="新增公告"
+      :btn-sec-add="true"
+      btn-sec-name="button-add"
       class="w-90"
-      @STbtnStatus="addNews"
+      @STbtnStatus="delMNews"
+      @STbtnSecStatus="addNews"
     />
     <TableTool
       :table-column="tableList"
@@ -26,6 +31,7 @@
       :is-del="true"
       class="w-90 news"
       @tableEvent="changeGroup"
+      @checkList="getTableCheck"
     />
 
     <div class="downloadTitle w-90">
@@ -60,6 +66,8 @@ import TableTool from '~/components/model/Table.vue';
 import SubTitleTool from '~/components/tools/SubTitleTool.vue';
 import PageHeader from '~/components/tools/PageHeader.vue';
 import BreadCrumbTool from '~/components/tools/BreadCrumbTool.vue';
+import { editNewsData } from '~/publish/editNewsData';
+import { getBulletin, editBulletin } from '~/api/bulletin';
 
 export default {
   components: {
@@ -96,12 +104,30 @@ export default {
           { title: ['XXXX資料須填寫XXXX表單', '資料填寫表單 '] }
         ]
       },
-      BreadCrumb: ['系統管理', '首頁資料管理']
+      BreadCrumb: ['系統管理', '首頁資料管理'],
+      delBtn: '',
+      delData: []
     };
   },
   name: 'EditNews',
+  async asyncData () {
+    return getBulletin().then(({ data }) => ({
+      tableList: {
+        head: [
+          { title: '公告名稱' },
+          { title: '公告內容' },
+          { title: '發布時間' },
+          { title: '相關連結' }
+        ],
+        body: editNewsData(data)
+      }
+    })).catch(e => {
+      console.log(e);
+    });
+  },
   methods: {
     addNews (e) {
+      console.log(e);
       if (e) {
         this.$store.commit('TOGGLE_POPUP_STATUS');
         this.$store.commit('TOGGLE_POPUP_TYPE', { type: 'news', title: '新增公告' });
@@ -126,6 +152,24 @@ export default {
       } else if (e === 'isDel') {
         console.log('isDel');
       }
+    },
+    getTableCheck (e) {
+      if (e) {
+        this.delData = e;
+        if (e.length > 1) {
+          this.delBtn = '多筆刪除';
+        } else {
+          this.delBtn = '';
+        };
+      }
+    },
+    delMNews () {
+      const data = 'bulletinsno=[5,6]&status=1';
+      editBulletin(data).then(r => {
+        console.log(r);
+      }).catch(e => {
+        console.log(e);
+      });
     }
   }
 

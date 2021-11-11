@@ -8,7 +8,7 @@
     />
     <div class="mainContent">
       <TableTool
-        :table-column="tableList"
+        :table-column="tableList.bulletin"
         :is-paginate="false"
         class="w-90 news"
       />
@@ -17,14 +17,20 @@
         class="w-90"
       />
       <div class="downloadArea w-90">
-        <TableTool
-          :table-column="tableData"
-          :is-paginate="false"
-        />
-        <TableTool
-          :table-column="tableData"
-          :is-paginate="false"
-        />
+        <div class="w-50 pr_2">
+          <SubTitleTool title="相關表單資料" />
+          <TableTool
+            :table-column="tableList.tableData"
+            :is-paginate="false"
+          />
+        </div>
+        <div class="w-50">
+          <SubTitleTool title="相關文件資料" />
+          <TableTool
+            :table-column="tableList.fileData"
+            :is-paginate="false"
+          />
+        </div>
       </div>
     </div>
   </div>
@@ -33,14 +39,19 @@
 <script>
 import TableTool from '~/components/model/Table.vue';
 import PageHeader from '~/components/tools/PageHeader.vue';
+import SubTitleTool from '~/components/tools/SubTitleTool.vue';
+import { getBulletin } from '~/api/bulletin';
+import { tableData } from '~/publish/tableData';
 
 export default {
   components: {
     PageHeader,
-    TableTool
+    TableTool,
+    SubTitleTool
   },
   data () {
     return {
+      result: [],
       tableList: {
         head: [
           { title: '公告名稱' },
@@ -50,28 +61,51 @@ export default {
         ],
         body: [
           { title: ['系統維修更新(字多呈現)', '於xx/xx上午將進行系統維修更新，請避開該時段使用於xx/xx上午將進行系統維修更新，請避開該時段使用於xx/xx上午將進行系統維修更新，請避開該時段使用於xx/xx上午將進行系統維修更新，請避開該時段使用於xx/xx上午將進行系統維修更新，請避開該時段使用', '2012/12/17', '連結1,連結2,連結3,連結4,連結5,連結6,連結7'] },
-          { title: ['109年第2期停灌申請開始辦理', '依據XXX公告，公告類地區工作站可以相關規定進行停灌作業申請辦理', '2012/12/17', '連結1'] },
-          { title: ['系統維修更新', '於xx/xx上午將進行系統維修更新，請避開該時段使用', '2012/12/17', '連結1'] },
+          { title: ['109年第2期停灌申請開始辦理', '依據XXX公告，公告類地區工作站可以相關規定進行停灌作業申請辦理', '2012/12/17', { type: 'link', data: ['./login', './login'] }] },
+          { title: ['系統維修更新', '於xx/xx上午將進行系統維修更新，請避開該時段使用', '2012/12/17', { type: 'input' }] },
           { title: ['109年第1期停灌申請開始辦理', '依據XXX公告，公告類地區工作站可以相關規定進行停灌作業申請辦理', '2012/12/17', '連結1'] }
-        ]
-      },
-      tableData: {
-        head: [
-          { title: '表單名稱' },
-          { title: '相關檔案' }
-        ],
-        body: [
-          { title: ['XXXX表單', '資料填寫表單 資料填寫表單2'] },
-          { title: ['XXXX表單', '資料填寫表單 '] },
-          { title: ['XXXX資料須填寫XXXX表單', '資料填寫表單 '] },
-          { title: ['XXXX資料須填寫XXXX表單', '資料填寫表單 '] }
         ]
       }
     };
   },
   name: 'Main',
   layout: 'main',
-  middleware: 'routerAuth'
+  middleware: 'routerAuth',
+  async asyncData () {
+    const a = getBulletin().then(({ data }) => ({
+      tableList: {
+        bulletin: {
+          head: [
+            { title: '公告名稱' },
+            { title: '公告內容' },
+            { title: '發布時間' },
+            { title: '相關連結' }
+          ],
+          body: tableData(data, 0)
+        },
+        tableData: {
+          head: [
+            { title: '表單名稱' },
+            { title: '相關檔案' }
+          ],
+          body: tableData(data, 1)
+        },
+        fileData: {
+          head: [
+            { title: '文件名稱' },
+            { title: '相關檔案' }
+          ],
+          body: tableData(data, 2)
+        }
+      }
+    })).catch(e => {
+      console.log(e);
+    });
+    return a;
+  },
+  methods: {
+  },
+  computed: {}
 };
 </script>
 <style lang="scss">
@@ -105,9 +139,13 @@ export default {
   .tableTool{
     flex:1;
     background: white;
+    min-height: auto;
   }
   .tableTool:nth-child(1){
     margin-right: 1em !important;
+  }
+  .pr_2{
+    padding-right: 2em;
   }
 }
 </style>

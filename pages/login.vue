@@ -1,5 +1,8 @@
 <template>
-  <div class="loginBox">
+  <div
+    class="loginBox"
+    @keyup.enter="login"
+  >
     <div
       class="mainLogo"
     >
@@ -26,10 +29,12 @@
           title="驗證碼"
           class="flex-1"
           :is-verification="true"
+          @inputValue="getCaptcha"
         />
         <img
-          :src="require('~/assets/img/verification.jpg')"
+          :src="verifyImg"
           class="flex-1"
+          @click="Verify"
         >
       </div>
       <div
@@ -40,47 +45,104 @@
       </div>
       <div class="flexBox flex-right">
         <span
+          class="forgetPassWord"
           @click="forgetPassWord"
         >忘記密碼</span>
       </div>
     </div>
+    <AlertBox
+      v-show="isforgetPassWord"
+      :cancel-button="true"
+      :add-input="true"
+      title="忘記密碼怎麼辦?"
+      box-icon="warning"
+      text="寄送重設密碼於註冊信箱 請前往信箱重設密碼"
+      :tips="forgetPasswordTips"
+      :warn-rule="errRule"
+      @confirm="sendForgetPassword"
+      @close="closeForgetPassWord"
+    />
+    <AlertBox
+      v-show="loginError"
+      :title="loginErrorTitle"
+      box-icon="warning"
+      :text="loginErrorText"
+      @confirm="closeAlert"
+      @close="closeAlert"
+    />
   </div>
 </template>
-
 <script crossorigin="anonymous">
 import InputHorizontal from '~/components/tools/InputHorizontal.vue';
-import { loginReq } from '~/api/login';
-// import axios from 'axios';
+import AlertBox from '~/components/tools/AlertBox.vue';
+import { loginReq, getVerify, forgetPassword } from '~/api/login';
+import { forgetPasswordErr } from '~/publish/apiErrorHandler';
+import Vue from 'vue';
+import VueCookies from 'vue-cookies';
+Vue.prototype.$cookies = VueCookies;
 export default {
   components: {
-    InputHorizontal
+    InputHorizontal,
+    AlertBox
   },
   data () {
     return {
       title: '農田水利灌溉管理整合雲系統',
       account: '',
-      password: ''
+      password: '',
+      verifyImg: '',
+      captcha: '',
+      isforgetPassWord: false,
+      loginError: false,
+      loginErrorTitle: '',
+      loginErrorText: '',
+      forgetPasswordTips: '',
+      errRule: ''
     };
   },
   name: 'Login',
   layout: 'login',
   middleware: 'routerAuth',
-  meta: {
-    requiresAuth: true
+  mounted () {
+    this.Verify();
   },
   methods: {
-    login () {
-      const data = `account=${this.account}&password=${this.password}`;
-      loginReq(data).then((r) => {
-        console.log(r);
-        this.$router.push('/');
+    Verify () {
+      getVerify().then((r) => {
+        this.verifyImg = r.data;
       }).catch((e) => {
         console.log(e);
-        this.$router.push('/');
       });
     },
+    login () {
+      const data = `account=${this.account}&password=${this.password}&captcha=${this.captcha}`;
+      loginReq(data).then((r) => {
+        if (r.data[0].status) {
+          sessionStorage.setItem('loginStatus', r.data[0].status);
+          this.$router.push('/');
+        } else {
+          console.log('驗證碼錯誤');
+        }
+      }).catch((e) => {
+        console.log(e);
+        this.loginErrorTitle = '登入錯誤';
+        this.loginErrorText = '請確認帳號密碼是否正確';
+        this.loginError = true;
+      });
+    },
+    closeForgetPassWord (e) {
+      if (e) {
+        this.isforgetPassWord = false;
+      };
+    },
+    closeAlert (e) {
+      console.log(e);
+      if (e) {
+        this.loginError = false;
+      };
+    },
     forgetPassWord () {
-      console.log('test');
+      this.isforgetPassWord = true;
     },
     getAccount (e) {
       if (e) {
@@ -90,6 +152,27 @@ export default {
     getPassword (e) {
       if (e) {
         this.password = e;
+      }
+    },
+    getCaptcha (e) {
+      if (e) {
+        this.captcha = e;
+      }
+    },
+    sendForgetPassword (e) {
+      if (e) {
+        const data = `account=${e.value.val}`;
+        forgetPassword(data).then(r => {
+          console.log(r);
+          this.isforgetPassWord = false;
+          this.loginErrorTitle = '發送信件成功';
+          this.loginErrorText = '請前往信箱重設密碼';
+          this.loginError = true;
+        }).catch(e => {
+          this.forgetPasswordTips = forgetPasswordErr(e.response.status);
+          this.errRule = 'code8';
+          console.log(e);
+        });
       }
     }
   }
@@ -117,7 +200,7 @@ export default {
         align-items: center;
         text-align: center;
         letter-spacing: 0.09em;
-        margin-bottom: 2vh;
+        margin-bottom: 0.25vh;
         font-size: 28px !important;
         @include noto-sans-tc-24-medium;
     }
@@ -153,9 +236,13 @@ export default {
             @include noto-sans-tc-18-medium;
             &:active,&:hover,&.focus{
               background-color: #21705d;
-              color: black;
             }
         }
     }
+}
+.forgetPassWord{
+  color: #3E9F88;
+  cursor: pointer;
+  @include noto-sans-tc-16-medium;
 }
 </style>

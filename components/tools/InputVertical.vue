@@ -116,6 +116,10 @@ export default {
       default: () => {
         return [];
       }
+    },
+    defaultData: {
+      type: String,
+      default: ''
     }
   },
   data: () => {
@@ -175,6 +179,11 @@ export default {
       this.filterList = fileList;
       this.filterBox = fileList.length > 0 && !this.isCloseFilter;
       this.isCloseFilter = false;
+    },
+    defaultData (n) {
+      if (n !== '') {
+        this.message = n;
+      }
     },
     changeText (value) {
       this.message = value;

@@ -46,10 +46,10 @@ export default {
           { title: '檔案' }
         ],
         body: [
-          { val: 0, title: [{ type: 'input' }, { type: 'btn' }] },
-          { val: 1, title: [{ type: 'input' }, { type: 'btn' }] },
-          { val: 2, title: [{ type: 'input' }, { type: 'btn' }] },
-          { val: 3, title: [{ type: 'input' }, { type: 'btn' }] }
+          { val: 'tableData0', title: [{ type: 'input' }, { type: 'btn' }] },
+          { val: 'tableData1', title: [{ type: 'input' }, { type: 'btn' }] },
+          { val: 'tableData2', title: [{ type: 'input' }, { type: 'btn' }] },
+          { val: 'tableData3', title: [{ type: 'input' }, { type: 'btn' }] }
         ]
       }
     };

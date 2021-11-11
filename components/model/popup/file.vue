@@ -3,6 +3,7 @@
     <InputVertical title="文件名稱" />
     <div class="buttonBox">
       <Button
+        v-show="delBtn"
         :name="'button-red'"
         :text="'刪除所選'"
       />
@@ -10,12 +11,15 @@
         :name="'button-add'"
         :text="'新增檔案'"
         :add="true"
+        @click="addFile"
       />
     </div>
     <Table
+      :key="num"
       :table-column="tableList"
       :is-paginate="false"
       :is-del="true"
+      @checkList="getTableCheck"
     />
   </div>
 </template>
@@ -33,18 +37,33 @@ export default {
   data: () => {
     return {
       tableList: {
+        name: 'file',
         head: [
           { title: '檔案名稱' },
           { title: '檔案' }
         ],
         body: [
-          { val: 0, title: [{ type: 'input' }, { type: 'btn' }] },
-          { val: 1, title: [{ type: 'input' }, { type: 'btn' }] },
-          { val: 2, title: [{ type: 'input' }, { type: 'btn' }] },
-          { val: 3, title: [{ type: 'input' }, { type: 'btn' }] }
+          { val: 'file0', title: [{ type: 'input' }, { type: 'btn' }] }
         ]
-      }
+      },
+      delBtn: false,
+      num: 0
     };
+  },
+  methods: {
+    getTableCheck (e) {
+      if (e) {
+        if (e.length > 1) {
+          this.delBtn = true;
+        } else {
+          this.delBtn = false;
+        };
+      }
+    },
+    addFile () {
+      this.num += 1;
+      this.tableList.body.push({ val: `file${this.num}`, title: [{ type: 'input', key: `a${this.num}` }, { type: 'btn', key: `b${this.num}` }] });
+    }
   },
   computed: {}
 };
@@ -58,5 +77,8 @@ export default {
   display: flex;
   justify-content: flex-end;
   margin: 10px 0;
+  .button_wrap:first-child{
+    margin: 0 0.25em;
+  }
 }
 </style>

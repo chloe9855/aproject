@@ -90,14 +90,14 @@
             <th
               v-for="( item, index ) in tableColumn.head"
               :key="index"
-              :class="{isRightBorder:setRightBorder(index)}"
+              :class="[{isRightBorder:setRightBorder(index)},item.setW]"
             >
               {{ item.title }}
             </th>
             <th
               v-if="optionLength>0"
               :colspan="optionLength"
-              :style="{'min-width': (optionLength*35)+'px'}"
+              :style="{'min-width': (optionLength*25)+'px'}"
             />
           </tr>
         </thead>
@@ -130,34 +130,38 @@
                 :text="text"
               />
               <Button
-                v-else-if="typeof text === 'object' && text.type === 'btn'"
+                v-else-if="tableType(text)&&typeof text === 'object' && text.type === 'btn'"
                 :name="'button-primary'"
                 :text="text.title"
               />
               <Input
-                v-else-if="typeof text === 'object' && text.type === 'input'"
-                :key="textIndex"
-                :input-id="textIndex"
+                v-else-if="tableType(text)&&typeof text === 'object' && text.type === 'input'"
+                :input-id="text.key"
                 :input-text="text.title"
                 @inputValue="inputVal"
               />
               <Dropdown
-                v-else-if="typeof text === 'object' && text.type === 'dropdown'"
+                v-else-if="tableType(text)&&typeof text === 'object' && text.type === 'dropdown'"
                 :key="textIndex"
                 :input-id="textIndex"
                 :input-text="text.title"
               />
               <DatePicker
-                v-else-if="typeof text === 'object' && text.type === 'date'"
+                v-else-if="tableType(text)&&typeof text === 'object' && text.type === 'date'"
                 :key="textIndex"
                 :input-id="textIndex"
                 :type="text.dateType"
                 :value-type="text.valueType"
                 @DateValue="dateVal"
               />
-              <DropdownTreeList v-else-if="typeof text === 'object' && text.type === 'dropdownTreeList'" />
+              <TableLink
+                v-else-if="tableType(text)&&typeof text === 'object' && text.type === 'link'"
+                :key="textIndex"
+                :link="text"
+              />
+              <DropdownTreeList v-else-if="tableType(text)&&typeof text === 'object' && text.type === 'dropdownTreeList'" />
               <span v-else>{{ text }}</span>
-              <span v-if="text.attachText!==''">{{ text.attachText }}</span>
+              <span v-if="tableType(text)&&isAttachText(text)">{{ text.attachText }}</span>
             </td>
             <!-- <td
               v-if="optionLength > 0 && isScrollTable"
@@ -250,7 +254,7 @@
               v-show="isEdit"
               class="editOption"
             >
-              <div @click="sendEvent('isEdit')">
+              <div @click="sendEvent('isEdit',item)">
                 <img
                   alt=""
                   class="vector"
@@ -262,7 +266,7 @@
               v-show="isDel"
               class="delOption"
             >
-              <div @click="sendEvent('isDel')">
+              <div @click="sendEvent('isDel',item)">
                 <img
                   alt=""
                   class="vector"
@@ -274,7 +278,7 @@
               v-show="isPrint"
               class="printOption"
             >
-              <div @click="sendEvent('isPrint')">
+              <div @click="sendEvent('isPrint',item)">
                 <img
                   alt=""
                   class="vector"
@@ -286,7 +290,7 @@
               v-show="isMap"
               class="mapOption"
             >
-              <div @click="sendEvent('isMap')">
+              <div @click="sendEvent('isMap',item)">
                 <img
                   alt=""
                   class="vector"
@@ -298,7 +302,7 @@
               v-show="isSearch"
               class="searchOption"
             >
-              <div @click="sendEvent('isSearch')">
+              <div @click="sendEvent('isSearch',item)">
                 <img
                   alt=""
                   class="vector"
@@ -326,6 +330,7 @@ import Button from '~/components/tools/Buttons';
 import Input from '~/components/tools/InputTool';
 import DatePicker from '~/components/tools/DatePicker';
 import Dropdown from '~/components/tools/Dropdown';
+import TableLink from '~/components/tools/TableLink';
 import DropdownTreeList from '~/components/tools/DropdownTreeList.vue';
 export default {
   components: {
@@ -335,6 +340,7 @@ export default {
     Input,
     DatePicker,
     Dropdown,
+    TableLink,
     DropdownTreeList
   },
   props: {
@@ -423,6 +429,8 @@ export default {
   name: 'TableTool',
   mounted: function () {
     this.getPageNum(1);
+    console.log('table');
+    console.log(this.tableColumn);
   },
   methods: {
     inputVal (e) { // 取得INPUT內容
@@ -449,6 +457,7 @@ export default {
           }
         });
       }
+      this.$emit('inputData', arr);
     },
     getPageNum (e) { // 換頁取得DATA
       this.getPage = e;
@@ -465,8 +474,8 @@ export default {
         }
       });
     },
-    sendEvent (e) {
-      this.$emit('tableEvent', e);
+    sendEvent (e, item) {
+      this.$emit('tableEvent', { event: e, item: item });
     }
   },
   computed: {
@@ -532,11 +541,36 @@ export default {
     checkAllId: function () {
       const name = this.tableColumn.name;
       return name ? name + 'All' : 'allchecked2';
+    },
+    tableType: function () {
+      return function (text) {
+        /** do something */
+        let result;
+        if (text === 'string' || text === null) {
+          result = '';
+        } else {
+          result = true;
+        }
+        return result;
+      };
+    },
+    isAttachText: function () {
+      return function (text) {
+        /** do something */
+        if (text.attachText !== '') {
+          return true;
+        } else {
+          return false;
+        }
+      };
     }
   },
   watch: {
     checkList: function (n) {
-      this.$emit('DropdownVal', n);
+      this.$emit('checkList', n);
+    },
+    checkScrollList: function (n) {
+      this.$emit('checkScrollList', n);
     },
     inputList: function (n) {
       this.$emit('tableInput', n);
@@ -570,7 +604,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
+@import '~/assets/scss/input.scss';
 .noWrap {
   white-space: nowrap;
 }
@@ -711,32 +745,7 @@ export default {
   background-position: center;
   background-color: #eff3f2;
 }
-.checkBoxOption,.editOption,.delOption,.printOption,.mapOption,.searchOption{
-  width: 30px;
-}
-.checkBoxOption{
-  input[type="checkbox"] {
-    display:none;
-  }
-  input[type="checkbox"] + label
-  {
-    height: 14px;
-    width: 14px;
-    display:inline-block;
-    margin: 0 5px;
-    cursor: pointer;
-    @include checkbox;
-  }
-  input[type="checkbox"]:checked + label
-  {
-    background: url("~/assets/img/check.svg");
-    height: 14px;
-    width: 14px;
-    display:inline-block;
-    margin: 0 5px;
-    cursor: pointer;
-  }
-}
+
 .minWidth80{
   th{
     min-width: 80px;
@@ -761,6 +770,24 @@ export default {
   th{
     min-width: 150px;
   }
+}
+.minWidth160{
+  th{
+    min-width: 160px;
+  }
+}
+.minWidth170{
+  th{
+    min-width: 170px;
+  }
+}
+.minWidth180{
+  th{
+    min-width: 180px;
+  }
+}
+.setWidth200{
+  min-width: 200px !important;
 }
 .isRightBorder{
   border-right:1px solid $light-green;

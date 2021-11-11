@@ -6,7 +6,7 @@
       @current="payload => options.current = payload"
     />
     <div
-      v-if="options.current === 0"
+      v-show="options.current === 0"
       class="irrigatedLand"
     >
       <DropdownVertical
@@ -27,7 +27,7 @@
       />
     </div>
     <div
-      v-if="options.current === 1"
+      v-show="options.current === 1"
       class="irrigatedInfo"
     >
       <DropdownVertical

@@ -14,10 +14,11 @@
     <client-only>
       <v-select
         v-model="selected"
+        :value="selectVal"
         label="title"
         code="value"
         :clearable="false"
-        :options="options"
+        :options="optionData"
         :placeholder="placeholders"
         :class="{'add_bg': bgColor}"
         class="w-100 inputSelect"
@@ -29,7 +30,7 @@
 <script>
 export default {
   props: {
-    options: {
+    optionData: {
       type: Array,
       default: () => {
         return [{ title: '選項1', value: '0' }, { title: '選項2', value: '1' }, { title: '選項3', value: '2' }];
@@ -55,6 +56,14 @@ export default {
       type: String,
       default: '請選擇'
     },
+    defaultData: {
+      type: String,
+      default: ''
+    },
+    defaultValue: {
+      type: String,
+      default: ''
+    },
     changeText: {
       type: String,
       default: ''
@@ -63,13 +72,24 @@ export default {
   data: () => {
     return {
       selected: '',
+      selectVal: '',
       option: [{ title: '選項11', value: '0' }, { title: '選項2', value: '1' }, { title: '選項3', value: '2' }]
     };
   },
   name: 'DropdownVertical',
+  mounted () {
+  },
+  methods: {
+  },
   watch: {
     selected (n, o) {
       this.$emit('DropdownVal', n);
+    },
+    defaultData (n, o) {
+      this.selected = n;
+    },
+    defaultValue (n, o) {
+      this.selectVal = n;
     },
     changeText (value) {
       this.message = value;
