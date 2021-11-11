@@ -352,7 +352,7 @@ export default {
   justify-content: flex-end;
 }
 .name {
-  width: 73px;
+  min-width: 70px;
   color: $white;
   text-align: center;
   margin-right: 10px;
