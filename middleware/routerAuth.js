@@ -1,7 +1,6 @@
 import { signOnStatus } from '~/api/login';
 export default ({ route, store, app, redirect }) => {
-  const loginPath = '/IRCloud/login';
-  console.log(route.path);
+  const loginPath = '/login';
   signOnStatus().then(r => {
     store.commit('SET_USER_INFO', { userInfo: r.data[0] });
     console.log(r);
