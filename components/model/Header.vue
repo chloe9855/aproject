@@ -40,9 +40,9 @@
           <p @click="openSettingAccount">
             帳號設定
           </p>
-          <p @click="loginStatus">
+          <!-- <p @click="loginStatus">
             登入狀態
-          </p>
+          </p> -->
           <p @click="logoutAccount">
             登出
           </p>
