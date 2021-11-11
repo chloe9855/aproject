@@ -2,8 +2,9 @@
   <div class="out_wrap">
     <p>請選擇圖層後，於圖面點選查詢該圖層資訊</p>
     <Dropdown-component
-      :options="dropList"
-      :placeholders="'請選擇管理處'"
+      :options="clickMapList"
+      :placeholders="'請選擇圖層'"
+      @DropdownVal="selectLayer"
     />
     <div class="bt_wrap">
       <Buttons-component
@@ -23,12 +24,22 @@ export default {
     'Dropdown-component': Dropdown,
     'Buttons-component': Buttons
   },
+  props: {
+    clickMapList: {
+      type: Array
+    }
+  },
   data () {
     return {
       dropList: [{ title: '01 宜蘭', value: '1' }]
     };
   },
-  name: 'ClickSearch'
+  name: 'ClickSearch',
+  methods: {
+    selectLayer (payload) {
+
+    }
+  }
 };
 </script>
 

@@ -56,8 +56,8 @@ export default {
       default: '請選擇'
     },
     changeText: {
-      type: String,
-      default: ''
+      type: Boolean,
+      default: false
     }
   },
   data: () => {
@@ -72,7 +72,9 @@ export default {
       this.$emit('DropdownVal', n);
     },
     changeText (value) {
-      this.message = value;
+      if (value === true) {
+        this.selected = '';
+      }
     }
   }
 };

@@ -12,7 +12,10 @@
       <keep-alive>
         <component
           :is="componentInstance"
+          :click-map-list="ListCS"
           @channelSearch="$emit('search')"
+          @keywordSearch="getVerticalData"
+          @clearKeyword="clearVerticalData"
           @clear="$emit('clear')"
         />
       </keep-alive>
@@ -95,87 +98,103 @@ export default {
       searchResult: {
         channel: ''
       },
-      columnList: [
-        {
-          name: '流水編號',
-          value: '851705',
-          id: 0
-        },
-        {
-          name: '管理處代碼',
-          value: '09',
-          id: 1
-        },
-        {
-          name: '管理處名稱',
-          value: '851705',
-          id: 2
-        },
-        {
-          name: '管理分分處名稱',
-          value: '09',
-          id: 3
-        },
-        {
-          name: '工作站代碼',
-          value: '851705',
-          id: 4
-        },
-        {
-          name: '工作站名稱',
-          value: '09',
-          id: 5
-        },
-        {
-          name: '水利小組代碼',
-          value: '851705',
-          id: 6
-        },
-        {
-          name: '水利小組名稱',
-          value: '泉厝支線小組',
-          id: 7
-        },
-        {
-          name: '輪區代碼',
-          value: '851705',
-          id: 8
-        },
-        {
-          name: '輪區名稱',
-          value: '09',
-          id: 57
-        },
-        {
-          name: '長度',
-          value: '09',
-          id: 66
-        },
-        {
-          name: '渠道名稱',
-          value: '851705',
-          id: 62
-        },
-        {
-          name: '渠道等級代碼',
-          value: '09',
-          id: 58
-        },
-        {
-          name: '渠道等級名稱',
-          value: '851705',
-          id: 52
-        }
-      ]
+      //* 屬性資料表格
+      columnList: [],
+      backList: [],
+      //* 第一次按下點擊查詢
+      openOnceCS: true,
+      ListCS: []
     };
   },
   name: 'MapSearchBox',
   mounted () {
     const data = require('~/static/channel.json');
     this.searchResult.channel = data;
+
+    const vdata = require('~/static/singleLand.json');
+    this.backList = vdata.data;
   },
   methods: {
+    clearVerticalData () {
+      this.columnList = [];
+    },
+    //* 取得屬性資料表格
+    getVerticalData (payload) {
+      if (payload.length < 1) {
+        return;
+      }
+      this.backList.forEach((item) => {
+        if (item.name === '流水編號') {
+          item.value = payload[0].FID;
+        }
+        if (item.name === '管理處代碼') {
+          item.value = payload[0].Ia;
+        }
+        if (item.name === '管理處名稱') {
+          item.value = payload[0].Ia_cns;
+        }
+        if (item.name === '管理分處代碼') {
+          item.value = payload[0].Mng;
+        }
+        if (item.name === '管理分處名稱') {
+          item.value = payload[0].Mng_cns;
+        }
+        if (item.name === '工作站代碼') {
+          item.value = payload[0].Stn;
+        }
+        if (item.name === '工作站名稱') {
+          item.value = payload[0].Stn_cns;
+        }
+        if (item.name === '小組代碼') {
+          item.value = payload[0].Grp;
+        }
+        if (item.name === '小組名稱') {
+          item.value = payload[0].Grp_cns;
+        }
+        if (item.name === '輪區代碼') {
+          item.value = payload[0].Rot;
+        }
+        if (item.name === '輪區名稱') {
+          item.value = payload[0].Rot_cns;
+        }
+        if (item.name === '渠道長度(m)') {
+          item.value = payload[0].Length;
+        }
+        if (item.name === '渠道編號-通用碼') {
+          item.value = payload[0].Ex_sys;
+        }
+        if (item.name === '渠道編號-個別管理處') {
+          item.value = payload[0].Sys;
+        }
+        if (item.name === '渠道名稱') {
+          item.value = payload[0].Sys_cns;
+        }
+        if (item.name === '渠道等級代碼') {
+          item.value = payload[0].Sys_type;
+        }
+        if (item.name === '渠道等級名稱') {
+          item.value = payload[0].Sys_cls;
+        }
+        if (item.name === '渠道取得性質') {
+          item.value = payload[0].Uc;
+        }
+        if (item.name === '渠道屬性') {
+          item.value = payload[0].Sys_atb;
+        }
+        if (item.name === '渠道灌溉類型') {
+          item.value = payload[0].Sys_dir;
+        }
+        if (item.name === '資料日期') {
+          item.value = payload[0].Ymd;
+        }
+        if (item.name === '渠道種類代號') {
+          item.value = payload[0].Sys_kind;
+        }
+      });
 
+      this.columnList = [];
+      this.columnList = this.backList;
+    }
   },
   computed: {
     searchType () {
@@ -184,6 +203,61 @@ export default {
     componentInstance () {
       const myType = this.searchType;
       return () => import(`~/components/model/MapSearchBox/${myType}`);
+    }
+  },
+  watch: {
+    'barOptions.current': {
+      handler (value) {
+        if (value === 3 && this.openOnceCS === true) {
+          Object.keys(MBT.Style).forEach((key) => {
+            const mName = key.substring(3);
+            const result = {
+              id: Math.random(),
+              LayerName: key,
+              title: '',
+              value: key,
+            };
+            if (mName === 'Cons') {
+              result.title = '水工構造物';
+              this.ListCS.push(result);
+            }
+            if (mName === 'Canal') {
+              result.title = '渠道';
+              this.ListCS.push(result);
+            }
+            if (mName === 'Ia') {
+              result.title = '管理處';
+              this.ListCS.push(result);
+            }
+            if (mName === 'Mng') {
+              result.title = '管理分處';
+              this.ListCS.push(result);
+            }
+            if (mName === 'Stn') {
+              result.title = '工作站';
+              this.ListCS.push(result);
+            }
+            if (mName === 'Grp') {
+              result.title = '小組';
+              this.ListCS.push(result);
+            }
+            if (mName === 'Rot') {
+              result.title = '輪區';
+              this.ListCS.push(result);
+            }
+            if (mName === 'Period') {
+              result.title = '期作別';
+              this.ListCS.push(result);
+            }
+            if (mName === 'Pool') {
+              result.title = '埤塘';
+              this.ListCS.push(result);
+            }
+          });
+          this.openOnceCS = false;
+        }
+      },
+      deep: true
     }
   }
 };

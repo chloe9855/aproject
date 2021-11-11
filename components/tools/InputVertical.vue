@@ -31,6 +31,7 @@
     </div>
     <input
       v-model="message"
+      autocomplete="off"
       class="inputType"
       :class="{inputError:isError,isIcon:isAddIcon}"
       :placeholder="inputText"
@@ -108,8 +109,8 @@ export default {
       default: ''
     },
     changeText: {
-      type: String,
-      default: ''
+      type: Boolean,
+      default: false
     },
     searchInput: {
       type: Array,
@@ -176,9 +177,15 @@ export default {
       this.filterBox = fileList.length > 0 && !this.isCloseFilter;
       this.isCloseFilter = false;
     },
-    changeText (value) {
-      this.message = value;
+    changeText: {
+      handler (value) {
+        if (value) {
+          this.message = '';
+        }
+      },
+      deep: true
     }
+
   }
 };
 </script>

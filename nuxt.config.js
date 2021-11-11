@@ -9,7 +9,7 @@ export default {
   },
   target: 'static',
   router: {
-    base: '/testyy/'
+    base: '/IRCloud/'
   },
 
   // Global page headers: https://go.nuxtjs.dev/config-head

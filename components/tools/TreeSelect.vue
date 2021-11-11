@@ -31,7 +31,7 @@ export default {
             ia: '嘉南管理處',
 
             stn: [
-              { title: '南基工作站', no: 555, grp: [{ name: '北北水利小組', no: 111, isChecked: false }, { name: 'uu水利小組', no: 541, isChecked: false4 }, { name: 'yy水利小組', no: 657, isChecked: false }] },
+              { title: '南基工作站', no: 555, grp: [{ name: '北北水利小組', no: 111, isChecked: false }, { name: 'uu水利小組', no: 541, isChecked: false }, { name: 'yy水利小組', no: 657, isChecked: false }] },
               { title: 'uu工作站', no: 475, grp: [{ name: 'ee水利小組', no: 888, isChecked: false }, { name: 'tt水利小組', no: 755, isChecked: false }, { name: 'll水利小組', no: 442, isChecked: false }] },
               { title: 'oo工作站', no: 588, grp: [{ name: 'ii水利小組', no: 463, isChecked: false }, { name: 'aa水利小組', no: 774, isChecked: false }, { name: 'fg水利小組', no: 521, isChecked: false }] }
             ]
