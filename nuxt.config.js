@@ -26,196 +26,196 @@ export default {
     ],
     script: [
       {
-        src: 'scripts/Base.js',
+        src: 'http://192.168.3.112/testyy/scripts/Base.js',
         async: true
       },
       {
-        src: 'scripts/OperationBase.js',
+        src: 'http://192.168.3.112/testyy/scripts/OperationBase.js',
         async: true
       },
       {
-        src: 'scripts/SuperGeoUtility.js',
+        src: 'http://192.168.3.112/testyy/scripts/SuperGeoUtility.js',
         async: true
       },
       {
-        src: 'scripts/AjaxAgent.js',
+        src: 'http://192.168.3.112/testyy/scripts/AjaxAgent.js',
         async: true
       },
       {
-        src: 'scripts/Framework.js',
+        src: 'http://192.168.3.112/testyy/scripts/Framework.js',
         async: true
       },
       {
-        src: 'scripts/MapBase.js',
+        src: 'http://192.168.3.112/testyy/scripts/MapBase.js',
         async: true
       },
       {
-        src: 'scripts/Controls.js',
+        src: 'http://192.168.3.112/testyy/scripts/Controls.js',
         async: true
       },
       {
-        src: 'scripts/MapLayer.js',
+        src: 'http://192.168.3.112/testyy/scripts/MapLayer.js',
         async: true
       },
       {
-        src: 'scripts/Navigate.js',
+        src: 'http://192.168.3.112/testyy/scripts/Navigate.js',
         async: true
       },
       {
-        src: 'scripts/CachedLayer.js',
+        src: 'http://192.168.3.112/testyy/scripts/CachedLayer.js',
         async: true
       },
       {
-        src: 'scripts/OpenStreetMap.js',
+        src: 'http://192.168.3.112/testyy/scripts/OpenStreetMap.js',
         async: true
       },
       {
-        src: 'scripts/ToolControls.js',
+        src: 'http://192.168.3.112/testyy/scripts/ToolControls.js',
         async: true
       },
       {
-        src: 'scripts/Tasks.js',
+        src: 'http://192.168.3.112/testyy/scripts/Tasks.js',
         async: true
       },
       {
-        src: 'scripts/GFX.js',
+        src: 'http://192.168.3.112/testyy/scripts/GFX.js',
         async: true
       },
       {
-        src: 'scripts/FX.js',
+        src: 'http://192.168.3.112/testyy/scripts/FX.js',
         async: true
       },
       {
-        src: 'scripts/Compass.js',
+        src: 'http://192.168.3.112/testyy/scripts/Compass.js',
         async: true
       },
       {
-        src: 'scripts/Tracker.js',
+        src: 'http://192.168.3.112/testyy/scripts/Tracker.js',
         async: true
       },
       {
-        src: 'scripts/Geometry.js',
+        src: 'http://192.168.3.112/testyy/scripts/Geometry.js',
         async: true
       },
       {
-        src: 'scripts/Symbol.js',
+        src: 'http://192.168.3.112/testyy/scripts/Symbol.js',
         async: true
       },
       {
-        src: 'scripts/Draw.js',
+        src: 'http://192.168.3.112/testyy/scripts/Draw.js',
         async: true
       },
       {
-        src: 'scripts/Overview.js',
+        src: 'http://192.168.3.112/testyy/scripts/Overview.js',
         async: true
       },
       {
-        src: 'scripts/Bookmark.js',
+        src: 'http://192.168.3.112/testyy/scripts/Bookmark.js',
         async: true
       },
       {
-        src: 'scripts/TemplatePicker.js',
+        src: 'http://192.168.3.112/testyy/scripts/TemplatePicker.js',
         async: true
       },
       {
-        src: 'scripts/Layer.js',
+        src: 'http://192.168.3.112/testyy/scripts/Layer.js',
         async: true
       },
       {
-        src: 'scripts/TiledLayer.js',
+        src: 'http://192.168.3.112/testyy/scripts/TiledLayer.js',
         async: true
       },
       {
-        src: 'scripts/TileLayer.js',
+        src: 'http://192.168.3.112/testyy/scripts/TileLayer.js',
         async: true
       },
       {
-        src: 'scripts/DynamicLayer.js',
+        src: 'http://192.168.3.112/testyy/scripts/DynamicLayer.js',
         async: true
       },
       {
-        src: 'scripts/Graphic.js',
+        src: 'http://192.168.3.112/testyy/scripts/Graphic.js',
         async: true
       },
       {
-        src: 'scripts/GraphicsLayer.js',
+        src: 'http://192.168.3.112/testyy/scripts/GraphicsLayer.js',
         async: true
       },
 
       {
-        src: 'scripts/OSMLayer.js',
+        src: 'http://192.168.3.112/testyy/scripts/OSMLayer.js',
         async: true
       },
       {
-        src: 'scripts/BingTiledLayer.js',
+        src: 'http://192.168.3.112/testyy/scripts/BingTiledLayer.js',
         async: true
       },
       {
-        src: 'scripts/Infowindow.js',
+        src: 'http://192.168.3.112/testyy/scripts/Infowindow.js',
         async: true
       },
       {
-        src: 'scripts/Mercator.js',
+        src: 'http://192.168.3.112/testyy/scripts/Mercator.js',
         async: true
       },
       {
-        src: 'scripts/CoordSys.js',
+        src: 'http://192.168.3.112/testyy/scripts/CoordSys.js',
         async: true
       },
       {
-        src: 'scripts/PrintTool.js',
+        src: 'http://192.168.3.112/testyy/scripts/PrintTool.js',
         async: true
       },
       {
-        src: 'scripts/Process.js',
+        src: 'http://192.168.3.112/testyy/scripts/Process.js',
         async: true
       },
       {
-        src: 'scripts/Query.js',
+        src: 'http://192.168.3.112/testyy/scripts/Query.js',
         async: true
       },
       {
-        src: 'scripts/Edit.js',
+        src: 'http://192.168.3.112/testyy/scripts/Edit.js',
         async: true
       },
       {
-        src: 'scripts/UndoManager.js',
+        src: 'http://192.168.3.112/testyy/scripts/UndoManager.js',
         async: true
       },
       {
-        src: 'scripts/Request.js',
+        src: 'http://192.168.3.112/testyy/scripts/Request.js',
         async: true
       },
       {
-        src: 'scripts/WMSLayer.js',
+        src: 'http://192.168.3.112/testyy/scripts/WMSLayer.js',
         async: true
       },
       {
-        src: 'scripts/WMTSLayer.js',
+        src: 'http://192.168.3.112/testyy/scripts/WMTSLayer.js',
         async: true
       },
       {
-        src: 'scripts/Google.js',
+        src: 'http://192.168.3.112/testyy/scripts/Google.js',
         async: true
       },
       {
-        src: 'scripts/Base64.js',
+        src: 'http://192.168.3.112/testyy/scripts/Base64.js',
         async: true
       },
       {
-        src: 'scripts/Projection.js',
+        src: 'http://192.168.3.112/testyy/scripts/Projection.js',
         async: true
       },
       {
-        src: 'scripts/GroupLayer.js',
+        src: 'http://192.168.3.112/testyy/scripts/GroupLayer.js',
         async: true
       },
       {
-        src: 'scripts/KMLLayer.js',
+        src: 'http://192.168.3.112/testyy/scripts/KMLLayer.js',
         async: true
       },
       {
-        src: 'scripts/VectorTiledLayer.js',
+        src: 'http://192.168.3.112/testyy/scripts/VectorTiledLayer.js',
         async: true
       },
       // {
@@ -223,7 +223,7 @@ export default {
       //   async: true
       // },
       {
-        src: 'scripts/setMap.js',
+        src: 'http://192.168.3.112/testyy/scripts/setMap.js',
         async: true
       }
     ],
