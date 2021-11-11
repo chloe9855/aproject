@@ -35,6 +35,9 @@ export default {
     };
   },
   name: 'ClickSearch',
+  mounted () {
+    sg.events.on(MBT, 'click', function (e) { console.log(e.graphic.attributes); });
+  },
   methods: {
     selectLayer (payload) {
 
