@@ -759,29 +759,9 @@ export default {
       SuperGIS.LoadModules(['scripts/MVTData.js', 'vector_tile.js', 'pbf.js', 'scripts/KML.js', 'scripts/Collada.js'], () => {
         this.allVectors = new sg.layers.VectorMBTLayer('http://192.168.3.112/mapcache/01', {
           loaded: () => {
-            // // MBT.Style["01_Period"].visible = false;
-            // this.allVectors.Style['01_Grp'].visible = false;
-            // // MBT.Style["01_Stn"].visible = false;
-            // // MBT.Style["01_Ia"].visible = false;
-            // this.allVectors.Style['01_Canal'].visible = false;
-            // // MBT.Style["01_Cons"].visible = false;
-            // this.allVectors.updateStyle(this.allVectors.Style);
             this.loadVectors();
           }
         });
-        // pMapBase.AddLayer(this.allVectors);
-        // pMapBase.RefreshMap(true);
-        // pMapBase.AddLayer(MBT = new sg.layers.VectorMBTLayer('http://192.168.3.112/mapcache/01', {
-        //   loaded: function () {
-        //     // MBT.Style["01_Period"].visible = false;
-        //     MBT.Style['01_Grp'].visible = false;
-        //     // MBT.Style["01_Stn"].visible = false;
-        //     // MBT.Style["01_Ia"].visible = false;
-        //     MBT.Style['01_Canal'].visible = false;
-        //     // MBT.Style["01_Cons"].visible = false;
-        //     MBT.updateStyle(MBT.Style);
-        //   }
-        // }));
       });
     },
     loadVectors () {
@@ -997,9 +977,11 @@ export default {
     },
     // * @ 圖層工具：透明度調整
     layerOpacityCtrl (id, value, category, layerName) {
-      // console.log(layerName);
       if (category === 'pointList') {
         const index = this.layerOptions.pointList.findIndex(item => item.id === id);
+        const oldVal = this.layerOptions.pointList[index].opacity;
+        if (oldVal === value) { return; }
+
         this.layerOptions.pointList[index].opacity = value;
 
         MBT.Style[layerName].style = { opacity: value / 100 };
@@ -1007,6 +989,9 @@ export default {
       }
       if (category === 'lineList') {
         const index = this.layerOptions.lineList.findIndex(item => item.id === id);
+        const oldVal = this.layerOptions.lineList[index].opacity;
+        if (oldVal === value) { return; }
+
         this.layerOptions.lineList[index].opacity = value;
 
         MBT.Style[layerName].style = { opacity: value / 100 };
@@ -1014,6 +999,9 @@ export default {
       }
       if (category === 'surfaceList') {
         const index = this.layerOptions.surfaceList.findIndex(item => item.id === id);
+        const oldVal = this.layerOptions.surfaceList[index].opacity;
+        if (oldVal === value) { return; }
+
         this.layerOptions.surfaceList[index].opacity = value;
 
         MBT.Style[layerName].style = { opacity: value / 100 };
@@ -1514,6 +1502,12 @@ export default {
   //   background-color: pink;
   //   z-index: -1;
   // }
+
+  @keyframes dash-cycle-ani {
+    100% {
+      stroke-dashoffset: 0;
+    }
+  }
 
   .scbar_wrap {
     position: absolute;

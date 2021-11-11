@@ -1,10 +1,10 @@
 <template>
   <div class="screen_wrap">
     <InputVertical-component
-      v-model="titleValue"
       name="請輸入地圖標題"
       title="地圖標題"
       :change-text="titleValue"
+      @inputValue="getInputValue"
     />
     <div class="bt_wrap">
       <Buttons-component
@@ -35,12 +35,15 @@ export default {
   },
   data () {
     return {
-      titleValue: ''
+      titleValue: false
     };
   },
   methods: {
     clearAll () {
-      this.titleValue = '';
+      this.titleValue = true;
+    },
+    getInputValue (payload) {
+      this.titleValue = false;
     }
   },
   watch: {
