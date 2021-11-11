@@ -3,6 +3,7 @@
     <PageHeader
       icon="password"
       class="w-90"
+      :is-border="true"
     />
     <div class="pwdSetting">
       <InputVertical
@@ -12,6 +13,7 @@
         error-tip="輸入文字格式錯誤"
         is-warn="code8"
         is-icon="lock"
+        @inputValue="getPassword1"
       />
       <InputVertical
         name="inputName"
@@ -20,8 +22,12 @@
         error-tip="輸入文字格式錯誤"
         is-warn="code8"
         is-icon="lock"
+        @inputValue="getPassword2"
       />
-      <Button />
+      <Button
+        text="確定"
+        @click="setNewPassword"
+      />
     </div>
   </div>
 </template>
@@ -38,10 +44,28 @@ export default {
     Button
   },
   data () {
-    return {};
+    return {
+      password1: '',
+      password2: ''
+    };
   },
   name: 'PwdSetting',
-  layout: 'main'
+  layout: 'main',
+  methods: {
+    getPassword1 (e) {
+      if (e) {
+        this.password1 = e;
+      }
+    },
+    getPassword2 (e) {
+      if (e) {
+        this.password2 = e;
+      }
+    },
+    setNewPassword () {
+      // const data = `account=${e.value.val}`;
+    }
+  }
 };
 </script>
 <style lang="scss">

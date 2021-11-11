@@ -5,11 +5,14 @@ export default ({ route, store, app, redirect }) => {
     console.log(r);
   }).catch(e => {
     console.log(e);
+    if (route.path !== '/login' && route.path !== '/pwdSetting') {
+      return redirect('login');
+    }
   });
   const loginStatus = parseInt(sessionStorage.getItem('loginStatus'));
   if (loginStatus === 1 && route.path === '/login') {
     return redirect('/');
-  } else if (loginStatus !== 1 && route.path !== '/login') {
+  } else if (loginStatus !== 1 && route.path !== '/login' && route.path !== '/pwdSetting') {
     return redirect('login');
   }
 };

@@ -19,8 +19,8 @@
           v-if="addInput === true"
           sizing="w-310"
           input-text="請輸入帳號"
-          error-tip="無此帳號，請重新輸入"
-          is-warn="code8"
+          :error-tip="tips"
+          :is-warn="warnRule"
           @inputValue="getInputValue"
         />
       </div>
@@ -67,6 +67,10 @@ export default {
       type: String,
       default: '我是警示文字'
     },
+    tips: {
+      type: String,
+      default: ''
+    },
     boxIcon: {
       type: String,
       default: 'warning'
@@ -75,6 +79,10 @@ export default {
     addInput: {
       type: Boolean,
       default: false
+    },
+    warnRule: {
+      type: String,
+      default: ''
     }
   },
   data () {

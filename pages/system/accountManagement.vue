@@ -28,7 +28,7 @@
           :is-edit="true"
           :is-del="true"
           :is-scroll-table="true"
-          :column-min-width="160"
+          :column-min-width="150"
           @tableEvent="getTableEvent"
           @checkScrollList="getTableCheck"
         />
@@ -65,7 +65,7 @@ export default {
           { title: '管理處' },
           { title: '工作站' },
           { title: '權限群組' },
-          { title: '上次登入時間' },
+          { title: '上次登入時間', minW: 'minWidth150' },
           { title: '狀態' }
         ],
         body: [
@@ -95,7 +95,7 @@ export default {
           { title: '管理處' },
           { title: '工作站' },
           { title: '權限群組' },
-          { title: '上次登入時間' },
+          { title: '上次登入時間', setW: 'setWidth200' },
           { title: '狀態' }
         ],
         body: accountData(r.data)

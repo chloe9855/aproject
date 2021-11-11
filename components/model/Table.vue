@@ -90,14 +90,14 @@
             <th
               v-for="( item, index ) in tableColumn.head"
               :key="index"
-              :class="{isRightBorder:setRightBorder(index)}"
+              :class="[{isRightBorder:setRightBorder(index)},item.setW]"
             >
               {{ item.title }}
             </th>
             <th
               v-if="optionLength>0"
               :colspan="optionLength"
-              :style="{'min-width': (optionLength*35)+'px'}"
+              :style="{'min-width': (optionLength*25)+'px'}"
             />
           </tr>
         </thead>
@@ -786,10 +786,8 @@ export default {
     min-width: 180px;
   }
 }
-.minWidth200{
-  th{
-    min-width: 200px;
-  }
+.setWidth200{
+  min-width: 200px !important;
 }
 .isRightBorder{
   border-right:1px solid $light-green;

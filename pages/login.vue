@@ -56,7 +56,9 @@
       :add-input="true"
       title="忘記密碼怎麼辦?"
       box-icon="warning"
-      text="寄送重設密碼於註冊信箱請前往信箱重設密碼"
+      text="寄送重設密碼於註冊信箱 請前往信箱重設密碼"
+      :tips="forgetPasswordTips"
+      :warn-rule="errRule"
       @confirm="sendForgetPassword"
       @close="closeForgetPassWord"
     />
@@ -74,6 +76,7 @@
 import InputHorizontal from '~/components/tools/InputHorizontal.vue';
 import AlertBox from '~/components/tools/AlertBox.vue';
 import { loginReq, getVerify, forgetPassword } from '~/api/login';
+import { forgetPasswordErr } from '~/publish/apiErrorHandler';
 import Vue from 'vue';
 import VueCookies from 'vue-cookies';
 Vue.prototype.$cookies = VueCookies;
@@ -92,7 +95,9 @@ export default {
       isforgetPassWord: false,
       loginError: false,
       loginErrorTitle: '',
-      loginErrorText: ''
+      loginErrorText: '',
+      forgetPasswordTips: '',
+      errRule: ''
     };
   },
   name: 'Login',
@@ -160,7 +165,12 @@ export default {
         forgetPassword(data).then(r => {
           console.log(r);
           this.isforgetPassWord = false;
+          this.loginErrorTitle = '發送信件成功';
+          this.loginErrorText = '請前往信箱重設密碼';
+          this.loginError = true;
         }).catch(e => {
+          this.forgetPasswordTips = forgetPasswordErr(e.response.status);
+          this.errRule = 'code8';
           console.log(e);
         });
       }
@@ -232,6 +242,7 @@ export default {
 }
 .forgetPassWord{
   color: #3E9F88;
+  cursor: pointer;
   @include noto-sans-tc-16-medium;
 }
 </style>

@@ -33,7 +33,7 @@
       <SubTitleTool
         title="土地資料(填寫單位:桃園管理處)"
         class="w-90"
-        btn-text="新增土地資料"
+        :btn-text="isAddLandDataBtn"
         :btn-add="true"
         @STbtnStatus="boxToggle"
       />
@@ -148,6 +148,9 @@ export default {
   computed: {
     componentInstance () {
       return 'AddLand';
+    },
+    isAddLandDataBtn () {
+      return this.boxToggleStatus ? '' : '新增土地資料';
     },
     boxWidth () {
       const setWidth = this.toggleStatus ? 'tg-75' : 'w-90';
