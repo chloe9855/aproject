@@ -904,18 +904,18 @@ export default {
         const index = this.layerOptions.pointList.findIndex(item => item.id === id);
         this.layerOptions.pointList[index].visible = $event;
 
-        // MBT.Style[layerName].visible = $event;
-        // MBT.updateStyle(MBT.Style);
-        MBT.updateStyle({
-          [layerName]: { visible: $event },
-          '01_Canal': {
-            style: {
-              'stroke-dashoffset': 288,
-              'stroke-dasharray': '60 3 6 3',
-              animation: 'dash-cycle-ani 5s linear infinite'
-            }
-          }
-        });
+        MBT.Style[layerName].visible = $event;
+        MBT.updateStyle(MBT.Style);
+        // MBT.updateStyle({
+        //   [layerName]: { visible: $event },
+        //   '01_Canal': {
+        //     style: {
+        //       'stroke-dashoffset': 288,
+        //       'stroke-dasharray': '60 3 6 3',
+        //       animation: 'dash-cycle-ani 5s linear infinite'
+        //     }
+        //   }
+        // });
       }
       if (category === 'lineList') {
         const index = this.layerOptions.lineList.findIndex(item => item.id === id);
@@ -924,14 +924,7 @@ export default {
         // MBT.Style[layerName].visible = $event;
         // MBT.updateStyle(MBT.Style);
         MBT.updateStyle({
-          [layerName]: { visible: $event },
-          '01_Canal': {
-            style: {
-              'stroke-dashoffset': 288,
-              'stroke-dasharray': '60 3 6 3',
-              animation: 'dash-cycle-ani 5s linear infinite'
-            }
-          }
+          [layerName]: { visible: $event }
         });
       }
       if (category === 'surfaceList') {
@@ -941,14 +934,7 @@ export default {
         // MBT.Style[layerName].visible = $event;
         // MBT.updateStyle(MBT.Style);
         MBT.updateStyle({
-          [layerName]: { visible: $event },
-          '01_Canal': {
-            style: {
-              'stroke-dashoffset': 288,
-              'stroke-dasharray': '60 3 6 3',
-              animation: 'dash-cycle-ani 5s linear infinite'
-            }
-          }
+          [layerName]: { visible: $event }
         });
       }
       // 底圖切換
