@@ -98,7 +98,7 @@
               class="layer__list"
             >
               <div
-                v-for="item in layerOptions.surfaceList"
+                v-for="item in layerOptions.surfaceList.slice().reverse()"
                 :key="item.id"
                 class="layer__item"
               >
@@ -812,17 +812,28 @@ export default {
     loadAllBaseLayerTS (layerName, index) {
       this.allBaseLayer.push(new sg.layers.WMTSLayer('https://wmts.nlsc.gov.tw/wmts', {
         serviceMode: 'KVP',
-        loadEffect: true
+        loadEffect: true,
+        loaded: () => {
+          this.getMyWMTS(layerName, index);
+        }
       }));
 
-      setTimeout(() => {
-        this.allBaseLayer[index].layerInfo.identifier = layerName;
-        pMapBase.AddLayer(this.allBaseLayer[index]);
-        if (layerName !== 'EMAP5_OPENDATA') {
-          this.allBaseLayer[index].hide();
-        }
-        pMapBase.RefreshMap(true);
-      }, 2000);
+      // setTimeout(() => {
+      //   this.allBaseLayer[index].layerInfo.identifier = layerName;
+      //   pMapBase.AddLayer(this.allBaseLayer[index]);
+      //   if (layerName !== 'EMAP5_OPENDATA') {
+      //     this.allBaseLayer[index].hide();
+      //   }
+      //   pMapBase.RefreshMap(true);
+      // }, 2000);
+    },
+    getMyWMTS (layerName, index) {
+      this.allBaseLayer[index].layerInfo.identifier = layerName;
+      pMapBase.AddLayer(this.allBaseLayer[index]);
+      if (layerName !== 'EMAP5_OPENDATA') {
+        this.allBaseLayer[index].hide();
+      }
+      pMapBase.RefreshMap(true);
     },
     //* 載入底圖 wms
     loadAllBaseLayer (layerName, index) {
@@ -893,25 +904,52 @@ export default {
         const index = this.layerOptions.pointList.findIndex(item => item.id === id);
         this.layerOptions.pointList[index].visible = $event;
 
-        MBT.Style[layerName].visible = $event;
-        MBT.updateStyle(MBT.Style);
-        pMapBase.RefreshMap(true);
+        // MBT.Style[layerName].visible = $event;
+        // MBT.updateStyle(MBT.Style);
+        MBT.updateStyle({
+          [layerName]: { visible: $event },
+          '01_Canal': {
+            style: {
+              'stroke-dashoffset': 288,
+              'stroke-dasharray': '60 3 6 3',
+              animation: 'dash-cycle-ani 5s linear infinite'
+            }
+          }
+        });
       }
       if (category === 'lineList') {
         const index = this.layerOptions.lineList.findIndex(item => item.id === id);
         this.layerOptions.lineList[index].visible = $event;
 
-        MBT.Style[layerName].visible = $event;
-        MBT.updateStyle(MBT.Style);
-        pMapBase.RefreshMap(true);
+        // MBT.Style[layerName].visible = $event;
+        // MBT.updateStyle(MBT.Style);
+        MBT.updateStyle({
+          [layerName]: { visible: $event },
+          '01_Canal': {
+            style: {
+              'stroke-dashoffset': 288,
+              'stroke-dasharray': '60 3 6 3',
+              animation: 'dash-cycle-ani 5s linear infinite'
+            }
+          }
+        });
       }
       if (category === 'surfaceList') {
         const index = this.layerOptions.surfaceList.findIndex(item => item.id === id);
         this.layerOptions.surfaceList[index].visible = $event;
 
-        MBT.Style[layerName].visible = $event;
-        MBT.updateStyle(MBT.Style);
-        pMapBase.RefreshMap(true);
+        // MBT.Style[layerName].visible = $event;
+        // MBT.updateStyle(MBT.Style);
+        MBT.updateStyle({
+          [layerName]: { visible: $event },
+          '01_Canal': {
+            style: {
+              'stroke-dashoffset': 288,
+              'stroke-dasharray': '60 3 6 3',
+              animation: 'dash-cycle-ani 5s linear infinite'
+            }
+          }
+        });
       }
       // 底圖切換
       if (category === 'baseLayer') {
@@ -984,8 +1022,9 @@ export default {
 
         this.layerOptions.pointList[index].opacity = value;
 
-        MBT.Style[layerName].style = { opacity: value / 100 };
-        MBT.updateStyle(MBT.Style);
+        // MBT.Style[layerName].style = { opacity: value / 100 };
+        // MBT.updateStyle(MBT.Style);
+        MBT.updateStyle({ [layerName]: { style: { opacity: value / 100 } } });
       }
       if (category === 'lineList') {
         const index = this.layerOptions.lineList.findIndex(item => item.id === id);
@@ -994,8 +1033,9 @@ export default {
 
         this.layerOptions.lineList[index].opacity = value;
 
-        MBT.Style[layerName].style = { opacity: value / 100 };
-        MBT.updateStyle(MBT.Style);
+        // MBT.Style[layerName].style = { opacity: value / 100 };
+        // MBT.updateStyle(MBT.Style);
+        MBT.updateStyle({ [layerName]: { style: { opacity: value / 100 } } });
       }
       if (category === 'surfaceList') {
         const index = this.layerOptions.surfaceList.findIndex(item => item.id === id);
@@ -1004,8 +1044,9 @@ export default {
 
         this.layerOptions.surfaceList[index].opacity = value;
 
-        MBT.Style[layerName].style = { opacity: value / 100 };
-        MBT.updateStyle(MBT.Style);
+        // MBT.Style[layerName].style = { opacity: value / 100 };
+        // MBT.updateStyle(MBT.Style);
+        MBT.updateStyle({ [layerName]: { style: { opacity: value / 100 } } });
       }
       // 底圖切換
       if (category === 'baseLayer') {
@@ -1283,6 +1324,11 @@ export default {
         scaleImg.onload = function () {
           ctx.drawImage(scaleImg, 100, 550);
           console.log('比例尺');
+
+          canvas.toBlob(function (blob) {
+            saveAs(blob, 'iamap.jpg');
+            console.log('印出來');
+          });
         };
 
         // 加日期
@@ -1296,12 +1342,12 @@ export default {
         ctx.fillText('地圖平台 : 農田水利署地理空間處理平台', 235, 610);
       }, 2500);
 
-      setTimeout(() => {
-        canvas.toBlob(function (blob) {
-          saveAs(blob, 'iamap.jpg');
-          console.log('印出來');
-        });
-      }, 7000);
+      // setTimeout(() => {
+      //   canvas.toBlob(function (blob) {
+      //     saveAs(blob, 'iamap.jpg');
+      //     console.log('印出來');
+      //   });
+      // }, 7000);
     },
     // * @ 截圖工具：PDF下載
     downloadPDF () {
@@ -1309,6 +1355,10 @@ export default {
       const canvas = document.getElementsByTagName('canvas')[0];
       const ctx = canvas.getContext('2d');
       ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      window.jsPDF = window.jspdf.jsPDF;
+      // eslint-disable-next-line new-cap
+      const doc = new jsPDF('l', 'px', [canvas.width, canvas.height]);
 
       // 加上地圖
       const mapImg = new Image();
@@ -1353,6 +1403,10 @@ export default {
         scaleImg.onload = function () {
           ctx.drawImage(scaleImg, 100, 550);
           console.log('比例尺');
+
+          const image = canvas.toDataURL();
+          doc.addImage(image, 'JPEG', 0, 0, canvas.width, canvas.height);
+          doc.save('iamap.pdf');
         };
 
         // 加日期
@@ -1366,14 +1420,14 @@ export default {
         ctx.fillText('地圖平台 : 農田水利署地理空間處理平台', 235, 610);
       }, 2500);
 
-      window.jsPDF = window.jspdf.jsPDF;
-      // eslint-disable-next-line new-cap
-      const doc = new jsPDF('l', 'px', [canvas.width, canvas.height]);
-      setTimeout(() => {
-        const image = canvas.toDataURL();
-        doc.addImage(image, 'JPEG', 0, 0, canvas.width, canvas.height);
-        doc.save('iamap.pdf');
-      }, 7000);
+      // window.jsPDF = window.jspdf.jsPDF;
+      // // eslint-disable-next-line new-cap
+      // const doc = new jsPDF('l', 'px', [canvas.width, canvas.height]);
+      // setTimeout(() => {
+      //   const image = canvas.toDataURL();
+      //   doc.addImage(image, 'JPEG', 0, 0, canvas.width, canvas.height);
+      //   doc.save('iamap.pdf');
+      // }, 7000);
     },
     // * 回到全圖
     fullMapCtrl () {
@@ -1592,7 +1646,7 @@ export default {
   .layerwindow {
     width: 363px;
     //max-height: 440.2px;
-    max-height: 400px;
+    max-height: 421px;
     overflow-y: auto;
     overflow-x: hidden;
   }
