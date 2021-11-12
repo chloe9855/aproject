@@ -35,7 +35,8 @@ export default {
   },
   data () {
     return {
-      titleValue: false
+      titleValue: false,
+      myWord: ''
     };
   },
   methods: {
@@ -43,11 +44,12 @@ export default {
       this.titleValue = true;
     },
     getInputValue (payload) {
+      this.myWord = payload;
       this.titleValue = false;
     }
   },
   watch: {
-    titleValue: {
+    myWord: {
       handler (value) {
         this.$emit('update', value);
       }

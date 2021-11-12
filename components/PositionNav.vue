@@ -16,21 +16,18 @@
         <DropdownVertical-component
           :options="allDropList.Mng"
           :title="'管理分處'"
-          :bg-color="true"
           :change-text="clearCanals2"
           @DropdownVal="(payload) => { nextListHandler(payload, 'Stn'), selectHandler(payload, 'Mng'), clearCanals2 = false }"
         />
         <DropdownVertical-component
           :options="allDropList.Stn"
           :title="'工作站'"
-          :bg-color="true"
           :change-text="clearCanals3"
           @DropdownVal="(payload) => { nextListHandler(payload, 'Grp'), selectHandler(payload, 'Stn'), clearCanals3 = false }"
         />
         <DropdownVertical-component
           :options="allDropList.Grp"
           :title="'水利小組'"
-          :bg-color="true"
           :change-text="clearCanals4"
           @DropdownVal="(payload) => { nextListHandler(payload, 'Grp'), selectHandler(payload, 'Grp'), clearCanals4 = false }"
         />

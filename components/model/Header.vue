@@ -50,6 +50,15 @@
       </div>
 
       <div class="navbar">
+        <nuxt-link
+          :to="'/'"
+          class="temp_bt"
+        >
+          <p class="title-two">
+            首頁
+          </p>
+        </nuxt-link>
+
         <div class="menu-list">
           <div
             v-for="item of menuList"
@@ -259,7 +268,7 @@ export default {
     isLimit (item) {
       const r = this.userInfo;
       if (r.data) {
-        console.log(this.userInfo.data[0]);
+        // console.log(this.userInfo.data[0]);
         return headerLimit(r, item);
       };
     },
@@ -276,6 +285,20 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+
+.temp_bt {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 170px;
+  height: 33px;
+  position: absolute;
+  top: 0;
+  &:hover {
+    background-color: $dark-green;
+    cursor: pointer;
+  }
+}
 
 .header {
   z-index: 7000;
@@ -382,6 +405,7 @@ export default {
   padding: 0 545px 0 0;
   display: flex;
   align-items: flex-start;
+  position: relative;
 }
 .menu-list {
   background-color: $main-green;
@@ -458,6 +482,10 @@ export default {
 //   width: 100%;
 //   height: 100%;
 // }
+
+.submenu-group:nth-child(1) {
+  z-index: -1;
+}
 
 .submenu-group:nth-child(2) {
   .seticon::after {

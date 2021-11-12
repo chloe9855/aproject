@@ -51,7 +51,7 @@ export default {
         this.$store.commit('SET_LOUOUT_COUNTDOWN', { min: this.setMin });
         if (this.setMin <= 1200000) {
           this.countDownLogout();
-          console.log(this.setMin);
+          // console.log(this.setMin);
         } else {
           getLogout(this);
         }
