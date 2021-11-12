@@ -227,8 +227,10 @@ export default {
     searchHandler (type) {
       this.clearAllHandler();
       if (type === 0) {
-        const datas = require('~/static/singleLand.json');
-        this.searchResult.landNo = datas.data;
+        // const datas = require('~/static/singleLand.json');
+        // this.searchResult.landNo = datas.data;
+        const data = require('~/static/land.json');
+        this.searchResult.authority = data;
       }
 
       if (type === 1) {

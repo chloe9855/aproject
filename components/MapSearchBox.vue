@@ -23,7 +23,7 @@
     <div
       v-if="columnList.length >= 1 && (barOptions.current === 0 || barOptions.current === 3)"
       class="content_block"
-      :class="{'hide_block': hideResult, 'show_block': !hideResult}"
+      :class="{'hide_VVblock': hideResult, 'show_block': !hideResult}"
     >
       <p class="title">
         屬性表格
@@ -366,7 +366,7 @@ export default {
     }
   }
 
-  .hide_block {
+  .hide_VVblock {
     transition: transform 0.4s;
     transform: translateY(-92.5%);
   }
