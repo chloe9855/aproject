@@ -9,7 +9,7 @@ export default {
   },
   target: 'static',
   router: {
-    base: '/IRCloud/'
+    base: '/test008/'
   },
 
   // Global page headers: https://go.nuxtjs.dev/config-head
@@ -26,196 +26,196 @@ export default {
     ],
     script: [
       {
-        src: 'http://192.168.3.112/testyy/scripts/Base.js',
+        src: 'http://192.168.3.112/test008/scripts/Base.js',
         async: true
       },
       {
-        src: 'http://192.168.3.112/testyy/scripts/OperationBase.js',
+        src: 'http://192.168.3.112/test008/scripts/OperationBase.js',
         async: true
       },
       {
-        src: 'http://192.168.3.112/testyy/scripts/SuperGeoUtility.js',
+        src: 'http://192.168.3.112/test008/scripts/SuperGeoUtility.js',
         async: true
       },
       {
-        src: 'http://192.168.3.112/testyy/scripts/AjaxAgent.js',
+        src: 'http://192.168.3.112/test008/scripts/AjaxAgent.js',
         async: true
       },
       {
-        src: 'http://192.168.3.112/testyy/scripts/Framework.js',
+        src: 'http://192.168.3.112/test008/scripts/Framework.js',
         async: true
       },
       {
-        src: 'http://192.168.3.112/testyy/scripts/MapBase.js',
+        src: 'http://192.168.3.112/test008/scripts/MapBase.js',
         async: true
       },
       {
-        src: 'http://192.168.3.112/testyy/scripts/Controls.js',
+        src: 'http://192.168.3.112/test008/scripts/Controls.js',
         async: true
       },
       {
-        src: 'http://192.168.3.112/testyy/scripts/MapLayer.js',
+        src: 'http://192.168.3.112/test008/scripts/MapLayer.js',
         async: true
       },
       {
-        src: 'http://192.168.3.112/testyy/scripts/Navigate.js',
+        src: 'http://192.168.3.112/test008/scripts/Navigate.js',
         async: true
       },
       {
-        src: 'http://192.168.3.112/testyy/scripts/CachedLayer.js',
+        src: 'http://192.168.3.112/test008/scripts/CachedLayer.js',
         async: true
       },
       {
-        src: 'http://192.168.3.112/testyy/scripts/OpenStreetMap.js',
+        src: 'http://192.168.3.112/test008/scripts/OpenStreetMap.js',
         async: true
       },
       {
-        src: 'http://192.168.3.112/testyy/scripts/ToolControls.js',
+        src: 'http://192.168.3.112/test008/scripts/ToolControls.js',
         async: true
       },
       {
-        src: 'http://192.168.3.112/testyy/scripts/Tasks.js',
+        src: 'http://192.168.3.112/test008/scripts/Tasks.js',
         async: true
       },
       {
-        src: 'http://192.168.3.112/testyy/scripts/GFX.js',
+        src: 'http://192.168.3.112/test008/scripts/GFX.js',
         async: true
       },
       {
-        src: 'http://192.168.3.112/testyy/scripts/FX.js',
+        src: 'http://192.168.3.112/test008/scripts/FX.js',
         async: true
       },
       {
-        src: 'http://192.168.3.112/testyy/scripts/Compass.js',
+        src: 'http://192.168.3.112/test008/scripts/Compass.js',
         async: true
       },
       {
-        src: 'http://192.168.3.112/testyy/scripts/Tracker.js',
+        src: 'http://192.168.3.112/test008/scripts/Tracker.js',
         async: true
       },
       {
-        src: 'http://192.168.3.112/testyy/scripts/Geometry.js',
+        src: 'http://192.168.3.112/test008/scripts/Geometry.js',
         async: true
       },
       {
-        src: 'http://192.168.3.112/testyy/scripts/Symbol.js',
+        src: 'http://192.168.3.112/test008/scripts/Symbol.js',
         async: true
       },
       {
-        src: 'http://192.168.3.112/testyy/scripts/Draw.js',
+        src: 'http://192.168.3.112/test008/scripts/Draw.js',
         async: true
       },
       {
-        src: 'http://192.168.3.112/testyy/scripts/Overview.js',
+        src: 'http://192.168.3.112/test008/scripts/Overview.js',
         async: true
       },
       {
-        src: 'http://192.168.3.112/testyy/scripts/Bookmark.js',
+        src: 'http://192.168.3.112/test008/scripts/Bookmark.js',
         async: true
       },
       {
-        src: 'http://192.168.3.112/testyy/scripts/TemplatePicker.js',
+        src: 'http://192.168.3.112/test008/scripts/TemplatePicker.js',
         async: true
       },
       {
-        src: 'http://192.168.3.112/testyy/scripts/Layer.js',
+        src: 'http://192.168.3.112/test008/scripts/Layer.js',
         async: true
       },
       {
-        src: 'http://192.168.3.112/testyy/scripts/TiledLayer.js',
+        src: 'http://192.168.3.112/test008/scripts/TiledLayer.js',
         async: true
       },
       {
-        src: 'http://192.168.3.112/testyy/scripts/TileLayer.js',
+        src: 'http://192.168.3.112/test008/scripts/TileLayer.js',
         async: true
       },
       {
-        src: 'http://192.168.3.112/testyy/scripts/DynamicLayer.js',
+        src: 'http://192.168.3.112/test008/scripts/DynamicLayer.js',
         async: true
       },
       {
-        src: 'http://192.168.3.112/testyy/scripts/Graphic.js',
+        src: 'http://192.168.3.112/test008/scripts/Graphic.js',
         async: true
       },
       {
-        src: 'http://192.168.3.112/testyy/scripts/GraphicsLayer.js',
+        src: 'http://192.168.3.112/test008/scripts/GraphicsLayer.js',
         async: true
       },
 
       {
-        src: 'http://192.168.3.112/testyy/scripts/OSMLayer.js',
+        src: 'http://192.168.3.112/test008/scripts/OSMLayer.js',
         async: true
       },
       {
-        src: 'http://192.168.3.112/testyy/scripts/BingTiledLayer.js',
+        src: 'http://192.168.3.112/test008/scripts/BingTiledLayer.js',
         async: true
       },
       {
-        src: 'http://192.168.3.112/testyy/scripts/Infowindow.js',
+        src: 'http://192.168.3.112/test008/scripts/Infowindow.js',
         async: true
       },
       {
-        src: 'http://192.168.3.112/testyy/scripts/Mercator.js',
+        src: 'http://192.168.3.112/test008/scripts/Mercator.js',
         async: true
       },
       {
-        src: 'http://192.168.3.112/testyy/scripts/CoordSys.js',
+        src: 'http://192.168.3.112/test008/scripts/CoordSys.js',
         async: true
       },
       {
-        src: 'http://192.168.3.112/testyy/scripts/PrintTool.js',
+        src: 'http://192.168.3.112/test008/scripts/PrintTool.js',
         async: true
       },
       {
-        src: 'http://192.168.3.112/testyy/scripts/Process.js',
+        src: 'http://192.168.3.112/test008/scripts/Process.js',
         async: true
       },
       {
-        src: 'http://192.168.3.112/testyy/scripts/Query.js',
+        src: 'http://192.168.3.112/test008/scripts/Query.js',
         async: true
       },
       {
-        src: 'http://192.168.3.112/testyy/scripts/Edit.js',
+        src: 'http://192.168.3.112/test008/scripts/Edit.js',
         async: true
       },
       {
-        src: 'http://192.168.3.112/testyy/scripts/UndoManager.js',
+        src: 'http://192.168.3.112/test008/scripts/UndoManager.js',
         async: true
       },
       {
-        src: 'http://192.168.3.112/testyy/scripts/Request.js',
+        src: 'http://192.168.3.112/test008/scripts/Request.js',
         async: true
       },
       {
-        src: 'http://192.168.3.112/testyy/scripts/WMSLayer.js',
+        src: 'http://192.168.3.112/test008/scripts/WMSLayer.js',
         async: true
       },
       {
-        src: 'http://192.168.3.112/testyy/scripts/WMTSLayer.js',
+        src: 'http://192.168.3.112/test008/scripts/WMTSLayer.js',
         async: true
       },
       {
-        src: 'http://192.168.3.112/testyy/scripts/Google.js',
+        src: 'http://192.168.3.112/test008/scripts/Google.js',
         async: true
       },
       {
-        src: 'http://192.168.3.112/testyy/scripts/Base64.js',
+        src: 'http://192.168.3.112/test008/scripts/Base64.js',
         async: true
       },
       {
-        src: 'http://192.168.3.112/testyy/scripts/Projection.js',
+        src: 'http://192.168.3.112/test008/scripts/Projection.js',
         async: true
       },
       {
-        src: 'http://192.168.3.112/testyy/scripts/GroupLayer.js',
+        src: 'http://192.168.3.112/test008/scripts/GroupLayer.js',
         async: true
       },
       {
-        src: 'http://192.168.3.112/testyy/scripts/KMLLayer.js',
+        src: 'http://192.168.3.112/test008/scripts/KMLLayer.js',
         async: true
       },
       {
-        src: 'http://192.168.3.112/testyy/scripts/VectorTiledLayer.js',
+        src: 'http://192.168.3.112/test008/scripts/VectorTiledLayer.js',
         async: true
       },
       // {
@@ -223,7 +223,7 @@ export default {
       //   async: true
       // },
       {
-        src: 'http://192.168.3.112/testyy/scripts/setMap.js',
+        src: 'http://192.168.3.112/test008/scripts/setMap.js',
         async: true
       }
     ],

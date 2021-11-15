@@ -52,19 +52,16 @@
         <DropdownVertical-component
           :options="countyList.Town"
           :title="'鄉鎮市區'"
-          :bg-color="true"
           @DropdownVal="(payload) => { nextCountHandler(payload, 'Section') }"
         />
         <DropdownVertical-component
           :options="dropListA2"
           :title="'地段'"
-          :bg-color="true"
           @DropdownVal="(payload) => { nextCountHandler(payload, 'Sec5cov') }"
         />
         <DropdownVertical-component
           :options="dropListA2"
           :title="'地號'"
-          :bg-color="true"
         />
         <div class="bt_wrap underline">
           <Buttons-component
@@ -244,6 +241,7 @@ export default {
       clearCanals2: false,
       clearCanals3: false,
       clearCanals4: false,
+      geoGraphic: '',
       // * 地籍定位
       countyList: {
         County: [],
@@ -411,6 +409,7 @@ export default {
       // this.allDropList.Ia = [];
       this.allDropList.Mng = [];
       this.allDropList.Stn = [];
+      pMapBase.drawingGraphicsLayer.remove(this.geoGraphic);
     },
     // * @ 灌溉定位 : 點擊選單 抓出下一排選項的所有清單
     nextListHandler (payload, nextType) {
@@ -483,6 +482,9 @@ export default {
       if (payload.value === 'none') { return; }
 
       let myObj = {};
+      if (myType === 'Ia') {
+        myObj = { Ia: '01', FID: 1 };
+      }
       if (myType === 'Mng') {
         myObj = { Ia: '01', FID: payload.FID };
       }
@@ -502,7 +504,17 @@ export default {
       }).then((response) => {
         return response.json();
       }).then((jsonData) => {
-        console.log(jsonData);
+        console.log(jsonData[0].geometry);
+        // 先清除之前的
+        pMapBase.drawingGraphicsLayer.remove(this.geoGraphic);
+        // 畫圖
+        const geometry = sg.geometry.Geometry.fromGeoJson(jsonData[0].geometry);
+        this.geoGraphic = sg.Graphic.createFromGeometry(geometry, { borderwidth: 1, fillcolor: new sg.Color(220, 105, 105, 0.5) });
+        pMapBase.drawingGraphicsLayer.add(this.geoGraphic);
+        // 定位
+        const extent = geometry.extent;
+        pMapBase.ZoomMapTo(extent);
+        pMapBase.RefreshMap(true);
       }).catch((err) => {
         console.log(err);
       });
