@@ -2,7 +2,7 @@
   <div class="inputBox">
     <DropdownVertical
       title="群組"
-      :option-data="member"
+      :options="member"
       @DropdownVal="getGroup"
     />
     <DatePicker

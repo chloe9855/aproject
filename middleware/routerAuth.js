@@ -6,8 +6,9 @@ export default ({ route, store, app, redirect }) => {
     console.log(r);
   }).catch(e => {
     console.log(e);
-    console.log(route.path !== loginPath);
-    console.log(route.path !== '/pwdSetting');
+    if (e.response.status === '401') {
+      return redirect('/login');
+    }
     if (route.path !== loginPath && route.path !== '/pwdSetting') {
       return redirect('/login');
     }

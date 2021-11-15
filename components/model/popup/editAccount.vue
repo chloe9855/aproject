@@ -31,15 +31,15 @@
     />
     <DropdownVertical
       title="單位"
-      :options="group"
+      :options="groupList"
     />
     <DropdownVertical
       title="工作站"
-      :options="group"
+      :options="groupList"
     />
     <DropdownVertical
       title="小組別"
-      :options="group"
+      :options="groupList"
     />
     <InputVertical
       title="信箱"
@@ -82,7 +82,7 @@ export default {
     return {
       onPassword: false,
       account: {},
-      group: [],
+      group: {},
       iaList: [],
       groupList: [],
       stnList: [],
