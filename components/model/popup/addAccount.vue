@@ -30,7 +30,7 @@
     />
     <DropdownVertical
       title="群組"
-      :option-data="groupList"
+      :options="groupList"
       @DropdownVal="setGroup"
     />
   </div>
