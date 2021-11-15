@@ -9,7 +9,7 @@
     />
     <component
       :is="componentInstance"
-      @search="(type) => { $emit('search', type) }"
+      @search="(type, data) => { $emit('search', type, data) }"
       @clear="$emit('clear')"
     />
     <div
