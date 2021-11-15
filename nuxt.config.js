@@ -7,7 +7,7 @@ export default {
       productionTip: false
     }
   },
-  target: 'static',
+  // target: 'static',
   router: {
     base: '/test008/'
   },
@@ -302,6 +302,6 @@ export default {
     }
   },
   server: {
-    host: 'localhost'
+    host: '192.168.1.103'
   }
 };
