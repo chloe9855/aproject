@@ -152,7 +152,7 @@
 
 <script>
 import { signOnStatus } from '~/api/login';
-import { mapState } from 'vuex';
+// import { mapState } from 'vuex';
 import { headerLimit } from '~/publish/headerLimit';
 import { getLogout } from '~/publish/getLogout';
 export default {
@@ -271,10 +271,10 @@ export default {
         // console.log(this.userInfo.data[0]);
         return headerLimit(r, item);
       };
-    },
-    ...mapState([
-      'userInfo'
-    ])
+    }
+    // ...mapState([
+    //   'userInfo'
+    // ])
   },
   computed: {
     togglePopup () {

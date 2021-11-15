@@ -39,4 +39,7 @@ export const mutations = {
   SET_EDIT_ACCOUNT (state, payload) {
     state.editAccount = payload.userId;
   }
+  // SET_LOGOUT_MIN (state, payload) {
+  //   state.setMin = payload.setMin;
+  // }
 };
