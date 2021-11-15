@@ -87,11 +87,12 @@
       <div class="listTitle">
         農民類別
       </div>
-      <div>
+      <div class="flexBox">
         <Dropdown
           :options="member"
+          class="flex-1"
         />
-        <div />
+        <div class="flex-4" />
       </div>
     </div>
     <div class="listBox Box4">

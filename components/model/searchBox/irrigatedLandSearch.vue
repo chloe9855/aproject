@@ -44,7 +44,6 @@
       />
       <DropdownCheckList
         title="地號"
-        :options="member"
       />
     </div>
   </div>
