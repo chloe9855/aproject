@@ -22,6 +22,7 @@
       <InputHorizontal
         title="密碼"
         is-icon="lock"
+        input-type="password"
         @inputValue="getPassword"
       />
       <div class="verification flexBox">

@@ -82,7 +82,7 @@ export default {
     return {
       onPassword: false,
       account: {},
-      group: {},
+      group: [],
       iaList: [],
       groupList: [],
       stnList: [],
