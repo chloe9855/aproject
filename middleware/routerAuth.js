@@ -2,26 +2,50 @@ import { signOnStatus } from '~/api/login';
 export default ({ route, store, app, redirect }) => {
   const loginPath = '/login';
   const loginStatus = parseInt(sessionStorage.getItem('loginStatus'));
+  const isLogin = route.path.indexOf(loginPath) > -1;
+  const isPwdSetting = route.path.indexOf('pwdSetting') > -1;
+  store.commit('SET_LOUOUT_COUNTDOWN', { min: 0 });
   signOnStatus().then(r => {
     store.commit('SET_USER_INFO', { userInfo: r.data[0] });
-    console.log(r);
+    if (isLogin || isPwdSetting) {
+      return redirect('/');
+    }
   }).catch(e => {
-    console.log(e.response.status);
-    if (e.response.status === '401') {
-      sessionStorage.setItem('loginStatus', 0);
-      return redirect('/login');
-    }
-    if (route.path !== loginPath && route.path !== '/pwdSetting') {
-      sessionStorage.setItem('loginStatus', 0);
-      return redirect('/login');
-    }
-  });
-  console.log(route.path !== loginPath);
-  console.log(route.path);
-  console.log(route.path);
-  if (loginStatus === 1 && route.path === loginPath) {
-    return redirect('/');
-  } else if (loginStatus !== 1 && route.path !== loginPath && route.path !== '/pwdSetting') {
+    sessionStorage.setItem('loginStatus', 0);
     return redirect('/login');
+    // if (!isLogin || !isPwdSetting) {
+    //   if (e.response.status === 401) {
+    //     return redirect('/login');
+    //   } else {
+    //     return redirect('/');
+    //   }
+    // } else {
+    //   return redirect('/login');
+    // }
+  });
+  if (loginStatus === 1 && (isLogin || isPwdSetting)) {
+    return redirect('/');
+  } else {
+    signOnStatus().then(r => {
+      store.commit('SET_USER_INFO', { userInfo: r.data[0] });
+      if (isLogin || isPwdSetting) {
+        return redirect('/');
+      }
+    }).catch(e => {
+      sessionStorage.setItem('loginStatus', 0);
+      return redirect('/login');
+      // if (!isLogin || !isPwdSetting) {
+      //   if (e.response.status === 401) {
+      //     return redirect('/login');
+      //   } else {
+      //     return redirect('/');
+      //   }
+      // } else {
+      //   return redirect('/login');
+      // }
+    });
   }
+  //  else if (loginStatus !== 1 && route.path !== loginPath && route.path !== '/pwdSetting') {
+  //   return redirect('/login');
+  // }
 };
