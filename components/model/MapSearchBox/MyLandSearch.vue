@@ -31,8 +31,8 @@
         title="地號"
         green-hint="地號範圍:0"
         star-sign="*"
-        :options="countyList1.Sec5cov"
-        @DropdownVal="(payload) => { coData1.Sec5cov = payload.Land_no }"
+        :search-input="Sec5covList"
+        @inputValue="(payload) => { coData1.Sec5cov = payload }"
       />
     </div>
     <div
@@ -144,7 +144,8 @@ export default {
         Mng: '',
         Stn: '',
         Grp: ''
-      }
+      },
+      Sec5covList: []
     };
   },
   name: 'MyLandSearch',
@@ -161,10 +162,10 @@ export default {
     searchData (current) {
       let url = '';
       if (current === 0) {
-        url = `http://192.168.3.112/AERC/rest/Fund?CountyID=${this.coData1.County}&TownID=${this.coData1.Town}&LandLotNO=${this.coData1.Section}&LandNo=${this.coData1.Sec5cov}`;
+        url = `http://192.168.3.112/AERC/rest/Fund?CountyID=${this.coData1.County}&TownID=${this.coData1.Town}&LandLotNO=${this.coData1.Section}&LandNo=${this.coData1.Sec5cov}&pageCnt=1&pageRows=10`;
       }
       if (current === 1) {
-        url = `http://192.168.3.112/AERC/rest/Fund?CountyID=${this.coData2.County}&TownID=${this.coData2.Town}&LandLotNO=&LandNo=`;
+        url = `http://192.168.3.112/AERC/rest/Fund?CountyID=${this.coData2.County}&TownID=${this.coData2.Town}&LandLotNO=&LandNo=&pageCnt=1&pageRows=10`;
       }
 
       fetch(url, {
@@ -176,7 +177,7 @@ export default {
         return response.json();
       }).then((data) => {
         console.log(data);
-        this.$emit('search', options.current, data);
+        this.$emit('search', current, data);
       }).catch((err) => {
         console.log(err);
       });
@@ -285,16 +286,23 @@ export default {
 
       let myObj = {};
       if (nextType === 'Town') {
-        myObj = { CountyID: coData1.County };
+        myObj = { CountyID: payload.COUNTYID };
       }
       if (nextType === 'Section') {
-        myObj = { CountyID: coData1.County, TOWNID: coData1.Town };
+        myObj = { CountyID: payload.COUNTYID, TownID: payload.TOWNID };
       }
       if (nextType === 'Sec5cov') {
-        myObj = { CountyID: coData1.County, TOWNID: coData1.Town, Section: coData1.Section };
+        myObj = { CountyID: this.coData1.County };
       }
 
-      fetch(`http://192.168.3.112/AERC/rest/${nextType}`, {
+      let url = '';
+      if (nextType !== 'Sec5cov') {
+        url = `http://192.168.3.112/AERC/rest/${nextType}`;
+      } else {
+        url = 'http://192.168.3.112/AERC/rest/Sec5cov?pageCnt=1&pageRows=5';
+      }
+
+      fetch(url, {
         method: 'POST',
         headers: new Headers({
           'Content-Type': 'application/json'
@@ -325,6 +333,9 @@ export default {
           if (nextType === 'Sec5cov') { item.title = item.Land_no; }
         });
         this.countyList1[nextType] = jsonData;
+
+        const nameList = jsonData.map(item => item.Land_no);
+        this.Sec5covList = nameList;
       }).catch((err) => {
         console.log(err);
       });

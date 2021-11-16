@@ -3,9 +3,14 @@
     <Dropdown-component
       :options="dropList"
       :placeholders="'請選擇管理處'"
+      :change-text="clearText"
+      @DropdownVal="getCanalLists"
     />
     <InputTool-component
       :input-text="'輸入渠道關鍵字或是點擊地圖'"
+      :search-input="canalList"
+      :change-text="clearKeyText"
+      @inputValue="searchCanal"
     />
     <div class="input_wrap">
       <div>
@@ -88,10 +93,44 @@ export default {
   },
   data () {
     return {
-      dropList: [{ title: '01 宜蘭', value: '1' }]
+      dropList: [{ title: '01 宜蘭', value: '1' }],
+      allCanalList: [],
+      canalList: [],
+      clearText: false,
+      clearKeyText: false
     };
   },
-  name: 'ChannelSearch'
+  name: 'ChannelSearch',
+  methods: {
+    // * 取得該管理處的所有渠道
+    getCanalLists (payload) {
+      this.clearText = false;
+
+      fetch('http://192.168.3.112/AERC/rest/Canal/admin5', {
+        method: 'POST',
+        headers: new Headers({
+          'Content-Type': 'application/json'
+        }),
+        body: JSON.stringify({
+          Ia: '01'
+        })
+      }).then((response) => {
+        if (response.status === 403) {
+          this.countyList[nextType] = [{ title: '不拘', value: 'none' }];
+          return Promise.reject(response);
+        }
+        return response.json();
+      }).then((jsonData) => {
+        console.log(jsonData);
+        this.allCanalList = jsonData;
+
+        const nameList = jsonData.map(item => item.Sys_cns);
+        this.canalList = nameList;
+      }).catch((err) => {
+        console.log(err);
+      });
+    }
+  }
 };
 </script>
 

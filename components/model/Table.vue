@@ -208,7 +208,7 @@
               v-show="isMap && !isScrollTable"
               class="mapOption"
             >
-              <div @click="sendEvent('isMap')">
+              <div @click="sendEvent('isMap', index)">
                 <img
                   alt=""
                   class="vector"
@@ -220,7 +220,7 @@
               v-show="isSearch"
               class="searchOption"
             >
-              <div @click="sendEvent('isSearch')">
+              <div @click="sendEvent('isSearch', item.title[3], index)">
                 <img
                   alt=""
                   class="vector"
@@ -474,8 +474,8 @@ export default {
         }
       });
     },
-    sendEvent (e, item) {
-      this.$emit('tableEvent', { event: e, item: item });
+    sendEvent (e, item, i) {
+      this.$emit('tableEvent', { event: e, item: item, myIndex: i });
     }
   },
   computed: {

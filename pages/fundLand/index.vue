@@ -16,7 +16,7 @@
         <BreadCrumbTool :options="breadCrumb" />
         <PageHeader
           icon="land"
-          btn-text="在地圖上顯示"
+          :hide-button="true"
           btn-name="button-primary"
         />
         <Table
@@ -66,6 +66,7 @@
           <Buttons
             :name="'button-primary'"
             :text="'在地圖上顯示'"
+            @click="showOnMap"
           />
         </div>
 
@@ -74,9 +75,9 @@
           :selected="options.current"
           @current="payload => options.current = payload"
         /> -->
-        <NormalTable
-          v-if="columnList.length >= 1"
-          :list="columnList"
+        <NormalTable2
+          v-if="detailItem !== ''"
+          :item="detailItem[0]"
         />
       </div>
     </div>
@@ -88,7 +89,7 @@ import SearchFund from '~/components/model/SearchFund';
 import BreadCrumbTool from '~/components/tools/BreadCrumbTool';
 import PageHeader from '~/components/tools/PageHeader.vue';
 import Table from '~/components/model/Table.vue';
-import NormalTable from '~/components/model/NormalTable.vue';
+import NormalTable2 from '~/components/model/NormalTable2.vue';
 // import NavTabs from '~/components/tools/NavTabs.vue';
 import Buttons from '~/components/tools/Buttons.vue';
 
@@ -98,12 +99,13 @@ export default {
     BreadCrumbTool: BreadCrumbTool,
     PageHeader: PageHeader,
     Table: Table,
-    NormalTable: NormalTable,
+    NormalTable2: NormalTable2,
     // NavTabs: NavTabs,
     Buttons: Buttons
   },
   data () {
     return {
+      allData: '',
       growUp: true,
       showDetail: false,
       searchResult: {
@@ -154,7 +156,10 @@ export default {
         ],
         body: []
       },
-      columnList: []
+      //* 依單筆地號 單筆詳細資料
+      detailItem: '',
+      myCountyId: '',
+      mapIndex: ''
     };
   },
   mounted () {
@@ -170,24 +175,74 @@ export default {
         _searchFund.showBar();
       }
     },
+    //* 單筆看詳細、定位至地圖
     showDetailHandler (payload) {
-      if (payload === 'isSearch') {
-        this.addDetail(true);
+      if (payload.event === 'isSearch') {
+        // payload.item = 地號
+        // payload.myIndex = index
+        this.mapIndex = payload.myIndex;
+
+        fetch(`http://192.168.3.112/AERC/rest/Fund?CountyID=${this.myCountyId}&TownID=&LandLotNO=&LandNo=${payload.item}&pageCnt=1&pageRows=10`, {
+          method: 'GET',
+          headers: new Headers({
+            'Content-Type': 'application/json'
+          })
+        }).then((response) => {
+          return response.json();
+        }).then((jsonData) => {
+          console.log(jsonData);
+
+          this.detailItem = '';
+          this.addDetail(true);
+          this.detailItem = jsonData;
+        }).catch((err) => {
+          console.log(err);
+        });
+      }
+
+      if (payload.event === 'isMap') {
+        // payload.item = index
+
+        fetch('http://192.168.3.112/AERC/rest/Sec5cov?pageCnt=1&pageRows=5', {
+          method: 'POST',
+          headers: new Headers({
+            'Content-Type': 'application/json'
+          }),
+          body: JSON.stringify({
+            CountyID: this.myCountyId,
+            FID: this.allData[payload.item].FID
+          })
+        }).then((response) => {
+          return response.json();
+        }).then((jsonData) => {
+          console.log(jsonData);
+
+          window.open('http://192.168.3.112/test008/map/');
+          localStorage.setItem('oriData', JSON.stringify(jsonData[0].geometry));
+        }).catch((err) => {
+          console.log(err);
+        });
       }
     },
+    //* 搜尋
     searchHandler (type, data) {
       this.clearAllHandler();
+
+      if (data.length < 1) {
+        this.searchResult.authority = '';
+        this.searchData1.body = [];
+        return;
+      }
+
       // 依單筆地號
       if (type === 0) {
-        // const datas = require('~/static/singleLand.json');
-        // this.searchResult.landNo = datas.data;
-        // const data = require('~/static/land.json');
-        // this.searchResult.authority = data;
+        this.allData = data;
+
         const newArr = [];
-        const result = {
-          title: []
-        };
         data.forEach((item) => {
+          const result = {
+            title: []
+          };
           result.title[0] = item.CountyName;
           result.title[1] = item.TownName;
           result.title[2] = item.LandLot;
@@ -195,8 +250,10 @@ export default {
           newArr.push(result);
         });
 
+        this.myCountyId = data[0].CountyID;
         this.searchData1.body = newArr;
         this.searchResult.authority = this.searchData1;
+        this.$forceUpdate();
       }
 
       // 依管理單位
@@ -205,10 +262,33 @@ export default {
         // this.searchResult.authority = data;
       }
     },
+    // * 清除全部
     clearAllHandler () {
       this.searchResult.authority = '';
       this.searchResult.landNo = '';
       this.searchData1.body = [];
+    },
+    // * 在地圖上顯示
+    showOnMap () {
+      fetch('http://192.168.3.112/AERC/rest/Sec5cov?pageCnt=1&pageRows=5', {
+        method: 'POST',
+        headers: new Headers({
+          'Content-Type': 'application/json'
+        }),
+        body: JSON.stringify({
+          CountyID: this.myCountyId,
+          FID: this.allData[this.mapIndex].FID
+        })
+      }).then((response) => {
+        return response.json();
+      }).then((jsonData) => {
+        console.log(jsonData);
+
+        window.open('http://192.168.3.112/test008/map/');
+        localStorage.setItem('oriData', JSON.stringify(jsonData[0].geometry));
+      }).catch((err) => {
+        console.log(err);
+      });
     }
   },
   watch: {
