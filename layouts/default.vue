@@ -49,7 +49,8 @@ export default {
       setTimeout(() => {
         this.setMin += 1000;
         this.$store.commit('SET_LOUOUT_COUNTDOWN', { min: this.setMin });
-        if (this.$store.state.mouseEventMin <= 119000) {
+        if (this.$store.state.mouseEventMin <= 1190000) {
+          console.log(this.$store.state.mouseEventMin);
           this.countDownLogout();
         } else {
           this.setMin = 0;
