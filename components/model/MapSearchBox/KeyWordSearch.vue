@@ -39,7 +39,8 @@ export default {
       allCanalList: [],
       canalList: [],
       clearText: false,
-      clearKeyText: false
+      clearKeyText: false,
+      canalGraphic: ''
     };
   },
   name: 'KeyWordSearch',
@@ -47,6 +48,8 @@ export default {
     clearAllHandler () {
       this.clearText = true;
       this.clearKeyText = true;
+      // 清除圖形
+      pMapBase.drawingGraphicsLayer.remove(this.canalGraphic);
       this.$emit('clearKeyword');
     },
     // * 取得該管理處的所有渠道
@@ -101,6 +104,17 @@ export default {
       }).then((jsonData) => {
         console.log(jsonData);
         this.$emit('keywordSearch', jsonData);
+
+        // 先清除之前的
+        pMapBase.drawingGraphicsLayer.remove(this.canalGraphic);
+        // 畫圖
+        const geometry = sg.geometry.Geometry.fromGeoJson(jsonData[0].geometry);
+        this.canalGraphic = sg.Graphic.createFromGeometry(geometry, { borderwidth: 1, fillcolor: new sg.Color(220, 105, 105, 0.5) });
+        pMapBase.drawingGraphicsLayer.add(this.canalGraphic);
+        // 定位
+        const extent = geometry.extent;
+        pMapBase.ZoomMapTo(extent);
+        pMapBase.RefreshMap(true);
       }).catch((err) => {
         console.log(err);
       });

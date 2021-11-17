@@ -31,7 +31,6 @@
         title="地號"
         green-hint="地號範圍:0"
         star-sign="*"
-        :search-input="Sec5covList"
         @inputValue="(payload) => { coData1.Sec5cov = payload }"
       />
     </div>
@@ -330,11 +329,11 @@ export default {
           item.value = item.FID;
           if (nextType === 'Town') { item.title = item.TOWNNAME; }
           if (nextType === 'Section') { item.title = item.Sec_cns; }
-          if (nextType === 'Sec5cov') { item.title = item.Land_no; }
+          // if (nextType === 'Sec5cov') { item.title = item.Land_no; }
         });
         this.countyList1[nextType] = jsonData;
 
-        const nameList = jsonData.map(item => item.Land_no);
+        const nameList = jsonData[0].data.map(item => item.Land_no);
         this.Sec5covList = nameList;
       }).catch((err) => {
         console.log(err);

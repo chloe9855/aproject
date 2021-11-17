@@ -217,7 +217,12 @@ export default {
         }).then((jsonData) => {
           console.log(jsonData);
 
-          window.open('http://192.168.3.112/test008/map/');
+          const nowUrl = window.location.href;
+          const front = nowUrl.substring(0, nowUrl.length - 9);
+          const end = 'map/';
+          const myUrl = `${front}${end}`;
+
+          window.open(myUrl);
           localStorage.setItem('oriData', JSON.stringify(jsonData[0].geometry));
         }).catch((err) => {
           console.log(err);
@@ -284,7 +289,12 @@ export default {
       }).then((jsonData) => {
         console.log(jsonData);
 
-        window.open('http://192.168.3.112/test008/map/');
+        const nowUrl = window.location.href;
+        const front = nowUrl.substring(0, nowUrl.length - 9);
+        const end = 'map/';
+        const myUrl = `${front}${end}`;
+
+        window.open(myUrl);
         localStorage.setItem('oriData', JSON.stringify(jsonData[0].geometry));
       }).catch((err) => {
         console.log(err);
