@@ -23,7 +23,7 @@
     <h3 class="title">
       {{ mainTitle }}
     </h3>
-    <div>
+    <div :class="{ 'hide_btn': hideButton }">
       <Buttons
         v-show="isBtn"
         :name="btnName"
@@ -105,6 +105,10 @@ export default {
       default: ''
     },
     btnSecAdd: {
+      type: Boolean,
+      default: false
+    },
+    hideButton: {
       type: Boolean,
       default: false
     }
@@ -230,4 +234,9 @@ export default {
   color: #21705D;
   @include noto-sans-tc-14-medium;
 }
+
+.hide_btn{
+  display: none;
+}
+
 </style>

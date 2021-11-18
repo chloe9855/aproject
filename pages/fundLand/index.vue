@@ -16,7 +16,7 @@
         <BreadCrumbTool :options="breadCrumb" />
         <PageHeader
           icon="land"
-          btn-text="在地圖上顯示"
+          :hide-button="true"
           btn-name="button-primary"
         />
         <Table
@@ -66,6 +66,7 @@
           <Buttons
             :name="'button-primary'"
             :text="'在地圖上顯示'"
+            @click="showOnMap"
           />
         </div>
 
@@ -74,9 +75,9 @@
           :selected="options.current"
           @current="payload => options.current = payload"
         /> -->
-        <NormalTable
-          v-if="columnList.length >= 1"
-          :list="columnList"
+        <NormalTable2
+          v-if="detailItem !== ''"
+          :item="detailItem[0]"
         />
       </div>
     </div>
@@ -88,7 +89,7 @@ import SearchFund from '~/components/model/SearchFund';
 import BreadCrumbTool from '~/components/tools/BreadCrumbTool';
 import PageHeader from '~/components/tools/PageHeader.vue';
 import Table from '~/components/model/Table.vue';
-import NormalTable from '~/components/model/NormalTable.vue';
+import NormalTable2 from '~/components/model/NormalTable2.vue';
 // import NavTabs from '~/components/tools/NavTabs.vue';
 import Buttons from '~/components/tools/Buttons.vue';
 
@@ -98,12 +99,13 @@ export default {
     BreadCrumbTool: BreadCrumbTool,
     PageHeader: PageHeader,
     Table: Table,
-    NormalTable: NormalTable,
+    NormalTable2: NormalTable2,
     // NavTabs: NavTabs,
     Buttons: Buttons
   },
   data () {
     return {
+      allData: '',
       growUp: true,
       showDetail: false,
       searchResult: {
@@ -132,78 +134,32 @@ export default {
           }
         ]
       },
-      columnList: [
-        {
-          name: '流水編號',
-          value: '851705',
-          id: 0
-        },
-        {
-          name: '管理處代碼',
-          value: '09',
-          id: 1
-        },
-        {
-          name: '管理處名稱',
-          value: '851705',
-          id: 2
-        },
-        {
-          name: '管理分分處名稱',
-          value: '09',
-          id: 3
-        },
-        {
-          name: '工作站代碼',
-          value: '851705',
-          id: 4
-        },
-        {
-          name: '工作站名稱',
-          value: '09',
-          id: 5
-        },
-        {
-          name: '水利小組代碼',
-          value: '851705',
-          id: 6
-        },
-        {
-          name: '水利小組名稱',
-          value: '泉厝支線小組',
-          id: 7
-        },
-        {
-          name: '輪區代碼',
-          value: '851705',
-          id: 8
-        },
-        {
-          name: '輪區名稱',
-          value: '09',
-          id: 57
-        },
-        {
-          name: '長度',
-          value: '09',
-          id: 66
-        },
-        {
-          name: '渠道名稱',
-          value: '851705',
-          id: 62
-        },
-        {
-          name: '渠道等級代碼',
-          value: '09',
-          id: 58
-        },
-        {
-          name: '渠道等級名稱',
-          value: '851705',
-          id: 52
-        }
-      ]
+      //* 依單筆地號 查詢結果
+      searchData1: {
+        head: [
+          { title: '縣市' },
+          { title: '鄉鎮市區' },
+          { title: '段名' },
+          { title: '地號' }
+        ],
+        body: []
+      },
+      //* 依管理單位 查詢結果
+      searchData2: {
+        head: [
+          { title: '縣市' },
+          { title: '鄉鎮市區' },
+          { title: '管理處' },
+          { title: '管理分處' },
+          { title: '工作站' },
+          { title: '水利小組' }
+        ],
+        body: []
+      },
+      //* 依單筆地號 單筆詳細資料
+      detailItem: '',
+      myCountyId: '',
+      mapIndex: ''
     };
   },
   mounted () {
@@ -219,28 +175,130 @@ export default {
         _searchFund.showBar();
       }
     },
+    //* 單筆看詳細、定位至地圖
     showDetailHandler (payload) {
-      if (payload === 'isSearch') {
-        this.addDetail(true);
-      }
-    },
-    searchHandler (type) {
-      this.clearAllHandler();
-      if (type === 0) {
-        // const datas = require('~/static/singleLand.json');
-        // this.searchResult.landNo = datas.data;
-        const data = require('~/static/land.json');
-        this.searchResult.authority = data;
+      if (payload.event === 'isSearch') {
+        // payload.item = 地號
+        // payload.myIndex = index
+        this.mapIndex = payload.myIndex;
+
+        fetch(`http://192.168.3.112/AERC/rest/Fund?CountyID=${this.myCountyId}&TownID=&LandLotNO=&LandNo=${payload.item}&pageCnt=1&pageRows=10`, {
+          method: 'GET',
+          headers: new Headers({
+            'Content-Type': 'application/json'
+          })
+        }).then((response) => {
+          return response.json();
+        }).then((jsonData) => {
+          console.log(jsonData);
+
+          this.detailItem = '';
+          this.addDetail(true);
+          this.detailItem = jsonData;
+        }).catch((err) => {
+          console.log(err);
+        });
       }
 
-      if (type === 1) {
-        const data = require('~/static/land.json');
-        this.searchResult.authority = data;
+      if (payload.event === 'isMap') {
+        // payload.item = index
+
+        fetch('http://192.168.3.112/AERC/rest/Sec5cov?pageCnt=1&pageRows=5', {
+          method: 'POST',
+          headers: new Headers({
+            'Content-Type': 'application/json'
+          }),
+          body: JSON.stringify({
+            CountyID: this.myCountyId,
+            FID: this.allData[payload.item].FID
+          })
+        }).then((response) => {
+          return response.json();
+        }).then((jsonData) => {
+          console.log(jsonData);
+
+          const nowUrl = window.location.href;
+          const front = nowUrl.substring(0, nowUrl.length - 9);
+          const end = 'map/';
+          const myUrl = `${front}${end}`;
+
+          window.open(myUrl);
+          localStorage.setItem('oriData', JSON.stringify(jsonData[0].geometry));
+        }).catch((err) => {
+          console.log(err);
+        });
       }
     },
+    //* 搜尋
+    searchHandler (type, data) {
+      this.clearAllHandler();
+
+      if (data.length < 1) {
+        this.searchResult.authority = '';
+        this.searchData1.body = [];
+        return;
+      }
+
+      // 依單筆地號
+      if (type === 0) {
+        this.allData = data;
+
+        const newArr = [];
+        data.forEach((item) => {
+          const result = {
+            title: []
+          };
+          result.title[0] = item.CountyName;
+          result.title[1] = item.TownName;
+          result.title[2] = item.LandLot;
+          result.title[3] = item.LandNo;
+          newArr.push(result);
+        });
+
+        this.myCountyId = data[0].CountyID;
+        this.searchData1.body = newArr;
+        this.searchResult.authority = this.searchData1;
+        this.$forceUpdate();
+      }
+
+      // 依管理單位
+      if (type === 1) {
+        // const data = require('~/static/land.json');
+        // this.searchResult.authority = data;
+      }
+    },
+    // * 清除全部
     clearAllHandler () {
       this.searchResult.authority = '';
       this.searchResult.landNo = '';
+      this.searchData1.body = [];
+    },
+    // * 在地圖上顯示
+    showOnMap () {
+      fetch('http://192.168.3.112/AERC/rest/Sec5cov?pageCnt=1&pageRows=5', {
+        method: 'POST',
+        headers: new Headers({
+          'Content-Type': 'application/json'
+        }),
+        body: JSON.stringify({
+          CountyID: this.myCountyId,
+          FID: this.allData[this.mapIndex].FID
+        })
+      }).then((response) => {
+        return response.json();
+      }).then((jsonData) => {
+        console.log(jsonData);
+
+        const nowUrl = window.location.href;
+        const front = nowUrl.substring(0, nowUrl.length - 9);
+        const end = 'map/';
+        const myUrl = `${front}${end}`;
+
+        window.open(myUrl);
+        localStorage.setItem('oriData', JSON.stringify(jsonData[0].geometry));
+      }).catch((err) => {
+        console.log(err);
+      });
     }
   },
   watch: {

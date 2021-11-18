@@ -47,32 +47,50 @@
         <DropdownVertical-component
           :options="countyList.County"
           :title="'縣市'"
-          @DropdownVal="(payload) => { nextCountHandler(payload, 'Town') }"
+          @DropdownVal="(payload) => { nextCountHandler(payload, 'Town'), positionCtrl(payload, 'County'), counData.County = payload.COUNTYNAME, countyIdList.push(payload.COUNTYID), clearLand1 = false }"
         />
         <DropdownVertical-component
           :options="countyList.Town"
           :title="'鄉鎮市區'"
-          @DropdownVal="(payload) => { nextCountHandler(payload, 'Section') }"
+          @DropdownVal="(payload) => { nextCountHandler(payload, 'Section'), positionCtrl(payload, 'Town'), counData.Town = payload.TOWNNAME, clearLand2 = false }"
         />
         <DropdownVertical-component
-          :options="dropListA2"
+          :options="countyList.Section"
           :title="'地段'"
-          @DropdownVal="(payload) => { nextCountHandler(payload, 'Sec5cov') }"
+          @DropdownVal="(payload) => { nextCountHandler(payload, 'Sec5cov'), positionCtrl(payload, 'Section'), counData.Section = payload.Section, clearLand3 = false }"
         />
         <DropdownVertical-component
-          :options="dropListA2"
+          :options="countyList.Sec5cov"
           :title="'地號'"
+          @DropdownVal="(payload) => { counData.Sec5cov = payload.Land_no, landnoFidList.push(payload.FID), clearLand4 = false }"
         />
         <div class="bt_wrap underline">
           <Buttons-component
             :name="'button-default'"
             :text="'清除全部'"
+            @click="clearLandHandler"
           />
           <Buttons-component
             :text="'加入'"
+            @click="addLandItem"
           />
         </div>
         <div
+          v-if="landItemList.length >= 1"
+          class="land_wrap theme_scrollbar"
+        >
+          <div
+            v-for="item in landItemList"
+            :key="item.id"
+            class="land_item"
+            :class="{ 'deep_bg': item.checked === true }"
+            @click="drawLandHandler($event, item)"
+          >
+            {{ item.title }}
+          </div>
+        </div>
+        <div
+          v-if="landItemList.length < 1"
           class="no_file"
         >
           <img :src="require('~/assets/img/no-file.svg')">
@@ -249,20 +267,23 @@ export default {
         Section: [],
         Sec5cov: []
       },
-      dropListA2: [
-        {
-          title: '請選擇管理處',
-          value: 0
-        },
-        {
-          title: '選項1',
-          value: 1
-        },
-        {
-          title: '選項2',
-          value: 2
-        }
-      ]
+      myCountyId: '',
+      landnoFidList: [],
+      countyIdList: [],
+      landGraphic: '',
+      clearLand1: false,
+      clearLand2: false,
+      clearLand3: false,
+      clearLand4: false,
+      // * 地籍定位 : 各欄位的值
+      counData: {
+        County: '',
+        Town: '',
+        Section: '',
+        Sec5cov: ''
+      },
+      // * 地籍定位 : 地號陣列
+      landItemList: []
 
     };
   },
@@ -361,17 +382,28 @@ export default {
         console.log(err);
       });
     },
-    // * @ 地籍定位 : 取得鄉鎮市區 地段 地籍資料
+    // * @ 地籍定位 : 取得鄉鎮市區 地段 地號資料
     nextCountHandler (payload, nextType) {
       let myObj = {};
       if (nextType === 'Town') {
         myObj = { COUNTYID: payload.COUNTYID };
+        this.myCountyId = payload.COUNTYID;
       }
       if (nextType === 'Section') {
         myObj = { CountyID: payload.COUNTYID, TownID: payload.TOWNID };
       }
+      if (nextType === 'Sec5cov') {
+        myObj = { CountyID: this.myCountyId };
+      }
 
-      fetch(`http://192.168.3.112/AERC/rest/${nextType}`, {
+      let url = '';
+      if (nextType !== 'Sec5cov') {
+        url = `http://192.168.3.112/AERC/rest/${nextType}`;
+      } else {
+        url = 'http://192.168.3.112/AERC/rest/Sec5cov?pageCnt=1&pageRows=5';
+      }
+
+      fetch(url, {
         method: 'POST',
         headers: new Headers({
           'Content-Type': 'application/json'
@@ -390,14 +422,139 @@ export default {
         jsonData.forEach((item) => {
           item.value = item.FID;
           if (nextType === 'Town') { item.title = item.TOWNNAME; }
-          if (nextType === 'Section') { item.title = item.Sec_cns; }
-          // if (nextType === 'Sec5cov') { item.title = item.Sec_cns; }
+          if (nextType === 'Section') { item.title = `${item.Section}${item.Sec_cns}`; }
+          // if (nextType === 'Sec5cov') { item.title = item.Land_no; }
         });
 
-        this.countyList[nextType] = jsonData;
+        if (nextType === 'Sec5cov') {
+          const newData = jsonData[0].data;
+          newData.forEach((item) => {
+            item.title = item.Land_no;
+          });
+
+          this.countyList.Sec5cov = newData;
+        }
+
+        if (nextType !== 'Sec5cov') {
+          this.countyList[nextType] = jsonData;
+        }
       }).catch((err) => {
         console.log(err);
       });
+    },
+    // * @ 地籍定位 : 點選各dropdown的其中一筆 繪製圖形+定位過去
+    positionCtrl (payload, myType) {
+      let myObj = {};
+      if (myType === 'County') {
+        myObj = { FID: payload.FID };
+      }
+      if (myType === 'Town') {
+        myObj = { CountyID: payload.COUNTYID, FID: payload.FID };
+      }
+      if (myType === 'Section') {
+        myObj = { CountyID: payload.City_no, TownID: payload.Town_no, FID: payload.FID };
+      }
+
+      fetch(`http://192.168.3.112/AERC/rest/${myType}`, {
+        method: 'POST',
+        headers: new Headers({
+          'Content-Type': 'application/json'
+        }),
+        body: JSON.stringify(myObj)
+      }).then((response) => {
+        return response.json();
+      }).then((jsonData) => {
+        console.log(jsonData);
+
+        // 先清除之前的
+        pMapBase.drawingGraphicsLayer.remove(this.landGraphic);
+        // 畫圖
+        let geometry = '';
+        if (myType === 'County' || myType === 'Town') {
+          geometry = sg.geometry.Geometry.fromGeoJson(jsonData[0].GEOMETRY);
+        } else {
+          geometry = sg.geometry.Geometry.fromGeoJson(jsonData[0].geometry);
+        }
+
+        this.landGraphic = sg.Graphic.createFromGeometry(geometry, { borderwidth: 1, fillcolor: new sg.Color(220, 105, 105, 0.5) });
+        pMapBase.drawingGraphicsLayer.add(this.landGraphic);
+        // 定位
+        const extent = geometry.extent;
+        pMapBase.ZoomMapTo(extent);
+        pMapBase.RefreshMap(true);
+      }).catch((err) => {
+        console.log(err);
+      });
+    },
+    // * @ 地籍定位 : 按下加入 加入地號清單
+    addLandItem () {
+      const result = {
+        id: Math.random(),
+        title: `${this.counData.County} ${this.counData.Town} ${this.counData.Section} ${this.counData.Sec5cov}`,
+        checked: false,
+        fid: this.landnoFidList[this.landnoFidList.length - 1],
+        countyId: this.countyIdList[this.countyIdList.length - 1]
+      };
+      this.landItemList.push(result);
+    },
+    // * @ 地籍定位 : 點擊清單中某筆 畫圖+定位過去
+    drawLandHandler (e, landItem) {
+      console.log(e);
+
+      if (landItem.checked === true) { return; }
+
+      // 沒按shift -> 單選
+      if (e.shiftKey === false) {
+        this.landItemList.forEach((item) => {
+          item.checked = false;
+        });
+        landItem.checked = true;
+
+        fetch('http://192.168.3.112/AERC/rest/Sec5cov?pageCnt=1&pageRows=5', {
+          method: 'POST',
+          headers: new Headers({
+            'Content-Type': 'application/json'
+          }),
+          body: JSON.stringify({
+            CountyID: landItem.countyId,
+            FID: landItem.fid
+          })
+        }).then((response) => {
+          return response.json();
+        }).then((jsonData) => {
+          console.log(jsonData);
+
+          // 先清除之前的
+          pMapBase.drawingGraphicsLayer.remove(this.landGraphic);
+          // 畫圖
+          const geometry = sg.geometry.Geometry.fromGeoJson(jsonData[0].data[0].geometry);
+          this.landGraphic = sg.Graphic.createFromGeometry(geometry, { borderwidth: 1, fillcolor: new sg.Color(220, 105, 105, 0.5) });
+          pMapBase.drawingGraphicsLayer.add(this.landGraphic);
+          // 定位
+          const extent = geometry.extent;
+          pMapBase.ZoomMapTo(extent);
+          pMapBase.RefreshMap(true);
+        }).catch((err) => {
+          console.log(err);
+        });
+      }
+
+      // 按shift -> 多選
+      if (e.shiftKey === true) {
+        landItem.checked = true;
+      }
+    },
+    // * @ 地籍定位 : 清除全部
+    clearLandHandler () {
+      this.clearLand1 = true;
+      this.clearLand2 = true;
+      this.clearLand3 = true;
+      this.clearLand4 = true;
+      this.countyList.County = [];
+      this.countyList.Town = [];
+      this.countyList.Section = [];
+      this.countyList.Sec5cov = [];
+      pMapBase.drawingGraphicsLayer.remove(this.landGraphic);
     },
     // * @ 灌溉定位 : 清除全部
     clearCanalHandler () {
@@ -426,24 +583,6 @@ export default {
       if (nextType === 'Grp') {
         myObj = { Ia: '01', Mng: payload.Mng, Stn: payload.Stn };
       }
-      // if (nextType === 'Stn' && this.allDropList.Mng[0].value !== 'none') {
-      //   myObj = { Ia: '01', Mng: payload.Mng };
-      // }
-      // if (nextType === 'Stn' && this.allDropList.Mng[0].value === 'none') {
-      //   myObj = { Ia: '01' };
-      // }
-      // if (nextType === 'Grp' && this.allDropList.Mng[0].value !== 'none' && this.allDropList.Stn[0].value !== 'none') {
-      //   myObj = { Ia: '01', Mng: payload.Mng, Stn: payload.Stn };
-      // }
-      // if (nextType === 'Grp' && this.allDropList.Mng[0].value === 'none' && this.allDropList.Stn[0].value !== 'none') {
-      //   myObj = { Ia: '01', Stn: payload.Stn };
-      // }
-      // if (nextType === 'Grp' && this.allDropList.Mng[0].value !== 'none' && this.allDropList.Stn[0].value === 'none') {
-      //   myObj = { Ia: '01', Mng: payload.Mng };
-      // }
-      // if (nextType === 'Grp' && this.allDropList.Mng[0].value === 'none' && this.allDropList.Stn[0].value === 'none') {
-      //   myObj = { Ia: '01' };
-      // }
 
       fetch(`http://192.168.3.112/AERC/rest/${nextType}/admin5`, {
         method: 'POST',
@@ -477,7 +616,7 @@ export default {
         console.log(err);
       });
     },
-    // * @ 灌溉定位: 點選清單中的其中一筆 繪製圖形+定位過去
+    // * @ 灌溉定位: 點選各dropdown中的其中一筆 繪製圖形+定位過去
     selectHandler (payload, myType) {
       if (payload.value === 'none') { return; }
 
@@ -524,6 +663,27 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+
+  .land_wrap{
+    max-height: 120px;
+    overflow-y: scroll;
+  }
+
+  .land_item{
+    padding: 12px 0;
+    color: #494949;
+    padding-left: 7px;
+    cursor: pointer;
+    @include noto-sans-tc-16-regular-line16;
+  }
+
+  .land_item:nth-child(odd) {
+    background-color: #F5F5F5;
+  }
+
+  .deep_bg{
+    background-color: $active-green !important;
+  }
 
   .pos_wrap {
     width: 350px;

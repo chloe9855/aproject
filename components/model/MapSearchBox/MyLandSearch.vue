@@ -12,22 +12,26 @@
       <DropdownVertical
         title="縣市"
         star-sign="*"
-        :options="member"
+        :options="countyList1.County"
+        @DropdownVal="(payload) => { nextMenuHandler(payload, 'Town'), coData1.County = payload.COUNTYID }"
       />
       <DropdownVertical
         title="鄉鎮市區"
         star-sign="*"
-        :options="member"
+        :options="countyList1.Town"
+        @DropdownVal="(payload) => { nextMenuHandler(payload, 'Section'), coData1.Town = payload.TOWNID }"
       />
       <DropdownVertical
         title="段名"
         star-sign="*"
-        :options="member"
+        :options="countyList1.Section"
+        @DropdownVal="(payload) => { nextMenuHandler(payload, 'Sec5cov'), coData1.Section = payload.Section }"
       />
       <InputVertical
         title="地號"
         green-hint="地號範圍:0"
         star-sign="*"
+        @inputValue="(payload) => { coData1.Sec5cov = payload }"
       />
     </div>
     <div
@@ -36,27 +40,33 @@
     >
       <DropdownVertical
         title="縣市"
-        :options="member"
+        :options="countyList2.County"
+        @DropdownVal="(payload) => { getTownData(payload), coData2.County = payload.COUNTYID }"
       />
       <DropdownVertical
         title="鄉鎮市區"
-        :options="member"
+        :options="countyList2.Town"
+        @DropdownVal="(payload) => { coData2.Town = payload.TOWNID }"
       />
       <DropdownVertical
         title="管理處"
-        :options="member"
+        :options="countyList2.Ia"
+        @DropdownVal="(payload) => { nextListHandler(payload, 'Mng'), coData2.Ia = payload.Ia }"
       />
       <DropdownVertical
         title="管理分處"
-        :options="member"
+        :options="countyList2.Mng"
+        @DropdownVal="(payload) => { nextListHandler(payload, 'Stn'), coData2.Mng = payload.Mng }"
       />
       <DropdownVertical
         title="工作站"
-        :options="member"
+        :options="countyList2.Stn"
+        @DropdownVal="(payload) => { nextListHandler(payload, 'Grp'), coData2.Stn = payload.Stn }"
       />
       <DropdownVertical
         title="水利小組"
-        :options="member"
+        :options="countyList2.Grp"
+        @DropdownVal="(payload) => { coData2.Grp = payload.Grp }"
       />
     </div>
     <div class="buttonBox">
@@ -68,7 +78,7 @@
       <Button
         :name="'button-primary'"
         :text="'查詢'"
-        @click="$emit('search',options.current)"
+        @click="searchData(options.current)"
       />
     </div>
   </div>
@@ -101,11 +111,235 @@ export default {
             id: 1
           }
         ]
-      }
+      },
+      //* 單筆地號 縣市資料
+      countyList1: {
+        County: [],
+        Town: [],
+        Section: [],
+        Sec5cov: []
+      },
+      //* 管理單位 縣市資料
+      countyList2: {
+        County: [],
+        Town: [],
+        Ia: [],
+        Mng: [],
+        Stn: [],
+        Grp: []
+      },
+      //* 單筆地號 選值
+      coData1: {
+        County: '',
+        Town: '',
+        Section: '',
+        Sec5cov: ''
+      },
+      //* 管理單位 選值
+      coData2: {
+        County: '',
+        Town: '',
+        Ia: '',
+        Mng: '',
+        Stn: '',
+        Grp: ''
+      },
+      Sec5covList: []
     };
   },
   name: 'MyLandSearch',
-  computed: {}
+  mounted () {
+    this.getCountyData();
+    this.countyList2.Ia = [{
+      title: '宜蘭01',
+      value: 1,
+      Ia_cns: '宜蘭01'
+    }];
+  },
+  methods: {
+    // * 搜尋
+    searchData (current) {
+      let url = '';
+      if (current === 0) {
+        url = `http://192.168.3.112/AERC/rest/Fund?CountyID=${this.coData1.County}&TownID=${this.coData1.Town}&LandLotNO=${this.coData1.Section}&LandNo=${this.coData1.Sec5cov}&pageCnt=1&pageRows=10`;
+      }
+      if (current === 1) {
+        url = `http://192.168.3.112/AERC/rest/Fund?CountyID=${this.coData2.County}&TownID=${this.coData2.Town}&LandLotNO=&LandNo=&pageCnt=1&pageRows=10`;
+      }
+
+      fetch(url, {
+        method: 'GET',
+        headers: new Headers({
+          'Content-Type': 'application/json'
+        })
+      }).then((response) => {
+        return response.json();
+      }).then((data) => {
+        console.log(data);
+        this.$emit('search', current, data);
+      }).catch((err) => {
+        console.log(err);
+      });
+    },
+    // * @ 取得縣市資料
+    getCountyData () {
+      fetch('http://192.168.3.112/AERC/rest/County', {
+        method: 'POST',
+        headers: new Headers({
+          'Content-Type': 'application/json'
+        }),
+        body: JSON.stringify({
+
+        })
+      }).then((response) => {
+        return response.json();
+      }).then((data) => {
+        console.log(data);
+
+        data.forEach((item) => {
+          item.value = item.FID;
+          item.title = item.COUNTYNAME;
+        });
+        this.countyList1.County = data;
+        this.countyList2.County = data;
+      }).catch((err) => {
+        console.log(err);
+      });
+    },
+    // * @ 管理單位 取得鄉鎮資料
+    getTownData (payload) {
+      fetch('http://192.168.3.112/AERC/rest/Town', {
+        method: 'POST',
+        headers: new Headers({
+          'Content-Type': 'application/json'
+        }),
+        body: JSON.stringify({
+          CountyID: payload.COUNTYID
+        })
+      }).then((response) => {
+        return response.json();
+      }).then((data) => {
+        console.log(data);
+
+        data.forEach((item) => {
+          item.value = item.FID;
+          item.title = item.TOWNNAME;
+        });
+        this.countyList2.Town = data;
+      }).catch((err) => {
+        console.log(err);
+      });
+    },
+    // * @ 管理單位 取得管理處以下 之下一排清單資料
+    nextListHandler (payload, nextType) {
+      console.log(payload);
+      console.log(nextType);
+
+      let myObj = {};
+      if (nextType === 'Mng') {
+        myObj = { Ia: '01' };
+      }
+      if (nextType === 'Stn') {
+        myObj = { Ia: '01', Mng: payload.Mng };
+      }
+      if (nextType === 'Grp') {
+        myObj = { Ia: '01', Mng: payload.Mng, Stn: payload.Stn };
+      }
+
+      fetch(`http://192.168.3.112/AERC/rest/${nextType}/admin5`, {
+        method: 'POST',
+        headers: new Headers({
+          'Content-Type': 'application/json'
+        }),
+        body: JSON.stringify(myObj)
+      }).then((response) => {
+        if (response.status === 403) {
+          this.countyList2[nextType] = [{ title: '不拘', value: 'none' }];
+          if (nextType === 'Mng') {
+            this.countyList2[nextType] = [{ title: '不拘', value: 'none', Mng: 0, Mng_cns: '' }];
+          }
+          if (nextType === 'Stn') {
+            this.countyList2[nextType] = [{ title: '不拘', value: 'none', Stn: 0, Stn_cns: '' }];
+          }
+          return Promise.reject(response);
+        }
+        return response.json();
+      }).then((jsonData) => {
+        console.log(jsonData);
+
+        jsonData.forEach((item) => {
+          item.value = item.FID;
+          if (nextType === 'Mng') { item.title = item.Mng_cns; }
+          if (nextType === 'Stn') { item.title = item.Stn_cns; }
+          if (nextType === 'Grp') { item.title = item.Grp_cns; }
+        });
+        this.countyList2[nextType] = jsonData;
+      }).catch((err) => {
+        console.log(err);
+      });
+    },
+    // * @ 依單筆地號  取得下一排清單資料
+    nextMenuHandler (payload, nextType) {
+      console.log(payload);
+      console.log(nextType);
+
+      let myObj = {};
+      if (nextType === 'Town') {
+        myObj = { CountyID: payload.COUNTYID };
+      }
+      if (nextType === 'Section') {
+        myObj = { CountyID: payload.COUNTYID, TownID: payload.TOWNID };
+      }
+      if (nextType === 'Sec5cov') {
+        myObj = { CountyID: this.coData1.County };
+      }
+
+      let url = '';
+      if (nextType !== 'Sec5cov') {
+        url = `http://192.168.3.112/AERC/rest/${nextType}`;
+      } else {
+        url = 'http://192.168.3.112/AERC/rest/Sec5cov?pageCnt=1&pageRows=5';
+      }
+
+      fetch(url, {
+        method: 'POST',
+        headers: new Headers({
+          'Content-Type': 'application/json'
+        }),
+        body: JSON.stringify(myObj)
+      }).then((response) => {
+        if (response.status === 403) {
+          this.countyList1[nextType] = [{ title: '不拘', value: 'none' }];
+          if (nextType === 'Town') {
+            this.countyList1[nextType] = [{ title: '不拘', value: 'none', TOWNID: '' }];
+          }
+          if (nextType === 'Section') {
+            this.countyList1[nextType] = [{ title: '不拘', value: 'none', Section: '' }];
+          }
+          if (nextType === 'Sec5cov') {
+            this.countyList1[nextType] = [{ title: '不拘', value: 'none', Land_no: '' }];
+          }
+          return Promise.reject(response);
+        }
+        return response.json();
+      }).then((jsonData) => {
+        console.log(jsonData);
+
+        jsonData.forEach((item) => {
+          item.value = item.FID;
+          if (nextType === 'Town') { item.title = item.TOWNNAME; }
+          if (nextType === 'Section') { item.title = item.Sec_cns; }
+          // if (nextType === 'Sec5cov') { item.title = item.Land_no; }
+        });
+        this.countyList1[nextType] = jsonData;
+
+        const nameList = jsonData[0].data.map(item => item.Land_no);
+        this.Sec5covList = nameList;
+      }).catch((err) => {
+        console.log(err);
+      });
+    }
+  }
 };
 </script>
 

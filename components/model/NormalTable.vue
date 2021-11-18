@@ -7,7 +7,7 @@
       <tbody>
         <tr
           v-for="item in list"
-          :key="item.id"
+          :key="item.index"
         >
           <td :class="{ 'set': shorten }">
             {{ item.name }}

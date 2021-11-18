@@ -140,6 +140,7 @@ export default {
       this.message = item;
       this.filterBox = false;
       this.isCloseFilter = true;
+      // this.$emit('inputValue', this.message);
     }
   },
   computed: {

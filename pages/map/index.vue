@@ -514,7 +514,10 @@ export default {
         ],
         layerList: [],
         kmlLayer: ''
-      }
+      },
+      //* 跳轉視窗 圖形
+      geoData: '',
+      localGraphic: ''
     };
   },
   // layout: 'map',
@@ -733,6 +736,10 @@ export default {
     // console.log(gogo());
     // console.log(coco);
 
+    setTimeout(() => {
+      this.getLocalStorage();
+    }, 3000);
+
     // * 載入canvas
     const canvas = document.getElementsByTagName('canvas')[0];
     const ctx = canvas.getContext('2d');
@@ -829,11 +836,13 @@ export default {
     },
     getMyWMTS (layerName, index) {
       this.allBaseLayer[index].layerInfo.identifier = layerName;
-      pMapBase.AddLayer(this.allBaseLayer[index]);
-      if (layerName !== 'EMAP5_OPENDATA') {
-        this.allBaseLayer[index].hide();
-      }
-      pMapBase.RefreshMap(true);
+      setTimeout(() => {
+        pMapBase.AddLayer(this.allBaseLayer[index]);
+        if (layerName !== 'EMAP5_OPENDATA') {
+          this.allBaseLayer[index].hide();
+        }
+        pMapBase.RefreshMap(true);
+      }, 3000);
     },
     //* 載入底圖 wms
     loadAllBaseLayer (layerName, index) {
@@ -1427,6 +1436,25 @@ export default {
     // * 縮小
     zoomOutCtrl () {
       ZoomOut();
+    },
+    // * 監測是否有localStorage傳來 有->接值進行繪圖
+    getLocalStorage () {
+      if (localStorage.getItem('oriData') !== null) {
+        this.geoData = JSON.parse(localStorage.getItem('oriData'));
+
+        // 先清除之前的
+        pMapBase.drawingGraphicsLayer.remove(this.localGraphic);
+        // 畫圖
+        const geometry = sg.geometry.Geometry.fromGeoJson(this.geoData);
+        this.localGraphic = sg.Graphic.createFromGeometry(geometry, { borderwidth: 1, fillcolor: new sg.Color(220, 105, 105, 0.5) });
+        pMapBase.drawingGraphicsLayer.add(this.localGraphic);
+        // 定位
+        const extent = geometry.extent;
+        pMapBase.ZoomMapTo(extent);
+        pMapBase.RefreshMap(true);
+        // 清空localStorage
+        localStorage.clear();
+      }
     }
   },
   computed: {
