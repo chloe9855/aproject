@@ -19,13 +19,27 @@
           :table-column="tableList"
           :is-paginate="true"
           :column-min-width="150"
+          :data-count="dataCount"
+          @nowPage="getPageNum"
         />
         <div
           class="calNoteBox w-90"
         >
-          <CalNote />
-          <CalNote />
-          <CalNote />
+          <CalNote
+            name="水利小組"
+            area="面積總計"
+            :area-num="numfmt(sum_grp)"
+          />
+          <CalNote
+            name="水利小組轄區農地"
+            area="地籍面積總計"
+            :area-num="numfmt(sum_tolarea)"
+          />
+          <CalNote
+            name="水利小組轄區農地"
+            area="灌溉面積總計"
+            :area-num="numfmt(sum_irgarea)"
+          />
         </div>
       </div>
       <div
@@ -44,6 +58,7 @@
       type="irrigatedLandSearch"
       @toggleStatus="getToggleStatus"
       @toggleCurrent="getToggleCurrent"
+      @onsearch="onsearch"
     />
   </div>
 </template>
@@ -55,6 +70,7 @@ import BreadCrumbTool from '~/components/tools/BreadCrumbTool.vue';
 import NormalTable from '~/components/model/NormalTable.vue';
 import Search from '~/components/model/Search.vue';
 import CalNote from '~/components/tools/CalNote.vue';
+import { getIrrigationLandArea, getIrrigationLand } from '~/publish/irrigation.js';
 
 export default {
   components: {
@@ -67,7 +83,6 @@ export default {
   },
   data () {
     return {
-      member: [{ title: '預設選項', value: '0' }, { title: '工作站人員', value: '1' }, { title: '管理人員', value: '2' }, { title: '民眾', value: '3' }],
       tableList: {
         head: [
           { title: '管理處' },
@@ -78,16 +93,7 @@ export default {
           { title: '水利小組轄區 農地地籍面積㎡' },
           { title: '水利小組轄區 農地灌溉面積㎡' }
         ],
-        body: [
-          { title: ['XX分處鹿草工作站', '山子腳', '山子腳-山腳', 'XXX小組', '2,050', '2,050', '2,050'] },
-          { title: ['XX分處鹿草工作站', '山子腳', '山子腳-山腳', 'XXX小組', '2,050', '2,050', '2,050'] },
-          { title: ['XX分處鹿草工作站', '山子腳', '山子腳-山腳', 'XXX小組', '2,050', '2,050', '2,050'] },
-          { title: ['XX分處鹿草工作站', '山子腳', '山子腳-山腳', 'XXX小組', '2,050', '2,050', '2,050'] },
-          { title: ['XX分處鹿草工作站', '山子腳', '山子腳-山腳', 'XXX小組', '2,050', '2,050', '2,050'] },
-          { title: ['XX分處鹿草工作站', '山子腳', '山子腳-山腳', 'XXX小組', '2,050', '2,050', '2,050'] },
-          { title: ['XX分處鹿草工作站', '山子腳', '山子腳-山腳', 'XXX小組', '2,050', '2,050', '2,050'] },
-          { title: ['XX分處鹿草工作站', '山子腳', '山子腳-山腳', 'XXX小組', '2,050', '2,050', '2,050'] }
-        ]
+        body: []
       },
       columnList: [
         {
@@ -163,16 +169,76 @@ export default {
       ],
       BreadCrumb: ['灌溉地管理', '灌溉地籍查詢'],
       toggleStatus: false,
-      toggleCurrent: 0
+      toggleCurrent: 0,
+      sum_grp: 0,
+      sum_irgarea: 0,
+      sum_tolarea: 0,
+      searchObj: {},
+      search2Obj: {},
+      dataCount: 0
     };
   },
   name: 'IrrigatedLand',
   methods: {
+    numfmt (n) {
+      function chunk (a, s) {
+        return Array.init(Math.ceil(a.length / s), n => a.slice(n * s, n * s + s));
+      }
+      const ns = n.toString().split('.');
+      ns[0] = chunk(Array.from(ns[0]).reverse(), 3).map(x => x.reverse().join('')).reverse().join(',');
+      if (ns.length >= 2) {
+        ns[1] = chunk(Array.from(ns[1]), 3).map(x => x.join('')).join(',');
+      }
+      return ns.join('.');
+    },
     getToggleStatus (e) {
       this.toggleStatus = e;
     },
     getToggleCurrent (e) {
       this.toggleCurrent = e;
+    },
+    onsearch (e) {
+      if (this.toggleCurrent === 0) {
+        this.searchObj = null;
+        if (e && e.ia) {
+          const x = [e.ia];
+          x.push(e.mng || '');
+          x.push(e.stn || '');
+          x.push(e.grp || '');
+          this.searchObj = [x];
+        }
+        getIrrigationLandArea(this.searchObj).then(r => {
+          this.sum_grp = r.data[0].sum_grp;
+          this.sum_irgarea = r.data[0].sum_irgarea;
+          this.sum_tolarea = r.data[0].sum_tolarea;
+          this.dataCount = r.data[0].pagemax;
+          this.getPageNum({ page: 1 });
+        });
+      } else if (this.toggleCurrent === 1) {
+        this.search2Obj = e;
+        getIrrigationLand(1, 10, null, this.search2Obj.county, this.search2Obj.town, this.search2Obj.section, this.search2Obj.land).then(r => {
+          const x = r.data[0];
+          this.columnList = [
+            { name: '縣市', value: x.county_name },
+            { name: '鄉鎮市區', value: x.town_name },
+            { name: '地段名稱', value: x.sec_cns },
+            { name: '地號', value: x.land_no },
+            { name: '管理處', value: x.ia_cns },
+            { name: '管理分處', value: x.mng_cns },
+            { name: '工作站', value: x.stn_cns },
+            { name: '水利小組', value: x.grp_cns },
+            { name: '地籍面積m2', value: x.tolarea },
+            { name: '灌溉面積m2', value: x.irgarea }
+          ];
+        });
+      }
+    },
+    getPageNum (e) { // 換頁取得DATA
+      getIrrigationLand(e.page, 10, this.searchObj).then(r => {
+        this.tableList.body = r.data.map(x => {
+          return { title: [x.ia_cns, x.mng_cns, x.stn_cns, x.grp_cns, x.grparea, x.tolarea, x.irgarea] };
+        });
+      });
     }
   },
   computed: {

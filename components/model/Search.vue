@@ -9,7 +9,9 @@
     />
     <component
       :is="componentInstance"
+      ref="searchComp"
       @tabCurrent="current"
+      @onsearch="onsearch"
     />
     <div class="buttonBox">
       <Button
@@ -19,6 +21,7 @@
       <Button
         :name="'button-primary'"
         :text="'查詢'"
+        @click="search"
       />
     </div>
     <div
@@ -98,6 +101,14 @@ export default {
     },
     current (e) {
       this.$emit('toggleCurrent', e);
+    },
+    search () {
+      if (this.$refs.searchComp && this.$refs.searchComp.search) {
+        this.$refs.searchComp.search();
+      }
+    },
+    onsearch (e) {
+      this.$emit('onsearch', e);
     }
   },
   computed: {
