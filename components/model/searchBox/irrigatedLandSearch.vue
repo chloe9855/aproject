@@ -49,10 +49,15 @@
         :options="member.section"
         @DropdownVal="sectionDrop"
       />
-      <DropdownCheckList
+      <!-- <DropdownCheckList
         title="地號"
         :options="member.land"
         @DropdownVal="landDrop"
+      /> -->
+      <InputVertical
+        title="地號"
+        green-hint="地號範圍:0"
+        star-sign="*"
       />
     </div>
   </div>
@@ -60,14 +65,16 @@
 
 <script>
 import DropdownVertical from '~/components/tools/DropdownVertical.vue';
-import DropdownCheckList from '~/components/tools/DropdownCheckList.vue';
+// import DropdownCheckList from '~/components/tools/DropdownCheckList.vue';
+import InputVertical from '~/components/tools/InputVertical.vue';
 import NavTabs from '~/components/tools/NavTabs';
 import { getIas, getMngs, getStns, getGrps, getCounties, getTowns, getSections, getLands } from '~/publish/irrigation.js';
 export default {
   components: {
     DropdownVertical: DropdownVertical,
-    DropdownCheckList: DropdownCheckList,
-    NavTabs: NavTabs
+    // DropdownCheckList: DropdownCheckList,
+    NavTabs: NavTabs,
+    InputVertical: InputVertical
   },
   props: {},
   data: () => {
@@ -113,6 +120,7 @@ export default {
   mounted () {
     getIas().then(r => {
       this.member.ia = r.data.map(x => ({ title: x.Ia_cns, value: x.Ia }));
+      console.log(this.member.ia);
     });
     getCounties().then(r => {
       console.log(r);
@@ -192,7 +200,11 @@ export default {
       this.searchObj.land = payload.value;
     },
     search () {
-      this.$emit('onsearch', this.searchObj);
+      console.log(this.searchObj);
+      this.$emit('onsearch', { obj: this.searchObj, select: this.options.current });
+      // if (this.options.current === 0) {
+      //   this.$emit('onsearch', this.searchObj);
+      // };
     }
   }
 };

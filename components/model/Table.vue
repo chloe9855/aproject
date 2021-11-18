@@ -46,6 +46,7 @@
       </table>
     </div>
     <div
+      v-show="!isShowBg"
       ref="tableContent"
       class="tableBox w-100 tableContent"
       :class="'minWidth'+columnMinWidth"
@@ -315,7 +316,7 @@
       </table>
     </div>
     <Paginate
-      v-show="isPaginate"
+      v-show="isPaginate && !isShowBg"
       :total="dataNum"
       :per-page="10"
       @nowPage="getPageNum"

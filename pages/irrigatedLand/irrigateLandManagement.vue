@@ -71,6 +71,7 @@ import NormalTable from '~/components/model/NormalTable.vue';
 import Search from '~/components/model/Search.vue';
 import CalNote from '~/components/tools/CalNote.vue';
 import { getIrrigationLandArea, getIrrigationLand } from '~/publish/irrigation.js';
+import { getIrrigationLand1 } from '~/api/irrigatedLand';
 
 export default {
   components: {
@@ -179,6 +180,13 @@ export default {
     };
   },
   name: 'IrrigatedLand',
+  mounted () {
+    getIrrigationLand1().then(r => {
+      console.log(r);
+    }).catch(e => {
+      console.log(e);
+    });
+  },
   methods: {
     numfmt (n) {
       function chunk (a, s) {
@@ -197,7 +205,8 @@ export default {
     getToggleCurrent (e) {
       this.toggleCurrent = e;
     },
-    onsearch (e) {
+    onsearch (o) {
+      const e = o.obj;
       if (this.toggleCurrent === 0) {
         this.searchObj = null;
         if (e && e.ia) {
@@ -260,7 +269,7 @@ export default {
 .calNoteBox{
     display: flex;
     justify-content:flex-end;
-    margin: 0 auto;
+    margin: 1em auto;
     div{
         margin: 0 2.5px;
     }

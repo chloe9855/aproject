@@ -112,8 +112,8 @@ export function getMngs (Ia) {
             FID: 11,
             Ia: '11',
             Ia_cns: '嘉南管理處',
-            Mng: '',
-            Mng_cns: 'Unknown',
+            Mng: '4',
+            Mng_cns: '新營',
             Area: 154060769.86,
             Ymd: '2011-07-24T00:00:00'
           }
@@ -133,10 +133,10 @@ export function getStns (Ia, Mng) {
             FID: 11,
             Ia: '11',
             Ia_cns: '嘉南管理處',
-            Mng: '',
-            Mng_cns: '',
-            Stn: '11',
-            Stn_cns: '苗栗站',
+            Mng: '4',
+            Mng_cns: '新營',
+            Stn: '08',
+            Stn_cns: '後壁',
             Area: 154060769.86,
             Ymd: '2011-07-24T00:00:00'
           }
@@ -159,12 +159,12 @@ export function getGrps (Ia, Mng, Stn) {
             FID: 11,
             Ia: '11',
             Ia_cns: '嘉南管理處',
-            Mng: '',
-            Mng_cns: '',
-            Stn: '11',
-            Stn_cns: '苗栗站',
+            Mng: '4',
+            Mng_cns: '新營',
+            Stn: '08',
+            Stn_cns: '後壁',
             Grp: '01',
-            Grp_cns: '嘉盛小組',
+            Grp_cns: '東後壁',
             Area: 154060769.86,
             Ymd: '2011-07-24T00:00:00'
           }
@@ -185,10 +185,10 @@ export function getCounties () {
       resolve({
         data: [
           {
-            FID: 11,
-            COUNTYCODE: '11',
-            COUNTYNAME: '嘉南管理處',
-            COUNTYENG: ''
+            FID: 10,
+            COUNTYCODE: '67000',
+            COUNTYNAME: '臺南市',
+            COUNTYENG: 'Tainan City'
           }
         ]
       });
@@ -203,10 +203,10 @@ export function getTowns (county) {
       resolve({
         data: [
           {
-            FID: 11,
-            TOWNCODE: '11',
-            TOWNNAME: '嘉南管理處',
-            TOWNENG: ''
+            FID: 225,
+            TOWNCODE: '67000010',
+            TOWNNAME: '新營區',
+            TOWNENG: 'Xinying District'
           }
         ]
       });
@@ -223,11 +223,11 @@ export function getSections (county, town) {
       resolve({
         data: [
           {
-            FID: 11,
-            Section: '11',
-            Sec_cns: '嘉南管理處',
-            Area: 140057.843883,
-            Ymd: '2011-07-24T00:00:00'
+            FID: 2224,
+            Section: 'DD2001',
+            Sec_cns: '新營',
+            Area: 1473446.55837,
+            Ymd: '2021-06-15 00:00:00.000'
           }
         ]
       });
