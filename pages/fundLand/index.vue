@@ -81,6 +81,21 @@
         />
       </div>
     </div>
+
+    <div
+      v-if="loadModal === true"
+      class="modal_wrapper"
+    >
+      <div class="modal ww5">
+        <p
+          class="p3"
+          style="margin-bottom: 10px;"
+        >
+          載入中
+        </p>
+        <div class="bar" />
+      </div>
+    </div>
   </div>
 </template>
 
@@ -108,6 +123,7 @@ export default {
       allData: '',
       growUp: true,
       showDetail: false,
+      loadModal: false,
       searchResult: {
         authority: '',
         landNo: ''
@@ -203,6 +219,8 @@ export default {
       if (payload.event === 'isMap') {
         // payload.item = index
 
+        this.loadModal = true;
+
         fetch('http://192.168.3.112/AERC/rest/Sec5cov?pageCnt=1&pageRows=5', {
           method: 'POST',
           headers: new Headers({
@@ -217,13 +235,15 @@ export default {
         }).then((jsonData) => {
           console.log(jsonData);
 
+          this.loadModal = false;
+
           const nowUrl = window.location.href;
           const front = nowUrl.substring(0, nowUrl.length - 9);
           const end = 'map/';
           const myUrl = `${front}${end}`;
 
           window.open(myUrl);
-          localStorage.setItem('oriData', JSON.stringify(jsonData[0].geometry));
+          localStorage.setItem('oriData', JSON.stringify(jsonData[0].data[0].geometry));
         }).catch((err) => {
           console.log(err);
         });
@@ -275,6 +295,8 @@ export default {
     },
     // * 在地圖上顯示
     showOnMap () {
+      this.loadModal = true;
+
       fetch('http://192.168.3.112/AERC/rest/Sec5cov?pageCnt=1&pageRows=5', {
         method: 'POST',
         headers: new Headers({
@@ -289,13 +311,15 @@ export default {
       }).then((jsonData) => {
         console.log(jsonData);
 
+        this.loadModal = false;
+
         const nowUrl = window.location.href;
         const front = nowUrl.substring(0, nowUrl.length - 9);
         const end = 'map/';
         const myUrl = `${front}${end}`;
 
         window.open(myUrl);
-        localStorage.setItem('oriData', JSON.stringify(jsonData[0].geometry));
+        localStorage.setItem('oriData', JSON.stringify(jsonData[0].data[0].geometry));
       }).catch((err) => {
         console.log(err);
       });
@@ -312,6 +336,49 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+
+  .modal_wrapper {
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background-color: rgba(0, 0, 0, 0.2);
+  z-index: 9998;
+  cursor: default;
+}
+
+.modal {
+  width: 280px;
+  padding: 5px 31px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  font-size: 16px;
+  text-align: center;
+  background-color: #fff;
+  border-radius: 10px;
+  z-index: 9999;
+  transform: translate(-50%, -50%);
+  flex-direction: column;
+}
+
+.p3 {
+  margin-top: 42px;
+  font-size: 25px;
+  font-weight: bold;
+  color: #165f88;
+}
+
+.bar {
+  width: 236px;
+  height: 12px;
+  margin: 10px 0 20px;
+  background: url('~/assets/img/bar-new.svg') no-repeat center/contain;
+}
 
   .main {
     position: relative;

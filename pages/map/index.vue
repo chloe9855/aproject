@@ -933,7 +933,8 @@ export default {
         // MBT.Style[layerName].visible = $event;
         // MBT.updateStyle(MBT.Style);
         MBT.updateStyle({
-          [layerName]: { visible: $event }
+          [layerName]: { visible: $event },
+          '01_Arrow': { visible: $event }
         });
       }
       if (category === 'surfaceList') {
@@ -1031,6 +1032,7 @@ export default {
         // MBT.Style[layerName].style = { opacity: value / 100 };
         // MBT.updateStyle(MBT.Style);
         MBT.updateStyle({ [layerName]: { style: { opacity: value / 100 } } });
+        MBT.updateStyle({ '01_Arrow': { style: { opacity: value / 100 } } });
       }
       if (category === 'surfaceList') {
         const index = this.layerOptions.surfaceList.findIndex(item => item.id === id);
@@ -1511,7 +1513,7 @@ export default {
             const result = {
               id: Math.random(),
               LayerName: key,
-              visible: true,
+              visible: false,
               opacity: 100,
               LayerTitle: ''
             };
@@ -1553,6 +1555,15 @@ export default {
             }
           });
           this.openOnceLa = false;
+
+          //* */
+          const yyu = new sg.layers.VectorMBTLayer('http://192.168.3.112/mapcache/arrow', {
+            loaded: function () {
+              this.setMinScale(Math.pow(2, 14 + 7 - 0.5) / 6378137 / Math.PI);
+              this.setMaxScale(Math.pow(2, 20 + 7 + 0.5) / 6378137 / Math.PI);
+              console.log(yyu);
+            }
+          });
         }
       }
     }

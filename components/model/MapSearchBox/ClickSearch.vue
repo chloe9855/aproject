@@ -10,6 +10,7 @@
       <Buttons-component
         :name="'button-default'"
         :text="'清除全部'"
+        @click="$emit('clearCliSearch')"
       />
     </div>
   </div>
@@ -31,16 +32,33 @@ export default {
   },
   data () {
     return {
-      dropList: [{ title: '01 宜蘭', value: '1' }]
+      dropList: [{ title: '01 宜蘭', value: '1' }],
+      nowLayer: '',
+      nowId: '',
+      nowInfo: ''
     };
   },
   name: 'ClickSearch',
   mounted () {
-    sg.events.on(MBT, 'click', function (e) { console.log(e.graphic.attributes); });
+    sg.events.on(MBT, 'click', (e) => {
+      console.log(e.graphic.id);
+      console.log(e.graphic.attributes);
+
+      this.nowId = e.graphic.id[0];
+      this.nowInfo = e.graphic.attributes;
+      if (this.nowLayer === this.nowId) {
+        this.$emit('clickSearch', this.nowId, this.nowInfo);
+      }
+    });
   },
   methods: {
     selectLayer (payload) {
+      console.log(payload);
+      this.nowLayer = payload.LayerName;
 
+      // if (this.nowId === payload.LayerName) {
+      //   this.$emit('clickSearch', this.nowId, this.nowInfo);
+      // }
     }
   }
 };

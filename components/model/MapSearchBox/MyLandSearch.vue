@@ -13,25 +13,29 @@
         title="縣市"
         star-sign="*"
         :options="countyList1.County"
-        @DropdownVal="(payload) => { nextMenuHandler(payload, 'Town'), coData1.County = payload.COUNTYID }"
+        :change-text="clearLand1"
+        @DropdownVal="(payload) => { nextMenuHandler(payload, 'Town'), coData1.County = payload.COUNTYID, clearLand1 = false }"
       />
       <DropdownVertical
         title="鄉鎮市區"
         star-sign="*"
         :options="countyList1.Town"
-        @DropdownVal="(payload) => { nextMenuHandler(payload, 'Section'), coData1.Town = payload.TOWNID }"
+        :change-text="clearLand2"
+        @DropdownVal="(payload) => { nextMenuHandler(payload, 'Section'), coData1.Town = payload.TOWNID, clearLand2 = false }"
       />
       <DropdownVertical
         title="段名"
         star-sign="*"
         :options="countyList1.Section"
-        @DropdownVal="(payload) => { nextMenuHandler(payload, 'Sec5cov'), coData1.Section = payload.Section }"
+        :change-text="clearLand3"
+        @DropdownVal="(payload) => { nextMenuHandler(payload, 'Sec5cov'), coData1.Section = payload.Section, clearLand3 = false }"
       />
       <InputVertical
         title="地號"
         green-hint="地號範圍:0"
         star-sign="*"
-        @inputValue="(payload) => { coData1.Sec5cov = payload }"
+        :change-text="clearLand4"
+        @inputValue="(payload) => { coData1.Sec5cov = payload, clearLand4 = false }"
       />
     </div>
     <div
@@ -73,7 +77,7 @@
       <Button
         :name="'button-default'"
         :text="'清除全部'"
-        @click="$emit('clear')"
+        @click="$emit('clear'), clearHandler"
       />
       <Button
         :name="'button-primary'"
@@ -119,6 +123,11 @@ export default {
         Section: [],
         Sec5cov: []
       },
+      // * 單筆地號 清除值
+      clearLand1: false,
+      clearLand2: false,
+      clearLand3: false,
+      clearLand4: false,
       //* 管理單位 縣市資料
       countyList2: {
         County: [],
@@ -338,6 +347,13 @@ export default {
       }).catch((err) => {
         console.log(err);
       });
+    },
+    // * @ 依單筆地號 清除全部
+    clearHandler () {
+      this.clearLand1 = true;
+      this.clearLand2 = true;
+      this.clearLand3 = true;
+      this.clearLand4 = true;
     }
   }
 };
