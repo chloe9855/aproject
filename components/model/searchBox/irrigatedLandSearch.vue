@@ -11,19 +11,27 @@
     >
       <DropdownVertical
         title="管理處"
-        :options="member"
+        :options="member.ia"
+        :change-text="isClear"
+        @DropdownVal="iaDrop"
       />
       <DropdownVertical
         title="管理分處"
-        :options="member"
+        :options="member.mng"
+        :change-text="isClear"
+        @DropdownVal="mngDrop"
       />
       <DropdownVertical
         title="工作站"
-        :options="member"
+        :options="member.stn"
+        :change-text="isClear"
+        @DropdownVal="stnDrop"
       />
       <DropdownVertical
         title="水利小組"
-        :options="member"
+        :options="member.grp"
+        :change-text="isClear"
+        @DropdownVal="grpDrop"
       />
     </div>
     <div
@@ -32,18 +40,32 @@
     >
       <DropdownVertical
         title="縣市"
-        :options="member"
+        :options="member.county"
+        :change-text="isClear"
+        @DropdownVal="countyDrop"
       />
       <DropdownVertical
         title="鄉鎮"
-        :options="member"
+        :options="member.town"
+        :change-text="isClear"
+        @DropdownVal="townDrop"
       />
       <DropdownVertical
         title="段名"
-        :options="member"
+        :options="member.section"
+        :change-text="isClear"
+        @DropdownVal="sectionDrop"
       />
-      <DropdownCheckList
+      <!-- <DropdownCheckList
         title="地號"
+        :options="member.land"
+        @DropdownVal="landDrop"
+      /> -->
+      <InputVertical
+        title="地號"
+        green-hint="地號範圍:0"
+        star-sign="*"
+        @inputValue="getInputValue"
       />
     </div>
   </div>
@@ -51,18 +73,46 @@
 
 <script>
 import DropdownVertical from '~/components/tools/DropdownVertical.vue';
-import DropdownCheckList from '~/components/tools/DropdownCheckList.vue';
+// import DropdownCheckList from '~/components/tools/DropdownCheckList.vue';
+import InputVertical from '~/components/tools/InputVertical.vue';
 import NavTabs from '~/components/tools/NavTabs';
+import { getIas, getMngs, getStns, getGrps, getCounties, getTowns, getSections, getLands } from '~/publish/irrigation.js';
 export default {
   components: {
     DropdownVertical: DropdownVertical,
-    DropdownCheckList: DropdownCheckList,
-    NavTabs: NavTabs
+    // DropdownCheckList: DropdownCheckList,
+    NavTabs: NavTabs,
+    InputVertical: InputVertical
   },
-  props: {},
+  props: {
+    isClear: {
+      type: Boolean,
+      default: false
+    }
+  },
   data: () => {
     return {
-      member: [{ title: '預設選項', value: '0' }, { title: '工作站人員', value: '1' }, { title: '管理人員', value: '2' }, { title: '民眾', value: '3' }],
+      inputValue: '',
+      searchObj: {
+        ia: '',
+        mng: '',
+        stn: '',
+        grp: '',
+        county: '',
+        town: '',
+        section: '',
+        land: ''
+      },
+      member: {
+        ia: [],
+        mng: [],
+        stn: [],
+        grp: [],
+        county: [],
+        town: [],
+        section: [],
+        land: ''
+      },
       options: {
         current: 0,
         typeList: [
@@ -80,6 +130,102 @@ export default {
   },
   updated () {
     this.$emit('tabCurrent', this.options.current);
+  },
+  mounted () {
+    getIas().then(r => {
+      this.member.ia = r.data.map(x => ({ title: x.Ia_cns, value: x.Ia }));
+      console.log(this.member.ia);
+    });
+    getCounties().then(r => {
+      console.log(r);
+      this.member.county = r.data.map(x => ({ title: x.COUNTYNAME, value: x.COUNTYID }));
+    }).catch(e => {
+      console.log(e);
+    });
+  },
+  methods: {
+    iaDrop (payload) {
+      this.searchObj.ia = payload.value;
+      this.searchObj.grp = '';
+      this.searchObj.stn = '';
+      this.searchObj.mng = '';
+      this.member.grp = [];
+      this.member.stn = [];
+      this.member.mng = [];
+      getMngs(this.searchObj.ia).then(r => {
+        this.member.mng = r.data.map(x => ({ title: x.Mng_cns, value: x.Mng }));
+      });
+      getStns(this.searchObj.ia).then(r => {
+        this.member.stn = r.data.map(x => ({ title: x.Stn_cns, value: x.Stn }));
+      });
+    },
+    mngDrop (payload) {
+      this.searchObj.mng = payload.value;
+      this.searchObj.grp = '';
+      this.searchObj.stn = '';
+      this.member.grp = [];
+      this.member.stn = [];
+      getStns(this.searchObj.ia, this.searchObj.mng).then(r => {
+        this.member.stn = r.data.map(x => ({ title: x.Stn_cns, value: x.Stn }));
+      });
+    },
+    stnDrop (payload) {
+      this.searchObj.stn = payload.value;
+      this.searchObj.grp = '';
+      this.member.grp = [];
+      getGrps(this.searchObj.ia, this.searchObj.mng, this.searchObj.stn).then(r => {
+        this.member.grp = r.data.map(x => ({ title: x.Grp_cns, value: x.Grp }));
+      });
+    },
+    grpDrop (payload) {
+      this.searchObj.grp = payload.value;
+    },
+    countyDrop (payload) {
+      this.searchObj.county = payload.value;
+      this.searchObj.town = '';
+      this.searchObj.section = '';
+      this.searchObj.land = '';
+      this.member.town = [];
+      this.member.section = [];
+      this.member.land = { option: [{ title: '', value: '0' }] };
+      getTowns(this.searchObj.county).then(r => {
+        this.member.town = r.data.map(x => ({ title: x.TOWNNAME, value: x.TOWNID }));
+      });
+    },
+    townDrop (payload) {
+      this.searchObj.town = payload.value;
+      this.searchObj.section = '';
+      this.searchObj.land = '';
+      this.member.section = [];
+      this.member.land = { option: [{ title: '', value: '0' }] };
+      getSections(this.searchObj.county, this.searchObj.town).then(r => {
+        this.member.section = r.data.map(x => ({ title: x.Sec_cns, value: x.Section }));
+      });
+    },
+    sectionDrop (payload) {
+      this.searchObj.section = payload.value;
+      this.searchObj.land = '';
+      this.member.land = { option: [{ title: '', value: '0' }] };
+      getLands(this.searchObj.county, this.searchObj.town, this.searchObj.section).then(r => {
+        this.member.land = { option: r.data.map(x => ({ title: x.Land, value: x.Land_no })) };
+      });
+    },
+    landDrop (payload) {
+      this.searchObj.land = payload.value;
+    },
+    getInputValue (e) {
+      if (e) {
+        this.inputValue = e;
+      }
+    },
+    search () {
+      console.log(this.searchObj);
+      this.searchObj.land = this.inputValue;
+      this.$emit('onsearch', { obj: this.searchObj, select: this.options.current });
+      // if (this.options.current === 0) {
+      //   this.$emit('onsearch', this.searchObj);
+      // };
+    }
   }
 };
 </script>

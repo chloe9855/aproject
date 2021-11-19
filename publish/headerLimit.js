@@ -42,6 +42,6 @@ export function headerLimit (item, tag) {
       result = true;
       break;
   }
-  // console.log(result);
+  console.log(result);
   return true;
 }

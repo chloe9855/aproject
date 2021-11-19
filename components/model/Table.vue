@@ -46,6 +46,7 @@
       </table>
     </div>
     <div
+      v-show="!isShowBg"
       ref="tableContent"
       class="tableBox w-100 tableContent"
       :class="'minWidth'+columnMinWidth"
@@ -208,7 +209,7 @@
               v-show="isMap && !isScrollTable"
               class="mapOption"
             >
-              <div @click="sendEvent('isMap', index)">
+              <div @click="sendEvent('isMap')">
                 <img
                   alt=""
                   class="vector"
@@ -220,7 +221,7 @@
               v-show="isSearch"
               class="searchOption"
             >
-              <div @click="sendEvent('isSearch', item.title[3], index)">
+              <div @click="sendEvent('isSearch')">
                 <img
                   alt=""
                   class="vector"
@@ -315,7 +316,7 @@
       </table>
     </div>
     <Paginate
-      v-show="isPaginate"
+      v-show="isPaginate && !isShowBg"
       :total="dataNum"
       :per-page="10"
       @nowPage="getPageNum"
@@ -410,6 +411,10 @@ export default {
       default: () => {
         return ['啟用中', '停用中', '驗證中', '無狀態'];
       }
+    },
+    dataCount: {
+      type: Number,
+      default: 0
     }
   },
   data: () => {
@@ -460,6 +465,10 @@ export default {
       this.$emit('inputData', arr);
     },
     getPageNum (e) { // 換頁取得DATA
+      if (this.dataCount) {
+        this.$emit('nowPage', { page: e, size: this.columnLength });
+        return;
+      }
       this.getPage = e;
       this.tableColumnBody = [];
       const page = this.getPage;
@@ -474,8 +483,8 @@ export default {
         }
       });
     },
-    sendEvent (e, item, i) {
-      this.$emit('tableEvent', { event: e, item: item, myIndex: i });
+    sendEvent (e, item) {
+      this.$emit('tableEvent', { event: e, item: item });
     }
   },
   computed: {
@@ -519,6 +528,9 @@ export default {
       return result;
     },
     dataNum: function () {
+      if (this.dataCount) {
+        return this.dataCount;
+      }
       const data = this.tableColumn.body;
       return data.length;
     },
@@ -566,6 +578,11 @@ export default {
     }
   },
   watch: {
+    'tableColumn.body': function () {
+      if (this.dataCount) {
+        this.tableColumnBody = this.tableColumn.body;
+      }
+    },
     checkList: function (n) {
       this.$emit('checkList', n);
     },

@@ -5,6 +5,7 @@
 export const state = () => ({
   hideFooter: false,
   popupState: false,
+  isLoading: false,
   popupType: { type: 'editAccount', title: '請設定查詢作業標題', editId: {} },
   mouseEventMin: 0,
   userInfo: {},
@@ -22,6 +23,9 @@ export const mutations = {
   },
   TOGGLE_POPUP_STATUS (state) {
     state.popupState = !state.popupState;
+  },
+  TOGGLE_LOADING_STATUS (state) {
+    state.isLoading = !state.isLoading;
   },
   TOGGLE_POPUP_TYPE (state, payload) {
     state.popupType.title = payload.title;
