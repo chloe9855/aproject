@@ -46,7 +46,15 @@
         </div>
 
         <div
-          v-if="searchResult.landNo === '' && searchResult.authority === ''"
+          v-if="searchResult.authority === '' && noResult === true"
+          class="no_file"
+        >
+          <img :src="require('~/assets/img/no_data.svg')">
+          <p>查無資料</p>
+        </div>
+
+        <div
+          v-if="searchResult.landNo === '' && searchResult.authority === '' && noResult === false"
           class="no_file"
         >
           <img :src="require('~/assets/img/no_file.svg')">
@@ -86,14 +94,14 @@
       v-if="loadModal === true"
       class="modal_wrapper"
     >
-      <div class="modal ww5">
-        <p
+      <div class="modal">
+        <!-- <p
           class="p3"
           style="margin-bottom: 10px;"
         >
           載入中
         </p>
-        <div class="bar" />
+        <div class="bar" /> -->
       </div>
     </div>
   </div>
@@ -175,7 +183,9 @@ export default {
       //* 依單筆地號 單筆詳細資料
       detailItem: '',
       myCountyId: '',
-      mapIndex: ''
+      mapIndex: '',
+      //* 查無結果
+      noResult: false
     };
   },
   mounted () {
@@ -253,9 +263,11 @@ export default {
     searchHandler (type, data) {
       this.clearAllHandler();
 
+      // 回傳空值(查無結果)
       if (data.length < 1) {
         this.searchResult.authority = '';
         this.searchData1.body = [];
+        this.noResult = true;
         return;
       }
 
@@ -292,6 +304,7 @@ export default {
       this.searchResult.authority = '';
       this.searchResult.landNo = '';
       this.searchData1.body = [];
+      this.noResult = false;
     },
     // * 在地圖上顯示
     showOnMap () {
@@ -343,27 +356,29 @@ export default {
   position: fixed;
   top: 0;
   left: 0;
-  background-color: rgba(0, 0, 0, 0.2);
+  // background-color: rgba(0, 0, 0, 0.2);
   z-index: 9998;
   cursor: default;
 }
 
 .modal {
-  width: 280px;
-  padding: 5px 31px;
+  width: 200px;
+  height: 200px;
+  // padding: 5px 31px;
   margin: 0 auto;
   display: flex;
   align-items: center;
   position: fixed;
   top: 50%;
   left: 50%;
-  font-size: 16px;
-  text-align: center;
-  background-color: #fff;
-  border-radius: 10px;
+  // font-size: 16px;
+  // text-align: center;
+  // background-color: #fff;
+  // border-radius: 10px;
   z-index: 9999;
   transform: translate(-50%, -50%);
   flex-direction: column;
+  background: url('~/assets/img/loading_icon.svg') no-repeat center/contain;
 }
 
 .p3 {

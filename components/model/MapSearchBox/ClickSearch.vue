@@ -1,9 +1,10 @@
 <template>
   <div class="out_wrap">
-    <p>請選擇圖層後，於圖面點選查詢該圖層資訊</p>
+    <p>開啟圖層後，於圖面點選圖層進行查詢</p>
     <Dropdown-component
       :options="clickMapList"
       :placeholders="'請選擇圖層'"
+      :add-text="myWord"
       @DropdownVal="selectLayer"
     />
     <div class="bt_wrap">
@@ -35,7 +36,8 @@ export default {
       dropList: [{ title: '01 宜蘭', value: '1' }],
       nowLayer: '',
       nowId: '',
-      nowInfo: ''
+      nowInfo: '',
+      myWord: ''
     };
   },
   name: 'ClickSearch',
@@ -46,7 +48,29 @@ export default {
 
       this.nowId = e.graphic.id[0];
       this.nowInfo = e.graphic.attributes;
-      if (this.nowLayer === this.nowId) {
+      // if (this.nowLayer === this.nowId) {
+      //   this.$emit('clickSearch', this.nowId, this.nowInfo);
+      // }
+
+      if (e.graphic.id.length >= 1) {
+        if (this.nowId === '01_Cons') {
+          this.myWord = '水工構造物';
+        }
+        if (this.nowId === '01_Canal') {
+          this.myWord = '渠道';
+        }
+        if (this.nowId === '01_Ia') {
+          this.myWord = '管理處';
+        }
+        if (this.nowId === '01_Stn') {
+          this.myWord = '工作站';
+        }
+        if (this.nowId === '01_Grp') {
+          this.myWord = '小組';
+        }
+        if (this.nowId === '01_Period') {
+          this.myWord = '期作別';
+        }
         this.$emit('clickSearch', this.nowId, this.nowInfo);
       }
     });

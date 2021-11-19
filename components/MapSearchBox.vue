@@ -154,7 +154,10 @@ export default {
       allClickData: [],
       consData: [],
       iaData: [],
-      canalData: []
+      canalData: [],
+      stnData: [],
+      grpData: [],
+      periodData: []
     };
   },
   name: 'MapSearchBox',
@@ -173,10 +176,20 @@ export default {
 
     const data4 = require('~/static/clickCanal.json');
     this.canalData = data4.data;
+
+    const data5 = require('~/static/clickStn.json');
+    this.stnData = data5.data;
+
+    const data6 = require('~/static/clickGrp.json');
+    this.grpData = data6.data;
+
+    const data7 = require('~/static/clickPeriod.json');
+    this.periodData = data7.data;
   },
   methods: {
     // * @ 點擊查詢 : 取得屬性資料表格
     getClickData (id, info) {
+      // 管理處
       if (id === '01_Ia') {
         this.iaData.forEach((item) => {
           if (item.name === '管理處代碼') {
@@ -197,6 +210,7 @@ export default {
         this.allClickData = this.iaData;
       }
 
+      // 渠道
       if (id === '01_Canal') {
         this.canalData.forEach((item) => {
           if (item.name === '渠道編號-通用碼') {
@@ -256,6 +270,7 @@ export default {
         this.allClickData = this.canalData;
       }
 
+      // 水工構造物
       if (id === '01_Cons') {
         this.consData.forEach((item) => {
           if (item.name === '構造物名稱') {
@@ -325,6 +340,99 @@ export default {
 
         this.allClickData = [];
         this.allClickData = this.consData;
+      }
+
+      // 工作站
+      if (id === '01_Stn') {
+        this.stnData.forEach((item) => {
+          if (item.name === '管理處代碼') {
+            item.value = info.Ia;
+          }
+          if (item.name === '管理處名稱') {
+            item.value = info.Ia_cns;
+          }
+          if (item.name === '面積(m2)') {
+            item.value = info.Area;
+          }
+          if (item.name === '資料日期') {
+            item.value = info.Ymd;
+          }
+          if (item.name === '管理分處代碼') {
+            item.value = info.Mng;
+          }
+          if (item.name === '工作站代碼') {
+            item.value = info.Stn;
+          }
+          if (item.name === '工作站名稱') {
+            item.value = info.Stn_cns;
+          }
+        });
+
+        this.allClickData = [];
+        this.allClickData = this.stnData;
+      }
+
+      // 小組
+      if (id === '01_Grp') {
+        this.grpData.forEach((item) => {
+          if (item.name === '管理處代碼') {
+            item.value = info.Ia;
+          }
+          if (item.name === '管理處名稱') {
+            item.value = info.Ia_cns;
+          }
+          if (item.name === '面積(m2)') {
+            item.value = info.Area;
+          }
+          if (item.name === '資料日期') {
+            item.value = info.Ymd;
+          }
+          if (item.name === '小組代碼') {
+            item.value = info.Grp;
+          }
+          if (item.name === '小組名稱') {
+            item.value = info.Grp_cns;
+          }
+          if (item.name === '管理分處代碼') {
+            item.value = info.Mng;
+          }
+          if (item.name === '工作站代碼') {
+            item.value = info.Stn;
+          }
+          if (item.name === '工作站名稱') {
+            item.value = info.Stn_cns;
+          }
+        });
+
+        this.allClickData = [];
+        this.allClickData = this.grpData;
+      }
+
+      // 期作別
+      if (id === '01_Period') {
+        this.periodData.forEach((item) => {
+          if (item.name === '管理處代碼') {
+            item.value = info.Ia;
+          }
+          if (item.name === '管理處名稱') {
+            item.value = info.Ia_cns;
+          }
+          if (item.name === '面積(m2)') {
+            item.value = info.Area;
+          }
+          if (item.name === '期作別代碼') {
+            item.value = info.Period;
+          }
+          if (item.name === '期作別') {
+            item.value = info.Period_cns;
+          }
+          if (item.name === '資料日期') {
+            item.value = info.Ymd;
+          }
+        });
+
+        this.allClickData = [];
+        this.allClickData = this.periodData;
       }
     },
     // * @ 點擊查詢 : 清除全部
