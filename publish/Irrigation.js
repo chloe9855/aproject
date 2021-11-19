@@ -205,7 +205,7 @@ export function getTowns (county) {
         data: [
           {
             FID: 225,
-            TOWNID: '13',
+            TOWNID: '09',
             TOWNCODE: '67000010',
             COUNTYNAME: '臺南市',
             TOWNNAME: '新營區',

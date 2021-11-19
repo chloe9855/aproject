@@ -307,7 +307,8 @@ export default {
     getPageNum (e) { // 換頁取得DATA
       const _this = this;
       this.$store.commit('TOGGLE_LOADING_STATUS');
-      axios.post(`http://192.168.3.112/AERC/rest/IrrigationLand?pageCnt=${e.page}&pageRows=10`, { query: [['11', '4', '', '']] }).then(r => {
+      // axios.post(`http://192.168.3.112/AERC/rest/IrrigationLand?pageCnt=${e.page}&pageRows=10`, { query: [['11', '4', '', '']] }).then(r => {
+      axios.post(`http://192.168.3.112/AERC/rest/IrrigationLand?pageCnt=${e.page}&pageRows=10`, { query: _this.searchObj }).then(r => {
         this.tableList.body = r.data.map(x => {
           return { title: [x.ia_cns, x.mng_cns, x.stn_cns, x.grp_cns, x.grparea, x.tolarea, x.irgarea] };
         });
