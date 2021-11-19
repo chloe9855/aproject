@@ -46,7 +46,15 @@
         </div>
 
         <div
-          v-if="searchResult.landNo === '' && searchResult.authority === ''"
+          v-if="searchResult.authority === '' && noResult === true"
+          class="no_file"
+        >
+          <img :src="require('~/assets/img/no_data.svg')">
+          <p>查無資料</p>
+        </div>
+
+        <div
+          v-if="searchResult.landNo === '' && searchResult.authority === '' && noResult === false"
           class="no_file"
         >
           <img :src="require('~/assets/img/no_file.svg')">
@@ -81,6 +89,21 @@
         />
       </div>
     </div>
+
+    <div
+      v-if="loadModal === true"
+      class="modal_wrapper"
+    >
+      <div class="modal">
+        <!-- <p
+          class="p3"
+          style="margin-bottom: 10px;"
+        >
+          載入中
+        </p>
+        <div class="bar" /> -->
+      </div>
+    </div>
   </div>
 </template>
 
@@ -108,6 +131,7 @@ export default {
       allData: '',
       growUp: true,
       showDetail: false,
+      loadModal: false,
       searchResult: {
         authority: '',
         landNo: ''
@@ -159,7 +183,9 @@ export default {
       //* 依單筆地號 單筆詳細資料
       detailItem: '',
       myCountyId: '',
-      mapIndex: ''
+      mapIndex: '',
+      //* 查無結果
+      noResult: false
     };
   },
   mounted () {
@@ -203,6 +229,8 @@ export default {
       if (payload.event === 'isMap') {
         // payload.item = index
 
+        this.loadModal = true;
+
         fetch('http://192.168.3.112/AERC/rest/Sec5cov?pageCnt=1&pageRows=5', {
           method: 'POST',
           headers: new Headers({
@@ -217,13 +245,15 @@ export default {
         }).then((jsonData) => {
           console.log(jsonData);
 
+          this.loadModal = false;
+
           const nowUrl = window.location.href;
           const front = nowUrl.substring(0, nowUrl.length - 9);
           const end = 'map/';
           const myUrl = `${front}${end}`;
 
           window.open(myUrl);
-          localStorage.setItem('oriData', JSON.stringify(jsonData[0].geometry));
+          localStorage.setItem('oriData', JSON.stringify(jsonData[0].data[0].geometry));
         }).catch((err) => {
           console.log(err);
         });
@@ -233,9 +263,11 @@ export default {
     searchHandler (type, data) {
       this.clearAllHandler();
 
+      // 回傳空值(查無結果)
       if (data.length < 1) {
         this.searchResult.authority = '';
         this.searchData1.body = [];
+        this.noResult = true;
         return;
       }
 
@@ -272,9 +304,12 @@ export default {
       this.searchResult.authority = '';
       this.searchResult.landNo = '';
       this.searchData1.body = [];
+      this.noResult = false;
     },
     // * 在地圖上顯示
     showOnMap () {
+      this.loadModal = true;
+
       fetch('http://192.168.3.112/AERC/rest/Sec5cov?pageCnt=1&pageRows=5', {
         method: 'POST',
         headers: new Headers({
@@ -289,13 +324,15 @@ export default {
       }).then((jsonData) => {
         console.log(jsonData);
 
+        this.loadModal = false;
+
         const nowUrl = window.location.href;
         const front = nowUrl.substring(0, nowUrl.length - 9);
         const end = 'map/';
         const myUrl = `${front}${end}`;
 
         window.open(myUrl);
-        localStorage.setItem('oriData', JSON.stringify(jsonData[0].geometry));
+        localStorage.setItem('oriData', JSON.stringify(jsonData[0].data[0].geometry));
       }).catch((err) => {
         console.log(err);
       });
@@ -312,6 +349,51 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+
+  .modal_wrapper {
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  // background-color: rgba(0, 0, 0, 0.2);
+  z-index: 9998;
+  cursor: default;
+}
+
+.modal {
+  width: 200px;
+  height: 200px;
+  // padding: 5px 31px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  // font-size: 16px;
+  // text-align: center;
+  // background-color: #fff;
+  // border-radius: 10px;
+  z-index: 9999;
+  transform: translate(-50%, -50%);
+  flex-direction: column;
+  background: url('~/assets/img/loading_icon.svg') no-repeat center/contain;
+}
+
+.p3 {
+  margin-top: 42px;
+  font-size: 25px;
+  font-weight: bold;
+  color: #165f88;
+}
+
+.bar {
+  width: 236px;
+  height: 12px;
+  margin: 10px 0 20px;
+  background: url('~/assets/img/bar-new.svg') no-repeat center/contain;
+}
 
   .main {
     position: relative;

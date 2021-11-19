@@ -29,7 +29,7 @@
           :options="allDropList.Grp"
           :title="'水利小組'"
           :change-text="clearCanals4"
-          @DropdownVal="(payload) => { nextListHandler(payload, 'Grp'), selectHandler(payload, 'Grp'), clearCanals4 = false }"
+          @DropdownVal="(payload) => { nextListHandler(payload, 'Grp'), selectHandler(payload, 'Grp'), clearCanals4 = false, grpPosition = payload }"
         />
         <div class="bt_wrap">
           <Buttons-component
@@ -39,6 +39,7 @@
           />
           <Buttons-component
             :text="'定位'"
+            @click="selectHandler(grpPosition, 'Grp')"
           />
         </div>
       </div>
@@ -47,22 +48,26 @@
         <DropdownVertical-component
           :options="countyList.County"
           :title="'縣市'"
-          @DropdownVal="(payload) => { nextCountHandler(payload, 'Town'), positionCtrl(payload, 'County'), counData.County = payload.COUNTYNAME, countyIdList.push(payload.COUNTYID), clearLand1 = false }"
+          :change-text="clearLand1"
+          @DropdownVal="(payload) => { nextCountHandler(payload, 'Town'), positionCtrl(payload, 'County'), countyIdList.push(payload.COUNTYID), clearLand1 = false, payload !== '' ? counData.County = payload.COUNTYNAME : counData.County = '' }"
         />
         <DropdownVertical-component
           :options="countyList.Town"
           :title="'鄉鎮市區'"
-          @DropdownVal="(payload) => { nextCountHandler(payload, 'Section'), positionCtrl(payload, 'Town'), counData.Town = payload.TOWNNAME, clearLand2 = false }"
+          :change-text="clearLand2"
+          @DropdownVal="(payload) => { nextCountHandler(payload, 'Section'), positionCtrl(payload, 'Town'), clearLand2 = false, payload !== '' ? counData.Town = payload.TOWNNAME : counData.Town = '' }"
         />
         <DropdownVertical-component
           :options="countyList.Section"
           :title="'地段'"
-          @DropdownVal="(payload) => { nextCountHandler(payload, 'Sec5cov'), positionCtrl(payload, 'Section'), counData.Section = payload.Section, clearLand3 = false }"
+          :change-text="clearLand3"
+          @DropdownVal="(payload) => { getLandnoList(payload), positionCtrl(payload, 'Section'), clearLand3 = false, payload !== '' ? counData.Section = payload.Section : counData.Section = '' }"
         />
         <DropdownVertical-component
           :options="countyList.Sec5cov"
           :title="'地號'"
-          @DropdownVal="(payload) => { counData.Sec5cov = payload.Land_no, landnoFidList.push(payload.FID), clearLand4 = false }"
+          :change-text="clearLand4"
+          @DropdownVal="(payload) => { landnoFidList.push(payload.FID), clearLand4 = false, payload !== '' ? counData.Sec5cov = payload.Land_no : counData.Sec5cov = '' }"
         />
         <div class="bt_wrap underline">
           <Buttons-component
@@ -80,11 +85,11 @@
           class="land_wrap theme_scrollbar"
         >
           <div
-            v-for="item in landItemList"
+            v-for="(item, index) in landItemList"
             :key="item.id"
             class="land_item"
             :class="{ 'deep_bg': item.checked === true }"
-            @click="drawLandHandler($event, item)"
+            @click="drawLandHandler($event, item, index)"
           >
             {{ item.title }}
           </div>
@@ -260,6 +265,7 @@ export default {
       clearCanals3: false,
       clearCanals4: false,
       geoGraphic: '',
+      grpPosition: '',
       // * 地籍定位
       countyList: {
         County: [],
@@ -270,7 +276,7 @@ export default {
       myCountyId: '',
       landnoFidList: [],
       countyIdList: [],
-      landGraphic: '',
+      myLandGraphic: '',
       clearLand1: false,
       clearLand2: false,
       clearLand3: false,
@@ -283,7 +289,10 @@ export default {
         Sec5cov: ''
       },
       // * 地籍定位 : 地號陣列
-      landItemList: []
+      landItemList: [],
+      // * 地籍定位 : graphic圖形陣列
+      allLandGraphic: [],
+      allMetry: []
 
     };
   },
@@ -382,8 +391,10 @@ export default {
         console.log(err);
       });
     },
-    // * @ 地籍定位 : 取得鄉鎮市區 地段 地號資料
+    // * @ 地籍定位 : 取得鄉鎮市區 地段 資料
     nextCountHandler (payload, nextType) {
+      if (payload === '') { return; }
+
       let myObj = {};
       if (nextType === 'Town') {
         myObj = { COUNTYID: payload.COUNTYID };
@@ -442,8 +453,33 @@ export default {
         console.log(err);
       });
     },
+    // * @ 地籍定位 : 取得地號清單
+    getLandnoList (payload) {
+      if (payload === '') { return; }
+
+      fetch(`http://192.168.3.112/aerc/rest/Sec5nos?CountyID=${this.myCountyId}&Section=${payload.Section}`, {
+        method: 'GET',
+        headers: new Headers({
+          'Content-Type': 'application/json'
+        })
+      }).then((response) => {
+        return response.json();
+      }).then((jsonData) => {
+        console.log(jsonData);
+
+        jsonData.forEach((item) => {
+          item.title = item.Land_no;
+          item.value = item.FID;
+        });
+        this.countyList.Sec5cov = jsonData;
+      }).catch((err) => {
+        console.log(err);
+      });
+    },
     // * @ 地籍定位 : 點選各dropdown的其中一筆 繪製圖形+定位過去
     positionCtrl (payload, myType) {
+      if (payload === '') { return; }
+
       let myObj = {};
       if (myType === 'County') {
         myObj = { FID: payload.FID };
@@ -467,7 +503,7 @@ export default {
         console.log(jsonData);
 
         // 先清除之前的
-        pMapBase.drawingGraphicsLayer.remove(this.landGraphic);
+        pMapBase.drawingGraphicsLayer.remove(this.myLandGraphic);
         // 畫圖
         let geometry = '';
         if (myType === 'County' || myType === 'Town') {
@@ -476,8 +512,8 @@ export default {
           geometry = sg.geometry.Geometry.fromGeoJson(jsonData[0].geometry);
         }
 
-        this.landGraphic = sg.Graphic.createFromGeometry(geometry, { borderwidth: 1, fillcolor: new sg.Color(220, 105, 105, 0.5) });
-        pMapBase.drawingGraphicsLayer.add(this.landGraphic);
+        this.myLandGraphic = sg.Graphic.createFromGeometry(geometry, { borderwidth: 1, fillcolor: new sg.Color(220, 105, 105, 0.5) });
+        pMapBase.drawingGraphicsLayer.add(this.myLandGraphic);
         // 定位
         const extent = geometry.extent;
         pMapBase.ZoomMapTo(extent);
@@ -491,15 +527,16 @@ export default {
       const result = {
         id: Math.random(),
         title: `${this.counData.County} ${this.counData.Town} ${this.counData.Section} ${this.counData.Sec5cov}`,
-        checked: false,
+        checked: false, // 選取變色
         fid: this.landnoFidList[this.landnoFidList.length - 1],
         countyId: this.countyIdList[this.countyIdList.length - 1]
       };
       this.landItemList.push(result);
     },
     // * @ 地籍定位 : 點擊清單中某筆 畫圖+定位過去
-    drawLandHandler (e, landItem) {
+    drawLandHandler (e, landItem, index) {
       console.log(e);
+      console.log(landItem);
 
       if (landItem.checked === true) { return; }
 
@@ -525,11 +562,18 @@ export default {
           console.log(jsonData);
 
           // 先清除之前的
-          pMapBase.drawingGraphicsLayer.remove(this.landGraphic);
+          this.allMetry = [];
+          this.allLandGraphic.forEach((item) => {
+            pMapBase.drawingGraphicsLayer.remove(item);
+          });
+          pMapBase.drawingGraphicsLayer.remove(this.myLandGraphic);
+
           // 畫圖
           const geometry = sg.geometry.Geometry.fromGeoJson(jsonData[0].data[0].geometry);
-          this.landGraphic = sg.Graphic.createFromGeometry(geometry, { borderwidth: 1, fillcolor: new sg.Color(220, 105, 105, 0.5) });
-          pMapBase.drawingGraphicsLayer.add(this.landGraphic);
+          this.allLandGraphic[index] = sg.Graphic.createFromGeometry(geometry, { borderwidth: 1, fillcolor: new sg.Color(220, 105, 105, 0.5) });
+          pMapBase.drawingGraphicsLayer.add(this.allLandGraphic[index]);
+
+          this.allMetry.push(geometry);
           // 定位
           const extent = geometry.extent;
           pMapBase.ZoomMapTo(extent);
@@ -542,6 +586,38 @@ export default {
       // 按shift -> 多選
       if (e.shiftKey === true) {
         landItem.checked = true;
+
+        fetch('http://192.168.3.112/AERC/rest/Sec5cov?pageCnt=1&pageRows=5', {
+          method: 'POST',
+          headers: new Headers({
+            'Content-Type': 'application/json'
+          }),
+          body: JSON.stringify({
+            CountyID: landItem.countyId,
+            FID: landItem.fid
+          })
+        }).then((response) => {
+          return response.json();
+        }).then((jsonData) => {
+          console.log(jsonData);
+
+          pMapBase.drawingGraphicsLayer.remove(this.myLandGraphic);
+          // 畫圖
+          const geometry = sg.geometry.Geometry.fromGeoJson(jsonData[0].data[0].geometry);
+          this.allLandGraphic[index] = sg.Graphic.createFromGeometry(geometry, { borderwidth: 1, fillcolor: new sg.Color(220, 105, 105, 0.5) });
+          pMapBase.drawingGraphicsLayer.add(this.allLandGraphic[index]);
+
+          this.allMetry.push(geometry);
+
+          // 定位至最大範圍
+          const extent = sg.geometry.Extent.unionall(this.allMetry.map(function (geom) { return geom.extent; }));
+          pMapBase.ZoomMapTo(extent);
+          pMapBase.RefreshMap(true);
+
+          console.log(extent);
+        }).catch((err) => {
+          console.log(err);
+        });
       }
     },
     // * @ 地籍定位 : 清除全部
@@ -550,11 +626,27 @@ export default {
       this.clearLand2 = true;
       this.clearLand3 = true;
       this.clearLand4 = true;
-      this.countyList.County = [];
       this.countyList.Town = [];
       this.countyList.Section = [];
       this.countyList.Sec5cov = [];
-      pMapBase.drawingGraphicsLayer.remove(this.landGraphic);
+
+      this.counData.County = '';
+      this.counData.Town = '';
+      this.counData.Section = '';
+      this.counData.Sec5cov = '';
+
+      this.countyIdList = [];
+      this.landnoFidList = [];
+      this.landItemList = [];
+
+      pMapBase.drawingGraphicsLayer.remove(this.myLandGraphic);
+      this.allLandGraphic.forEach((item) => {
+        pMapBase.drawingGraphicsLayer.remove(item);
+      });
+
+      this.myLandGraphic = '';
+      this.allLandGraphic = [];
+      this.allMetry = [];
     },
     // * @ 灌溉定位 : 清除全部
     clearCanalHandler () {
@@ -570,6 +662,8 @@ export default {
     },
     // * @ 灌溉定位 : 點擊選單 抓出下一排選項的所有清單
     nextListHandler (payload, nextType) {
+      if (payload === '') { return; }
+
       console.log(payload);
       console.log(nextType);
 
@@ -619,6 +713,7 @@ export default {
     // * @ 灌溉定位: 點選各dropdown中的其中一筆 繪製圖形+定位過去
     selectHandler (payload, myType) {
       if (payload.value === 'none') { return; }
+      if (payload === '') { return; }
 
       let myObj = {};
       if (myType === 'Ia') {

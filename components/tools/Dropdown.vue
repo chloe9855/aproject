@@ -42,6 +42,10 @@ export default {
     changeText: {
       type: Boolean,
       default: false
+    },
+    addText: {
+      type: String,
+      default: ''
     }
   },
   data: () => {
@@ -58,6 +62,11 @@ export default {
     changeText (value) {
       if (value === true) {
         this.selected = '';
+      }
+    },
+    addText (value) {
+      if (value !== '') {
+        this.selected = value;
       }
     }
   }

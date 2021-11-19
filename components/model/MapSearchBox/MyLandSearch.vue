@@ -13,25 +13,30 @@
         title="縣市"
         star-sign="*"
         :options="countyList1.County"
-        @DropdownVal="(payload) => { nextMenuHandler(payload, 'Town'), coData1.County = payload.COUNTYID }"
+        :change-text="clearLand1"
+        @DropdownVal="(payload) => { nextMenuHandler(payload, 'Town'), clearLand1 = false, payload !== '' ? coData1.County = payload.COUNTYID : coData1.County = '' }"
       />
       <DropdownVertical
         title="鄉鎮市區"
         star-sign="*"
         :options="countyList1.Town"
-        @DropdownVal="(payload) => { nextMenuHandler(payload, 'Section'), coData1.Town = payload.TOWNID }"
+        :change-text="clearLand2"
+        @DropdownVal="(payload) => { nextMenuHandler(payload, 'Section'), clearLand2 = false, payload !== '' ? coData1.Town = payload.TOWNID : coData1.Town = '' }"
       />
       <DropdownVertical
         title="段名"
         star-sign="*"
         :options="countyList1.Section"
-        @DropdownVal="(payload) => { nextMenuHandler(payload, 'Sec5cov'), coData1.Section = payload.Section }"
+        :change-text="clearLand3"
+        @DropdownVal="(payload) => { getLandnoList(payload), clearLand3 = false, payload !== '' ? coData1.Section = payload.Section : coData1.Section = '' }"
       />
       <InputVertical
         title="地號"
         green-hint="地號範圍:0"
         star-sign="*"
-        @inputValue="(payload) => { coData1.Sec5cov = payload }"
+        :change-text="clearLand4"
+        :search-input="Sec5covList"
+        @inputValue="(payload) => { coData1.Sec5cov = payload, clearLand4 = false }"
       />
     </div>
     <div
@@ -73,7 +78,7 @@
       <Button
         :name="'button-default'"
         :text="'清除全部'"
-        @click="$emit('clear')"
+        @click="clearHandler"
       />
       <Button
         :name="'button-primary'"
@@ -119,6 +124,11 @@ export default {
         Section: [],
         Sec5cov: []
       },
+      // * 單筆地號 清除值
+      clearLand1: false,
+      clearLand2: false,
+      clearLand3: false,
+      clearLand4: false,
       //* 管理單位 縣市資料
       countyList2: {
         County: [],
@@ -280,6 +290,8 @@ export default {
     },
     // * @ 依單筆地號  取得下一排清單資料
     nextMenuHandler (payload, nextType) {
+      if (payload === '') { return; }
+
       console.log(payload);
       console.log(nextType);
 
@@ -290,18 +302,8 @@ export default {
       if (nextType === 'Section') {
         myObj = { CountyID: payload.COUNTYID, TownID: payload.TOWNID };
       }
-      if (nextType === 'Sec5cov') {
-        myObj = { CountyID: this.coData1.County };
-      }
 
-      let url = '';
-      if (nextType !== 'Sec5cov') {
-        url = `http://192.168.3.112/AERC/rest/${nextType}`;
-      } else {
-        url = 'http://192.168.3.112/AERC/rest/Sec5cov?pageCnt=1&pageRows=5';
-      }
-
-      fetch(url, {
+      fetch(`http://192.168.3.112/AERC/rest/${nextType}`, {
         method: 'POST',
         headers: new Headers({
           'Content-Type': 'application/json'
@@ -316,9 +318,7 @@ export default {
           if (nextType === 'Section') {
             this.countyList1[nextType] = [{ title: '不拘', value: 'none', Section: '' }];
           }
-          if (nextType === 'Sec5cov') {
-            this.countyList1[nextType] = [{ title: '不拘', value: 'none', Land_no: '' }];
-          }
+
           return Promise.reject(response);
         }
         return response.json();
@@ -332,12 +332,47 @@ export default {
           // if (nextType === 'Sec5cov') { item.title = item.Land_no; }
         });
         this.countyList1[nextType] = jsonData;
+      }).catch((err) => {
+        console.log(err);
+      });
+    },
+    // * @ 依單筆地號 取得地號清單
+    getLandnoList (payload) {
+      if (payload === '') { return; }
 
-        const nameList = jsonData[0].data.map(item => item.Land_no);
+      fetch(`http://192.168.3.112/aerc/rest/Sec5nos?CountyID=${this.coData1.County}&Section=${payload.Section}`, {
+        method: 'GET',
+        headers: new Headers({
+          'Content-Type': 'application/json'
+        })
+      }).then((response) => {
+        return response.json();
+      }).then((jsonData) => {
+        console.log(jsonData);
+
+        const nameList = jsonData.map(item => item.Land_no);
         this.Sec5covList = nameList;
       }).catch((err) => {
         console.log(err);
       });
+    },
+    // * @ 依單筆地號 清除全部
+    clearHandler () {
+      this.clearLand1 = true;
+      this.clearLand2 = true;
+      this.clearLand3 = true;
+      this.clearLand4 = true;
+
+      this.countyList1.Town = [];
+      this.countyList1.Section = [];
+      this.countyList1.Sec5cov = [];
+
+      this.coData1.County = '';
+      this.coData1.Town = '';
+      this.coData1.Section = '';
+      this.coData1.Sec5cov = '';
+
+      this.$emit('clear');
     }
   }
 };

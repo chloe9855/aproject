@@ -2,7 +2,7 @@
   <div class="search_container">
     <div
       class="search_box"
-      :class="{'no_radius': columnList.length >= 1 && (barOptions.current === 0 || barOptions.current === 3) }"
+      :class="{'no_radius': (columnList.length >= 1 || allClickData.length >= 1) && (barOptions.current === 0 || barOptions.current === 3) }"
     >
       <NavTabs-component
         :type-list="barOptions.typeList"
@@ -14,14 +14,16 @@
           :is="componentInstance"
           :click-map-list="ListCS"
           @channelSearch="$emit('search')"
-          @keywordSearch="getVerticalData"
-          @clearKeyword="clearVerticalData"
+          @keywordSearch="getKeywordData"
+          @clickSearch="getClickData"
+          @clearKeyword="clearKeywordData"
+          @clearCliSearch="clearClickData"
           @clear="$emit('clear')"
         />
       </keep-alive>
     </div>
     <div
-      v-if="columnList.length >= 1 && (barOptions.current === 0 || barOptions.current === 3)"
+      v-if="columnList.length >= 1 && barOptions.current === 0"
       class="content_block"
       :class="{'hide_VVblock': hideResult, 'show_block': !hideResult}"
     >
@@ -61,6 +63,49 @@
         </p>
       </div>
     </div>
+
+    <!--  點擊查詢結果  -->
+    <div
+      v-if="allClickData.length >= 1 && barOptions.current === 3"
+      class="content_block"
+      :class="{'hide_VVblock': hideResult2, 'show_block': !hideResult2}"
+    >
+      <p class="title">
+        屬性表格
+      </p>
+      <div class="table_block_wrap">
+        <div class="table_block theme_scrollbar">
+          <table>
+            <tbody>
+              <tr
+                v-for="(item, index) in allClickData"
+                :key="index"
+              >
+                <td>{{ item.name }}</td>
+                <td>{{ item.value }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div
+        class="hide_button"
+        @click="hideResult2 = !hideResult2"
+      >
+        <p
+          v-if="hideResult2"
+          :class="{'down_arrow': hideResult2 }"
+        >
+          顯示查詢結果
+        </p>
+        <p
+          v-if="!hideResult2"
+          :class="{'down_arrow': hideResult2 }"
+        >
+          隱藏查詢結果
+        </p>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -74,6 +119,7 @@ export default {
   data () {
     return {
       hideResult: false,
+      hideResult2: false,
       barOptions: {
         current: 0,
         typeList: [
@@ -98,12 +144,20 @@ export default {
       searchResult: {
         channel: ''
       },
-      //* 屬性資料表格
+      //* 關鍵字查詢 屬性資料表格
       columnList: [],
       backList: [],
       //* 第一次按下點擊查詢
       openOnceCS: true,
-      ListCS: []
+      ListCS: [],
+      //* 點擊查詢
+      allClickData: [],
+      consData: [],
+      iaData: [],
+      canalData: [],
+      stnData: [],
+      grpData: [],
+      periodData: []
     };
   },
   name: 'MapSearchBox',
@@ -111,15 +165,286 @@ export default {
     const data = require('~/static/channel.json');
     this.searchResult.channel = data;
 
-    const vdata = require('~/static/singleLand.json');
-    this.backList = vdata.data;
+    const data1 = require('~/static/singleLand.json');
+    this.backList = data1.data;
+
+    const data2 = require('~/static/clickCons.json');
+    this.consData = data2.data;
+
+    const data3 = require('~/static/clickIa.json');
+    this.iaData = data3.data;
+
+    const data4 = require('~/static/clickCanal.json');
+    this.canalData = data4.data;
+
+    const data5 = require('~/static/clickStn.json');
+    this.stnData = data5.data;
+
+    const data6 = require('~/static/clickGrp.json');
+    this.grpData = data6.data;
+
+    const data7 = require('~/static/clickPeriod.json');
+    this.periodData = data7.data;
   },
   methods: {
-    clearVerticalData () {
+    // * @ 點擊查詢 : 取得屬性資料表格
+    getClickData (id, info) {
+      // 管理處
+      if (id === '01_Ia') {
+        this.iaData.forEach((item) => {
+          if (item.name === '管理處代碼') {
+            item.value = info.Ia;
+          }
+          if (item.name === '管理處名稱') {
+            item.value = info.Ia_cns;
+          }
+          if (item.name === '面積(m2)') {
+            item.value = info.Area;
+          }
+          if (item.name === '資料日期') {
+            item.value = info.Ymd;
+          }
+        });
+
+        this.allClickData = [];
+        this.allClickData = this.iaData;
+      }
+
+      // 渠道
+      if (id === '01_Canal') {
+        this.canalData.forEach((item) => {
+          if (item.name === '渠道編號-通用碼') {
+            item.value = info.Ex_sys;
+          }
+          if (item.name === '小組代碼') {
+            item.value = info.Grp;
+          }
+          if (item.name === '小組名稱') {
+            item.value = info.Grp_cns;
+          }
+          if (item.name === '管理處代碼') {
+            item.value = info.Ia;
+          }
+          if (item.name === '管理處名稱') {
+            item.value = info.Ia_cns;
+          }
+          if (item.name === '渠道長度(m)') {
+            item.value = info.Length;
+          }
+          if (item.name === '管理分處代碼') {
+            item.value = info.Mng;
+          }
+          if (item.name === '輪區代碼') {
+            item.value = info.Rot;
+          }
+          if (item.name === '工作站代碼') {
+            item.value = info.Stn;
+          }
+          if (item.name === '工作站名稱') {
+            item.value = info.Stn_cns;
+          }
+          if (item.name === '渠道編號-個別管理處') {
+            item.value = info.Sys;
+          }
+          if (item.name === '渠道屬性') {
+            item.value = info.Sys_atb;
+          }
+          if (item.name === '渠道等級名稱') {
+            item.value = info.Sys_cls;
+          }
+          if (item.name === '渠道名稱') {
+            item.value = info.Sys_cns;
+          }
+          if (item.name === '渠道等級代碼') {
+            item.value = info.Sys_type;
+          }
+          if (item.name === '渠道取得性質') {
+            item.value = info.Uc;
+          }
+          if (item.name === '資料日期') {
+            item.value = info.Ymd;
+          }
+        });
+
+        this.allClickData = [];
+        this.allClickData = this.canalData;
+      }
+
+      // 水工構造物
+      if (id === '01_Cons') {
+        this.consData.forEach((item) => {
+          if (item.name === '構造物名稱') {
+            item.value = info.Consname;
+          }
+          if (item.name === '結束位置') {
+            item.value = info.End_;
+          }
+          if (item.name === '設施編號通用碼') {
+            item.value = info.Ex_consno;
+          }
+          if (item.name === '座落渠道編號-通用碼') {
+            item.value = info.Ex_sys;
+          }
+          if (item.name === '檢核結果') {
+            item.value = info.Flag;
+          }
+          if (item.name === '小組代碼') {
+            item.value = info.Grp;
+          }
+          if (item.name === '管理處代碼') {
+            item.value = info.Ia;
+          }
+          if (item.name === '管理處名稱') {
+            item.value = info.Ia_cns;
+          }
+          if (item.name === '構造物照片檔名稱') {
+            item.value = info.Image_key;
+          }
+          if (item.name === '內面工形式') {
+            item.value = info.Inside;
+          }
+          if (item.name === '內面工種類') {
+            item.value = info.Kind;
+          }
+          if (item.name === '管理分處代碼') {
+            item.value = info.Mng;
+          }
+          if (item.name === '構造物種類') {
+            item.value = info.Name;
+          }
+          if (item.name === '輪區代碼') {
+            item.value = info.Rot;
+          }
+          if (item.name === '起始樁號') {
+            item.value = info.S_location;
+          }
+          if (item.name === '起始位置') {
+            item.value = info.Start;
+          }
+          if (item.name === '工作站代碼') {
+            item.value = info.Stn;
+          }
+          if (item.name === '工作站名稱') {
+            item.value = info.Stn_cns;
+          }
+          if (item.name === '座落渠道編號-管理處') {
+            item.value = info.Sys;
+          }
+          if (item.name === '座落渠道名稱') {
+            item.value = info.Sys_cns;
+          }
+          if (item.name === '構造物種類代號') {
+            item.value = info.Type;
+          }
+        });
+
+        this.allClickData = [];
+        this.allClickData = this.consData;
+      }
+
+      // 工作站
+      if (id === '01_Stn') {
+        this.stnData.forEach((item) => {
+          if (item.name === '管理處代碼') {
+            item.value = info.Ia;
+          }
+          if (item.name === '管理處名稱') {
+            item.value = info.Ia_cns;
+          }
+          if (item.name === '面積(m2)') {
+            item.value = info.Area;
+          }
+          if (item.name === '資料日期') {
+            item.value = info.Ymd;
+          }
+          if (item.name === '管理分處代碼') {
+            item.value = info.Mng;
+          }
+          if (item.name === '工作站代碼') {
+            item.value = info.Stn;
+          }
+          if (item.name === '工作站名稱') {
+            item.value = info.Stn_cns;
+          }
+        });
+
+        this.allClickData = [];
+        this.allClickData = this.stnData;
+      }
+
+      // 小組
+      if (id === '01_Grp') {
+        this.grpData.forEach((item) => {
+          if (item.name === '管理處代碼') {
+            item.value = info.Ia;
+          }
+          if (item.name === '管理處名稱') {
+            item.value = info.Ia_cns;
+          }
+          if (item.name === '面積(m2)') {
+            item.value = info.Area;
+          }
+          if (item.name === '資料日期') {
+            item.value = info.Ymd;
+          }
+          if (item.name === '小組代碼') {
+            item.value = info.Grp;
+          }
+          if (item.name === '小組名稱') {
+            item.value = info.Grp_cns;
+          }
+          if (item.name === '管理分處代碼') {
+            item.value = info.Mng;
+          }
+          if (item.name === '工作站代碼') {
+            item.value = info.Stn;
+          }
+          if (item.name === '工作站名稱') {
+            item.value = info.Stn_cns;
+          }
+        });
+
+        this.allClickData = [];
+        this.allClickData = this.grpData;
+      }
+
+      // 期作別
+      if (id === '01_Period') {
+        this.periodData.forEach((item) => {
+          if (item.name === '管理處代碼') {
+            item.value = info.Ia;
+          }
+          if (item.name === '管理處名稱') {
+            item.value = info.Ia_cns;
+          }
+          if (item.name === '面積(m2)') {
+            item.value = info.Area;
+          }
+          if (item.name === '期作別代碼') {
+            item.value = info.Period;
+          }
+          if (item.name === '期作別') {
+            item.value = info.Period_cns;
+          }
+          if (item.name === '資料日期') {
+            item.value = info.Ymd;
+          }
+        });
+
+        this.allClickData = [];
+        this.allClickData = this.periodData;
+      }
+    },
+    // * @ 點擊查詢 : 清除全部
+    clearClickData () {
+      this.allClickData = [];
+    },
+    // * @ 關鍵字查詢 : 清除全部
+    clearKeywordData () {
       this.columnList = [];
     },
-    //* 取得屬性資料表格
-    getVerticalData (payload) {
+    // * @ 關鍵字查詢 : 取得屬性資料表格
+    getKeywordData (payload) {
       if (payload.length < 1) {
         return;
       }
@@ -215,7 +540,7 @@ export default {
               id: Math.random(),
               LayerName: key,
               title: '',
-              value: key,
+              value: key
             };
             if (mName === 'Cons') {
               result.title = '水工構造物';

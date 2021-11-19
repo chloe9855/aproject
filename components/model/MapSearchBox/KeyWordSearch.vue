@@ -109,7 +109,8 @@ export default {
         pMapBase.drawingGraphicsLayer.remove(this.canalGraphic);
         // 畫圖
         const geometry = sg.geometry.Geometry.fromGeoJson(jsonData[0].geometry);
-        this.canalGraphic = sg.Graphic.createFromGeometry(geometry, { borderwidth: 1, fillcolor: new sg.Color(220, 105, 105, 0.5) });
+        // this.canalGraphic = sg.Graphic.createFromGeometry(geometry, { borderwidth: 5, fillcolor: new sg.Color(126, 255, 178, 1) });
+        this.canalGraphic = sg.Graphic.createFromGeometry(geometry, { linewidth: 5, linecolor: new sg.Color(126, 255, 178, 1) });
         pMapBase.drawingGraphicsLayer.add(this.canalGraphic);
         // 定位
         const extent = geometry.extent;

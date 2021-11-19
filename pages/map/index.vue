@@ -793,7 +793,7 @@ export default {
           item.id = item.Layer_sno;
           item.visible = false;
           item.opacity = 100;
-          if (item.LayerName === 'EMAP5_OPENDATA') {
+          if (item.LayerName === 'EMAP5') {
             item.visible = true;
           }
 
@@ -838,7 +838,7 @@ export default {
       this.allBaseLayer[index].layerInfo.identifier = layerName;
       setTimeout(() => {
         pMapBase.AddLayer(this.allBaseLayer[index]);
-        if (layerName !== 'EMAP5_OPENDATA') {
+        if (layerName !== 'EMAP5') {
           this.allBaseLayer[index].hide();
         }
         pMapBase.RefreshMap(true);
@@ -934,6 +934,9 @@ export default {
         // MBT.updateStyle(MBT.Style);
         MBT.updateStyle({
           [layerName]: { visible: $event }
+        });
+        ARO.updateStyle({
+          '01_Arrow': { visible: $event }
         });
       }
       if (category === 'surfaceList') {
@@ -1031,6 +1034,7 @@ export default {
         // MBT.Style[layerName].style = { opacity: value / 100 };
         // MBT.updateStyle(MBT.Style);
         MBT.updateStyle({ [layerName]: { style: { opacity: value / 100 } } });
+        ARO.updateStyle({ '01_Arrow': { style: { opacity: value / 100 } } });
       }
       if (category === 'surfaceList') {
         const index = this.layerOptions.surfaceList.findIndex(item => item.id === id);
@@ -1511,7 +1515,7 @@ export default {
             const result = {
               id: Math.random(),
               LayerName: key,
-              visible: true,
+              visible: false,
               opacity: 100,
               LayerTitle: ''
             };
@@ -1525,34 +1529,51 @@ export default {
             }
             if (mName === 'Ia') {
               result.LayerTitle = '管理處';
+              result.visible = true;
+              result.opacity = 50;
               this.layerOptions.surfaceList.push(result);
             }
             if (mName === 'Mng') {
               result.LayerTitle = '管理分處';
+              result.opacity = 50;
               this.layerOptions.surfaceList.push(result);
             }
             if (mName === 'Stn') {
               result.LayerTitle = '工作站';
+              result.opacity = 50;
               this.layerOptions.surfaceList.push(result);
             }
             if (mName === 'Grp') {
               result.LayerTitle = '小組';
+              result.opacity = 50;
               this.layerOptions.surfaceList.push(result);
             }
             if (mName === 'Rot') {
               result.LayerTitle = '輪區';
+              result.opacity = 50;
               this.layerOptions.surfaceList.push(result);
             }
             if (mName === 'Period') {
               result.LayerTitle = '期作別';
+              result.opacity = 50;
               this.layerOptions.surfaceList.push(result);
             }
             if (mName === 'Pool') {
               result.LayerTitle = '埤塘';
+              result.opacity = 50;
               this.layerOptions.surfaceList.push(result);
             }
           });
           this.openOnceLa = false;
+
+          //* */
+          const yyu = new sg.layers.VectorMBTLayer('http://192.168.3.112/mapcache/arrow', {
+            loaded: function () {
+              this.setMinScale(Math.pow(2, 14 + 7 - 0.5) / 6378137 / Math.PI);
+              this.setMaxScale(Math.pow(2, 20 + 7 + 0.5) / 6378137 / Math.PI);
+              console.log(yyu);
+            }
+          });
         }
       }
     }
