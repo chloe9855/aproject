@@ -10,6 +10,7 @@
     <component
       :is="componentInstance"
       ref="searchComp"
+      :is-clear="isClearAll"
       @tabCurrent="current"
       @onsearch="onsearch"
     />
@@ -17,6 +18,7 @@
       <Button
         :name="'button-default'"
         :text="'清除全部'"
+        @click="clearAll"
       />
       <Button
         :name="'button-primary'"
@@ -78,7 +80,8 @@ export default {
     return {
       toggleState: false,
       toggleBox: '',
-      arrow: 'arrowLeft'
+      arrow: 'arrowLeft',
+      isClearAll: false
     };
   },
   name: 'SearchBox',
@@ -105,10 +108,16 @@ export default {
     search () {
       if (this.$refs.searchComp && this.$refs.searchComp.search) {
         this.$refs.searchComp.search();
+        this.isClearAll = !this.isClearAll;
       }
     },
     onsearch (e) {
       this.$emit('onsearch', e);
+    },
+    clearAll (e) {
+      if (e) {
+        this.isClearAll = !this.isClearAll;
+      }
     }
   },
   computed: {

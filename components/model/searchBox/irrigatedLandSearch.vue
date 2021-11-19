@@ -12,21 +12,25 @@
       <DropdownVertical
         title="管理處"
         :options="member.ia"
+        :change-text="isClear"
         @DropdownVal="iaDrop"
       />
       <DropdownVertical
         title="管理分處"
         :options="member.mng"
+        :change-text="isClear"
         @DropdownVal="mngDrop"
       />
       <DropdownVertical
         title="工作站"
         :options="member.stn"
+        :change-text="isClear"
         @DropdownVal="stnDrop"
       />
       <DropdownVertical
         title="水利小組"
         :options="member.grp"
+        :change-text="isClear"
         @DropdownVal="grpDrop"
       />
     </div>
@@ -37,16 +41,19 @@
       <DropdownVertical
         title="縣市"
         :options="member.county"
+        :change-text="isClear"
         @DropdownVal="countyDrop"
       />
       <DropdownVertical
         title="鄉鎮"
         :options="member.town"
+        :change-text="isClear"
         @DropdownVal="townDrop"
       />
       <DropdownVertical
         title="段名"
         :options="member.section"
+        :change-text="isClear"
         @DropdownVal="sectionDrop"
       />
       <!-- <DropdownCheckList
@@ -58,6 +65,7 @@
         title="地號"
         green-hint="地號範圍:0"
         star-sign="*"
+        @inputValue="getInputValue"
       />
     </div>
   </div>
@@ -76,9 +84,15 @@ export default {
     NavTabs: NavTabs,
     InputVertical: InputVertical
   },
-  props: {},
+  props: {
+    isClear: {
+      type: Boolean,
+      default: false
+    }
+  },
   data: () => {
     return {
+      inputValue: '',
       searchObj: {
         ia: '',
         mng: '',
@@ -97,7 +111,7 @@ export default {
         county: [],
         town: [],
         section: [],
-        land: { option: [{ title: '', value: '0' }] }
+        land: ''
       },
       options: {
         current: 0,
@@ -124,7 +138,7 @@ export default {
     });
     getCounties().then(r => {
       console.log(r);
-      this.member.county = r.data.map(x => ({ title: x.COUNTYNAME, value: x.COUNTYCODE }));
+      this.member.county = r.data.map(x => ({ title: x.COUNTYNAME, value: x.COUNTYID }));
     }).catch(e => {
       console.log(e);
     });
@@ -175,7 +189,7 @@ export default {
       this.member.section = [];
       this.member.land = { option: [{ title: '', value: '0' }] };
       getTowns(this.searchObj.county).then(r => {
-        this.member.town = r.data.map(x => ({ title: x.TOWNNAME, value: x.TOWNCODE }));
+        this.member.town = r.data.map(x => ({ title: x.TOWNNAME, value: x.TOWNID }));
       });
     },
     townDrop (payload) {
@@ -199,8 +213,14 @@ export default {
     landDrop (payload) {
       this.searchObj.land = payload.value;
     },
+    getInputValue (e) {
+      if (e) {
+        this.inputValue = e;
+      }
+    },
     search () {
       console.log(this.searchObj);
+      this.searchObj.land = this.inputValue;
       this.$emit('onsearch', { obj: this.searchObj, select: this.options.current });
       // if (this.options.current === 0) {
       //   this.$emit('onsearch', this.searchObj);

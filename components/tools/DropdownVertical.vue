@@ -92,6 +92,7 @@ export default {
       this.selectVal = n;
     },
     changeText (value) {
+      console.log(value);
       if (value === true) {
         this.selected = '';
       }

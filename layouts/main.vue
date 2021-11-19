@@ -12,6 +12,7 @@
       :type="popupType"
     />
     <MaskTool :is-active="togglePopup" />
+    <MaskTool :is-active="isLoading" />
     <Footer />
   </div>
 </template>
@@ -63,6 +64,9 @@ export default {
     },
     popupType () {
       return this.$store.state.popupType;
+    },
+    isLoading () {
+      return this.$store.state.isLoading;
     }
   }
 };

@@ -1,6 +1,6 @@
 import request from '~/service';
 export function getIrrigationLandArea (query) {
-  if (window.location.host === '192.168.1.103:3000') {
+  if (window.location.host === '192.168.3.112') {
     return new Promise((resolve, reject) => {
       resolve({
         data: [
@@ -20,7 +20,7 @@ export function getIrrigationLandArea (query) {
 }
 
 export function getIrrigationLand (PageCnt, PageRows, query, county, town, section, land) {
-  if (window.location.host === '192.168.1.103:3000') {
+  if (window.location.host === '192.168.3.112') {
     return new Promise((resolve, reject) => {
       resolve({
         data: [
@@ -85,7 +85,7 @@ export function getIrrigationLand (PageCnt, PageRows, query, county, town, secti
 }
 
 export function getIas () {
-  if (window.location.host === '192.168.1.103:3000') {
+  if (window.location.host === '192.168.3.112') {
     return new Promise((resolve, reject) => {
       resolve({
         data: [
@@ -104,7 +104,7 @@ export function getIas () {
 }
 
 export function getMngs (Ia) {
-  if (window.location.host === '192.168.1.103:3000') {
+  if (window.location.host === '192.168.3.112') {
     return new Promise((resolve, reject) => {
       resolve({
         data: [
@@ -125,7 +125,7 @@ export function getMngs (Ia) {
 }
 
 export function getStns (Ia, Mng) {
-  if (window.location.host === '192.168.1.103:3000') {
+  if (window.location.host === '192.168.3.112') {
     return new Promise((resolve, reject) => {
       resolve({
         data: [
@@ -151,7 +151,7 @@ export function getStns (Ia, Mng) {
 }
 
 export function getGrps (Ia, Mng, Stn) {
-  if (window.location.host === '192.168.1.103:3000') {
+  if (window.location.host === '192.168.3.112') {
     return new Promise((resolve, reject) => {
       resolve({
         data: [
@@ -180,12 +180,13 @@ export function getGrps (Ia, Mng, Stn) {
 }
 
 export function getCounties () {
-  if (window.location.host === '192.168.1.103:3000') {
+  if (window.location.host === '192.168.3.112') {
     return new Promise((resolve, reject) => {
       resolve({
         data: [
           {
             FID: 10,
+            COUNTYID: 'D',
             COUNTYCODE: '67000',
             COUNTYNAME: '臺南市',
             COUNTYENG: 'Tainan City'
@@ -198,15 +199,19 @@ export function getCounties () {
 }
 
 export function getTowns (county) {
-  if (window.location.host === '192.168.1.103:3000') {
+  if (window.location.host === '192.168.3.112') {
     return new Promise((resolve, reject) => {
       resolve({
         data: [
           {
             FID: 225,
+            TOWNID: '13',
             TOWNCODE: '67000010',
+            COUNTYNAME: '臺南市',
             TOWNNAME: '新營區',
-            TOWNENG: 'Xinying District'
+            TOWNENG: 'Xinying District',
+            COUNTYID: 'D',
+            COUNTYCODE: '67000'
           }
         ]
       });
@@ -218,16 +223,20 @@ export function getTowns (county) {
 }
 
 export function getSections (county, town) {
-  if (window.location.host === '192.168.1.103:3000') {
+  if (window.location.host === '192.168.3.112') {
     return new Promise((resolve, reject) => {
       resolve({
         data: [
           {
             FID: 2224,
+            City: '台南市',
+            City_no: 'D',
+            Town: '新營區',
+            Town_no: '09',
             Section: 'DD2001',
             Sec_cns: '新營',
             Area: 1473446.55837,
-            Ymd: '2021-06-15 00:00:00.000'
+            Ymd: '2021-06-15T00:00:00'
           }
         ]
       });
@@ -240,7 +249,7 @@ export function getSections (county, town) {
 }
 
 export function getLands (county, town, section) {
-  if (window.location.host === '192.168.1.103:3000') {
+  if (window.location.host === '192.168.3.112') {
     return new Promise((resolve, reject) => {
       resolve({
         data: [

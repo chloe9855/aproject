@@ -29,7 +29,7 @@
       class="editcompensateEventBind"
     />
     <SubTitleTool
-      title="行政院農業委員會農田水利署停灌補償金申請書(二聯單)付款"
+      title="行政院農業委員會農田水利署停灌補償金申請書(二聯單)附款"
       class="w-90"
       :class="boxWidth"
       btn-text="存檔"

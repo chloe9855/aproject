@@ -13,6 +13,8 @@
       :type="popupType"
     />
     <MaskTool :is-active="togglePopup" />
+    <MaskTool :is-active="isLoading" />
+    <Loading :is-active="isLoading" />
   </div>
 </template>
 
@@ -21,6 +23,7 @@ import Header from '~/components/model/Header';
 import Footer from '~/components/model/Footer';
 import Popup from '~/components/model/Popup.vue';
 import MaskTool from '~/components/tools/Mask.vue';
+import Loading from '~/components/tools/Loading.vue';
 import { getLogout } from '~/publish/getLogout';
 
 export default {
@@ -28,7 +31,8 @@ export default {
     Header,
     Footer,
     Popup,
-    MaskTool
+    MaskTool,
+    Loading
   },
   data () {
     return {
@@ -64,6 +68,9 @@ export default {
     },
     popupType () {
       return this.$store.state.popupType;
+    },
+    isLoading () {
+      return this.$store.state.isLoading;
     }
   }
 };
@@ -74,6 +81,13 @@ export default {
  .mainArea {
    min-height: 100vh;
    position: relative;
+ }
+ .loadingImg{
+   width: 100px;
+   height: 100px;
+   position: absolute;
+   top: calc( 50vh - 50px );
+   left: calc( 50vw - 50px);
  }
 
 </style>
