@@ -302,6 +302,6 @@ export default {
     }
   },
   server: {
-    host: 'location'
+    host: 'localhost'
   }
 };
