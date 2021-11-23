@@ -32,7 +32,7 @@
       />
       <InputVertical
         title="地號"
-        green-hint="地號範圍:0"
+        :green-hint="`地號範圍: ${minNo}-${maxNo}`"
         star-sign="*"
         :change-text="clearLand4"
         :search-input="Sec5covList"
@@ -154,7 +154,11 @@ export default {
         Stn: '',
         Grp: ''
       },
-      Sec5covList: []
+      // * 地號清單
+      Sec5covList: [],
+      minNo: '',
+      maxNo: '',
+      myLandnoList: []
     };
   },
   name: 'MyLandSearch',
@@ -169,6 +173,8 @@ export default {
   methods: {
     // * 搜尋
     searchData (current) {
+      if (this.coData1.County === '' || this.coData1.Town === '' || this.coData1.Section === '' || this.coData1.Sec5cov === '') { return; }
+
       let url = '';
       if (current === 0) {
         url = `http://192.168.3.112/AERC/rest/Fund?CountyID=${this.coData1.County}&TownID=${this.coData1.Town}&LandLotNO=${this.coData1.Section}&LandNo=${this.coData1.Sec5cov}&pageCnt=1&pageRows=10`;
@@ -186,7 +192,9 @@ export default {
         return response.json();
       }).then((data) => {
         console.log(data);
-        this.$emit('search', current, data);
+
+        const nowNum = this.myLandnoList.filter(item => item.Land_no === this.coData1.Sec5cov);
+        this.$emit('search', current, data, nowNum[0].FID);
       }).catch((err) => {
         console.log(err);
       });
@@ -336,10 +344,11 @@ export default {
         console.log(err);
       });
     },
-    // * @ 依單筆地號 取得地號清單
+    // * @ 依單筆地號 取得地號清單、取得地號最大最小值
     getLandnoList (payload) {
       if (payload === '') { return; }
 
+      // 取得地號清單
       fetch(`http://192.168.3.112/aerc/rest/Sec5nos?CountyID=${this.coData1.County}&Section=${payload.Section}`, {
         method: 'GET',
         headers: new Headers({
@@ -349,9 +358,27 @@ export default {
         return response.json();
       }).then((jsonData) => {
         console.log(jsonData);
+        this.myLandnoList = jsonData;
 
         const nameList = jsonData.map(item => item.Land_no);
         this.Sec5covList = nameList;
+      }).catch((err) => {
+        console.log(err);
+      });
+
+      // 取得地號最大最小值
+      fetch(`http://192.168.3.112/aerc/rest/Sec5no?CountyID=${this.coData1.County}&Section=${payload.Section}`, {
+        method: 'GET',
+        headers: new Headers({
+          'Content-Type': 'application/json'
+        })
+      }).then((response) => {
+        return response.json();
+      }).then((jsonData) => {
+        console.log(jsonData);
+
+        this.minNo = jsonData[0].Min;
+        this.maxNo = jsonData[0].Max;
       }).catch((err) => {
         console.log(err);
       });

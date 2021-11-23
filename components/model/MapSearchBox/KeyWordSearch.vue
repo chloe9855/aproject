@@ -1,7 +1,7 @@
 <template>
   <div class="out_wrap">
     <Dropdown-component
-      :options="member"
+      :options="manList"
       :placeholders="'請選擇管理處'"
       :change-text="clearText"
       @DropdownVal="getCanalLists"
@@ -35,7 +35,7 @@ export default {
   },
   data () {
     return {
-      member: [{ title: '01 宜蘭', value: '1' }],
+      manList: [],
       allCanalList: [],
       canalList: [],
       clearText: false,
@@ -44,6 +44,9 @@ export default {
     };
   },
   name: 'KeyWordSearch',
+  mounted () {
+    this.manList = [{ title: '01 宜蘭', value: '1' }];
+  },
   methods: {
     clearAllHandler () {
       this.clearText = true;

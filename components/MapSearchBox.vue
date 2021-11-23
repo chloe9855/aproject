@@ -71,7 +71,7 @@
       :class="{'hide_VVblock': hideResult2, 'show_block': !hideResult2}"
     >
       <p class="title">
-        屬性表格
+        屬性表格 {{ blockTitle }}
       </p>
       <div class="table_block_wrap">
         <div class="table_block theme_scrollbar">
@@ -157,7 +157,8 @@ export default {
       canalData: [],
       stnData: [],
       grpData: [],
-      periodData: []
+      periodData: [],
+      blockTitle: ''
     };
   },
   name: 'MapSearchBox',
@@ -188,7 +189,9 @@ export default {
   },
   methods: {
     // * @ 點擊查詢 : 取得屬性資料表格
-    getClickData (id, info) {
+    getClickData (id, info, title) {
+      this.blockTitle = title;
+
       // 管理處
       if (id === '01_Ia') {
         this.iaData.forEach((item) => {
@@ -438,6 +441,7 @@ export default {
     // * @ 點擊查詢 : 清除全部
     clearClickData () {
       this.allClickData = [];
+      this.blockTitle = '';
     },
     // * @ 關鍵字查詢 : 清除全部
     clearKeywordData () {
@@ -594,7 +598,8 @@ export default {
     width: 350px;
     display: flex;
     flex-direction: column;
-    height: 100%;
+    // height: 100%;
+    height: 97.3%;
     z-index: 7000;
   }
 

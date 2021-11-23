@@ -9,7 +9,8 @@ export const state = () => ({
   popupType: { type: 'editAccount', title: '請設定查詢作業標題', editId: {} },
   mouseEventMin: 0,
   userInfo: {},
-  editAccount: ''
+  editAccount: '',
+  canvasUrl: ''
 });
 
 // * ==========================================================================
@@ -42,8 +43,14 @@ export const mutations = {
   },
   SET_EDIT_ACCOUNT (state, payload) {
     state.editAccount = payload.userId;
-  }
+  },
   // SET_LOGOUT_MIN (state, payload) {
   //   state.setMin = payload.setMin;
   // }
+
+  // * 截圖dataUrl
+  GET_DATA_URL (state, payload) {
+    state.canvasUrl = payload;
+  }
+
 };

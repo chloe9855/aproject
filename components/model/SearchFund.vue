@@ -9,7 +9,7 @@
     />
     <component
       :is="componentInstance"
-      @search="(type, data) => { $emit('search', type, data) }"
+      @search="(type, data, secFid) => { $emit('search', type, data, secFid) }"
       @clear="$emit('clear')"
     />
     <div
@@ -56,7 +56,7 @@ export default {
       boxText: '收合查詢列'
     };
   },
-  name: 'SearchBox',
+  name: 'SearchFund',
   methods: {
     toggleSearchBox () {
       const isOpen = this.toggleState;
