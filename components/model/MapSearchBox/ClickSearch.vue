@@ -1,12 +1,13 @@
 <template>
   <div class="out_wrap">
     <p>開啟圖層後，於圖面點選圖層進行查詢</p>
-    <Dropdown-component
+    <!-- <Dropdown-component
       :options="clickMapList"
       :placeholders="'請選擇圖層'"
       :add-text="myWord"
       @DropdownVal="selectLayer"
-    />
+    /> -->
+
     <div class="bt_wrap">
       <Buttons-component
         :name="'button-default'"
@@ -18,12 +19,12 @@
 </template>
 
 <script>
-import Dropdown from '~/components/tools/Dropdown.vue';
+// import InputTool from '~/components/tools/InputTool.vue';
 import Buttons from '~/components/tools/Buttons.vue';
 
 export default {
   components: {
-    'Dropdown-component': Dropdown,
+    // 'InputTool-component': InputTool,
     'Buttons-component': Buttons
   },
   props: {
@@ -48,9 +49,6 @@ export default {
 
       this.nowId = e.graphic.id[0];
       this.nowInfo = e.graphic.attributes;
-      // if (this.nowLayer === this.nowId) {
-      //   this.$emit('clickSearch', this.nowId, this.nowInfo);
-      // }
 
       if (e.graphic.id.length >= 1) {
         if (this.nowId === '01_Cons') {
@@ -71,14 +69,14 @@ export default {
         if (this.nowId === '01_Period') {
           this.myWord = '期作別';
         }
-        this.$emit('clickSearch', this.nowId, this.nowInfo);
+        this.$emit('clickSearch', this.nowId, this.nowInfo, this.myWord);
       }
     });
   },
   methods: {
     selectLayer (payload) {
       console.log(payload);
-      this.nowLayer = payload.LayerName;
+      // this.nowLayer = payload.LayerName;
 
       // if (this.nowId === payload.LayerName) {
       //   this.$emit('clickSearch', this.nowId, this.nowInfo);

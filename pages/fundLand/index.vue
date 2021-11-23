@@ -111,7 +111,7 @@
 import SearchFund from '~/components/model/SearchFund';
 import BreadCrumbTool from '~/components/tools/BreadCrumbTool';
 import PageHeader from '~/components/tools/PageHeader.vue';
-import Table from '~/components/model/Table.vue';
+import Table from '~/components/model/TableForJoy.vue';
 import NormalTable2 from '~/components/model/NormalTable2.vue';
 // import NavTabs from '~/components/tools/NavTabs.vue';
 import Buttons from '~/components/tools/Buttons.vue';
@@ -184,6 +184,8 @@ export default {
       detailItem: '',
       myCountyId: '',
       mapIndex: '',
+      //* 依單筆地號 目前輸入地號的fid
+      landnoFid: 0,
       //* 查無結果
       noResult: false
     };
@@ -231,14 +233,10 @@ export default {
 
         this.loadModal = true;
 
-        fetch('http://192.168.3.112/AERC/rest/Sec5cov?pageCnt=1&pageRows=5', {
-          method: 'POST',
+        fetch(`http://192.168.3.112/AERC/rest/Sec5ByFID?CountyID=${this.myCountyId}&FID=${this.landnoFid}`, {
+          method: 'GET',
           headers: new Headers({
             'Content-Type': 'application/json'
-          }),
-          body: JSON.stringify({
-            CountyID: this.myCountyId,
-            FID: this.allData[payload.item].FID
           })
         }).then((response) => {
           return response.json();
@@ -253,14 +251,14 @@ export default {
           const myUrl = `${front}${end}`;
 
           window.open(myUrl);
-          localStorage.setItem('oriData', JSON.stringify(jsonData[0].data[0].geometry));
+          localStorage.setItem('oriData', JSON.stringify(jsonData[0].geometry));
         }).catch((err) => {
           console.log(err);
         });
       }
     },
     //* 搜尋
-    searchHandler (type, data) {
+    searchHandler (type, data, secFid) {
       this.clearAllHandler();
 
       // 回傳空值(查無結果)
@@ -270,6 +268,8 @@ export default {
         this.noResult = true;
         return;
       }
+
+      this.landnoFid = secFid;
 
       // 依單筆地號
       if (type === 0) {
@@ -310,14 +310,10 @@ export default {
     showOnMap () {
       this.loadModal = true;
 
-      fetch('http://192.168.3.112/AERC/rest/Sec5cov?pageCnt=1&pageRows=5', {
-        method: 'POST',
+      fetch(`http://192.168.3.112/AERC/rest/Sec5ByFID?CountyID=${this.myCountyId}&FID=${this.landnoFid}`, {
+        method: 'GET',
         headers: new Headers({
           'Content-Type': 'application/json'
-        }),
-        body: JSON.stringify({
-          CountyID: this.myCountyId,
-          FID: this.allData[this.mapIndex].FID
         })
       }).then((response) => {
         return response.json();
@@ -332,7 +328,7 @@ export default {
         const myUrl = `${front}${end}`;
 
         window.open(myUrl);
-        localStorage.setItem('oriData', JSON.stringify(jsonData[0].data[0].geometry));
+        localStorage.setItem('oriData', JSON.stringify(jsonData[0].geometry));
       }).catch((err) => {
         console.log(err);
       });
@@ -397,7 +393,7 @@ export default {
 
   .main {
     position: relative;
-    height: calc(100vh - 86px);
+    height: calc(100vh - 91px);
     display: flex;
   }
 

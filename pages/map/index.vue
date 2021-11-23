@@ -1291,6 +1291,13 @@ export default {
       mapImg.onload = function () {
         ctx.drawImage(mapImg, 100, 48.5, 1300, 538);
         console.log('地圖');
+
+        // canvas.toBlob((blob) => {
+        //   saveAs(blob, 'iamap.jpg');
+        //   console.log('印出來');
+
+        //   // this.openPicPage();
+        // });
       };
 
       ctx.globalCompositeOperation = 'destination-over';
@@ -1327,6 +1334,8 @@ export default {
           canvas.toBlob(function (blob) {
             saveAs(blob, 'iamap.jpg');
             console.log('印出來');
+
+            // this.openPicPage();
           });
         };
 
@@ -1427,6 +1436,18 @@ export default {
       //   doc.addImage(image, 'JPEG', 0, 0, canvas.width, canvas.height);
       //   doc.save('iamap.pdf');
       // }, 7000);
+    },
+    openPicPage () {
+      const canvas = document.getElementsByTagName('canvas')[0];
+      const myDataUrl = canvas.toDataURL();
+
+      const nowUrl = window.location.href;
+      const front = nowUrl.substring(0, nowUrl.length - 4);
+      const end = 'showPic/';
+      const myUrl = `${front}${end}`;
+
+      window.open(myUrl);
+      localStorage.setItem('picData', myDataUrl);
     },
     // * 回到全圖
     fullMapCtrl () {
@@ -1600,7 +1621,7 @@ export default {
 
   .scbar_wrap {
     position: absolute;
-    bottom: 14px;
+    bottom: 28px;
     left: 9px;
   }
 
@@ -1672,7 +1693,7 @@ export default {
   .main{
     position: relative;
     width: 100%;
-    height: calc(100vh - 86px);
+    height: calc(100vh - 91px);
     overflow: hidden;
     z-index: 0;
     // background: pink;
