@@ -252,10 +252,7 @@ export default {
       },
       // * 灌溉定位
       allDropList: {
-        Ia: [{
-          title: '宜蘭01',
-          value: 1
-        }],
+        Ia: [],
         Mng: [],
         Stn: [],
         Grp: []
@@ -303,6 +300,11 @@ export default {
     proj4.defs('EPSG:3857', '+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +wktext  +no_defs');
 
     this.getCountyData();
+
+    this.allDropList.Ia = [{
+      title: '宜蘭01',
+      value: 1
+    }];
   },
   methods: {
     // * @ 坐標定位 : 清除全部
@@ -547,14 +549,10 @@ export default {
         });
         landItem.checked = true;
 
-        fetch('http://192.168.3.112/AERC/rest/Sec5cov?pageCnt=1&pageRows=5', {
-          method: 'POST',
+        fetch(`http://192.168.3.112/AERC/rest/Sec5ByFID?CountyID=${landItem.countyId}&FID=${landItem.fid}`, {
+          method: 'GET',
           headers: new Headers({
             'Content-Type': 'application/json'
-          }),
-          body: JSON.stringify({
-            CountyID: landItem.countyId,
-            FID: landItem.fid
           })
         }).then((response) => {
           return response.json();
@@ -569,7 +567,7 @@ export default {
           pMapBase.drawingGraphicsLayer.remove(this.myLandGraphic);
 
           // 畫圖
-          const geometry = sg.geometry.Geometry.fromGeoJson(jsonData[0].data[0].geometry);
+          const geometry = sg.geometry.Geometry.fromGeoJson(jsonData[0].geometry);
           this.allLandGraphic[index] = sg.Graphic.createFromGeometry(geometry, { borderwidth: 1, fillcolor: new sg.Color(220, 105, 105, 0.5) });
           pMapBase.drawingGraphicsLayer.add(this.allLandGraphic[index]);
 
@@ -587,14 +585,10 @@ export default {
       if (e.shiftKey === true) {
         landItem.checked = true;
 
-        fetch('http://192.168.3.112/AERC/rest/Sec5cov?pageCnt=1&pageRows=5', {
-          method: 'POST',
+        fetch(`http://192.168.3.112/AERC/rest/Sec5ByFID?CountyID=${landItem.countyId}&FID=${landItem.fid}`, {
+          method: 'GET',
           headers: new Headers({
             'Content-Type': 'application/json'
-          }),
-          body: JSON.stringify({
-            CountyID: landItem.countyId,
-            FID: landItem.fid
           })
         }).then((response) => {
           return response.json();
@@ -603,7 +597,7 @@ export default {
 
           pMapBase.drawingGraphicsLayer.remove(this.myLandGraphic);
           // 畫圖
-          const geometry = sg.geometry.Geometry.fromGeoJson(jsonData[0].data[0].geometry);
+          const geometry = sg.geometry.Geometry.fromGeoJson(jsonData[0].geometry);
           this.allLandGraphic[index] = sg.Graphic.createFromGeometry(geometry, { borderwidth: 1, fillcolor: new sg.Color(220, 105, 105, 0.5) });
           pMapBase.drawingGraphicsLayer.add(this.allLandGraphic[index]);
 

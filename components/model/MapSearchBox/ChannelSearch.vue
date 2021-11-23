@@ -93,7 +93,7 @@ export default {
   },
   data () {
     return {
-      dropList: [{ title: '01 宜蘭', value: '1' }],
+      dropList: [],
       allCanalList: [],
       canalList: [],
       clearText: false,
@@ -101,6 +101,9 @@ export default {
     };
   },
   name: 'ChannelSearch',
+  mounted () {
+    this.dropList = [{ title: '01 宜蘭', value: '1' }];
+  },
   methods: {
     // * 取得該管理處的所有渠道
     getCanalLists (payload) {

@@ -205,7 +205,7 @@ export function getTowns (county) {
         data: [
           {
             FID: 225,
-            TOWNID: '13',
+            TOWNID: '09',
             TOWNCODE: '67000010',
             COUNTYNAME: '臺南市',
             TOWNNAME: '新營區',
@@ -233,7 +233,7 @@ export function getSections (county, town) {
             City_no: 'D',
             Town: '新營區',
             Town_no: '09',
-            Section: 'DD2001',
+            Section: 'DD2009',
             Sec_cns: '新營',
             Area: 1473446.55837,
             Ymd: '2021-06-15T00:00:00'

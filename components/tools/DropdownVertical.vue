@@ -21,7 +21,7 @@
         :options="options"
         :placeholder="placeholders"
         :class="{'add_bg': bgColor}"
-        class="w-100 inputSelect"
+        class="w-100 inputSelect getMargin"
       />
     </client-only>
   </div>
@@ -96,6 +96,11 @@ export default {
       if (value === true) {
         this.selected = '';
       }
+    },
+    options (value) {
+      if (value.length === 1) {
+        this.selected = this.options[0];
+      }
     }
   }
 };
@@ -103,6 +108,11 @@ export default {
 
 <style lang="scss" scoped>
 @import '~/assets/scss/input.scss';
+
+.getMargin {
+  margin: 3px 0;
+}
+
 .inputSelect{
   background-color: white;
 }

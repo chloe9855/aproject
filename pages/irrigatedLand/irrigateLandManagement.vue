@@ -72,7 +72,7 @@
 </template>
 
 <script>
-import TableTool from '~/components/model/Table.vue';
+import TableTool from '~/components/model/Table555.vue';
 import PageHeader from '~/components/tools/PageHeader.vue';
 import BreadCrumbTool from '~/components/tools/BreadCrumbTool.vue';
 import NormalTable from '~/components/model/NormalTable.vue';

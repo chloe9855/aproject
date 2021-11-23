@@ -25,10 +25,13 @@ export default {
   },
   data () {
     return {
-      dropList: [{ title: '01 宜蘭', value: '1' }]
+      dropList: []
     };
   },
-  name: 'StakeSearch'
+  name: 'StakeSearch',
+  mounted () {
+    this.dropList = [{ title: '01 宜蘭', value: '1' }];
+  }
 };
 </script>
 

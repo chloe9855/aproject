@@ -344,7 +344,7 @@ export default {
 }
 
 .banner-group {
-  padding: 2px 10px;
+  padding: 10.6px 10px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -361,11 +361,11 @@ export default {
   margin-right: 10px;
 }
 .logo-text {
-  width: 294px;
+  // width: 294px;
   color: $header-black;
   text-align: center;
   letter-spacing: 1.5px;
-  @include noto-sans-tc-20-medium;
+  @include noto-sans-tc-24-medium;
 }
 .account {
   border-radius: 7px;
