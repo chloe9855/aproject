@@ -7,9 +7,9 @@ export default {
       productionTip: false
     }
   },
-  target: 'static',
+  // target: 'static',
   router: {
-    base: '/test008/'
+    base: '/test007/'
   },
 
   // Global page headers: https://go.nuxtjs.dev/config-head

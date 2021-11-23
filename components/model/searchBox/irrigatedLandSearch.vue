@@ -76,7 +76,7 @@ import DropdownVertical from '~/components/tools/DropdownVertical.vue';
 // import DropdownCheckList from '~/components/tools/DropdownCheckList.vue';
 import InputVertical from '~/components/tools/InputVertical.vue';
 import NavTabs from '~/components/tools/NavTabs';
-import { getIas, getMngs, getStns, getGrps, getCounties, getTowns, getSections, getLands } from '~/publish/irrigation.js';
+import { getIas, getMngs, getStns, getGrps, getCounties, getTowns, getSections, getLands } from '~/publish/Irrigation.js';
 export default {
   components: {
     DropdownVertical: DropdownVertical,
