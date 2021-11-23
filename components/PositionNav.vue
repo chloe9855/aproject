@@ -754,7 +754,7 @@ export default {
 <style lang="scss" scoped>
 
   .land_wrap{
-    max-height: 120px;
+    max-height: 90px;
     overflow-y: scroll;
   }
 

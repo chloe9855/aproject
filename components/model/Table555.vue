@@ -46,7 +46,6 @@
       </table>
     </div>
     <div
-      v-show="!isShowBg"
       ref="tableContent"
       class="tableBox w-100 tableContent"
       :class="'minWidth'+columnMinWidth"
@@ -161,7 +160,7 @@
                 :link="text"
               />
               <DropdownTreeList v-else-if="tableType(text)&&typeof text === 'object' && text.type === 'dropdownTreeList'" />
-              <span v-else>{{ text }}</span>
+              <span v-else>{{ textIsNum(text) }}</span>
               <span v-if="tableType(text)&&isAttachText(text)">{{ text.attachText }}</span>
             </td>
             <!-- <td
@@ -209,7 +208,7 @@
               v-show="isMap && !isScrollTable"
               class="mapOption"
             >
-              <div @click="sendEvent('isMap')">
+              <div @click="sendEvent('isMap', index)">
                 <img
                   alt=""
                   class="vector"
@@ -221,7 +220,7 @@
               v-show="isSearch"
               class="searchOption"
             >
-              <div @click="sendEvent('isSearch')">
+              <div @click="sendEvent('isSearch', item.title[3], index)">
                 <img
                   alt=""
                   class="vector"
@@ -316,7 +315,7 @@
       </table>
     </div>
     <Paginate
-      v-show="isPaginate && !isShowBg"
+      v-show="isPaginate"
       :total="dataNum"
       :per-page="10"
       @nowPage="getPageNum"
@@ -411,10 +410,6 @@ export default {
       default: () => {
         return ['啟用中', '停用中', '驗證中', '無狀態'];
       }
-    },
-    dataCount: {
-      type: Number,
-      default: 0
     }
   },
   data: () => {
@@ -465,10 +460,6 @@ export default {
       this.$emit('inputData', arr);
     },
     getPageNum (e) { // 換頁取得DATA
-      if (this.dataCount) {
-        this.$emit('nowPage', { page: e, size: this.columnLength });
-        return;
-      }
       this.getPage = e;
       this.tableColumnBody = [];
       const page = this.getPage;
@@ -483,9 +474,21 @@ export default {
         }
       });
     },
-    sendEvent (e, item) {
-      this.$emit('tableEvent', { event: e, item: item });
+    sendEvent (e, item, i) {
+      this.$emit('tableEvent', { event: e, item: item, myIndex: i });
+    },
+    numfmt (n) {
+      function chunk (a, s) {
+        return Array.init(Math.ceil(a.length / s), n => a.slice(n * s, n * s + s));
+      }
+      const ns = n.toString().split('.');
+      ns[0] = chunk(Array.from(ns[0]).reverse(), 3).map(x => x.reverse().join('')).reverse().join(',');
+      if (ns.length >= 2) {
+        ns[1] = chunk(Array.from(ns[1]), 3).map(x => x.join('')).join(',');
+      }
+      return ns.join('.');
     }
+
   },
   computed: {
     isShowBg: function () {
@@ -528,9 +531,6 @@ export default {
       return result;
     },
     dataNum: function () {
-      if (this.dataCount) {
-        return this.dataCount;
-      }
       const data = this.tableColumn.body;
       return data.length;
     },
@@ -575,14 +575,21 @@ export default {
           return false;
         }
       };
+    },
+    textIsNum () {
+      return function (t) {
+        /** do something */
+        let result = '';
+        if (typeof t === 'number') {
+          result = this.numfmt(t);
+        } else {
+          result = t;
+        }
+        return result;
+      };
     }
   },
   watch: {
-    'tableColumn.body': function () {
-      if (this.dataCount) {
-        this.tableColumnBody = this.tableColumn.body;
-      }
-    },
     checkList: function (n) {
       this.$emit('checkList', n);
     },

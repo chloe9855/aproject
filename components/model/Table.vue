@@ -160,7 +160,7 @@
                 :link="text"
               />
               <DropdownTreeList v-else-if="tableType(text)&&typeof text === 'object' && text.type === 'dropdownTreeList'" />
-              <span v-else>{{ textIsNum(text) }}</span>
+              <span v-else>{{ text }}</span>
               <span v-if="tableType(text)&&isAttachText(text)">{{ text.attachText }}</span>
             </td>
             <!-- <td
@@ -476,19 +476,7 @@ export default {
     },
     sendEvent (e, item, i) {
       this.$emit('tableEvent', { event: e, item: item, myIndex: i });
-    },
-    numfmt (n) {
-      function chunk (a, s) {
-        return Array.init(Math.ceil(a.length / s), n => a.slice(n * s, n * s + s));
-      }
-      const ns = n.toString().split('.');
-      ns[0] = chunk(Array.from(ns[0]).reverse(), 3).map(x => x.reverse().join('')).reverse().join(',');
-      if (ns.length >= 2) {
-        ns[1] = chunk(Array.from(ns[1]), 3).map(x => x.join('')).join(',');
-      }
-      return ns.join('.');
     }
-
   },
   computed: {
     isShowBg: function () {
@@ -574,18 +562,6 @@ export default {
         } else {
           return false;
         }
-      };
-    },
-    textIsNum () {
-      return function (t) {
-        /** do something */
-        let result = '';
-        if (typeof t === 'number') {
-          result = this.numfmt(t);
-        } else {
-          result = t;
-        }
-        return result;
       };
     }
   },

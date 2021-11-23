@@ -491,11 +491,13 @@ export default {
             id: 1
           }
         ],
-        holder: 'https://irrggis2.aerc.org.tw/arcgis/services/Aerc/03Ia/MapServer/WMSServer',
+        holder: '請輸入服務連結',
         layerList: []
       },
       wmTsLayer: '',
       wmsLayer: '',
+      wmTsUrl: 'https://wmts.nlsc.gov.tw/wmts',
+      wmsUrl: 'https://wms.nlsc.gov.tw/wms',
       // * 臨時展繪的lightbox
       formatBox: false,
       sizeBox: false,
@@ -935,9 +937,9 @@ export default {
         MBT.updateStyle({
           [layerName]: { visible: $event }
         });
-        ARO.updateStyle({
-          '01_Arrow': { visible: $event }
-        });
+        // ARO.updateStyle({
+        //   '01_Arrow': { visible: $event }
+        // });
       }
       if (category === 'surfaceList') {
         const index = this.layerOptions.surfaceList.findIndex(item => item.id === id);
@@ -1034,7 +1036,7 @@ export default {
         // MBT.Style[layerName].style = { opacity: value / 100 };
         // MBT.updateStyle(MBT.Style);
         MBT.updateStyle({ [layerName]: { style: { opacity: value / 100 } } });
-        ARO.updateStyle({ '01_Arrow': { style: { opacity: value / 100 } } });
+        // ARO.updateStyle({ '01_Arrow': { style: { opacity: value / 100 } } });
       }
       if (category === 'surfaceList') {
         const index = this.layerOptions.surfaceList.findIndex(item => item.id === id);
@@ -1140,11 +1142,17 @@ export default {
     // * @ 圖層工具：OGC介接 取得服務
     getOgcHandler (current) {
       // const wmsUrl = this.$refs.wms.value;
-      // const wmtsUrl = this.$refs.wmts.value;
+      // const wmTsUrl = this.$refs.wmts.value;
 
       // WMS
       if (current === 0) {
-        this.wmsLayer = new sg.layers.WMSLayer('https://wms.nlsc.gov.tw/wms', {
+        if (this.$refs.wms.value !== '') {
+          this.wmsUrl = this.$refs.wms.value;
+        } else {
+          this.wmsUrl = 'https://wms.nlsc.gov.tw/wms';
+        }
+
+        this.wmsLayer = new sg.layers.WMSLayer(this.wmsUrl, {
           imageFormat: 'image/png',
           loadEffect: true,
           loaded: () => {
@@ -1155,7 +1163,13 @@ export default {
 
       // WMTS
       if (current === 1) {
-        this.wmTsLayer = new sg.layers.WMTSLayer('https://wmts.nlsc.gov.tw/wmts', {
+        if (this.$refs.wmts.value !== '') {
+          this.wmTsUrl = this.$refs.wmts.value;
+        } else {
+          this.wmTsUrl = 'https://wmts.nlsc.gov.tw/wmts';
+        }
+
+        this.wmTsLayer = new sg.layers.WMTSLayer(this.wmTsUrl, {
           serviceMode: 'KVP',
           loadEffect: true,
           loaded: () => {
@@ -1291,13 +1305,6 @@ export default {
       mapImg.onload = function () {
         ctx.drawImage(mapImg, 100, 48.5, 1300, 538);
         console.log('地圖');
-
-        // canvas.toBlob((blob) => {
-        //   saveAs(blob, 'iamap.jpg');
-        //   console.log('印出來');
-
-        //   // this.openPicPage();
-        // });
       };
 
       ctx.globalCompositeOperation = 'destination-over';
@@ -1327,15 +1334,15 @@ export default {
           .then((dataUrl) => {
             scaleImg.src = dataUrl;
           });
-        scaleImg.onload = function () {
+        scaleImg.onload = () => {
           ctx.drawImage(scaleImg, 100, 550);
           console.log('比例尺');
 
-          canvas.toBlob(function (blob) {
+          canvas.toBlob((blob) => {
             saveAs(blob, 'iamap.jpg');
             console.log('印出來');
 
-            // this.openPicPage();
+            this.openPicPage();
           });
         };
 
@@ -1348,7 +1355,7 @@ export default {
 
         // 加版權
         ctx.fillText('地圖平台 : 農田水利署地理空間處理平台', 235, 610);
-      }, 2500);
+      }, 6000);
 
       // setTimeout(() => {
       //   canvas.toBlob(function (blob) {
@@ -1586,15 +1593,6 @@ export default {
             }
           });
           this.openOnceLa = false;
-
-          //* */
-          const yyu = new sg.layers.VectorMBTLayer('http://192.168.3.112/mapcache/arrow', {
-            loaded: function () {
-              this.setMinScale(Math.pow(2, 14 + 7 - 0.5) / 6378137 / Math.PI);
-              this.setMaxScale(Math.pow(2, 20 + 7 + 0.5) / 6378137 / Math.PI);
-              console.log(yyu);
-            }
-          });
         }
       }
     }
@@ -1849,6 +1847,7 @@ export default {
     align-items: center;
     color: #3E9F88;
     padding: 10px 0;
+    margin-bottom: 10px;
     @include noto-sans-tc-16-regular;
   }
 

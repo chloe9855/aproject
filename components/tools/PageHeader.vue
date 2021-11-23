@@ -1,7 +1,7 @@
 <template>
   <div
     class="page-header"
-    :class="{isBorder:isBorder,isBg:isBg,isSticky:isSticky,isBreadCrumb:!isBreadCrumb}"
+    :class="{isBorder:isBorder,isBg:isBg,isBreadCrumb:!isBreadCrumb}"
   >
     <div
       v-show="isArrow"
