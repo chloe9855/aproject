@@ -108,7 +108,6 @@ export default {
     search () {
       if (this.$refs.searchComp && this.$refs.searchComp.search) {
         this.$refs.searchComp.search();
-        this.isClearAll = !this.isClearAll;
       }
     },
     onsearch (e) {
