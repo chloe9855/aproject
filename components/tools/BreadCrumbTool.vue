@@ -91,7 +91,8 @@ export default {
 <style lang="scss" scoped>
 .breadcrumb{
   display: flex;
-  margin: 0.5em auto;
+  margin: 0 auto;
+  padding: 0.5em 0;
   position: sticky;
   top: 0;
   background: white;

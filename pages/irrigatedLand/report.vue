@@ -75,6 +75,9 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
+.mainContent{
+  position: relative;
+}
 .content_box{
   padding-right: 0.5em;
   height: calc( 100vh - 200px );

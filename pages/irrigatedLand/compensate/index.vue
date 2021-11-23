@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="mainContent">
     <div
       class="content_block"
       :class="[growDiv,boxWidth]"
@@ -121,6 +121,9 @@ export default {
 };
 </script>
 <style lang="scss">
+.mainContent{
+  position: relative;
+}
 .calNoteBox{
     display: flex;
     justify-content:flex-end;

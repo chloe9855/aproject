@@ -1,5 +1,5 @@
 <template>
-  <div class="">
+  <div class="mainContent">
     <div
       class="content_block"
       :class="[growDiv,boxWidth]"
@@ -100,6 +100,9 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
+.mainContent{
+  position: relative;
+}
 .tableTool{
   .tableContent{
     table{
