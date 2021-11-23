@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="mainContent">
     <div
       class="content_block"
       :class="[growDiv,boxWidth]"
@@ -83,6 +83,9 @@ export default {
 };
 </script>
 <style lang="scss">
+.mainContent{
+  position: relative;
+}
 .downloadArea{
   display: flex;
   margin: 0 auto;

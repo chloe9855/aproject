@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="mainContent">
     <div
       class="content_block"
       :class="[growDiv,boxWidth]"
@@ -10,6 +10,8 @@
       <PageHeader
         icon="bungalow"
         title="灌溉地籍查詢與統計"
+        :btn-text="topBtnText"
+        btn-name="button-primary"
       />
       <div
         v-if=" toggleCurrent === 0 "
@@ -27,17 +29,17 @@
         >
           <CalNote
             name="水利小組"
-            area="面積總計"
+            area="面積總計㎡"
             :area-num="numfmt(sum_grp)"
           />
           <CalNote
             name="水利小組轄區農地"
-            area="地籍面積總計"
+            area="地籍面積總計㎡"
             :area-num="numfmt(sum_tolarea)"
           />
           <CalNote
             name="水利小組轄區農地"
-            area="灌溉面積總計"
+            area="灌溉面積總計㎡"
             :area-num="numfmt(sum_irgarea)"
           />
         </div>
@@ -189,7 +191,8 @@ export default {
       search2Obj: {},
       dataCount: 0,
       alertError: false,
-      alertText: ''
+      alertText: '',
+      topBtnText: ''
     };
   },
   name: 'IrrigatedLand',
@@ -227,8 +230,12 @@ export default {
       this.toggleStatus = e;
     },
     getToggleCurrent (e) {
-      console.log(e);
       this.toggleCurrent = e;
+      if (e === 0) {
+        this.topBtnText = this.tableList.body.length > 0 ? '資料下載' : '';
+      } else if (e === 1) {
+        this.topBtnText = this.columnList.length > 0 ? '在地圖上顯示' : '';
+      }
     },
     clearSearchIrrigatedLand () {
       this.tableList.body = [];
@@ -257,6 +264,7 @@ export default {
             this.sum_tolarea = r.data[0].data[0].sum_tolarea;
             this.dataCount = r.data[0].pagemax;
             this.getPageNum({ page: 1 });
+            this.topBtnText = '資料下載';
           }).catch(function (error) {
             console.log(error);
           });
@@ -292,6 +300,7 @@ export default {
               { name: '地籍面積m2', value: x.tolarea },
               { name: '灌溉面積m2', value: x.irgarea }
             ];
+            this.topBtnText = '在地圖上顯示';
           }).then(function () {
             console.log(_this.$store.state.isLoading);
             _this.$store.commit('TOGGLE_LOADING_STATUS');
@@ -342,6 +351,9 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
+.mainContent{
+  position: relative;
+}
 .calNoteBox{
     display: flex;
     justify-content:flex-end;

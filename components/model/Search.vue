@@ -162,7 +162,7 @@ export default {
   position: absolute;
   width: 320px;
   height: calc( 100vh - 66px );
-  top: 66px;
+  top: 0px;
   left:-320px;
   background: #EFF4F3;
 }
@@ -185,7 +185,7 @@ export default {
 .buttonBox{
   display: flex;
   justify-content: flex-end;
-  margin-top: 20px;
+  margin-top: 10px;
   padding-right: 15px;
   .button_wrap{
     padding-left: 5px;

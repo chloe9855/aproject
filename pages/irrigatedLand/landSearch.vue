@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="mainContent">
     <BreadCrumbTool
       :class="boxWidth"
       :options="BreadCrumb"
@@ -87,6 +87,9 @@ export default {
 };
 </script>
 <style lang="scss">
+.mainContent{
+  position: relative;
+}
 .calNoteBox{
     display: flex;
     justify-content:flex-end;
