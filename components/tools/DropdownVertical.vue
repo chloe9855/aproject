@@ -98,7 +98,7 @@ export default {
       }
     },
     options (value) {
-      if (value.length === 1) {
+      if (value.length === 1 && !this.changeText) {
         this.selected = this.options[0];
       }
     }

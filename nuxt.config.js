@@ -9,7 +9,7 @@ export default {
   },
   // target: 'static',
   router: {
-    base: '/test007/'
+    base: '/test008/'
   },
 
   // Global page headers: https://go.nuxtjs.dev/config-head
