@@ -69,7 +69,7 @@ export default {
     };
   },
   name: 'Main',
-  layout: 'main',
+  layout: 'main2',
   middleware: 'routerAuth',
   async asyncData () {
     const a = getBulletin().then(({ data }) => ({

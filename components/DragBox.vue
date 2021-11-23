@@ -59,7 +59,7 @@ export default {
     border-radius: 5px;
     padding: 0 0 10px;
     box-shadow: 0 0 14px 0 rgba(137, 137, 137, 0.19);
-    max-height: 518px;
+    max-height: 526px;
     // overflow: hidden;
   }
 
