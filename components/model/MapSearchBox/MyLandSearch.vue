@@ -399,6 +399,9 @@ export default {
       this.coData1.Section = '';
       this.coData1.Sec5cov = '';
 
+      this.minNo = '';
+      this.maxNo = '';
+
       this.$emit('clear');
     }
   }

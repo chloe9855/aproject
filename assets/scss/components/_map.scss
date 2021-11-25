@@ -874,28 +874,31 @@ input[type='checkbox']::after {
 // InfoWindow.css
 .sgInfoWindow {
   position: absolute;
-  background-color: #eee;
-  border: 2px solid #353;
+  background-color: white;
+  // border: 2px solid #353;
   -moz-border-radius: 5px;
   -webkit-border-radius: 5px;
   -o-border-radius: 5px;
   border-radius: 5px;
   z-index: 100;
   -moz-box-shadow: 0 0 1em #26393d;
-  box-shadow: 4px 4px 3px rgba(20%, 20%, 40%, 0.5);
+  box-shadow: 0 0 3px 1px rgba(20%, 20%, 40%, 0.5);
+  text-align: center;
+  padding: 5px 0 20px;
+  @include noto-sans-tc-16-regular;
 }
 
 .sgInfoWindow .title {
   height: 1.1em;
   padding: 2px;
   overflow: hidden;
-  font-size: 12px;
+  font-size: 16px;
   font-family: sans-serif;
   font-weight: bold;
-  color: #e6e2af;
-  background-color: #383;
+  color: black;
+  background-color: white;
   z-index: 1;
-  border-bottom: 1px solid #26393d;
+  // border-bottom: 1px solid #26393d;
 }
 
 .sgInfoWindow .content {
@@ -909,6 +912,7 @@ input[type='checkbox']::after {
   -o-border-radius: 5px;
   border-radius: 5px;
   z-index: 1;
+  font-size: 16px;
 }
 
 .sgInfoWindow .close {
@@ -916,11 +920,13 @@ input[type='checkbox']::after {
   height: 1.1em;
   margin: 0;
   position: absolute;
-  top: 0;
+  // top: 0;
+  top: -8px;
   right: 0;
   text-align: center;
-  color: white;
+  color: black;
   cursor: pointer;
+  font-size: 24px;
 }
 
 .sgInfoWindow .hide {
@@ -931,7 +937,7 @@ input[type='checkbox']::after {
   top: 0;
   right: 1.1em;
   text-align: center;
-  color: white;
+  color: black;
   cursor: pointer;
 }
 
@@ -959,8 +965,8 @@ input[type='checkbox']::after {
   height: 48px;
   position: absolute;
   background-color: white;
-  border: 2px solid #26393d;
-  box-shadow: 4px 4px 3px rgba(20%, 20%, 40%, 0.5);
+  // border: 2px solid #26393d;
+  box-shadow: 0 0 2px 4px #605b5b66;
   -ms-transform: rotate(45deg);
   -webkit-transform: rotate(45deg);
   -moz-transform: rotate(45deg);
@@ -1074,7 +1080,7 @@ input[type='checkbox']::after {
   margin-left: -25px;
   top: 18px;
   left: 50%;
-  background-color: #383;
+  background-color: white;
 }
 
 .sgInfoWindow .bottom-pointer {

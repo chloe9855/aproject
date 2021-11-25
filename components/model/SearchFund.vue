@@ -126,10 +126,16 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+
+@media screen  and (max-width: 1366px) {
+  .searchBox {
+    height: 100vh !important;
+  }
+}
+
 .searchBox{
   position: absolute;
   width: 320px;
-  // height: $vh-100;
   height: 100%;
   top: 0;
   left:-350px;

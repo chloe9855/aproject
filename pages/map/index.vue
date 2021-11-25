@@ -65,6 +65,7 @@
                 <LayerItem-component
                   category="pointList"
                   :item="item"
+                  :drop-down="true"
                   @changeVisible="layerVisibleCtrl"
                   @changeBranchVisible="branchVisibleCtrl"
                   @setAllVisible="allPointCtrl"
@@ -85,6 +86,7 @@
                 <LayerItem-component
                   category="lineList"
                   :item="item"
+                  :drop-down="true"
                   @changeVisible="layerVisibleCtrl"
                   @changeBranchVisible="branchVisibleCtrl"
                   @setAllVisible="allLineCtrl"
@@ -105,6 +107,7 @@
                 <LayerItem-component
                   category="surfaceList"
                   :item="item"
+                  :drop-down="true"
                   @changeVisible="layerVisibleCtrl"
                   @changeBranchVisible="branchVisibleCtrl"
                   @setAllVisible="allSurfaceCtrl"
@@ -917,16 +920,6 @@ export default {
 
         MBT.Style[layerName].visible = $event;
         MBT.updateStyle(MBT.Style);
-        // MBT.updateStyle({
-        //   [layerName]: { visible: $event },
-        //   '01_Canal': {
-        //     style: {
-        //       'stroke-dashoffset': 288,
-        //       'stroke-dasharray': '60 3 6 3',
-        //       animation: 'dash-cycle-ani 5s linear infinite'
-        //     }
-        //   }
-        // });
       }
       if (category === 'lineList') {
         const index = this.layerOptions.lineList.findIndex(item => item.id === id);
@@ -971,45 +964,87 @@ export default {
       }
     },
     // * @ 圖層工具：單一支線圖層 顯示/隱藏
-    branchVisibleCtrl ($event, id, category, mainId) {
+    branchVisibleCtrl ($event, id, category, mainId, layerName, branchName, subId) {
       if (category === 'pointList') {
         const index = this.layerOptions.pointList.findIndex(item => item.id === mainId);
         const indexB = this.layerOptions.pointList[index].type.findIndex(item => item.id === id);
         this.layerOptions.pointList[index].type[indexB].visible = $event;
+
+        MBT.updateStyle({
+          [layerName]: { subid: subId, subs: { [branchName]: { visible: $event } } }
+        });
       }
       if (category === 'lineList') {
         const index = this.layerOptions.lineList.findIndex(item => item.id === mainId);
         const indexB = this.layerOptions.lineList[index].type.findIndex(item => item.id === id);
         this.layerOptions.lineList[index].type[indexB].visible = $event;
+
+        MBT.updateStyle({
+          [layerName]: { subid: subId, subs: { [branchName]: { visible: $event } } }
+        });
       }
       if (category === 'surfaceList') {
         const index = this.layerOptions.surfaceList.findIndex(item => item.id === mainId);
         const indexB = this.layerOptions.surfaceList[index].type.findIndex(item => item.id === id);
         this.layerOptions.surfaceList[index].type[indexB].visible = $event;
+
+        MBT.updateStyle({
+          [layerName]: { subid: subId, subs: { [branchName]: { visible: $event } } }
+        });
       }
     },
     // * @ 圖層工具：全部顯示/關閉
-    allPointCtrl ($event, id) {
-      const myId = id.split('-')[1];
+    allPointCtrl ($event, id, layerName) {
+      const myId = parseFloat(id.split('-')[1]);
       const index = this.layerOptions.pointList.findIndex(item => item.id === myId);
+
+      const newObj = {};
+      let subId = '';
       this.layerOptions.pointList[index].type.forEach((item) => {
         item.visible = $event;
+
+        newObj[item.name] = { visible: $event };
+        subId = item.subId;
+      });
+
+      MBT.updateStyle({
+        [layerName]: { subid: subId, subs: newObj }
       });
       this.layerOptions.pointList[index].allShow = $event;
     },
-    allLineCtrl ($event, id) {
-      const myId = id.split('-')[1];
+    allLineCtrl ($event, id, layerName) {
+      const myId = parseFloat(id.split('-')[1]);
       const index = this.layerOptions.lineList.findIndex(item => item.id === myId);
+
+      const newObj = {};
+      let subId = '';
       this.layerOptions.lineList[index].type.forEach((item) => {
         item.visible = $event;
+
+        newObj[item.name] = { visible: $event };
+        subId = item.subId;
+      });
+
+      MBT.updateStyle({
+        [layerName]: { subid: subId, subs: newObj }
       });
       this.layerOptions.lineList[index].allShow = $event;
     },
-    allSurfaceCtrl ($event, id) {
-      const myId = id.split('-')[1];
+    allSurfaceCtrl ($event, id, layerName) {
+      const myId = parseFloat(id.split('-')[1]);
       const index = this.layerOptions.surfaceList.findIndex(item => item.id === myId);
+
+      const newObj = {};
+      let subId = '';
       this.layerOptions.surfaceList[index].type.forEach((item) => {
         item.visible = $event;
+
+        newObj[item.name] = { visible: $event };
+        subId = item.subId;
+      });
+
+      MBT.updateStyle({
+        [layerName]: { subid: subId, subs: newObj }
       });
       this.layerOptions.surfaceList[index].allShow = $event;
     },
@@ -1539,13 +1574,16 @@ export default {
         if (value === 'switchLayersWindow' && this.openOnceLa === true) {
           Object.keys(MBT.Style).forEach((key) => {
             console.log(key);
+            console.log(MBT.Style[key]);
             const mName = key.substring(3);
             const result = {
               id: Math.random(),
               LayerName: key,
               visible: false,
               opacity: 100,
-              LayerTitle: ''
+              LayerTitle: '',
+              type: [],
+              allShow: true
             };
             if (mName === 'Cons') {
               result.LayerTitle = '水工構造物';
@@ -1554,6 +1592,22 @@ export default {
             if (mName === 'Canal') {
               result.LayerTitle = '渠道';
               this.layerOptions.lineList.push(result);
+
+              const newArr = [];
+              MBT.Style[key].paint['line-color'].forEach((item, index, array) => {
+                if (index % 2 === 1 && index !== array.length - 1) {
+                  const res = {
+                    id: Math.random(),
+                    name: item[2],
+                    visible: true,
+                    subId: item[1][1]
+                  };
+
+                  newArr.push(res);
+                }
+              });
+
+              result.type = newArr;
             }
             if (mName === 'Ia') {
               result.LayerTitle = '管理處';
@@ -1570,6 +1624,22 @@ export default {
               result.LayerTitle = '工作站';
               result.opacity = 50;
               this.layerOptions.surfaceList.push(result);
+
+              const newArr = [];
+              MBT.Style[key].paint['fill-color'].forEach((item, index, array) => {
+                if (index % 2 === 1 && index !== array.length - 1) {
+                  const res = {
+                    id: Math.random(),
+                    name: item[2],
+                    visible: true,
+                    subId: item[1][1]
+                  };
+
+                  newArr.push(res);
+                }
+              });
+
+              result.type = newArr;
             }
             if (mName === 'Grp') {
               result.LayerTitle = '小組';
@@ -1585,6 +1655,22 @@ export default {
               result.LayerTitle = '期作別';
               result.opacity = 50;
               this.layerOptions.surfaceList.push(result);
+
+              const newArr = [];
+              MBT.Style[key].paint['fill-color'].forEach((item, index, array) => {
+                if (index % 2 === 1 && index !== array.length - 1) {
+                  const res = {
+                    id: Math.random(),
+                    name: item[2],
+                    visible: true,
+                    subId: item[1][1]
+                  };
+
+                  newArr.push(res);
+                }
+              });
+
+              result.type = newArr;
             }
             if (mName === 'Pool') {
               result.LayerTitle = '埤塘';
@@ -1685,7 +1771,7 @@ export default {
   }
 
   .reduceHeight {
-    height: calc(100vh - 66px) !important;
+    height: calc(100vh - 91px) !important;
   }
 
   .main{
