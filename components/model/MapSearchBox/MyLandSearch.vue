@@ -210,10 +210,10 @@ export default {
 
         if (current === 0) {
           const nowNum = this.myLandnoList.filter(item => item.Land_no === this.coData1.Sec5cov);
-          this.$emit('search', current, data, nowNum[0].FID);
+          this.$emit('search', current, data[0].data, nowNum[0].FID);
         }
         if (current === 1) {
-          this.$emit('search', current, data);
+          this.$emit('search', current, data[0].data);
         }
       }).catch((err) => {
         console.log(err);
@@ -284,7 +284,7 @@ export default {
         myObj = { Ia: '01', Mng: payload.Mng, Stn: payload.Stn };
       }
 
-      fetch(`http://192.168.3.112/AERC/rest/${nextType}/admin5`, {
+      fetch(`http://192.168.3.112/AERC/rest/${nextType}`, {
         method: 'POST',
         headers: new Headers({
           'Content-Type': 'application/json'

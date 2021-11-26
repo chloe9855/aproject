@@ -109,7 +109,7 @@ export default {
     getCanalLists (payload) {
       this.clearText = false;
 
-      fetch('http://192.168.3.112/AERC/rest/Canal/admin5', {
+      fetch('http://192.168.3.112/AERC/rest/Canal', {
         method: 'POST',
         headers: new Headers({
           'Content-Type': 'application/json'
