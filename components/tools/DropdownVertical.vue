@@ -24,6 +24,22 @@
         class="w-100 inputSelect getMargin"
       />
     </client-only>
+
+    <div
+      v-if="showError === true && selected === ''"
+      class="error_wrap"
+    >
+      <div class="img_wrap">
+        <img
+          :src="require('~/assets/img/error_icon.svg')"
+        >
+        <p class="tip">
+          必填
+        </p>
+      </div>
+
+      <div class="error_box" />
+    </div>
   </div>
 </template>
 
@@ -65,6 +81,11 @@ export default {
       default: ''
     },
     changeText: {
+      type: Boolean,
+      default: false
+    },
+    // 為空值跳錯誤
+    showError: {
       type: Boolean,
       default: false
     }
@@ -131,6 +152,31 @@ export default {
 
 .starSign {
   color: red;
+}
+
+.error_wrap {
+  position: absolute;
+  bottom: 2px;
+  text-align: right;
+  // display: none;
+
+  p {
+    color: $caution-red;
+    @include noto-sans-tc-12-regular;
+  }
+
+  .img_wrap {
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  .error_box {
+    border: 1px solid red;
+    width: 289px;
+    height: 33px;
+    border-radius: 4px;
+    margin-top: 5px;
+  }
 }
 
 </style>

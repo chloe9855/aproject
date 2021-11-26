@@ -173,10 +173,7 @@ export default {
         head: [
           { title: '縣市' },
           { title: '鄉鎮市區' },
-          { title: '管理處' },
-          { title: '管理分處' },
-          { title: '工作站' },
-          { title: '水利小組' }
+          { title: '管理處' }
         ],
         body: []
       },
@@ -269,10 +266,9 @@ export default {
         return;
       }
 
-      this.landnoFid = secFid;
-
       // 依單筆地號
       if (type === 0) {
+        this.landnoFid = secFid;
         this.allData = data;
 
         const newArr = [];
@@ -295,8 +291,22 @@ export default {
 
       // 依管理單位
       if (type === 1) {
-        // const data = require('~/static/land.json');
-        // this.searchResult.authority = data;
+        this.allData = data;
+
+        const newArr = [];
+        data.forEach((item) => {
+          const result = {
+            title: []
+          };
+          result.title[0] = item.CountyName;
+          result.title[1] = item.TownName;
+          result.title[2] = item.Ia_cns;
+          newArr.push(result);
+        });
+
+        this.searchData2.body = newArr;
+        this.searchResult.authority = this.searchData2;
+        this.$forceUpdate();
       }
     },
     // * 清除全部
@@ -352,14 +362,14 @@ export default {
   position: fixed;
   top: 0;
   left: 0;
-  // background-color: rgba(0, 0, 0, 0.2);
+  background-color: rgba(0, 0, 0, 0.5);
   z-index: 9998;
   cursor: default;
 }
 
 .modal {
-  width: 200px;
-  height: 200px;
+  width: 100px;
+  height: 100px;
   // padding: 5px 31px;
   margin: 0 auto;
   display: flex;

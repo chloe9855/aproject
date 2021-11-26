@@ -3,7 +3,9 @@
     class="input-box"
     :class="sizing"
   >
-    <div class="input-title-box">
+    <div
+      class="input-title-box"
+    >
       <p class="input-title">
         {{ title }}
         <span class="starSign">
@@ -25,7 +27,10 @@
           {{ errorTip }}
         </p>
       </div>
-      <div class="green_hint_text">
+      <div
+        class="green_hint_text"
+        :class="{ 'add_margin': unfillError === true }"
+      >
         {{ greenHint }}
       </div>
     </div>
@@ -57,6 +62,22 @@
           {{ item }}
         </li>
       </ul>
+    </div>
+
+    <div
+      v-if="unfillError === true && message === ''"
+      class="error_wrap"
+    >
+      <div class="img_wrap">
+        <img
+          :src="require('~/assets/img/error_icon.svg')"
+        >
+        <p class="tip">
+          必填
+        </p>
+      </div>
+
+      <div class="error_box" />
     </div>
   </div>
 </template>
@@ -121,6 +142,10 @@ export default {
     defaultData: {
       type: String,
       default: ''
+    },
+    unfillError: {
+      type: Boolean,
+      default: false
     }
   },
   data: () => {
@@ -221,6 +246,7 @@ export default {
   justify-content: flex-end;
 }
 .inputType{
+  z-index: 555;
   &.isIcon{
     padding-left: 28px !important;
   }
@@ -236,6 +262,38 @@ export default {
 
 .starSign {
   color: red;
+}
+
+.add_margin {
+  margin-right: 46px
+}
+
+.error_wrap {
+  position: absolute;
+  bottom: 0;
+  text-align: right;
+  z-index: 20;
+  // display: none;
+
+  p {
+    color: $caution-red;
+    @include noto-sans-tc-12-regular;
+  }
+
+  .img_wrap {
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  .error_box {
+    border: 1px solid red;
+    width: 284px;
+    height: 34px;
+    border-radius: 6px;
+    margin-top: 2px;
+    margin-right: 2px;
+    margin-bottom: -1px;;
+  }
 }
 
 </style>

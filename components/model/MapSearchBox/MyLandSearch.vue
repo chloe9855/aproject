@@ -14,6 +14,7 @@
         star-sign="*"
         :options="countyList1.County"
         :change-text="clearLand1"
+        :show-error="coData1.County === '' && unFilled === true ? true : false"
         @DropdownVal="(payload) => { nextMenuHandler(payload, 'Town'), clearLand1 = false, payload !== '' ? coData1.County = payload.COUNTYID : coData1.County = '' }"
       />
       <DropdownVertical
@@ -21,6 +22,7 @@
         star-sign="*"
         :options="countyList1.Town"
         :change-text="clearLand2"
+        :show-error="coData1.Town === '' && unFilled === true ? true : false"
         @DropdownVal="(payload) => { nextMenuHandler(payload, 'Section'), clearLand2 = false, payload !== '' ? coData1.Town = payload.TOWNID : coData1.Town = '' }"
       />
       <DropdownVertical
@@ -28,6 +30,7 @@
         star-sign="*"
         :options="countyList1.Section"
         :change-text="clearLand3"
+        :show-error="coData1.Section === '' && unFilled === true ? true : false"
         @DropdownVal="(payload) => { getLandnoList(payload), clearLand3 = false, payload !== '' ? coData1.Section = payload.Section : coData1.Section = '' }"
       />
       <InputVertical
@@ -36,6 +39,7 @@
         star-sign="*"
         :change-text="clearLand4"
         :search-input="Sec5covList"
+        :unfill-error="coData1.Sec5cov === '' && unFilled === true ? true : false"
         @inputValue="(payload) => { coData1.Sec5cov = payload, clearLand4 = false }"
       />
     </div>
@@ -58,7 +62,7 @@
         :options="countyList2.Ia"
         @DropdownVal="(payload) => { nextListHandler(payload, 'Mng'), coData2.Ia = payload.Ia }"
       />
-      <DropdownVertical
+      <!-- <DropdownVertical
         title="管理分處"
         :options="countyList2.Mng"
         @DropdownVal="(payload) => { nextListHandler(payload, 'Stn'), coData2.Mng = payload.Mng }"
@@ -72,7 +76,7 @@
         title="水利小組"
         :options="countyList2.Grp"
         @DropdownVal="(payload) => { coData2.Grp = payload.Grp }"
-      />
+      /> -->
     </div>
     <div class="buttonBox">
       <Button
@@ -158,7 +162,9 @@ export default {
       Sec5covList: [],
       minNo: '',
       maxNo: '',
-      myLandnoList: []
+      myLandnoList: [],
+      //
+      unFilled: false
     };
   },
   name: 'MyLandSearch',
@@ -167,20 +173,28 @@ export default {
     this.countyList2.Ia = [{
       title: '宜蘭01',
       value: 1,
-      Ia_cns: '宜蘭01'
+      Ia_cns: '宜蘭01',
+      Ia: '01'
     }];
   },
   methods: {
     // * 搜尋
     searchData (current) {
-      if (this.coData1.County === '' || this.coData1.Town === '' || this.coData1.Section === '' || this.coData1.Sec5cov === '') { return; }
+      if ((this.coData1.County === '' || this.coData1.Town === '' || this.coData1.Section === '' || this.coData1.Sec5cov === '') && current === 0) {
+        this.unFilled = true;
+        return;
+      }
+      if ((this.coData2.County === '' || this.coData2.Town === '' || this.coData2.Ia === '') && current === 1) {
+        this.unFilled = true;
+        return;
+      }
 
       let url = '';
       if (current === 0) {
         url = `http://192.168.3.112/AERC/rest/Fund?CountyID=${this.coData1.County}&TownID=${this.coData1.Town}&LandLotNO=${this.coData1.Section}&LandNo=${this.coData1.Sec5cov}&pageCnt=1&pageRows=10`;
       }
       if (current === 1) {
-        url = `http://192.168.3.112/AERC/rest/Fund?CountyID=${this.coData2.County}&TownID=${this.coData2.Town}&LandLotNO=&LandNo=&pageCnt=1&pageRows=10`;
+        url = `http://192.168.3.112/AERC/rest/Fund?CountyID=${this.coData2.County}&TownID=${this.coData2.Town}&Ia=${this.coData2.Ia}&pageCnt=1&pageRows=10`;
       }
 
       fetch(url, {
@@ -192,9 +206,15 @@ export default {
         return response.json();
       }).then((data) => {
         console.log(data);
+        this.unFilled = false;
 
-        const nowNum = this.myLandnoList.filter(item => item.Land_no === this.coData1.Sec5cov);
-        this.$emit('search', current, data, nowNum[0].FID);
+        if (current === 0) {
+          const nowNum = this.myLandnoList.filter(item => item.Land_no === this.coData1.Sec5cov);
+          this.$emit('search', current, data, nowNum[0].FID);
+        }
+        if (current === 1) {
+          this.$emit('search', current, data);
+        }
       }).catch((err) => {
         console.log(err);
       });
@@ -401,6 +421,8 @@ export default {
 
       this.minNo = '';
       this.maxNo = '';
+
+      this.unFilled = false;
 
       this.$emit('clear');
     }
