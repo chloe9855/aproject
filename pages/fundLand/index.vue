@@ -5,6 +5,7 @@
       type="MyLandSearch"
       @showSidebar="payload => growUp = payload"
       @search="searchHandler"
+      @nowOption="payload => nowTab = payload"
       @clear="clearAllHandler"
     />
 
@@ -26,7 +27,9 @@
           :is-map="true"
           :is-search="true"
           :is-check="false"
+          :all-pages="totalPage"
           @tableEvent="showDetailHandler"
+          @nowPage="getPageData"
         />
 
         <div
@@ -177,6 +180,10 @@ export default {
         ],
         body: []
       },
+      //* 依管理單位 總頁數
+      totalPage: 1,
+      //* 依管理單位 欄位值
+      searchWord: '',
       //* 依單筆地號 單筆詳細資料
       detailItem: '',
       myCountyId: '',
@@ -184,7 +191,9 @@ export default {
       //* 依單筆地號 目前輸入地號的fid
       landnoFid: 0,
       //* 查無結果
-      noResult: false
+      noResult: false,
+      // * 目前navTabs
+      nowTab: 0
     };
   },
   mounted () {
@@ -202,12 +211,14 @@ export default {
     },
     //* 單筆看詳細、定位至地圖
     showDetailHandler (payload) {
+      // 看詳細
       if (payload.event === 'isSearch') {
-        // payload.item = 地號
+        // payload.myInfo.LandNo = 地號
         // payload.myIndex = index
         this.mapIndex = payload.myIndex;
+        this.myCountyId = payload.myInfo.CountyID;
 
-        fetch(`http://192.168.3.112/AERC/rest/Fund?CountyID=${this.myCountyId}&TownID=&LandLotNO=&LandNo=${payload.item}&pageCnt=1&pageRows=10`, {
+        fetch(`http://192.168.3.112/AERC/rest/Fund?CountyID=${payload.myInfo.CountyID}&TownID=&LandLotNO=${payload.myInfo.LandLotNO}&LandNo=${payload.myInfo.LandNo}&pageCnt=1&pageRows=10`, {
           method: 'GET',
           headers: new Headers({
             'Content-Type': 'application/json'
@@ -219,18 +230,28 @@ export default {
 
           this.detailItem = '';
           this.addDetail(true);
-          this.detailItem = jsonData;
+          this.detailItem = jsonData[0].data;
         }).catch((err) => {
           console.log(err);
         });
+
+        // 取得所有地號清單 showOnMap()會用到
+        this.getAllLandnos(payload.myInfo.CountyID, payload.myInfo.LandLotNO, payload.myInfo.LandNo);
       }
 
-      if (payload.event === 'isMap') {
-        // payload.item = index
-
+      // 跳地圖 依單筆地號
+      if (payload.event === 'isMap' && this.nowTab === 0) {
         this.loadModal = true;
 
-        fetch(`http://192.168.3.112/AERC/rest/Sec5ByFID?CountyID=${this.myCountyId}&FID=${this.landnoFid}`, {
+        this.goMapPage(payload.myInfo.CountyID, this.landnoFid);
+      }
+
+      // 跳地圖 依管理單位
+      if (payload.event === 'isMap' && this.nowTab === 1) {
+        this.loadModal = true;
+
+        // 取得所有地號清單 以取得單筆fid
+        fetch(`http://192.168.3.112/aerc/rest/Sec5nos?CountyID=${payload.myInfo.CountyID}&Section=${payload.myInfo.LandLotNO}`, {
           method: 'GET',
           headers: new Headers({
             'Content-Type': 'application/json'
@@ -240,22 +261,58 @@ export default {
         }).then((jsonData) => {
           console.log(jsonData);
 
-          this.loadModal = false;
-
-          const nowUrl = window.location.href;
-          const front = nowUrl.substring(0, nowUrl.length - 9);
-          const end = 'map/';
-          const myUrl = `${front}${end}`;
-
-          window.open(myUrl);
-          localStorage.setItem('oriData', JSON.stringify(jsonData[0].geometry));
+          const myArr = jsonData.filter(item => item.Land_no === payload.myInfo.LandNo);
+          this.goMapPage(payload.myInfo.CountyID, myArr[0].FID);
         }).catch((err) => {
           console.log(err);
         });
       }
     },
-    //* 搜尋
-    searchHandler (type, data, secFid) {
+    // * 取得所有地號清單 以取得單筆fid
+    getAllLandnos (countyid, landlotno, landNo) {
+      fetch(`http://192.168.3.112/aerc/rest/Sec5nos?CountyID=${countyid}&Section=${landlotno}`, {
+        method: 'GET',
+        headers: new Headers({
+          'Content-Type': 'application/json'
+        })
+      }).then((response) => {
+        return response.json();
+      }).then((jsonData) => {
+        console.log(jsonData);
+
+        const myArr = jsonData.filter(item => item.Land_no === landNo);
+        this.landnoFid = myArr[0].FID;
+      }).catch((err) => {
+        console.log(err);
+      });
+    },
+    // * 跳轉地圖
+    goMapPage (countyid, fid) {
+      fetch(`http://192.168.3.112/AERC/rest/Sec5ByFID?CountyID=${countyid}&FID=${fid}`, {
+        method: 'GET',
+        headers: new Headers({
+          'Content-Type': 'application/json'
+        })
+      }).then((response) => {
+        return response.json();
+      }).then((jsonData) => {
+        console.log(jsonData);
+
+        this.loadModal = false;
+
+        const nowUrl = window.location.href;
+        const front = nowUrl.substring(0, nowUrl.length - 9);
+        const end = 'map/';
+        const myUrl = `${front}${end}`;
+
+        window.open(myUrl);
+        localStorage.setItem('oriData', JSON.stringify(jsonData[0].geometry));
+      }).catch((err) => {
+        console.log(err);
+      });
+    },
+    // * 搜尋
+    searchHandler (type, data, secFid, pageCount, choice) {
       this.clearAllHandler();
 
       // 回傳空值(查無結果)
@@ -270,50 +327,72 @@ export default {
       if (type === 0) {
         this.landnoFid = secFid;
         this.allData = data;
+        this.totalPage = pageCount;
 
-        const newArr = [];
-        data.forEach((item) => {
-          const result = {
-            title: []
-          };
-          result.title[0] = item.CountyName;
-          result.title[1] = item.TownName;
-          result.title[2] = item.LandLot;
-          result.title[3] = item.LandNo;
-          newArr.push(result);
+        // const newArr = [];
+        // data.forEach((item) => {
+        //   const result = {
+        //     title: [],
+        //     info: []
+        //   };
+        //   result.title[0] = item.CountyName;
+        //   result.title[1] = item.TownName;
+        //   result.title[2] = item.LandLot;
+        //   result.title[3] = item.LandNo;
+        //   result.info[0] = item;
+        //   newArr.push(result);
+        // });
+
+        this.searchData1.body = data.map(item => {
+          return { title: [item.CountyName, item.TownName, item.LandLot, item.LandNo], info: item };
         });
 
-        this.myCountyId = data[0].CountyID;
-        this.searchData1.body = newArr;
         this.searchResult.authority = this.searchData1;
-        this.$forceUpdate();
       }
 
       // 依管理單位
       if (type === 1) {
         this.allData = data;
+        this.totalPage = pageCount;
+        this.searchWord = choice;
 
-        const newArr = [];
-        data.forEach((item) => {
-          const result = {
-            title: []
-          };
-          result.title[0] = item.CountyName;
-          result.title[1] = item.TownName;
-          result.title[2] = item.Ia_cns;
-          newArr.push(result);
+        this.searchData2.body = data.map(item => {
+          return { title: [item.CountyName, item.TownName, item.Ia_cns], info: item };
         });
 
-        this.searchData2.body = newArr;
         this.searchResult.authority = this.searchData2;
-        this.$forceUpdate();
       }
+    },
+    // * 依管理單位 換頁call api 取得data
+    getPageData (nowPage) {
+      if (this.searchWord === '') { return; }
+
+      fetch(`http://192.168.3.112/AERC/rest/Fund?CountyID=${this.searchWord.County}&TownID=${this.searchWord.Town}&Ia=${this.searchWord.Ia}&pageCnt=${nowPage}&pageRows=10`, {
+        method: 'GET',
+        headers: new Headers({
+          'Content-Type': 'application/json'
+        })
+      }).then((response) => {
+        return response.json();
+      }).then((data) => {
+        console.log(data);
+        const myData = data[0].data;
+
+        this.searchData2.body = myData.map(item => {
+          return { title: [item.CountyName, item.TownName, item.Ia_cns], info: item };
+        });
+        this.searchResult.authority = this.searchData2;
+      }).catch((err) => {
+        console.log(err);
+      });
     },
     // * 清除全部
     clearAllHandler () {
       this.searchResult.authority = '';
       this.searchResult.landNo = '';
       this.searchData1.body = [];
+      this.searchData2.body = [];
+      this.searchWord = '';
       this.noResult = false;
     },
     // * 在地圖上顯示

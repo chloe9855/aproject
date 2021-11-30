@@ -38,7 +38,7 @@
       v-model="message"
       autocomplete="off"
       class="inputType"
-      :class="{inputError:isError,isIcon:isAddIcon}"
+      :class="{inputError:isError,isIcon:isAddIcon, 'add_border':unfillError === true && message === '' }"
       :placeholder="inputText"
       :name="name"
       :type="inputType"
@@ -286,14 +286,18 @@ export default {
   }
 
   .error_box {
-    border: 1px solid red;
+    // border: 1px solid red;
     width: 284px;
     height: 34px;
     border-radius: 6px;
-    margin-top: 2px;
+    margin-top: 4px;
     margin-right: 2px;
     margin-bottom: -1px;;
   }
+}
+
+.add_border {
+  border: 1px solid red;
 }
 
 </style>

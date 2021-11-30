@@ -4,7 +4,7 @@
       class="search_box"
       :class="{'no_radius': (columnList.length >= 1 || allClickData.length >= 1) && (barOptions.current === 0 || barOptions.current === 3) }"
     >
-      <NavTabs-component
+      <NavTabs
         :type-list="barOptions.typeList"
         :selected="barOptions.current"
         @current="payload => barOptions.current = payload"
@@ -111,10 +111,18 @@
 
 <script>
 import NavTabs from '~/components/tools/NavTabs.vue';
+import ChannelSearch from '~/components/model/MapSearchBox/ChannelSearch.vue';
+import ClickSearch from '~/components/model/MapSearchBox/ClickSearch.vue';
+import KeyWordSearch from '~/components/model/MapSearchBox/KeyWordSearch.vue';
+import StakeSearch from '~/components/model/MapSearchBox/StakeSearch.vue';
 
 export default {
   components: {
-    'NavTabs-component': NavTabs
+    NavTabs,
+    ChannelSearch,
+    ClickSearch,
+    KeyWordSearch,
+    StakeSearch
   },
   data () {
     return {
@@ -531,7 +539,7 @@ export default {
     },
     componentInstance () {
       const myType = this.searchType;
-      return () => import(`~/components/model/MapSearchBox/${myType}`);
+      return myType;
     }
   },
   watch: {

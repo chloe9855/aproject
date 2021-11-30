@@ -9,7 +9,8 @@
     />
     <component
       :is="componentInstance"
-      @search="(type, data, secFid) => { $emit('search', type, data, secFid) }"
+      @search="(type, data, secFid, pageCount, choice) => { $emit('search', type, data, secFid, pageCount, choice) }"
+      @nowOption="(value) => { $emit('nowOption', value) }"
       @clear="$emit('clear')"
     />
     <div
@@ -24,11 +25,12 @@
 
 <script>
 import PageHeader from '~/components/tools/PageHeader';
+import MyLandSearch from '~/components/model/MapSearchBox/MyLandSearch.vue';
 
 export default {
   components: {
-    PageHeader: PageHeader
-
+    PageHeader: PageHeader,
+    MyLandSearch: MyLandSearch
   },
   props: {
     tableColumn: {
@@ -90,9 +92,13 @@ export default {
     }
   },
   computed: {
+    // componentInstance () {
+    //   const searchType = this.type;
+    //   return () => import(`~/components/model/MapSearchBox/${searchType}`);
+    // },
     componentInstance () {
       const searchType = this.type;
-      return () => import(`~/components/model/MapSearchBox/${searchType}`);
+      return searchType;
     },
     searchTitle () {
       const searchType = this.type;

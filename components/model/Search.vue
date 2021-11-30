@@ -161,7 +161,7 @@ export default {
   position: absolute;
   width: 320px;
   height: calc( 100vh - 66px );
-  top: 0px;
+  top: 0;
   left:-320px;
   background: #EFF4F3;
 }

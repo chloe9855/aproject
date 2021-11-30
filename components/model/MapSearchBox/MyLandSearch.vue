@@ -50,17 +50,20 @@
       <DropdownVertical
         title="縣市"
         :options="countyList2.County"
-        @DropdownVal="(payload) => { getTownData(payload), coData2.County = payload.COUNTYID }"
+        :change-text="clearLand5"
+        @DropdownVal="(payload) => { getTownData(payload), clearLand5 = false, payload !== '' ? coData2.County = payload.COUNTYID : coData2.County = '' }"
       />
       <DropdownVertical
         title="鄉鎮市區"
         :options="countyList2.Town"
-        @DropdownVal="(payload) => { coData2.Town = payload.TOWNID }"
+        :change-text="clearLand6"
+        @DropdownVal="(payload) => { clearLand6 = false, payload !== '' ? coData2.Town = payload.TOWNID : coData2.Town = '' }"
       />
       <DropdownVertical
         title="管理處"
         :options="countyList2.Ia"
-        @DropdownVal="(payload) => { nextListHandler(payload, 'Mng'), coData2.Ia = payload.Ia }"
+        :change-text="clearLand7"
+        @DropdownVal="(payload) => { nextListHandler(payload, 'Mng'), clearLand7 = false, payload !== '' ? coData2.Ia = payload.Ia : coData2.Ia = '' }"
       />
       <!-- <DropdownVertical
         title="管理分處"
@@ -133,14 +136,15 @@ export default {
       clearLand2: false,
       clearLand3: false,
       clearLand4: false,
+      // * 管理單位 清除值
+      clearLand5: false,
+      clearLand6: false,
+      clearLand7: false,
       //* 管理單位 縣市資料
       countyList2: {
         County: [],
         Town: [],
-        Ia: [],
-        Mng: [],
-        Stn: [],
-        Grp: []
+        Ia: []
       },
       //* 單筆地號 選值
       coData1: {
@@ -153,10 +157,7 @@ export default {
       coData2: {
         County: '',
         Town: '',
-        Ia: '',
-        Mng: '',
-        Stn: '',
-        Grp: ''
+        Ia: ''
       },
       // * 地號清單
       Sec5covList: [],
@@ -184,10 +185,10 @@ export default {
         this.unFilled = true;
         return;
       }
-      if ((this.coData2.County === '' || this.coData2.Town === '' || this.coData2.Ia === '') && current === 1) {
-        this.unFilled = true;
-        return;
-      }
+      // if ((this.coData2.County === '' || this.coData2.Town === '' || this.coData2.Ia === '') && current === 1) {
+      //   this.unFilled = true;
+      //   return;
+      // }
 
       let url = '';
       if (current === 0) {
@@ -206,14 +207,17 @@ export default {
         return response.json();
       }).then((data) => {
         console.log(data);
+
         this.unFilled = false;
+        // 總頁數
+        const pageCount = Math.ceil(data[0].totalCount / 10);
 
         if (current === 0) {
           const nowNum = this.myLandnoList.filter(item => item.Land_no === this.coData1.Sec5cov);
-          this.$emit('search', current, data[0].data, nowNum[0].FID);
+          this.$emit('search', current, data[0].data, nowNum[0].FID, pageCount);
         }
         if (current === 1) {
-          this.$emit('search', current, data[0].data);
+          this.$emit('search', current, data[0].data, '', pageCount, this.coData2);
         }
       }).catch((err) => {
         console.log(err);
@@ -410,14 +414,25 @@ export default {
       this.clearLand3 = true;
       this.clearLand4 = true;
 
+      this.clearLand5 = true;
+      this.clearLand6 = true;
+      this.clearLand7 = true;
+
       this.countyList1.Town = [];
       this.countyList1.Section = [];
       this.countyList1.Sec5cov = [];
+
+      this.countyList2.Town = [];
+      // this.countyList2.Ia = [];
 
       this.coData1.County = '';
       this.coData1.Town = '';
       this.coData1.Section = '';
       this.coData1.Sec5cov = '';
+
+      this.coData2.County = '';
+      this.coData2.Town = '';
+      this.coData2.Ia = '';
 
       this.minNo = '';
       this.maxNo = '';
@@ -426,6 +441,15 @@ export default {
 
       this.$emit('clear');
     }
+  },
+  watch: {
+    'options.current': {
+      handler (value) {
+        this.$emit('nowOption', value);
+      },
+      deep: true
+    }
+
   }
 };
 </script>

@@ -174,7 +174,7 @@
               </div>
               <div
                 v-if="shpOptions.layerList.length < 1"
-                class="no_file"
+                class="no_filemm"
               >
                 <img :src="require('~/assets/img/no-file.svg')">
                 <p>尚未取得服務</p>
@@ -198,12 +198,14 @@
               <textarea
                 v-if="ogcOptions.current === 0"
                 ref="wms"
+                v-model="wmsUrl"
                 name="value"
                 :placeholder="ogcOptions.holder"
               />
               <textarea
                 v-if="ogcOptions.current === 1"
                 ref="wmts"
+                v-model="wmTsUrl"
                 name="value"
                 :placeholder="ogcOptions.holder"
               />
@@ -251,7 +253,7 @@
                 <div class="og_title">
                   圖層名稱
                 </div>
-                <div class="no_file">
+                <div class="no_filemm">
                   <img :src="require('~/assets/img/no-file.svg')">
                   <p>尚未取得服務</p>
                 </div>
@@ -925,8 +927,6 @@ export default {
         const index = this.layerOptions.lineList.findIndex(item => item.id === id);
         this.layerOptions.lineList[index].visible = $event;
 
-        // MBT.Style[layerName].visible = $event;
-        // MBT.updateStyle(MBT.Style);
         MBT.updateStyle({
           [layerName]: { visible: $event }
         });
@@ -1863,9 +1863,12 @@ export default {
     textarea {
       resize: none;
       width: 359px;
-      height: 58px;
+      height: 25px;
       border-radius: 5px;
       border: 1px solid #959595;
+      color: #494949;
+      font-size: 16px;
+      padding: 5px 0 3px;
     }
 
     .ogc_table1 {
@@ -1925,7 +1928,7 @@ export default {
     }
   }
 
-  .no_file {
+  .no_filemm {
     background-color: #EFF4F3;
     display: flex;
     flex-direction: column;
@@ -1933,7 +1936,6 @@ export default {
     align-items: center;
     color: #3E9F88;
     padding: 10px 0;
-    margin-bottom: 10px;
     @include noto-sans-tc-16-regular;
   }
 
