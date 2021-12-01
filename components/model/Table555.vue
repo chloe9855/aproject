@@ -104,7 +104,7 @@
         </thead>
         <tbody>
           <tr
-            v-for="( item, index ) in tableColumnBody"
+            v-for="( item, index ) in tableColumn.body"
             :key="index"
           >
             <td
@@ -433,9 +433,9 @@ export default {
   },
   name: 'TableTool',
   mounted: function () {
-    this.getPageNum(1);
-    console.log('table');
-    console.log(this.tableColumn);
+    // this.getPageNum(1);
+    // console.log('table');
+    // console.log(this.tableColumn);
   },
   methods: {
     inputVal (e) { // 取得INPUT內容
@@ -465,21 +465,23 @@ export default {
       this.$emit('inputData', arr);
     },
     getPageNum (e) { // 換頁取得DATA
-      if (this.dataCount) {
-        this.$emit('nowPage', { page: e, size: this.columnLength });
-        return;
-      }
+      console.log(this.dataCount);
+      // if (this.dataCount) {
+      //   this.$emit('nowPage', { page: e, size: this.columnLength });
+      //   return;
+      // }
       this.getPage = e;
       this.tableColumnBody = [];
       const page = this.getPage;
       const columnLength = this.columnLength;
       const startId = 1 + columnLength * (page - 1);
       const endId = startId + (columnLength - 1);
-      const tableColumnBodyContent = this.tableColumnBody;
+      // const tableColumnBodyContent = this.tableColumnBody;
       this.tableColumn.body.forEach(function (v, i) {
         const num = i + 1;
         if (num >= startId && num <= endId) {
-          tableColumnBodyContent.push(v);
+          // tableColumnBodyContent.push(v);
+          // console.log(this.tableColumnBody);
         }
       });
     },

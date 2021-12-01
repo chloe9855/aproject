@@ -122,8 +122,8 @@ export function getTowns (county) {
 
 export function getSections (county, town) {
   const data = {
-    county: county,
-    town: town || ''
+    CountyID: county,
+    TownID: town || ''
   };
   return request.post('/aerc/rest/Section', data);
 }
