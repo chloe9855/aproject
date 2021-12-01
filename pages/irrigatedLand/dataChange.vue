@@ -81,7 +81,7 @@ export default {
 <style lang="scss">
 .content_box{
   padding-right: 0.5em;
-  height: calc( 100vh - 175px );
+  height: calc( 100vh - 190px );
   @include scrollBar;
 }
 .calNoteBox{

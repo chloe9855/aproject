@@ -208,7 +208,7 @@
               v-show="isMap && !isScrollTable"
               class="mapOption"
             >
-              <div @click="sendEvent('isMap', index)">
+              <div @click="sendEvent('isMap', item.info, index)">
                 <img
                   alt=""
                   class="vector"
@@ -220,7 +220,7 @@
               v-show="isSearch"
               class="searchOption"
             >
-              <div @click="sendEvent('isSearch', item.title[3], index)">
+              <div @click="sendEvent('isSearch', item.info, index)">
                 <img
                   alt=""
                   class="vector"
@@ -316,7 +316,7 @@
     </div>
     <Paginate
       v-show="isPaginate"
-      :total="dataNum"
+      :total="allPages"
       :per-page="10"
       @nowPage="getPageNum"
     />
@@ -410,6 +410,11 @@ export default {
       default: () => {
         return ['啟用中', '停用中', '驗證中', '無狀態'];
       }
+    },
+    // 總頁數
+    allPages: {
+      type: Number,
+      default: 1
     }
   },
   data: () => {
@@ -460,22 +465,28 @@ export default {
       this.$emit('inputData', arr);
     },
     getPageNum (e) { // 換頁取得DATA
+      this.$emit('nowPage', e);
+
       this.getPage = e;
       this.tableColumnBody = [];
-      const page = this.getPage;
-      const columnLength = this.columnLength;
-      const startId = 1 + columnLength * (page - 1);
-      const endId = startId + (columnLength - 1);
-      const tableColumnBodyContent = this.tableColumnBody;
-      this.tableColumn.body.forEach(function (v, i) {
-        const num = i + 1;
-        if (num >= startId && num <= endId) {
-          tableColumnBodyContent.push(v);
-        }
+      // const page = this.getPage;
+      // const columnLength = this.columnLength;
+      // const startId = 1 + columnLength * (page - 1);
+      // const endId = startId + (columnLength - 1);
+      // const tableColumnBodyContent = this.tableColumnBody;
+      // this.tableColumn.body.forEach(function (v, i) {
+      //   const num = i + 1;
+      //   if (num >= startId && num <= endId) {
+      //     tableColumnBodyContent.push(v);
+      //   }
+      // });
+
+      this.tableColumn.body.forEach((v) => {
+        this.tableColumnBody.push(v);
       });
     },
-    sendEvent (e, item, i) {
-      this.$emit('tableEvent', { event: e, item: item, myIndex: i });
+    sendEvent (name, item, i) {
+      this.$emit('tableEvent', { event: name, myInfo: item, myIndex: i });
     }
   },
   computed: {
@@ -566,6 +577,9 @@ export default {
     }
   },
   watch: {
+    'tableColumn.body': function () {
+      this.tableColumnBody = this.tableColumn.body;
+    },
     checkList: function (n) {
       this.$emit('checkList', n);
     },

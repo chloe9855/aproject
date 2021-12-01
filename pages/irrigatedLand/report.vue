@@ -80,7 +80,7 @@ export default {
 }
 .content_box{
   padding-right: 0.5em;
-  height: calc( 100vh - 200px );
+  height: calc( 100vh - 190px );
 }
 .treeListBox{
   margin: 1em auto !important;

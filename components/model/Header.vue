@@ -18,7 +18,10 @@
           </nuxt-link>
         </div>
         <div class="account">
-          <p class="name">
+          <p
+            id="myUserId"
+            class="name"
+          >
             {{ $store.state.userInfo.name }}_{{ $store.state.userInfo.id }}
           </p>
           <div

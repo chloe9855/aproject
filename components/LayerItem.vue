@@ -39,7 +39,7 @@
           <ViewCheckBox-component
             :id="`all-${item.id}`"
             :visible="item.allShow"
-            @change="($event, id) => { $emit('setAllVisible', $event, id) }"
+            @change="($event, id) => { $emit('setAllVisible', $event, id, item.LayerName) }"
           />
         </div>
         <div class="branch_block">
@@ -50,13 +50,13 @@
           >
             <div class="twrap">
               <span>{{ typeItem.name }}</span>
-              <img :src="require(`~/assets/img/water-${typeItem.pic}.svg`)">
+              <!-- <img :src="require(`~/assets/img/water-${typeItem.pic}.svg`)"> -->
             </div>
 
             <ViewCheckBox-component
               :id="typeItem.id"
               :visible="typeItem.visible"
-              @change="($event, id) => { $emit('changeBranchVisible', $event, id, category, item.id) }"
+              @change="($event, id) => { $emit('changeBranchVisible', $event, id, category, item.id, item.LayerName, typeItem.name, typeItem.subId) }"
             />
           </div>
         </div>

@@ -672,7 +672,7 @@ export default {
         myObj = { Ia: '01', Mng: payload.Mng, Stn: payload.Stn };
       }
 
-      fetch(`http://192.168.3.112/AERC/rest/${nextType}/admin5`, {
+      fetch(`http://192.168.3.112/AERC/rest/${nextType}`, {
         method: 'POST',
         headers: new Headers({
           'Content-Type': 'application/json'
@@ -723,7 +723,7 @@ export default {
         myObj = { Ia: '01', Mng: payload.Mng, Stn: payload.Stn, FID: payload.FID };
       }
 
-      fetch(`http://192.168.3.112/AERC/rest/${myType}/admin5`, {
+      fetch(`http://192.168.3.112/AERC/rest/${myType}`, {
         method: 'POST',
         headers: new Headers({
           'Content-Type': 'application/json'
@@ -754,7 +754,7 @@ export default {
 <style lang="scss" scoped>
 
   .land_wrap{
-    max-height: 120px;
+    max-height: 90px;
     overflow-y: scroll;
   }
 

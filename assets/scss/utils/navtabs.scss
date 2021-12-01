@@ -5,7 +5,7 @@
   display: flex;
   // width: 352px;
   height: 32px;
-  padding: 10px 0;
+  padding: 10px 0 !important;
 }
 @media all and (max-width: $pcl-media) {
   .navtabs__header {

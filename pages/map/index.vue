@@ -65,6 +65,7 @@
                 <LayerItem-component
                   category="pointList"
                   :item="item"
+                  :drop-down="true"
                   @changeVisible="layerVisibleCtrl"
                   @changeBranchVisible="branchVisibleCtrl"
                   @setAllVisible="allPointCtrl"
@@ -85,6 +86,7 @@
                 <LayerItem-component
                   category="lineList"
                   :item="item"
+                  :drop-down="true"
                   @changeVisible="layerVisibleCtrl"
                   @changeBranchVisible="branchVisibleCtrl"
                   @setAllVisible="allLineCtrl"
@@ -105,6 +107,7 @@
                 <LayerItem-component
                   category="surfaceList"
                   :item="item"
+                  :drop-down="true"
                   @changeVisible="layerVisibleCtrl"
                   @changeBranchVisible="branchVisibleCtrl"
                   @setAllVisible="allSurfaceCtrl"
@@ -171,7 +174,7 @@
               </div>
               <div
                 v-if="shpOptions.layerList.length < 1"
-                class="no_file"
+                class="no_filemm"
               >
                 <img :src="require('~/assets/img/no-file.svg')">
                 <p>尚未取得服務</p>
@@ -195,12 +198,14 @@
               <textarea
                 v-if="ogcOptions.current === 0"
                 ref="wms"
+                v-model="wmsUrl"
                 name="value"
                 :placeholder="ogcOptions.holder"
               />
               <textarea
                 v-if="ogcOptions.current === 1"
                 ref="wmts"
+                v-model="wmTsUrl"
                 name="value"
                 :placeholder="ogcOptions.holder"
               />
@@ -248,7 +253,7 @@
                 <div class="og_title">
                   圖層名稱
                 </div>
-                <div class="no_file">
+                <div class="no_filemm">
                   <img :src="require('~/assets/img/no-file.svg')">
                   <p>尚未取得服務</p>
                 </div>
@@ -491,11 +496,13 @@ export default {
             id: 1
           }
         ],
-        holder: 'https://irrggis2.aerc.org.tw/arcgis/services/Aerc/03Ia/MapServer/WMSServer',
+        holder: '請輸入服務連結',
         layerList: []
       },
       wmTsLayer: '',
       wmsLayer: '',
+      wmTsUrl: 'https://wmts.nlsc.gov.tw/wmts',
+      wmsUrl: 'https://wms.nlsc.gov.tw/wms',
       // * 臨時展繪的lightbox
       formatBox: false,
       sizeBox: false,
@@ -915,29 +922,17 @@ export default {
 
         MBT.Style[layerName].visible = $event;
         MBT.updateStyle(MBT.Style);
-        // MBT.updateStyle({
-        //   [layerName]: { visible: $event },
-        //   '01_Canal': {
-        //     style: {
-        //       'stroke-dashoffset': 288,
-        //       'stroke-dasharray': '60 3 6 3',
-        //       animation: 'dash-cycle-ani 5s linear infinite'
-        //     }
-        //   }
-        // });
       }
       if (category === 'lineList') {
         const index = this.layerOptions.lineList.findIndex(item => item.id === id);
         this.layerOptions.lineList[index].visible = $event;
 
-        // MBT.Style[layerName].visible = $event;
-        // MBT.updateStyle(MBT.Style);
         MBT.updateStyle({
           [layerName]: { visible: $event }
         });
-        ARO.updateStyle({
-          '01_Arrow': { visible: $event }
-        });
+        // ARO.updateStyle({
+        //   '01_Arrow': { visible: $event }
+        // });
       }
       if (category === 'surfaceList') {
         const index = this.layerOptions.surfaceList.findIndex(item => item.id === id);
@@ -969,45 +964,87 @@ export default {
       }
     },
     // * @ 圖層工具：單一支線圖層 顯示/隱藏
-    branchVisibleCtrl ($event, id, category, mainId) {
+    branchVisibleCtrl ($event, id, category, mainId, layerName, branchName, subId) {
       if (category === 'pointList') {
         const index = this.layerOptions.pointList.findIndex(item => item.id === mainId);
         const indexB = this.layerOptions.pointList[index].type.findIndex(item => item.id === id);
         this.layerOptions.pointList[index].type[indexB].visible = $event;
+
+        MBT.updateStyle({
+          [layerName]: { subid: subId, subs: { [branchName]: { visible: $event } } }
+        });
       }
       if (category === 'lineList') {
         const index = this.layerOptions.lineList.findIndex(item => item.id === mainId);
         const indexB = this.layerOptions.lineList[index].type.findIndex(item => item.id === id);
         this.layerOptions.lineList[index].type[indexB].visible = $event;
+
+        MBT.updateStyle({
+          [layerName]: { subid: subId, subs: { [branchName]: { visible: $event } } }
+        });
       }
       if (category === 'surfaceList') {
         const index = this.layerOptions.surfaceList.findIndex(item => item.id === mainId);
         const indexB = this.layerOptions.surfaceList[index].type.findIndex(item => item.id === id);
         this.layerOptions.surfaceList[index].type[indexB].visible = $event;
+
+        MBT.updateStyle({
+          [layerName]: { subid: subId, subs: { [branchName]: { visible: $event } } }
+        });
       }
     },
     // * @ 圖層工具：全部顯示/關閉
-    allPointCtrl ($event, id) {
-      const myId = id.split('-')[1];
+    allPointCtrl ($event, id, layerName) {
+      const myId = parseFloat(id.split('-')[1]);
       const index = this.layerOptions.pointList.findIndex(item => item.id === myId);
+
+      const newObj = {};
+      let subId = '';
       this.layerOptions.pointList[index].type.forEach((item) => {
         item.visible = $event;
+
+        newObj[item.name] = { visible: $event };
+        subId = item.subId;
+      });
+
+      MBT.updateStyle({
+        [layerName]: { subid: subId, subs: newObj }
       });
       this.layerOptions.pointList[index].allShow = $event;
     },
-    allLineCtrl ($event, id) {
-      const myId = id.split('-')[1];
+    allLineCtrl ($event, id, layerName) {
+      const myId = parseFloat(id.split('-')[1]);
       const index = this.layerOptions.lineList.findIndex(item => item.id === myId);
+
+      const newObj = {};
+      let subId = '';
       this.layerOptions.lineList[index].type.forEach((item) => {
         item.visible = $event;
+
+        newObj[item.name] = { visible: $event };
+        subId = item.subId;
+      });
+
+      MBT.updateStyle({
+        [layerName]: { subid: subId, subs: newObj }
       });
       this.layerOptions.lineList[index].allShow = $event;
     },
-    allSurfaceCtrl ($event, id) {
-      const myId = id.split('-')[1];
+    allSurfaceCtrl ($event, id, layerName) {
+      const myId = parseFloat(id.split('-')[1]);
       const index = this.layerOptions.surfaceList.findIndex(item => item.id === myId);
+
+      const newObj = {};
+      let subId = '';
       this.layerOptions.surfaceList[index].type.forEach((item) => {
         item.visible = $event;
+
+        newObj[item.name] = { visible: $event };
+        subId = item.subId;
+      });
+
+      MBT.updateStyle({
+        [layerName]: { subid: subId, subs: newObj }
       });
       this.layerOptions.surfaceList[index].allShow = $event;
     },
@@ -1034,7 +1071,7 @@ export default {
         // MBT.Style[layerName].style = { opacity: value / 100 };
         // MBT.updateStyle(MBT.Style);
         MBT.updateStyle({ [layerName]: { style: { opacity: value / 100 } } });
-        ARO.updateStyle({ '01_Arrow': { style: { opacity: value / 100 } } });
+        // ARO.updateStyle({ '01_Arrow': { style: { opacity: value / 100 } } });
       }
       if (category === 'surfaceList') {
         const index = this.layerOptions.surfaceList.findIndex(item => item.id === id);
@@ -1140,11 +1177,17 @@ export default {
     // * @ 圖層工具：OGC介接 取得服務
     getOgcHandler (current) {
       // const wmsUrl = this.$refs.wms.value;
-      // const wmtsUrl = this.$refs.wmts.value;
+      // const wmTsUrl = this.$refs.wmts.value;
 
       // WMS
       if (current === 0) {
-        this.wmsLayer = new sg.layers.WMSLayer('https://wms.nlsc.gov.tw/wms', {
+        if (this.$refs.wms.value !== '') {
+          this.wmsUrl = this.$refs.wms.value;
+        } else {
+          this.wmsUrl = 'https://wms.nlsc.gov.tw/wms';
+        }
+
+        this.wmsLayer = new sg.layers.WMSLayer(this.wmsUrl, {
           imageFormat: 'image/png',
           loadEffect: true,
           loaded: () => {
@@ -1155,7 +1198,13 @@ export default {
 
       // WMTS
       if (current === 1) {
-        this.wmTsLayer = new sg.layers.WMTSLayer('https://wmts.nlsc.gov.tw/wmts', {
+        if (this.$refs.wmts.value !== '') {
+          this.wmTsUrl = this.$refs.wmts.value;
+        } else {
+          this.wmTsUrl = 'https://wmts.nlsc.gov.tw/wmts';
+        }
+
+        this.wmTsLayer = new sg.layers.WMTSLayer(this.wmTsUrl, {
           serviceMode: 'KVP',
           loadEffect: true,
           loaded: () => {
@@ -1291,13 +1340,6 @@ export default {
       mapImg.onload = function () {
         ctx.drawImage(mapImg, 100, 48.5, 1300, 538);
         console.log('地圖');
-
-        // canvas.toBlob((blob) => {
-        //   saveAs(blob, 'iamap.jpg');
-        //   console.log('印出來');
-
-        //   // this.openPicPage();
-        // });
       };
 
       ctx.globalCompositeOperation = 'destination-over';
@@ -1327,15 +1369,15 @@ export default {
           .then((dataUrl) => {
             scaleImg.src = dataUrl;
           });
-        scaleImg.onload = function () {
+        scaleImg.onload = () => {
           ctx.drawImage(scaleImg, 100, 550);
           console.log('比例尺');
 
-          canvas.toBlob(function (blob) {
+          canvas.toBlob((blob) => {
             saveAs(blob, 'iamap.jpg');
             console.log('印出來');
 
-            // this.openPicPage();
+            this.openPicPage();
           });
         };
 
@@ -1348,7 +1390,7 @@ export default {
 
         // 加版權
         ctx.fillText('地圖平台 : 農田水利署地理空間處理平台', 235, 610);
-      }, 2500);
+      }, 6000);
 
       // setTimeout(() => {
       //   canvas.toBlob(function (blob) {
@@ -1532,13 +1574,16 @@ export default {
         if (value === 'switchLayersWindow' && this.openOnceLa === true) {
           Object.keys(MBT.Style).forEach((key) => {
             console.log(key);
+            console.log(MBT.Style[key]);
             const mName = key.substring(3);
             const result = {
               id: Math.random(),
               LayerName: key,
               visible: false,
               opacity: 100,
-              LayerTitle: ''
+              LayerTitle: '',
+              type: [],
+              allShow: true
             };
             if (mName === 'Cons') {
               result.LayerTitle = '水工構造物';
@@ -1547,6 +1592,22 @@ export default {
             if (mName === 'Canal') {
               result.LayerTitle = '渠道';
               this.layerOptions.lineList.push(result);
+
+              const newArr = [];
+              MBT.Style[key].paint['line-color'].forEach((item, index, array) => {
+                if (index % 2 === 1 && index !== array.length - 1) {
+                  const res = {
+                    id: Math.random(),
+                    name: item[2],
+                    visible: true,
+                    subId: item[1][1]
+                  };
+
+                  newArr.push(res);
+                }
+              });
+
+              result.type = newArr;
             }
             if (mName === 'Ia') {
               result.LayerTitle = '管理處';
@@ -1563,6 +1624,22 @@ export default {
               result.LayerTitle = '工作站';
               result.opacity = 50;
               this.layerOptions.surfaceList.push(result);
+
+              const newArr = [];
+              MBT.Style[key].paint['fill-color'].forEach((item, index, array) => {
+                if (index % 2 === 1 && index !== array.length - 1) {
+                  const res = {
+                    id: Math.random(),
+                    name: item[2],
+                    visible: true,
+                    subId: item[1][1]
+                  };
+
+                  newArr.push(res);
+                }
+              });
+
+              result.type = newArr;
             }
             if (mName === 'Grp') {
               result.LayerTitle = '小組';
@@ -1578,6 +1655,22 @@ export default {
               result.LayerTitle = '期作別';
               result.opacity = 50;
               this.layerOptions.surfaceList.push(result);
+
+              const newArr = [];
+              MBT.Style[key].paint['fill-color'].forEach((item, index, array) => {
+                if (index % 2 === 1 && index !== array.length - 1) {
+                  const res = {
+                    id: Math.random(),
+                    name: item[2],
+                    visible: true,
+                    subId: item[1][1]
+                  };
+
+                  newArr.push(res);
+                }
+              });
+
+              result.type = newArr;
             }
             if (mName === 'Pool') {
               result.LayerTitle = '埤塘';
@@ -1586,15 +1679,6 @@ export default {
             }
           });
           this.openOnceLa = false;
-
-          //* */
-          const yyu = new sg.layers.VectorMBTLayer('http://192.168.3.112/mapcache/arrow', {
-            loaded: function () {
-              this.setMinScale(Math.pow(2, 14 + 7 - 0.5) / 6378137 / Math.PI);
-              this.setMaxScale(Math.pow(2, 20 + 7 + 0.5) / 6378137 / Math.PI);
-              console.log(yyu);
-            }
-          });
         }
       }
     }
@@ -1687,7 +1771,7 @@ export default {
   }
 
   .reduceHeight {
-    height: calc(100vh - 66px) !important;
+    height: calc(100vh - 91px) !important;
   }
 
   .main{
@@ -1779,9 +1863,12 @@ export default {
     textarea {
       resize: none;
       width: 359px;
-      height: 58px;
+      height: 25px;
       border-radius: 5px;
       border: 1px solid #959595;
+      color: #494949;
+      font-size: 16px;
+      padding: 5px 0 3px;
     }
 
     .ogc_table1 {
@@ -1841,7 +1928,7 @@ export default {
     }
   }
 
-  .no_file {
+  .no_filemm {
     background-color: #EFF4F3;
     display: flex;
     flex-direction: column;

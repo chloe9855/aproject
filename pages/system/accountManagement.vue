@@ -200,7 +200,7 @@ export default {
     margin : 0 5%;
 }
 .content_box{
-  height: calc( 100vh - 180px );
+  height: calc( 100vh - 190px );
   padding-right: 0.5em;
   @include scrollBar;
 }
