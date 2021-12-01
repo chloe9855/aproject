@@ -19,11 +19,13 @@ export default ({ route, store, app, redirect }) => {
   } else {
     signOnStatus().then(r => {
       store.commit('SET_USER_INFO', { userInfo: r.data[0] });
+      sessionStorage.setItem('loginUser', r.data[0].id);
       if (isLogin || isPwdSetting) {
         return redirect('/');
       }
     }).catch(e => {
       sessionStorage.setItem('loginStatus', 0);
+      sessionStorage.setItem('loginUser', '');
       if (!isLogin && !isPwdSetting) {
         return redirect('/login');
       }

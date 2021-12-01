@@ -132,12 +132,10 @@ export default {
     this.$emit('tabCurrent', this.options.current);
   },
   mounted () {
-    getIas().then(r => {
+    getIas(this).then(r => {
       this.member.ia = r.data.map(x => ({ title: x.Ia_cns, value: x.Ia }));
-      console.log(this.member.ia);
     });
     getCounties().then(r => {
-      console.log(r);
       this.member.county = r.data.map(x => ({ title: x.COUNTYNAME, value: x.COUNTYID }));
     }).catch(e => {
       console.log(e);
@@ -154,6 +152,10 @@ export default {
       this.member.mng = [];
       getMngs(this.searchObj.ia).then(r => {
         this.member.mng = r.data.map(x => ({ title: x.Mng_cns, value: x.Mng }));
+      }).catch(e => {
+        if (e.response.status === 403) {
+          this.member.mng = [{ title: '不拘', value: '' }];
+        };
       });
       getStns(this.searchObj.ia).then(r => {
         this.member.stn = r.data.map(x => ({ title: x.Stn_cns, value: x.Stn }));

@@ -1,4 +1,5 @@
 import request from '~/service';
+// import axios from 'axios';
 export function getIrrigationLandArea (query) {
   if (window.location.host === '192.168.3.112') {
     return new Promise((resolve, reject) => {
@@ -84,168 +85,47 @@ export function getIrrigationLand (PageCnt, PageRows, query, county, town, secti
   return request.get('/aerc/rest/IrrigationLand' + (q ? `?${q.join('&')}` : ''));
 }
 
-export function getIas () {
-  if (window.location.host === '192.168.3.112') {
-    return new Promise((resolve, reject) => {
-      resolve({
-        data: [
-          {
-            FID: 11,
-            Ia: '11',
-            Ia_cns: '嘉南管理處',
-            Area: 154060769.86,
-            Ymd: '2011-07-24T00:00:00'
-          }
-        ]
-      });
-    });
-  }
-  return request.post('/aerc/rest/Ia');
+export function getIas (t) {
+  const data = {};
+  const user = sessionStorage.getItem('loginUser');
+  return request.post(`/aerc/rest/Ia/${user}`, data);
 }
 
 export function getMngs (Ia) {
-  if (window.location.host === '192.168.3.112') {
-    return new Promise((resolve, reject) => {
-      resolve({
-        data: [
-          {
-            FID: 11,
-            Ia: '11',
-            Ia_cns: '嘉南管理處',
-            Mng: '4',
-            Mng_cns: '新營',
-            Area: 154060769.86,
-            Ymd: '2011-07-24T00:00:00'
-          }
-        ]
-      });
-    });
-  }
-  return request.post('/aerc/rest/Mngs', (Ia ? `Ia=${Ia}` : ''));
+  const data = Ia ? { Ia: Ia } : {};
+  return request.post('/aerc/rest/mng', data);
 }
 
 export function getStns (Ia, Mng) {
-  if (window.location.host === '192.168.3.112') {
-    return new Promise((resolve, reject) => {
-      resolve({
-        data: [
-          {
-            FID: 11,
-            Ia: '11',
-            Ia_cns: '嘉南管理處',
-            Mng: '4',
-            Mng_cns: '新營',
-            Stn: '08',
-            Stn_cns: '後壁',
-            Area: 154060769.86,
-            Ymd: '2011-07-24T00:00:00'
-          }
-        ]
-      });
-    });
-  }
-  const q = [];
-  if (Ia) q.push(`Ia=${Ia}`);
-  if (mng) q.push(`Mng=${mng}`);
-  return request.post('/aerc/rest/Stn', (q ? q.join('&') : ''));
+  const data = { Ia: Ia, Mng: Mng || '' };
+  return request.post('/aerc/rest/Stn', data);
 }
 
 export function getGrps (Ia, Mng, Stn) {
-  if (window.location.host === '192.168.3.112') {
-    return new Promise((resolve, reject) => {
-      resolve({
-        data: [
-          {
-            FID: 11,
-            Ia: '11',
-            Ia_cns: '嘉南管理處',
-            Mng: '4',
-            Mng_cns: '新營',
-            Stn: '08',
-            Stn_cns: '後壁',
-            Grp: '01',
-            Grp_cns: '東後壁',
-            Area: 154060769.86,
-            Ymd: '2011-07-24T00:00:00'
-          }
-        ]
-      });
-    });
-  }
-  const q = [];
-  if (Ia) q.push(`Ia=${Ia}`);
-  if (Mng) q.push(`Mng=${Mng}`);
-  if (Stn) q.push(`Stn=${Stn}`);
-  return request.post('/aerc/rest/Stn', (q ? q.join('&') : ''));
+  const data = {
+    Ia: Ia,
+    Mng: Mng || '',
+    Stn: Stn || ''
+  };
+  return request.post('/aerc/rest/Grp', data);
 }
 
 export function getCounties () {
-  if (window.location.host === '192.168.3.112') {
-    return new Promise((resolve, reject) => {
-      resolve({
-        data: [
-          {
-            FID: 10,
-            COUNTYID: 'D',
-            COUNTYCODE: '67000',
-            COUNTYNAME: '臺南市',
-            COUNTYENG: 'Tainan City'
-          }
-        ]
-      });
-    });
-  }
-  return request.post('/aerc/rest/County');
+  const data = {};
+  return request.post('/aerc/rest/County', data);
 }
 
 export function getTowns (county) {
-  if (window.location.host === '192.168.3.112') {
-    return new Promise((resolve, reject) => {
-      resolve({
-        data: [
-          {
-            FID: 225,
-            TOWNID: '09',
-            TOWNCODE: '67000010',
-            COUNTYNAME: '臺南市',
-            TOWNNAME: '新營區',
-            TOWNENG: 'Xinying District',
-            COUNTYID: 'D',
-            COUNTYCODE: '67000'
-          }
-        ]
-      });
-    });
-  }
-  const q = [];
-  if (county) q.push(`CountyID=${county}`);
-  return request.post('/aerc/rest/Town', (q ? q.join('&') : ''));
+  const data = county ? { CountyID: county } : {};
+  return request.post('/aerc/rest/Town', data);
 }
 
 export function getSections (county, town) {
-  if (window.location.host === '192.168.3.112') {
-    return new Promise((resolve, reject) => {
-      resolve({
-        data: [
-          {
-            FID: 2224,
-            City: '台南市',
-            City_no: 'D',
-            Town: '新營區',
-            Town_no: '09',
-            Section: 'DD2009',
-            Sec_cns: '新營',
-            Area: 1473446.55837,
-            Ymd: '2021-06-15T00:00:00'
-          }
-        ]
-      });
-    });
-  }
-  const q = [];
-  if (county) q.push(`CountyID=${county}`);
-  if (town) q.push(`TownID=${town}`);
-  return request.post('/aerc/rest/Section', (q ? q.join('&') : ''));
+  const data = {
+    county: county,
+    town: town || ''
+  };
+  return request.post('/aerc/rest/Section', data);
 }
 
 export function getLands (county, town, section) {
