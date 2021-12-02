@@ -465,25 +465,25 @@ export default {
       this.$emit('inputData', arr);
     },
     getPageNum (e) { // 換頁取得DATA
-      console.log(this.dataCount);
+      this.$emit('nowPage', { page: e, size: this.columnLength });
       // if (this.dataCount) {
       //   this.$emit('nowPage', { page: e, size: this.columnLength });
       //   return;
       // }
-      this.getPage = e;
-      this.tableColumnBody = [];
-      const page = this.getPage;
-      const columnLength = this.columnLength;
-      const startId = 1 + columnLength * (page - 1);
-      const endId = startId + (columnLength - 1);
+      // this.getPage = e;
+      // this.tableColumnBody = [];
+      // const page = this.getPage;
+      // const columnLength = this.columnLength;
+      // const startId = 1 + columnLength * (page - 1);
+      // const endId = startId + (columnLength - 1);
       // const tableColumnBodyContent = this.tableColumnBody;
-      this.tableColumn.body.forEach(function (v, i) {
-        const num = i + 1;
-        if (num >= startId && num <= endId) {
-          // tableColumnBodyContent.push(v);
-          // console.log(this.tableColumnBody);
-        }
-      });
+      // this.tableColumn.body.forEach(function (v, i) {
+      // const num = i + 1;
+      // if (num >= startId && num <= endId) {
+      // tableColumnBodyContent.push(v);
+      // console.log(this.tableColumnBody);
+      // }
+      // });
     },
     sendEvent (e, item) {
       this.$emit('tableEvent', { event: e, item: item });
@@ -540,12 +540,10 @@ export default {
       });
       return result;
     },
-    dataNum: function () {
-      if (this.dataCount) {
-        return this.dataCount;
-      }
-      const data = this.tableColumn.body;
-      return data.length;
+    dataNum () {
+      return this.dataCount;
+      // const data = this.tableColumn.body;
+      // return data.length;
     },
     setRightBorder () {
       return function (a) {
@@ -603,7 +601,7 @@ export default {
     }
   },
   watch: {
-    'tableColumn.body': function () {
+    tableColumn: function () {
       if (this.dataCount) {
         this.tableColumnBody = this.tableColumn.body;
       }

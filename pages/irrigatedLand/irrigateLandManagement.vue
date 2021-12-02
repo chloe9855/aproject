@@ -262,8 +262,8 @@ export default {
             this.sum_grp = r.data[0].data[0].sum_grp;
             this.sum_irgarea = r.data[0].data[0].sum_irgarea;
             this.sum_tolarea = r.data[0].data[0].sum_tolarea;
-            this.dataCount = r.data[0].pagemax;
-            this.getPageNum({ page: 1 });
+            this.dataCount = r.data[0].totalCount;
+            this.getPageNum({ page: 1, size: 10 });
             this.topBtnText = '資料下載';
           }).catch(function (error) {
             console.log(error);
@@ -317,7 +317,7 @@ export default {
       const _this = this;
       this.$store.commit('TOGGLE_LOADING_STATUS');
       // axios.post(`http://192.168.3.112/AERC/rest/IrrigationLand?pageCnt=${e.page}&pageRows=10`, { query: [['11', '4', '', '']] }).then(r => {
-      axios.post(`http://192.168.3.112/AERC/rest/IrrigationLand?pageCnt=${e.page}&pageRows=10`, { query: _this.searchObj }).then(r => {
+      axios.post(`http://192.168.3.112/AERC/rest/IrrigationLand?pageCnt=${e.page}&pageRows=${e.size}`, { query: _this.searchObj }).then(r => {
         this.tableList.body = r.data.map(x => {
           return { title: [x.ia_cns, x.mng_cns, x.stn_cns, x.grp_cns, x.grparea, x.tolarea, x.irgarea] };
         });
