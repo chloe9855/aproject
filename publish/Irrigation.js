@@ -148,3 +148,13 @@ export function getLands (county, town, section) {
   if (section) q.push(`Section=${section}`);
   return request.post('/aerc/rest/Sec5cov', (q ? q.join('&') : ''));
 }
+
+export function getSecNo (county, section) {
+  const secNoRequest = `/aerc/rest/Sec5no?CountyID=${county}&Section=${section}`;
+  return request.get(secNoRequest);
+}
+
+export function getSecNoList (county, section) {
+  const secNoListRequest = `/aerc/rest/Sec5nos?CountyID=${county}&Section=${section}`;
+  return request.get(secNoListRequest);
+}

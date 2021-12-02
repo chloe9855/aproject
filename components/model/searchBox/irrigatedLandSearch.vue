@@ -63,10 +63,20 @@
       /> -->
       <InputVertical
         title="地號"
-        green-hint="地號範圍:0"
+        :green-hint="`地號範圍: ${minNo}-${maxNo}`"
+        :search-input="Sec5covList"
         star-sign="*"
         @inputValue="getInputValue"
       />
+      <!-- <InputVertical
+        title="地號"
+        :green-hint="`地號範圍: ${minNo}-${maxNo}`"
+        star-sign="*"
+        :change-text="clearLand4"
+        :search-input="Sec5covList"
+        :unfill-error="coData1.Sec5cov === '' && unFilled === true ? true : false"
+        @inputValue="(payload) => { coData1.Sec5cov = payload, clearLand4 = false }"
+      /> -->
     </div>
   </div>
 </template>
@@ -76,7 +86,7 @@ import DropdownVertical from '~/components/tools/DropdownVertical.vue';
 // import DropdownCheckList from '~/components/tools/DropdownCheckList.vue';
 import InputVertical from '~/components/tools/InputVertical.vue';
 import NavTabs from '~/components/tools/NavTabs';
-import { getIas, getMngs, getStns, getGrps, getCounties, getTowns, getSections, getLands } from '~/publish/Irrigation.js';
+import { getIas, getMngs, getStns, getGrps, getCounties, getTowns, getSections, getSecNo, getSecNoList } from '~/publish/Irrigation.js';
 export default {
   components: {
     DropdownVertical: DropdownVertical,
@@ -125,7 +135,13 @@ export default {
             id: 1
           }
         ]
-      }
+      },
+      // * 地號清單
+      Sec5covList: [],
+      minNo: '',
+      maxNo: '',
+      myLandnoList: []
+      //
     };
   },
   updated () {
@@ -208,8 +224,15 @@ export default {
       this.searchObj.section = payload.value;
       this.searchObj.land = '';
       this.member.land = { option: [{ title: '', value: '0' }] };
-      getLands(this.searchObj.county, this.searchObj.town, this.searchObj.section).then(r => {
-        this.member.land = { option: r.data.map(x => ({ title: x.Land, value: x.Land_no })) };
+      // getLands(this.searchObj.county, this.searchObj.town, this.searchObj.section).then(r => {
+      //   this.member.land = { option: r.data.map(x => ({ title: x.Land, value: x.Land_no })) };
+      // });
+      getSecNo(this.searchObj.county, this.searchObj.section).then(r => {
+        this.maxNo = r.data[0].Max;
+        this.minNo = r.data[0].Min;
+      });
+      getSecNoList(this.searchObj.county, this.searchObj.section).then(r => {
+        this.Sec5covList = r.data.map(item => item.Land_no);
       });
     },
     landDrop (payload) {

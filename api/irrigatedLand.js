@@ -9,7 +9,5 @@ export function getIrrigationLand1 (data) {
       query: [['11', '4', '', '']]
     })
   };
-  console.log(config);
-
   return request.get('/aerc/rest/IrrigationLand?pageCnt=1&pageRows=10', config);
 }
