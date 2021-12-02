@@ -1,7 +1,7 @@
 <template>
   <div
     class="tableTool"
-    :class="{isNoData:isShowBg}"
+    :class="{isNoData:isNoDataBg}"
   >
     <div
       v-show="!isShowBg && isCheck && isScrollTable"
@@ -345,12 +345,6 @@ export default {
     DropdownTreeList
   },
   props: {
-    options: {
-      type: Object,
-      default: () => {
-        return { option: [{ title: '無清單資料1', value: '0' }, { title: '無清單資料2', value: '1' }] };
-      }
-    },
     tableColumn: {
       type: Object,
       default: () => {
@@ -415,6 +409,10 @@ export default {
     dataCount: {
       type: Number,
       default: 0
+    },
+    isNoDataBg: {
+      type: Boolean,
+      default: false
     }
   },
   data: () => {
@@ -656,6 +654,14 @@ export default {
   flex-direction: column;
   position: relative;
   margin: 0 auto;
+
+  width: 100%;
+  min-height: 300px;
+  background-image: url("~/assets/img/table_start_bg.jpg");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-color: #eff3f2;
+
   @include noto-sans-tc-16-regular;
 }
 .tableBox{

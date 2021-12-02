@@ -13,8 +13,6 @@
         title="管理處"
         :options="member.ia"
         :change-text="isClear"
-        :default-data="member.ia[0].title"
-        :default-value="member.ia[0].value"
         @DropdownVal="iaDrop"
       />
       <DropdownVertical

@@ -23,6 +23,7 @@
           :is-paginate="true"
           :column-min-width="150"
           :data-count="dataCount"
+          :is-no-data-bg="isNoDataBg"
           @nowPage="getPageNum"
         />
         <div
@@ -196,7 +197,8 @@ export default {
       alertError: false,
       alertText: '',
       topBtnText: '',
-      downloadIrrigationLand: ''
+      downloadIrrigationLand: '',
+      isNoDataBg: false
     };
   },
   name: 'IrrigatedLand',
@@ -258,14 +260,15 @@ export default {
         this.clearSearchIrrigatedLand();
         this.searchObj = null;
         if (e && e.ia) {
-          // const x = [e.ia];
-          // x.push(e.mng || '');
-          // x.push(e.stn || '');
-          // x.push(e.grp || '');
-          // this.searchObj = [x];
-          // e.grp.map(x=>)
-          const x = getMultipleSearch(e);
-          this.searchObj = x;
+          if (e.grp.length > 0) {
+            this.searchObj = getMultipleSearch(e);
+          } else {
+            const x = [e.ia];
+            x.push(e.mng || '');
+            x.push(e.stn || '');
+            x.push(e.grp || '');
+            this.searchObj = [x];
+          }
           axios.post('http://192.168.3.112/AERC/rest/IrrigationLandArea', { query: this.searchObj }).then(r => {
             this.sum_grp = r.data[0].data[0].sum_grp;
             this.sum_irgarea = r.data[0].data[0].sum_irgarea;
@@ -325,10 +328,15 @@ export default {
       const _this = this;
       this.$store.commit('TOGGLE_LOADING_STATUS');
       axios.post(`http://192.168.3.112/AERC/rest/IrrigationLand?pageCnt=${e.page}&pageRows=${e.size}`, { query: _this.searchObj }).then(r => {
-        this.tableList.body = r.data.map(x => {
+        _this.tableList.body = r.data.map(x => {
           return { title: [x.ia_cns, x.mng_cns, x.stn_cns, x.grp_cns, x.grparea, x.tolarea, x.irgarea] };
         });
       }).then(function () {
+        if (_this.tableList.body.length < 1) {
+          _this.isNoDataBg = true;
+        } else {
+          _this.isNoDataBg = false;
+        }
         _this.$store.commit('TOGGLE_LOADING_STATUS');
       }).then(function () {
         getDownloadIrrigationLand({ query: _this.searchObj }).then(r => {
