@@ -27,7 +27,13 @@
         :change-text="isClear"
         @DropdownVal="stnDrop"
       />
-      <DropdownVertical
+      <!-- <DropdownVertical
+        title="水利小組"
+        :options="member.grp"
+        :change-text="isClear"
+        @DropdownVal="grpDrop"
+      /> -->
+      <DropdownCheckList
         title="水利小組"
         :options="member.grp"
         :change-text="isClear"
@@ -83,16 +89,16 @@
 
 <script>
 import DropdownVertical from '~/components/tools/DropdownVertical.vue';
-// import DropdownCheckList from '~/components/tools/DropdownCheckList.vue';
+import DropdownCheckList from '~/components/tools/DropdownCheckList.vue';
 import InputVertical from '~/components/tools/InputVertical.vue';
 import NavTabs from '~/components/tools/NavTabs';
 import { getIas, getMngs, getStns, getGrps, getCounties, getTowns, getSections, getSecNo, getSecNoList } from '~/publish/Irrigation.js';
 export default {
   components: {
-    DropdownVertical: DropdownVertical,
-    // DropdownCheckList: DropdownCheckList,
-    NavTabs: NavTabs,
-    InputVertical: InputVertical
+    DropdownVertical,
+    DropdownCheckList,
+    NavTabs,
+    InputVertical
   },
   props: {
     isClear: {
@@ -196,7 +202,7 @@ export default {
       });
     },
     grpDrop (payload) {
-      this.searchObj.grp = payload.value;
+      this.searchObj.grp = payload;
     },
     countyDrop (payload) {
       this.searchObj.county = payload.value;
@@ -244,7 +250,6 @@ export default {
       }
     },
     search () {
-      console.log(this.searchObj);
       this.searchObj.land = this.inputValue;
       this.$emit('onsearch', { obj: this.searchObj, select: this.options.current });
       // if (this.options.current === 0) {
