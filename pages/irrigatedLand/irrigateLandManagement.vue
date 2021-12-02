@@ -12,6 +12,7 @@
         title="灌溉地籍查詢與統計"
         :btn-text="topBtnText"
         btn-name="button-primary"
+        @PHBtnStatus="phBtnEvent"
       />
       <div
         v-if=" toggleCurrent === 0 "
@@ -22,6 +23,7 @@
           :is-paginate="true"
           :column-min-width="150"
           :data-count="dataCount"
+          :is-no-data-bg="isNoDataBg"
           @nowPage="getPageNum"
         />
         <div
@@ -81,7 +83,9 @@ import NormalTable from '~/components/model/NormalTable.vue';
 import Search from '~/components/model/Search.vue';
 import CalNote from '~/components/tools/CalNote.vue';
 import AlertBox from '~/components/tools/AlertBox.vue';
-// import { getIrrigationLand } from '~/publish/irrigation.js';
+import { getMultipleSearch } from '~/publish/getMultipleSearch.js';
+import { getDownloadIrrigationLand } from '~/publish/Irrigation.js';
+
 // import { getIrrigationLand1 } from '~/api/irrigatedLand';
 import axios from 'axios';
 
@@ -192,7 +196,9 @@ export default {
       dataCount: 0,
       alertError: false,
       alertText: '',
-      topBtnText: ''
+      topBtnText: '',
+      downloadIrrigationLand: '',
+      isNoDataBg: false
     };
   },
   name: 'IrrigatedLand',
@@ -248,22 +254,27 @@ export default {
       this.columnList = [];
     },
     onsearch (o) {
+      // console.log(o);
       const e = o.obj;
       if (this.toggleCurrent === 0) {
         this.clearSearchIrrigatedLand();
         this.searchObj = null;
         if (e && e.ia) {
-          const x = [e.ia];
-          x.push(e.mng || '');
-          x.push(e.stn || '');
-          x.push(e.grp || '');
-          this.searchObj = [x];
+          if (e.grp.length > 0) {
+            this.searchObj = getMultipleSearch(e);
+          } else {
+            const x = [e.ia];
+            x.push(e.mng || '');
+            x.push(e.stn || '');
+            x.push(e.grp || '');
+            this.searchObj = [x];
+          }
           axios.post('http://192.168.3.112/AERC/rest/IrrigationLandArea', { query: this.searchObj }).then(r => {
             this.sum_grp = r.data[0].data[0].sum_grp;
             this.sum_irgarea = r.data[0].data[0].sum_irgarea;
             this.sum_tolarea = r.data[0].data[0].sum_tolarea;
-            this.dataCount = r.data[0].pagemax;
-            this.getPageNum({ page: 1 });
+            this.dataCount = r.data[0].totalCount;
+            this.getPageNum({ page: 1, size: 10 });
             this.topBtnText = '資料下載';
           }).catch(function (error) {
             console.log(error);
@@ -316,17 +327,34 @@ export default {
     getPageNum (e) { // 換頁取得DATA
       const _this = this;
       this.$store.commit('TOGGLE_LOADING_STATUS');
-      // axios.post(`http://192.168.3.112/AERC/rest/IrrigationLand?pageCnt=${e.page}&pageRows=10`, { query: [['11', '4', '', '']] }).then(r => {
-      axios.post(`http://192.168.3.112/AERC/rest/IrrigationLand?pageCnt=${e.page}&pageRows=10`, { query: _this.searchObj }).then(r => {
-        this.tableList.body = r.data.map(x => {
+      axios.post(`http://192.168.3.112/AERC/rest/IrrigationLand?pageCnt=${e.page}&pageRows=${e.size}`, { query: _this.searchObj }).then(r => {
+        _this.tableList.body = r.data.map(x => {
           return { title: [x.ia_cns, x.mng_cns, x.stn_cns, x.grp_cns, x.grparea, x.tolarea, x.irgarea] };
         });
       }).then(function () {
-        console.log(_this.$store.state.isLoading);
+        if (_this.tableList.body.length < 1) {
+          _this.isNoDataBg = true;
+        } else {
+          _this.isNoDataBg = false;
+        }
         _this.$store.commit('TOGGLE_LOADING_STATUS');
+      }).then(function () {
+        getDownloadIrrigationLand({ query: _this.searchObj }).then(r => {
+          _this.downloadIrrigationLand = r.data;
+        });
       }).catch(function (error) {
         console.log(error);
       });
+    },
+    phBtnEvent (e) {
+      if (e) {
+        const current = this.toggleCurrent;
+        if (current === 0 && this.downloadIrrigationLand !== '') {
+          window.location = this.downloadIrrigationLand;
+        } else if (current === 1) {
+          console.log(this.router);
+        }
+      }
     },
     closeAlert (e) {
       console.log(e);

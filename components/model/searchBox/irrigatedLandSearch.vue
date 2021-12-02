@@ -27,7 +27,13 @@
         :change-text="isClear"
         @DropdownVal="stnDrop"
       />
-      <DropdownVertical
+      <!-- <DropdownVertical
+        title="水利小組"
+        :options="member.grp"
+        :change-text="isClear"
+        @DropdownVal="grpDrop"
+      /> -->
+      <DropdownCheckList
         title="水利小組"
         :options="member.grp"
         :change-text="isClear"
@@ -63,26 +69,36 @@
       /> -->
       <InputVertical
         title="地號"
-        green-hint="地號範圍:0"
+        :green-hint="`地號範圍: ${minNo}-${maxNo}`"
+        :search-input="Sec5covList"
         star-sign="*"
         @inputValue="getInputValue"
       />
+      <!-- <InputVertical
+        title="地號"
+        :green-hint="`地號範圍: ${minNo}-${maxNo}`"
+        star-sign="*"
+        :change-text="clearLand4"
+        :search-input="Sec5covList"
+        :unfill-error="coData1.Sec5cov === '' && unFilled === true ? true : false"
+        @inputValue="(payload) => { coData1.Sec5cov = payload, clearLand4 = false }"
+      /> -->
     </div>
   </div>
 </template>
 
 <script>
 import DropdownVertical from '~/components/tools/DropdownVertical.vue';
-// import DropdownCheckList from '~/components/tools/DropdownCheckList.vue';
+import DropdownCheckList from '~/components/tools/DropdownCheckList.vue';
 import InputVertical from '~/components/tools/InputVertical.vue';
 import NavTabs from '~/components/tools/NavTabs';
-import { getIas, getMngs, getStns, getGrps, getCounties, getTowns, getSections, getLands } from '~/publish/Irrigation.js';
+import { getIas, getMngs, getStns, getGrps, getCounties, getTowns, getSections, getSecNo, getSecNoList } from '~/publish/Irrigation.js';
 export default {
   components: {
-    DropdownVertical: DropdownVertical,
-    // DropdownCheckList: DropdownCheckList,
-    NavTabs: NavTabs,
-    InputVertical: InputVertical
+    DropdownVertical,
+    DropdownCheckList,
+    NavTabs,
+    InputVertical
   },
   props: {
     isClear: {
@@ -125,19 +141,23 @@ export default {
             id: 1
           }
         ]
-      }
+      },
+      // * 地號清單
+      Sec5covList: [],
+      minNo: '',
+      maxNo: '',
+      myLandnoList: []
+      //
     };
   },
   updated () {
     this.$emit('tabCurrent', this.options.current);
   },
   mounted () {
-    getIas().then(r => {
+    getIas(this).then(r => {
       this.member.ia = r.data.map(x => ({ title: x.Ia_cns, value: x.Ia }));
-      console.log(this.member.ia);
     });
     getCounties().then(r => {
-      console.log(r);
       this.member.county = r.data.map(x => ({ title: x.COUNTYNAME, value: x.COUNTYID }));
     }).catch(e => {
       console.log(e);
@@ -154,6 +174,10 @@ export default {
       this.member.mng = [];
       getMngs(this.searchObj.ia).then(r => {
         this.member.mng = r.data.map(x => ({ title: x.Mng_cns, value: x.Mng }));
+      }).catch(e => {
+        if (e.response.status === 403) {
+          this.member.mng = [{ title: '不拘', value: '' }];
+        };
       });
       getStns(this.searchObj.ia).then(r => {
         this.member.stn = r.data.map(x => ({ title: x.Stn_cns, value: x.Stn }));
@@ -178,7 +202,7 @@ export default {
       });
     },
     grpDrop (payload) {
-      this.searchObj.grp = payload.value;
+      this.searchObj.grp = payload;
     },
     countyDrop (payload) {
       this.searchObj.county = payload.value;
@@ -206,8 +230,15 @@ export default {
       this.searchObj.section = payload.value;
       this.searchObj.land = '';
       this.member.land = { option: [{ title: '', value: '0' }] };
-      getLands(this.searchObj.county, this.searchObj.town, this.searchObj.section).then(r => {
-        this.member.land = { option: r.data.map(x => ({ title: x.Land, value: x.Land_no })) };
+      // getLands(this.searchObj.county, this.searchObj.town, this.searchObj.section).then(r => {
+      //   this.member.land = { option: r.data.map(x => ({ title: x.Land, value: x.Land_no })) };
+      // });
+      getSecNo(this.searchObj.county, this.searchObj.section).then(r => {
+        this.maxNo = r.data[0].Max;
+        this.minNo = r.data[0].Min;
+      });
+      getSecNoList(this.searchObj.county, this.searchObj.section).then(r => {
+        this.Sec5covList = r.data.map(item => item.Land_no);
       });
     },
     landDrop (payload) {
@@ -219,7 +250,6 @@ export default {
       }
     },
     search () {
-      console.log(this.searchObj);
       this.searchObj.land = this.inputValue;
       this.$emit('onsearch', { obj: this.searchObj, select: this.options.current });
       // if (this.options.current === 0) {

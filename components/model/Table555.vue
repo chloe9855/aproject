@@ -1,7 +1,7 @@
 <template>
   <div
     class="tableTool"
-    :class="{isNoData:isShowBg}"
+    :class="{isNoData:isNoDataBg}"
   >
     <div
       v-show="!isShowBg && isCheck && isScrollTable"
@@ -104,7 +104,7 @@
         </thead>
         <tbody>
           <tr
-            v-for="( item, index ) in tableColumnBody"
+            v-for="( item, index ) in tableColumn.body"
             :key="index"
           >
             <td
@@ -345,12 +345,6 @@ export default {
     DropdownTreeList
   },
   props: {
-    options: {
-      type: Object,
-      default: () => {
-        return { option: [{ title: '無清單資料1', value: '0' }, { title: '無清單資料2', value: '1' }] };
-      }
-    },
     tableColumn: {
       type: Object,
       default: () => {
@@ -415,6 +409,10 @@ export default {
     dataCount: {
       type: Number,
       default: 0
+    },
+    isNoDataBg: {
+      type: Boolean,
+      default: false
     }
   },
   data: () => {
@@ -433,9 +431,9 @@ export default {
   },
   name: 'TableTool',
   mounted: function () {
-    this.getPageNum(1);
-    console.log('table');
-    console.log(this.tableColumn);
+    // this.getPageNum(1);
+    // console.log('table');
+    // console.log(this.tableColumn);
   },
   methods: {
     inputVal (e) { // 取得INPUT內容
@@ -465,23 +463,25 @@ export default {
       this.$emit('inputData', arr);
     },
     getPageNum (e) { // 換頁取得DATA
-      if (this.dataCount) {
-        this.$emit('nowPage', { page: e, size: this.columnLength });
-        return;
-      }
-      this.getPage = e;
-      this.tableColumnBody = [];
-      const page = this.getPage;
-      const columnLength = this.columnLength;
-      const startId = 1 + columnLength * (page - 1);
-      const endId = startId + (columnLength - 1);
-      const tableColumnBodyContent = this.tableColumnBody;
-      this.tableColumn.body.forEach(function (v, i) {
-        const num = i + 1;
-        if (num >= startId && num <= endId) {
-          tableColumnBodyContent.push(v);
-        }
-      });
+      this.$emit('nowPage', { page: e, size: this.columnLength });
+      // if (this.dataCount) {
+      //   this.$emit('nowPage', { page: e, size: this.columnLength });
+      //   return;
+      // }
+      // this.getPage = e;
+      // this.tableColumnBody = [];
+      // const page = this.getPage;
+      // const columnLength = this.columnLength;
+      // const startId = 1 + columnLength * (page - 1);
+      // const endId = startId + (columnLength - 1);
+      // const tableColumnBodyContent = this.tableColumnBody;
+      // this.tableColumn.body.forEach(function (v, i) {
+      // const num = i + 1;
+      // if (num >= startId && num <= endId) {
+      // tableColumnBodyContent.push(v);
+      // console.log(this.tableColumnBody);
+      // }
+      // });
     },
     sendEvent (e, item) {
       this.$emit('tableEvent', { event: e, item: item });
@@ -538,12 +538,10 @@ export default {
       });
       return result;
     },
-    dataNum: function () {
-      if (this.dataCount) {
-        return this.dataCount;
-      }
-      const data = this.tableColumn.body;
-      return data.length;
+    dataNum () {
+      return this.dataCount;
+      // const data = this.tableColumn.body;
+      // return data.length;
     },
     setRightBorder () {
       return function (a) {
@@ -601,7 +599,7 @@ export default {
     }
   },
   watch: {
-    'tableColumn.body': function () {
+    tableColumn: function () {
       if (this.dataCount) {
         this.tableColumnBody = this.tableColumn.body;
       }
@@ -656,6 +654,14 @@ export default {
   flex-direction: column;
   position: relative;
   margin: 0 auto;
+
+  width: 100%;
+  min-height: 300px;
+  background-image: url("~/assets/img/table_start_bg.jpg");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-color: #eff3f2;
+
   @include noto-sans-tc-16-regular;
 }
 .tableBox{

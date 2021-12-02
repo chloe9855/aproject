@@ -16,7 +16,7 @@
       :class="{listOpen:istoggle,isUp:getType}"
       @click="toggleList"
     >
-      {{ options.option[0].title }}
+      {{ setDefaultData }}
     </div>
     <ul
       v-show="istoggle"
@@ -24,7 +24,7 @@
       :class="{up:getType,onTitle:isTitle}"
     >
       <li
-        v-for="(item , index) in options.option"
+        v-for="(item , index) in options"
         :key="index"
       >
         <input
@@ -43,9 +43,9 @@
 export default {
   props: {
     options: {
-      type: Object,
+      type: Array,
       default: () => {
-        return { option: [{ title: '無清單資料1', value: '0' }, { title: '無清單資料2', value: '1' }] };
+        return [{ title: '無清單資料1', value: '0' }, { title: '無清單資料2', value: '1' }];
       }
     },
     dropType: {
@@ -59,6 +59,10 @@ export default {
     sizing: {
       type: String,
       default: 'w-100'
+    },
+    changeText: {
+      type: Boolean,
+      default: false
     }
   },
   data: () => {
@@ -89,11 +93,20 @@ export default {
       } else {
         return true;
       }
+    },
+    setDefaultData () {
+      const result = this.dataArr.length > 0 ? `已選擇${this.dataArr.length}個小組` : '請選擇';
+      return result;
     }
   },
   watch: {
     dataArr: function (n) {
       this.$emit('DropdownVal', n);
+    },
+    changeText: function (n) {
+      if (n) {
+        this.dataArr = [];
+      }
     }
   }
 };
@@ -159,6 +172,8 @@ export default {
     background-color: #FFF;
     top: 38px;
     z-index: 1000;
+    height: 150px;
+    overflow:auto;
     &.onTitle{
       top: calc( 24px + 38px );
     }

@@ -99,8 +99,15 @@ export default {
   },
   name: 'DropdownVertical',
   mounted () {
+    this.setDefault();
   },
   methods: {
+    setDefault () {
+      if (this.defaultData !== '' && this.defaultValue !== '') {
+        this.selected = this.defaultData;
+        this.selectVal = this.defaultValue;
+      }
+    }
   },
   watch: {
     selected (n, o) {
