@@ -299,21 +299,25 @@ export default {
           this.searchObj = x;
           axios.post('http://192.168.3.112/AERC/rest/IrrigationLand?pageCnt=1&pageRows=1', this.searchObj).then(r => {
             const x = r.data[0];
-            this.columnList = [
-              { name: '縣市', value: x.county_name },
-              { name: '鄉鎮市區', value: x.town_name },
-              { name: '地段名稱', value: x.sec_cns },
-              { name: '地號', value: x.land_no },
-              { name: '管理處', value: x.ia_cns },
-              { name: '管理分處', value: x.mng_cns },
-              { name: '工作站', value: x.stn_cns },
-              { name: '水利小組', value: x.grp_cns },
-              { name: '地籍面積m2', value: x.tolarea },
-              { name: '灌溉面積m2', value: x.irgarea }
-            ];
-            this.topBtnText = '在地圖上顯示';
+            if (r.data.length < 1) {
+              _this.isNoDataBg = true;
+            } else {
+              _this.columnList = [
+                { name: '縣市', value: x.county_name },
+                { name: '鄉鎮市區', value: x.town_name },
+                { name: '地段名稱', value: x.sec_cns },
+                { name: '地號', value: x.land_no },
+                { name: '管理處', value: x.ia_cns },
+                { name: '管理分處', value: x.mng_cns },
+                { name: '工作站', value: x.stn_cns },
+                { name: '水利小組', value: x.grp_cns },
+                { name: '地籍面積m2', value: x.tolarea },
+                { name: '灌溉面積m2', value: x.irgarea }
+              ];
+              _this.isNoDataBg = false;
+              _this.topBtnText = '在地圖上顯示';
+            }
           }).then(function () {
-            console.log(_this.$store.state.isLoading);
             _this.$store.commit('TOGGLE_LOADING_STATUS');
           }).catch(function (error) {
             console.log(error);
