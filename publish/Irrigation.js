@@ -158,3 +158,8 @@ export function getSecNoList (county, section) {
   const secNoListRequest = `/aerc/rest/Sec5nos?CountyID=${county}&Section=${section}`;
   return request.get(secNoListRequest);
 }
+
+export function getDownloadIrrigationLand (data) {
+  const secNoListRequest = '/aerc/rest/DownloadIrrigationLand';
+  return request.post(secNoListRequest, data);
+}

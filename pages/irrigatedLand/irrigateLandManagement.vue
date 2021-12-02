@@ -12,6 +12,7 @@
         title="灌溉地籍查詢與統計"
         :btn-text="topBtnText"
         btn-name="button-primary"
+        @PHBtnStatus="phBtnEvent"
       />
       <div
         v-if=" toggleCurrent === 0 "
@@ -82,6 +83,8 @@ import Search from '~/components/model/Search.vue';
 import CalNote from '~/components/tools/CalNote.vue';
 import AlertBox from '~/components/tools/AlertBox.vue';
 import { getMultipleSearch } from '~/publish/getMultipleSearch.js';
+import { getDownloadIrrigationLand } from '~/publish/Irrigation.js';
+
 // import { getIrrigationLand1 } from '~/api/irrigatedLand';
 import axios from 'axios';
 
@@ -192,7 +195,8 @@ export default {
       dataCount: 0,
       alertError: false,
       alertText: '',
-      topBtnText: ''
+      topBtnText: '',
+      downloadIrrigationLand: ''
     };
   },
   name: 'IrrigatedLand',
@@ -320,17 +324,29 @@ export default {
     getPageNum (e) { // 換頁取得DATA
       const _this = this;
       this.$store.commit('TOGGLE_LOADING_STATUS');
-      // axios.post(`http://192.168.3.112/AERC/rest/IrrigationLand?pageCnt=${e.page}&pageRows=10`, { query: [['11', '4', '', '']] }).then(r => {
       axios.post(`http://192.168.3.112/AERC/rest/IrrigationLand?pageCnt=${e.page}&pageRows=${e.size}`, { query: _this.searchObj }).then(r => {
         this.tableList.body = r.data.map(x => {
           return { title: [x.ia_cns, x.mng_cns, x.stn_cns, x.grp_cns, x.grparea, x.tolarea, x.irgarea] };
         });
       }).then(function () {
-        console.log(_this.$store.state.isLoading);
         _this.$store.commit('TOGGLE_LOADING_STATUS');
+      }).then(function () {
+        getDownloadIrrigationLand({ query: _this.searchObj }).then(r => {
+          _this.downloadIrrigationLand = r.data;
+        });
       }).catch(function (error) {
         console.log(error);
       });
+    },
+    phBtnEvent (e) {
+      if (e) {
+        const current = this.toggleCurrent;
+        if (current === 0 && this.downloadIrrigationLand !== '') {
+          window.location = this.downloadIrrigationLand;
+        } else if (current === 1) {
+          console.log(this.router);
+        }
+      }
     },
     closeAlert (e) {
       console.log(e);
