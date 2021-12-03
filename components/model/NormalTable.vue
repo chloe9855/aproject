@@ -1,7 +1,6 @@
 <template>
   <div
     class="table_block theme_scrollbar"
-    :class="sizing"
   >
     <table>
       <tbody>
@@ -16,6 +15,23 @@
         </tr>
       </tbody>
     </table>
+
+    <div
+      v-if="list.length < 1 && noResult === true"
+      class="no_file"
+    >
+      <img :src="require('~/assets/img/no_data.svg')">
+      <p>查無資料</p>
+    </div>
+
+    <div
+      v-if="list.length < 1 && noResult === false"
+      class="no_file"
+    >
+      <img :src="require('~/assets/img/no_file.svg')">
+      <p>請設定查詢條件</p>
+      <p>並開始查詢 !</p>
+    </div>
   </div>
 </template>
 
@@ -30,7 +46,23 @@ export default {
     shorten: {
       type: Boolean,
       default: false
+    },
+    noResult: {
+      type: Boolean,
+      default: false
     }
+  },
+  data () {
+    return {
+
+    };
+  },
+  watch: {
+    // list (value) {
+    //   if (value.length >= 1) {
+    //     this.noResult = true;
+    //   }
+    // }
   }
 };
 </script>
@@ -68,6 +100,17 @@ export default {
 
   .h-432{
     height: 432px !important;
+  }
+
+  .no_file{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    background: #EFF4F3;
+    color: #3E9F88;
+    height: 450px;
+    @include noto-sans-tc-16-regular;
   }
 
 </style>

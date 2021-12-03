@@ -1,7 +1,7 @@
 import request from '~/service';
 // import axios from 'axios';
 export function getIrrigationLandArea (query) {
-  if (window.location.host === '192.168.3.112') {
+  if (window.location.host === '210.65.139.69') {
     return new Promise((resolve, reject) => {
       resolve({
         data: [
@@ -21,7 +21,7 @@ export function getIrrigationLandArea (query) {
 }
 
 export function getIrrigationLand (PageCnt, PageRows, query, county, town, section, land) {
-  if (window.location.host === '192.168.3.112') {
+  if (window.location.host === '210.65.139.69') {
     return new Promise((resolve, reject) => {
       resolve({
         data: [
@@ -129,7 +129,7 @@ export function getSections (county, town) {
 }
 
 export function getLands (county, town, section) {
-  if (window.location.host === '192.168.3.112') {
+  if (window.location.host === '210.65.139.69') {
     return new Promise((resolve, reject) => {
       resolve({
         data: [

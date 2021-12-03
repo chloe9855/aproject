@@ -218,7 +218,7 @@ export default {
         this.mapIndex = payload.myIndex;
         this.myCountyId = payload.myInfo.CountyID;
 
-        fetch(`http://192.168.3.112/AERC/rest/Fund?CountyID=${payload.myInfo.CountyID}&TownID=&LandLotNO=${payload.myInfo.LandLotNO}&LandNo=${payload.myInfo.LandNo}&pageCnt=1&pageRows=10`, {
+        fetch(`/AERC/rest/Fund?CountyID=${payload.myInfo.CountyID}&TownID=&LandLotNO=${payload.myInfo.LandLotNO}&LandNo=${payload.myInfo.LandNo}&pageCnt=1&pageRows=10`, {
           method: 'GET',
           headers: new Headers({
             'Content-Type': 'application/json'
@@ -251,7 +251,7 @@ export default {
         this.loadModal = true;
 
         // 取得所有地號清單 以取得單筆fid
-        fetch(`http://192.168.3.112/aerc/rest/Sec5nos?CountyID=${payload.myInfo.CountyID}&Section=${payload.myInfo.LandLotNO}`, {
+        fetch(`/aerc/rest/Sec5nos?CountyID=${payload.myInfo.CountyID}&Section=${payload.myInfo.LandLotNO}`, {
           method: 'GET',
           headers: new Headers({
             'Content-Type': 'application/json'
@@ -270,7 +270,7 @@ export default {
     },
     // * 取得所有地號清單 以取得單筆fid
     getAllLandnos (countyid, landlotno, landNo) {
-      fetch(`http://192.168.3.112/aerc/rest/Sec5nos?CountyID=${countyid}&Section=${landlotno}`, {
+      fetch(`/aerc/rest/Sec5nos?CountyID=${countyid}&Section=${landlotno}`, {
         method: 'GET',
         headers: new Headers({
           'Content-Type': 'application/json'
@@ -288,7 +288,7 @@ export default {
     },
     // * 跳轉地圖
     goMapPage (countyid, fid) {
-      fetch(`http://192.168.3.112/AERC/rest/Sec5ByFID?CountyID=${countyid}&FID=${fid}`, {
+      fetch(`/AERC/rest/Sec5ByFID?CountyID=${countyid}&FID=${fid}`, {
         method: 'GET',
         headers: new Headers({
           'Content-Type': 'application/json'
@@ -367,7 +367,7 @@ export default {
     getPageData (nowPage) {
       if (this.searchWord === '') { return; }
 
-      fetch(`http://192.168.3.112/AERC/rest/Fund?CountyID=${this.searchWord.County}&TownID=${this.searchWord.Town}&Ia=${this.searchWord.Ia}&pageCnt=${nowPage}&pageRows=10`, {
+      fetch(`/AERC/rest/Fund?CountyID=${this.searchWord.County}&TownID=${this.searchWord.Town}&Ia=${this.searchWord.Ia}&pageCnt=${nowPage}&pageRows=10`, {
         method: 'GET',
         headers: new Headers({
           'Content-Type': 'application/json'
@@ -399,7 +399,7 @@ export default {
     showOnMap () {
       this.loadModal = true;
 
-      fetch(`http://192.168.3.112/AERC/rest/Sec5ByFID?CountyID=${this.myCountyId}&FID=${this.landnoFid}`, {
+      fetch(`/AERC/rest/Sec5ByFID?CountyID=${this.myCountyId}&FID=${this.landnoFid}`, {
         method: 'GET',
         headers: new Headers({
           'Content-Type': 'application/json'

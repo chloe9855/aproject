@@ -59,7 +59,7 @@ export default {
     getCanalLists (payload) {
       this.clearText = false;
 
-      fetch('http://192.168.3.112/AERC/rest/Canal', {
+      fetch('/AERC/rest/Canal', {
         method: 'POST',
         headers: new Headers({
           'Content-Type': 'application/json'
@@ -93,7 +93,7 @@ export default {
       }
       console.log(myItem);
 
-      fetch('http://192.168.3.112/AERC/rest/Canal', {
+      fetch('/AERC/rest/Canal', {
         method: 'POST',
         headers: new Headers({
           'Content-Type': 'application/json'

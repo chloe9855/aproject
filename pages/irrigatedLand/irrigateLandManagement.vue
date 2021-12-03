@@ -203,7 +203,7 @@ export default {
   },
   name: 'IrrigatedLand',
   mounted () {
-    // fetch('http://192.168.3.112/AERC/rest/IrrigationLand?pageCnt=1&pageRows=10', {
+    // fetch('/AERC/rest/IrrigationLand?pageCnt=1&pageRows=10', {
     //   method: 'POST',
     //   headers: new Headers({
     //     'Content-Type': 'application/json'
@@ -214,7 +214,7 @@ export default {
     // }).then((data) => {
     //   console.log(data);
     // });
-    // axios.post('http://192.168.3.112/AERC/rest/IrrigationLand?pageCnt=1&pageRows=10', { query: [['11', '4', '', '']] }).then(r => {
+    // axios.post('/AERC/rest/IrrigationLand?pageCnt=1&pageRows=10', { query: [['11', '4', '', '']] }).then(r => {
     //   console.log(r);
     // }).catch(function (error) {
     //   console.log(error);
@@ -297,7 +297,7 @@ export default {
             land_no: e.land
           };
           this.searchObj = x;
-          axios.post('http://192.168.3.112/AERC/rest/IrrigationLand?pageCnt=1&pageRows=1', this.searchObj).then(r => {
+          axios.post('/AERC/rest/IrrigationLand?pageCnt=1&pageRows=1', this.searchObj).then(r => {
             const x = r.data[0];
             if (r.data.length < 1) {
               _this.isNoDataBg = true;
