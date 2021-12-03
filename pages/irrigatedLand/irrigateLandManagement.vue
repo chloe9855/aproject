@@ -51,8 +51,8 @@
         class="irrigatedLand content_box"
       >
         <NormalTable
-          v-if="columnList.length >= 1"
           :list="columnList"
+          :no-result="noResult"
           class="listTable"
         />
       </div>
@@ -200,7 +200,8 @@ export default {
       downloadIrrigationLand: '',
       isNoDataBg: false,
       countyId: '',
-      countyFID: ''
+      countyFID: '',
+      noResult: false
     };
   },
   name: 'IrrigatedLand',
@@ -322,9 +323,12 @@ export default {
               _this.topBtnText = '在地圖上顯示';
             }
           }).then(function () {
+            _this.noResult = false;
             _this.$store.commit('TOGGLE_LOADING_STATUS');
           }).catch(function (error) {
             console.log(error);
+            _this.noResult = true;
+            _this.$store.commit('TOGGLE_LOADING_STATUS');
           });
         } else {
           this.alertText = '縣市為必選';
