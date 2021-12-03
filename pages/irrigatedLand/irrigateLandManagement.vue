@@ -51,8 +51,8 @@
         class="irrigatedLand content_box"
       >
         <NormalTable
-          v-if="columnList.length >= 1"
           :list="columnList"
+          :no-result="noResult"
           class="listTable"
         />
       </div>
@@ -198,7 +198,10 @@ export default {
       alertText: '',
       topBtnText: '',
       downloadIrrigationLand: '',
-      isNoDataBg: false
+      isNoDataBg: false,
+      countyId: '',
+      countyFID: '',
+      noResult: false
     };
   },
   name: 'IrrigatedLand',
@@ -299,6 +302,8 @@ export default {
           this.searchObj = x;
           axios.post('/AERC/rest/IrrigationLand?pageCnt=1&pageRows=1', this.searchObj).then(r => {
             const x = r.data[0];
+            this.countyId = x.county_id;
+            this.countyFID = x.FID;
             if (r.data.length < 1) {
               _this.isNoDataBg = true;
             } else {
@@ -318,9 +323,12 @@ export default {
               _this.topBtnText = '在地圖上顯示';
             }
           }).then(function () {
+            _this.noResult = false;
             _this.$store.commit('TOGGLE_LOADING_STATUS');
           }).catch(function (error) {
             console.log(error);
+            _this.noResult = true;
+            _this.$store.commit('TOGGLE_LOADING_STATUS');
           });
         } else {
           this.alertText = '縣市為必選';
@@ -350,13 +358,39 @@ export default {
         console.log(error);
       });
     },
+    // * 跳轉地圖
+    goMapPage () {
+      const countyId = this.countyId;
+      const fid = this.countyFID;
+      this.$store.commit('TOGGLE_LOADING_STATUS');
+      fetch(`http://192.168.3.112/AERC/rest/Sec5ByFID?CountyID=${countyId}&FID=${fid}`, {
+        method: 'GET',
+        headers: new Headers({
+          'Content-Type': 'application/json'
+        })
+      }).then((response) => {
+        return response.json();
+      }).then((jsonData) => {
+        console.log(jsonData);
+        this.$store.commit('TOGGLE_LOADING_STATUS');
+        const nowUrl = window.location.origin;
+        const front = this.$router.options.base;
+        const end = 'map/';
+        const myUrl = `${nowUrl}${front}${end}`;
+
+        window.open(myUrl);
+        localStorage.setItem('oriData', JSON.stringify(jsonData[0].geometry));
+      }).catch((err) => {
+        console.log(err);
+      });
+    },
     phBtnEvent (e) {
       if (e) {
         const current = this.toggleCurrent;
         if (current === 0 && this.downloadIrrigationLand !== '') {
           window.location = this.downloadIrrigationLand;
         } else if (current === 1) {
-          console.log(this.router);
+          this.goMapPage();
         }
       }
     },

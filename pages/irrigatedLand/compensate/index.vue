@@ -35,6 +35,7 @@
     <Search
       type="compensateSearch"
       @toggleStatus="getToggleStatus"
+      @onsearch="onsearch"
     />
   </div>
 </template>
@@ -45,6 +46,7 @@ import PageHeader from '~/components/tools/PageHeader.vue';
 import BreadCrumbTool from '~/components/tools/BreadCrumbTool.vue';
 import Search from '~/components/model/Search.vue';
 import CalNote from '~/components/tools/CalNote.vue';
+import { getApplyEvent } from '~/api/apply';
 
 export default {
   components: {
@@ -106,6 +108,20 @@ export default {
       if (e) {
         this.$router.push({ path: '/irrigatedLand/compensate/editcompensate' });
       }
+    },
+    onsearch (e) {
+      if (e) {
+        this.columnList = [];
+        console.log(e.obj);
+        getApplyEvent(e.obj).then(r => {
+          console.log(r);
+        }).catch(err => {
+          console.log(err);
+        });
+      }
+    },
+    clearSearchIrrigatedInfo () {
+      this.columnList = [];
     }
   },
   computed: {
