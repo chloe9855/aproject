@@ -24,7 +24,7 @@ export default {
   mounted () {
     this.dropList = [{ title: '01 宜蘭', value: '1' }];
 
-    sg.events.on(MBT, 'click', (e) => {
+    sg.events.on(allMBT[0], 'click', (e) => {
       if (e.graphic.id[0] === '01_Canal') {
         this.title = e.graphic.id[0];
         this.nowFid = parseInt(e.graphic.id[1], 10);

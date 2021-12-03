@@ -43,31 +43,71 @@ export default {
   },
   name: 'ClickSearch',
   mounted () {
-    sg.events.on(MBT, 'click', (e) => {
+    // sg.events.on(MBT, 'click', (e) => {
+    //   console.log(e.graphic.id);
+    //   console.log(e.graphic.attributes);
+
+    //   this.nowId = e.graphic.id[0];
+    //   this.nowInfo = e.graphic.attributes;
+
+    //   if (e.graphic.id.length >= 1) {
+    //     if (this.nowId === '01_Cons') {
+    //       this.myWord = '水工構造物';
+    //     }
+    //     if (this.nowId === '01_Canal') {
+    //       this.myWord = '渠道';
+    //     }
+    //     if (this.nowId === '01_Ia') {
+    //       this.myWord = '管理處';
+    //     }
+    //     if (this.nowId === '01_Stn') {
+    //       this.myWord = '工作站';
+    //     }
+    //     if (this.nowId === '01_Grp') {
+    //       this.myWord = '小組';
+    //     }
+    //     if (this.nowId === '01_Period') {
+    //       this.myWord = '期作別';
+    //     }
+    //     this.$emit('clickSearch', this.nowId, this.nowInfo, this.myWord);
+    //   }
+    // });
+
+    console.log(allMBT);
+    sg.events.on(allMBT[0], 'click', (e) => {
       console.log(e.graphic.id);
       console.log(e.graphic.attributes);
 
-      this.nowId = e.graphic.id[0];
+      this.nowId = e.graphic.id[0].substring(3);
       this.nowInfo = e.graphic.attributes;
 
       if (e.graphic.id.length >= 1) {
-        if (this.nowId === '01_Cons') {
+        if (this.nowId === 'Cons') {
           this.myWord = '水工構造物';
         }
-        if (this.nowId === '01_Canal') {
+        if (this.nowId === 'Canal') {
           this.myWord = '渠道';
         }
-        if (this.nowId === '01_Ia') {
+        if (this.nowId === 'Ia') {
           this.myWord = '管理處';
         }
-        if (this.nowId === '01_Stn') {
+        if (this.nowId === 'Stn') {
           this.myWord = '工作站';
         }
-        if (this.nowId === '01_Grp') {
+        if (this.nowId === 'Grp') {
           this.myWord = '小組';
         }
-        if (this.nowId === '01_Period') {
+        if (this.nowId === 'Period') {
           this.myWord = '期作別';
+        }
+        if (this.nowId === 'Rot') {
+          this.myWord = '輪區';
+        }
+        if (this.nowId === 'Pool') {
+          this.myWord = '埤塘';
+        }
+        if (this.nowId === 'Mng') {
+          this.myWord = '管理分處';
         }
         this.$emit('clickSearch', this.nowId, this.nowInfo, this.myWord);
       }
