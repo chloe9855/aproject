@@ -1,6 +1,6 @@
 import request from '~/service';
 export function getIrrigationLandArea (query) {
-  if (window.location.host === '192.168.3.112') {
+  if (window.location.host === '210.65.139.69') {
     return new Promise((resolve, reject) => {
       resolve({
         data: [
@@ -20,7 +20,7 @@ export function getIrrigationLandArea (query) {
 }
 
 export function getIrrigationLand (PageCnt, PageRows, query, county, town, section, land) {
-  if (window.location.host === '192.168.3.112') {
+  if (window.location.host === '210.65.139.69') {
     return new Promise((resolve, reject) => {
       resolve({
         data: [
@@ -85,7 +85,7 @@ export function getIrrigationLand (PageCnt, PageRows, query, county, town, secti
 }
 
 export function getIas () {
-  if (window.location.host === '192.168.3.112') {
+  if (window.location.host === '210.65.139.69') {
     return new Promise((resolve, reject) => {
       resolve({
         data: [
@@ -104,7 +104,7 @@ export function getIas () {
 }
 
 export function getMngs (Ia) {
-  if (window.location.host === '192.168.3.112') {
+  if (window.location.host === '210.65.139.69') {
     return new Promise((resolve, reject) => {
       resolve({
         data: [
@@ -125,7 +125,7 @@ export function getMngs (Ia) {
 }
 
 export function getStns (Ia, Mng) {
-  if (window.location.host === '192.168.3.112') {
+  if (window.location.host === '210.65.139.69') {
     return new Promise((resolve, reject) => {
       resolve({
         data: [
@@ -151,7 +151,7 @@ export function getStns (Ia, Mng) {
 }
 
 export function getGrps (Ia, Mng, Stn) {
-  if (window.location.host === '192.168.3.112') {
+  if (window.location.host === '210.65.139.69') {
     return new Promise((resolve, reject) => {
       resolve({
         data: [
@@ -180,7 +180,7 @@ export function getGrps (Ia, Mng, Stn) {
 }
 
 export function getCounties () {
-  if (window.location.host === '192.168.3.112') {
+  if (window.location.host === '210.65.139.69') {
     return new Promise((resolve, reject) => {
       resolve({
         data: [
@@ -199,7 +199,7 @@ export function getCounties () {
 }
 
 export function getTowns (county) {
-  if (window.location.host === '192.168.3.112') {
+  if (window.location.host === '210.65.139.69') {
     return new Promise((resolve, reject) => {
       resolve({
         data: [
@@ -223,7 +223,7 @@ export function getTowns (county) {
 }
 
 export function getSections (county, town) {
-  if (window.location.host === '192.168.3.112') {
+  if (window.location.host === '210.65.139.69') {
     return new Promise((resolve, reject) => {
       resolve({
         data: [
@@ -249,7 +249,7 @@ export function getSections (county, town) {
 }
 
 export function getLands (county, town, section) {
-  if (window.location.host === '192.168.3.112') {
+  if (window.location.host === '210.65.139.69') {
     return new Promise((resolve, reject) => {
       resolve({
         data: [
