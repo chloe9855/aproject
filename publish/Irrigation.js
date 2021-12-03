@@ -1,7 +1,7 @@
 import request from '~/service';
 // import axios from 'axios';
 export function getIrrigationLandArea (query) {
-  if (window.location.host === '192.168.3.112') {
+  if (window.location.host === '210.65.139.69') {
     return new Promise((resolve, reject) => {
       resolve({
         data: [
@@ -21,7 +21,7 @@ export function getIrrigationLandArea (query) {
 }
 
 export function getIrrigationLand (PageCnt, PageRows, query, county, town, section, land) {
-  if (window.location.host === '192.168.3.112') {
+  if (window.location.host === '210.65.139.69') {
     return new Promise((resolve, reject) => {
       resolve({
         data: [
@@ -85,6 +85,7 @@ export function getIrrigationLand (PageCnt, PageRows, query, county, town, secti
   return request.get('/aerc/rest/IrrigationLand' + (q ? `?${q.join('&')}` : ''));
 }
 
+<<<<<<< HEAD
 export function getIas (t) {
   const data = {};
   const user = sessionStorage.getItem('loginUser');
@@ -126,10 +127,174 @@ export function getSections (county, town) {
     TownID: town || ''
   };
   return request.post('/aerc/rest/Section', data);
+=======
+export function getIas () {
+  if (window.location.host === '210.65.139.69') {
+    return new Promise((resolve, reject) => {
+      resolve({
+        data: [
+          {
+            FID: 11,
+            Ia: '11',
+            Ia_cns: '嘉南管理處',
+            Area: 154060769.86,
+            Ymd: '2011-07-24T00:00:00'
+          }
+        ]
+      });
+    });
+  }
+  return request.post('/aerc/rest/Ia');
+}
+
+export function getMngs (Ia) {
+  if (window.location.host === '210.65.139.69') {
+    return new Promise((resolve, reject) => {
+      resolve({
+        data: [
+          {
+            FID: 11,
+            Ia: '11',
+            Ia_cns: '嘉南管理處',
+            Mng: '4',
+            Mng_cns: '新營',
+            Area: 154060769.86,
+            Ymd: '2011-07-24T00:00:00'
+          }
+        ]
+      });
+    });
+  }
+  return request.post('/aerc/rest/Mngs', (Ia ? `Ia=${Ia}` : ''));
+}
+
+export function getStns (Ia, Mng) {
+  if (window.location.host === '210.65.139.69') {
+    return new Promise((resolve, reject) => {
+      resolve({
+        data: [
+          {
+            FID: 11,
+            Ia: '11',
+            Ia_cns: '嘉南管理處',
+            Mng: '4',
+            Mng_cns: '新營',
+            Stn: '08',
+            Stn_cns: '後壁',
+            Area: 154060769.86,
+            Ymd: '2011-07-24T00:00:00'
+          }
+        ]
+      });
+    });
+  }
+  const q = [];
+  if (Ia) q.push(`Ia=${Ia}`);
+  if (mng) q.push(`Mng=${mng}`);
+  return request.post('/aerc/rest/Stn', (q ? q.join('&') : ''));
+}
+
+export function getGrps (Ia, Mng, Stn) {
+  if (window.location.host === '210.65.139.69') {
+    return new Promise((resolve, reject) => {
+      resolve({
+        data: [
+          {
+            FID: 11,
+            Ia: '11',
+            Ia_cns: '嘉南管理處',
+            Mng: '4',
+            Mng_cns: '新營',
+            Stn: '08',
+            Stn_cns: '後壁',
+            Grp: '01',
+            Grp_cns: '東後壁',
+            Area: 154060769.86,
+            Ymd: '2011-07-24T00:00:00'
+          }
+        ]
+      });
+    });
+  }
+  const q = [];
+  if (Ia) q.push(`Ia=${Ia}`);
+  if (Mng) q.push(`Mng=${Mng}`);
+  if (Stn) q.push(`Stn=${Stn}`);
+  return request.post('/aerc/rest/Stn', (q ? q.join('&') : ''));
+}
+
+export function getCounties () {
+  if (window.location.host === '210.65.139.69') {
+    return new Promise((resolve, reject) => {
+      resolve({
+        data: [
+          {
+            FID: 10,
+            COUNTYID: 'D',
+            COUNTYCODE: '67000',
+            COUNTYNAME: '臺南市',
+            COUNTYENG: 'Tainan City'
+          }
+        ]
+      });
+    });
+  }
+  return request.post('/aerc/rest/County');
+}
+
+export function getTowns (county) {
+  if (window.location.host === '210.65.139.69') {
+    return new Promise((resolve, reject) => {
+      resolve({
+        data: [
+          {
+            FID: 225,
+            TOWNID: '09',
+            TOWNCODE: '67000010',
+            COUNTYNAME: '臺南市',
+            TOWNNAME: '新營區',
+            TOWNENG: 'Xinying District',
+            COUNTYID: 'D',
+            COUNTYCODE: '67000'
+          }
+        ]
+      });
+    });
+  }
+  const q = [];
+  if (county) q.push(`CountyID=${county}`);
+  return request.post('/aerc/rest/Town', (q ? q.join('&') : ''));
+}
+
+export function getSections (county, town) {
+  if (window.location.host === '210.65.139.69') {
+    return new Promise((resolve, reject) => {
+      resolve({
+        data: [
+          {
+            FID: 2224,
+            City: '台南市',
+            City_no: 'D',
+            Town: '新營區',
+            Town_no: '09',
+            Section: 'DD2009',
+            Sec_cns: '新營',
+            Area: 1473446.55837,
+            Ymd: '2021-06-15T00:00:00'
+          }
+        ]
+      });
+    });
+  }
+  const q = [];
+  if (county) q.push(`CountyID=${county}`);
+  if (town) q.push(`TownID=${town}`);
+  return request.post('/aerc/rest/Section', (q ? q.join('&') : ''));
+>>>>>>> joyy
 }
 
 export function getLands (county, town, section) {
-  if (window.location.host === '192.168.3.112') {
+  if (window.location.host === '210.65.139.69') {
     return new Promise((resolve, reject) => {
       resolve({
         data: [

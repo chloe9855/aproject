@@ -371,7 +371,7 @@ export default {
     },
     // * @ 地籍定位 : 取得縣市資料
     getCountyData () {
-      fetch('http://192.168.3.112/AERC/rest/County', {
+      fetch('/AERC/rest/County', {
         method: 'POST',
         headers: new Headers({
           'Content-Type': 'application/json'
@@ -411,9 +411,9 @@ export default {
 
       let url = '';
       if (nextType !== 'Sec5cov') {
-        url = `http://192.168.3.112/AERC/rest/${nextType}`;
+        url = `/AERC/rest/${nextType}`;
       } else {
-        url = 'http://192.168.3.112/AERC/rest/Sec5cov?pageCnt=1&pageRows=5';
+        url = '/AERC/rest/Sec5cov?pageCnt=1&pageRows=5';
       }
 
       fetch(url, {
@@ -459,7 +459,7 @@ export default {
     getLandnoList (payload) {
       if (payload === '') { return; }
 
-      fetch(`http://192.168.3.112/aerc/rest/Sec5nos?CountyID=${this.myCountyId}&Section=${payload.Section}`, {
+      fetch(`/aerc/rest/Sec5nos?CountyID=${this.myCountyId}&Section=${payload.Section}`, {
         method: 'GET',
         headers: new Headers({
           'Content-Type': 'application/json'
@@ -493,7 +493,7 @@ export default {
         myObj = { CountyID: payload.City_no, TownID: payload.Town_no, FID: payload.FID };
       }
 
-      fetch(`http://192.168.3.112/AERC/rest/${myType}`, {
+      fetch(`/AERC/rest/${myType}`, {
         method: 'POST',
         headers: new Headers({
           'Content-Type': 'application/json'
@@ -549,7 +549,7 @@ export default {
         });
         landItem.checked = true;
 
-        fetch(`http://192.168.3.112/AERC/rest/Sec5ByFID?CountyID=${landItem.countyId}&FID=${landItem.fid}`, {
+        fetch(`/AERC/rest/Sec5ByFID?CountyID=${landItem.countyId}&FID=${landItem.fid}`, {
           method: 'GET',
           headers: new Headers({
             'Content-Type': 'application/json'
@@ -585,7 +585,7 @@ export default {
       if (e.shiftKey === true) {
         landItem.checked = true;
 
-        fetch(`http://192.168.3.112/AERC/rest/Sec5ByFID?CountyID=${landItem.countyId}&FID=${landItem.fid}`, {
+        fetch(`/AERC/rest/Sec5ByFID?CountyID=${landItem.countyId}&FID=${landItem.fid}`, {
           method: 'GET',
           headers: new Headers({
             'Content-Type': 'application/json'
@@ -672,7 +672,7 @@ export default {
         myObj = { Ia: '01', Mng: payload.Mng, Stn: payload.Stn };
       }
 
-      fetch(`http://192.168.3.112/AERC/rest/${nextType}`, {
+      fetch(`/AERC/rest/${nextType}`, {
         method: 'POST',
         headers: new Headers({
           'Content-Type': 'application/json'
@@ -723,7 +723,7 @@ export default {
         myObj = { Ia: '01', Mng: payload.Mng, Stn: payload.Stn, FID: payload.FID };
       }
 
-      fetch(`http://192.168.3.112/AERC/rest/${myType}`, {
+      fetch(`/AERC/rest/${myType}`, {
         method: 'POST',
         headers: new Headers({
           'Content-Type': 'application/json'

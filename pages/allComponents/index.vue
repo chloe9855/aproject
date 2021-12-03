@@ -115,6 +115,13 @@
         :all-options="iaOptions"
       />
 
+      <NormalTable-component
+        :list="norList"
+      />
+      <div @click="norList = norList2">
+        NormalTable資料
+      </div>
+
       <br>
       <div
         ref="capture"
@@ -148,6 +155,7 @@ import SwitchOn from '~/components/tools/SwitchOn.vue';
 import AreaNote from '~/components/tools/AreaNote.vue';
 import CalNote from '~/components/tools/CalNote.vue';
 import TreeSelect from '~/components/tools/TreeSelect.vue';
+import NormalTable from '~/components/model/NormalTable.vue';
 
 export default {
   components: {
@@ -162,10 +170,34 @@ export default {
     'SwitchOn-component': SwitchOn,
     'AreaNote-component': AreaNote,
     'CalNote-component': CalNote,
-    'TreeSelect-component': TreeSelect
+    'TreeSelect-component': TreeSelect,
+    'NormalTable-component': NormalTable
   },
   data () {
     return {
+      norList: [],
+      norList2: [
+        {
+          name: '縣市',
+          value: 55555
+        },
+        {
+          name: '鄉鎮',
+          value: 5454
+        },
+        {
+          name: '箱箱',
+          value: 2121
+        },
+        {
+          name: '試試',
+          value: 6526
+        },
+        {
+          name: 'YY',
+          value: 356
+        }
+      ],
       modal1: false,
       options: {
         current: 0,

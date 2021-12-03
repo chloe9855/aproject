@@ -192,10 +192,10 @@ export default {
 
       let url = '';
       if (current === 0) {
-        url = `http://192.168.3.112/AERC/rest/Fund?CountyID=${this.coData1.County}&TownID=${this.coData1.Town}&LandLotNO=${this.coData1.Section}&LandNo=${this.coData1.Sec5cov}&pageCnt=1&pageRows=10`;
+        url = `/AERC/rest/Fund?CountyID=${this.coData1.County}&TownID=${this.coData1.Town}&LandLotNO=${this.coData1.Section}&LandNo=${this.coData1.Sec5cov}&pageCnt=1&pageRows=10`;
       }
       if (current === 1) {
-        url = `http://192.168.3.112/AERC/rest/Fund?CountyID=${this.coData2.County}&TownID=${this.coData2.Town}&Ia=${this.coData2.Ia}&pageCnt=1&pageRows=10`;
+        url = `/AERC/rest/Fund?CountyID=${this.coData2.County}&TownID=${this.coData2.Town}&Ia=${this.coData2.Ia}&pageCnt=1&pageRows=10`;
       }
 
       fetch(url, {
@@ -225,7 +225,7 @@ export default {
     },
     // * @ 取得縣市資料
     getCountyData () {
-      fetch('http://192.168.3.112/AERC/rest/County', {
+      fetch('/AERC/rest/County', {
         method: 'POST',
         headers: new Headers({
           'Content-Type': 'application/json'
@@ -250,7 +250,7 @@ export default {
     },
     // * @ 管理單位 取得鄉鎮資料
     getTownData (payload) {
-      fetch('http://192.168.3.112/AERC/rest/Town', {
+      fetch('/AERC/rest/Town', {
         method: 'POST',
         headers: new Headers({
           'Content-Type': 'application/json'
@@ -288,7 +288,7 @@ export default {
         myObj = { Ia: '01', Mng: payload.Mng, Stn: payload.Stn };
       }
 
-      fetch(`http://192.168.3.112/AERC/rest/${nextType}`, {
+      fetch(`/AERC/rest/${nextType}`, {
         method: 'POST',
         headers: new Headers({
           'Content-Type': 'application/json'
@@ -335,7 +335,7 @@ export default {
         myObj = { CountyID: payload.COUNTYID, TownID: payload.TOWNID };
       }
 
-      fetch(`http://192.168.3.112/AERC/rest/${nextType}`, {
+      fetch(`/AERC/rest/${nextType}`, {
         method: 'POST',
         headers: new Headers({
           'Content-Type': 'application/json'
@@ -373,7 +373,7 @@ export default {
       if (payload === '') { return; }
 
       // 取得地號清單
-      fetch(`http://192.168.3.112/aerc/rest/Sec5nos?CountyID=${this.coData1.County}&Section=${payload.Section}`, {
+      fetch(`/aerc/rest/Sec5nos?CountyID=${this.coData1.County}&Section=${payload.Section}`, {
         method: 'GET',
         headers: new Headers({
           'Content-Type': 'application/json'
@@ -391,7 +391,7 @@ export default {
       });
 
       // 取得地號最大最小值
-      fetch(`http://192.168.3.112/aerc/rest/Sec5no?CountyID=${this.coData1.County}&Section=${payload.Section}`, {
+      fetch(`/aerc/rest/Sec5no?CountyID=${this.coData1.County}&Section=${payload.Section}`, {
         method: 'GET',
         headers: new Headers({
           'Content-Type': 'application/json'

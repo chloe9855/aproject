@@ -771,7 +771,7 @@ export default {
   methods: {
     getVectorTile () {
       SuperGIS.LoadModules(['scripts/MVTData.js', 'vector_tile.js', 'pbf.js', 'scripts/KML.js', 'scripts/Collada.js'], () => {
-        this.allVectors = new sg.layers.VectorMBTLayer('http://192.168.3.112/mapcache/01', {
+        this.allVectors = new sg.layers.VectorMBTLayer('http://210.65.139.69/mapcache/01', {
           loaded: () => {
             this.loadVectors();
           }
@@ -786,7 +786,7 @@ export default {
     },
     // * @ 圖層工具：底圖切換API
     getBaseLayer () {
-      fetch('http://192.168.3.112/AERC/rest/Layer', {
+      fetch('/AERC/rest/Layer', {
         method: 'GET',
         headers: new Headers({
           'Content-Type': 'application/json'

@@ -203,7 +203,7 @@ export default {
   },
   name: 'IrrigatedLand',
   mounted () {
-    // fetch('http://192.168.3.112/AERC/rest/IrrigationLand?pageCnt=1&pageRows=10', {
+    // fetch('/AERC/rest/IrrigationLand?pageCnt=1&pageRows=10', {
     //   method: 'POST',
     //   headers: new Headers({
     //     'Content-Type': 'application/json'
@@ -214,7 +214,7 @@ export default {
     // }).then((data) => {
     //   console.log(data);
     // });
-    // axios.post('http://192.168.3.112/AERC/rest/IrrigationLand?pageCnt=1&pageRows=10', { query: [['11', '4', '', '']] }).then(r => {
+    // axios.post('/AERC/rest/IrrigationLand?pageCnt=1&pageRows=10', { query: [['11', '4', '', '']] }).then(r => {
     //   console.log(r);
     // }).catch(function (error) {
     //   console.log(error);
@@ -260,6 +260,7 @@ export default {
         this.clearSearchIrrigatedLand();
         this.searchObj = null;
         if (e && e.ia) {
+<<<<<<< HEAD
           if (e.grp.length > 0) {
             this.searchObj = getMultipleSearch(e);
           } else {
@@ -270,6 +271,14 @@ export default {
             this.searchObj = [x];
           }
           axios.post('http://192.168.3.112/AERC/rest/IrrigationLandArea', { query: this.searchObj }).then(r => {
+=======
+          const x = [e.ia];
+          x.push(e.mng || '');
+          x.push(e.stn || '');
+          x.push(e.grp || '');
+          this.searchObj = [x];
+          axios.post('/AERC/rest/IrrigationLandArea', { query: this.searchObj }).then(r => {
+>>>>>>> joyy
             this.sum_grp = r.data[0].data[0].sum_grp;
             this.sum_irgarea = r.data[0].data[0].sum_irgarea;
             this.sum_tolarea = r.data[0].data[0].sum_tolarea;
@@ -297,7 +306,7 @@ export default {
             land_no: e.land
           };
           this.searchObj = x;
-          axios.post('http://192.168.3.112/AERC/rest/IrrigationLand?pageCnt=1&pageRows=1', this.searchObj).then(r => {
+          axios.post('/AERC/rest/IrrigationLand?pageCnt=1&pageRows=1', this.searchObj).then(r => {
             const x = r.data[0];
             if (r.data.length < 1) {
               _this.isNoDataBg = true;
@@ -331,8 +340,14 @@ export default {
     getPageNum (e) { // 換頁取得DATA
       const _this = this;
       this.$store.commit('TOGGLE_LOADING_STATUS');
+<<<<<<< HEAD
       axios.post(`http://192.168.3.112/AERC/rest/IrrigationLand?pageCnt=${e.page}&pageRows=${e.size}`, { query: _this.searchObj }).then(r => {
         _this.tableList.body = r.data.map(x => {
+=======
+      // axios.post(`/AERC/rest/IrrigationLand?pageCnt=${e.page}&pageRows=10`, { query: [['11', '4', '', '']] }).then(r => {
+      axios.post(`/AERC/rest/IrrigationLand?pageCnt=${e.page}&pageRows=10`, { query: _this.searchObj }).then(r => {
+        this.tableList.body = r.data.map(x => {
+>>>>>>> joyy
           return { title: [x.ia_cns, x.mng_cns, x.stn_cns, x.grp_cns, x.grparea, x.tolarea, x.irgarea] };
         });
       }).then(function () {
