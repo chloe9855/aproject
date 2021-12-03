@@ -11,7 +11,7 @@
         <img
           alt=""
           class="vector"
-          src="https://static.overlay-tech.com/assets/615453fc-d75a-48d3-b454-3dad2c87a1cc.svg"
+          :src="require('~/assets/img/error_icon.svg')"
         >
       </div>
       <p class="error-hint-text">
