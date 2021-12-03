@@ -350,13 +350,39 @@ export default {
         console.log(error);
       });
     },
+    // * 跳轉地圖
+    goMapPage () {
+      console.log(this.columnList);
+      // fetch(`http://192.168.3.112/AERC/rest/Sec5ByFID?CountyID=${countyid}&FID=${fid}`, {
+      //   method: 'GET',
+      //   headers: new Headers({
+      //     'Content-Type': 'application/json'
+      //   })
+      // }).then((response) => {
+      //   return response.json();
+      // }).then((jsonData) => {
+      //   console.log(jsonData);
+
+      //   this.loadModal = false;
+
+      //   const nowUrl = window.location.href;
+      //   const front = nowUrl.substring(0, nowUrl.length - 9);
+      //   const end = 'map/';
+      //   const myUrl = `${front}${end}`;
+
+      //   window.open(myUrl);
+      //   localStorage.setItem('oriData', JSON.stringify(jsonData[0].geometry));
+      // }).catch((err) => {
+      //   console.log(err);
+      // });
+    },
     phBtnEvent (e) {
       if (e) {
         const current = this.toggleCurrent;
         if (current === 0 && this.downloadIrrigationLand !== '') {
           window.location = this.downloadIrrigationLand;
         } else if (current === 1) {
-          console.log(this.router);
+          this.goMapPage();
         }
       }
     },
