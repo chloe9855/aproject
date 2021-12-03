@@ -289,7 +289,8 @@ export default {
       landItemList: [],
       // * 地籍定位 : graphic圖形陣列
       allLandGraphic: [],
-      allMetry: []
+      allMetry: [],
+      userId: ''
 
     };
   },
@@ -299,12 +300,15 @@ export default {
     proj4.defs('EPSG:3826', '+proj=tmerc +lat_0=0 +lon_0=121 +k=0.9999 +x_0=250000 +y_0=0 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs');
     proj4.defs('EPSG:3857', '+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +wktext  +no_defs');
 
-    this.getCountyData();
+    this.userId = sessionStorage.getItem('loginUser');
 
-    this.allDropList.Ia = [{
-      title: '宜蘭01',
-      value: 1
-    }];
+    this.getCountyData();
+    this.getIaList();
+
+    // this.allDropList.Ia = [{
+    //   title: '宜蘭01',
+    //   value: 1
+    // }];
   },
   methods: {
     // * @ 坐標定位 : 清除全部
@@ -654,6 +658,30 @@ export default {
       this.allDropList.Stn = [];
       pMapBase.drawingGraphicsLayer.remove(this.geoGraphic);
     },
+    // * @ 灌溉定位 : 取得管理處資料
+    getIaList () {
+      fetch(`/AERC/rest/Ia/${this.userId}`, {
+        method: 'POST',
+        headers: new Headers({
+          'Content-Type': 'application/json'
+        }),
+        body: JSON.stringify({
+
+        })
+      }).then((response) => {
+        return response.json();
+      }).then((data) => {
+        console.log(data);
+
+        data.forEach((item) => {
+          item.value = item.FID;
+          item.title = `${item.Ia_cns}${item.Ia}`;
+        });
+        this.allDropList.Ia = data;
+      }).catch((err) => {
+        console.log(err);
+      });
+    },
     // * @ 灌溉定位 : 點擊選單 抓出下一排選項的所有清單
     nextListHandler (payload, nextType) {
       if (payload === '') { return; }
@@ -663,13 +691,13 @@ export default {
 
       let myObj = {};
       if (nextType === 'Mng') {
-        myObj = { Ia: '01' };
+        myObj = { Ia: payload.Ia };
       }
       if (nextType === 'Stn') {
-        myObj = { Ia: '01', Mng: payload.Mng };
+        myObj = { Ia: payload.Ia, Mng: payload.Mng };
       }
       if (nextType === 'Grp') {
-        myObj = { Ia: '01', Mng: payload.Mng, Stn: payload.Stn };
+        myObj = { Ia: payload.Ia, Mng: payload.Mng, Stn: payload.Stn };
       }
 
       fetch(`/AERC/rest/${nextType}`, {
@@ -682,7 +710,7 @@ export default {
         if (response.status === 403) {
           this.allDropList[nextType] = [{ title: '不拘', value: 'none' }];
           if (nextType === 'Mng') {
-            this.allDropList[nextType] = [{ title: '不拘', value: 'none', Mng: 0 }];
+            this.allDropList[nextType] = [{ title: '不拘', value: 'none', Mng: 0, Ia: payload.Ia }];
           }
           if (nextType === 'Stn') {
             this.allDropList[nextType] = [{ title: '不拘', value: 'none', Stn: 0 }];
@@ -710,20 +738,28 @@ export default {
       if (payload === '') { return; }
 
       let myObj = {};
+
       if (myType === 'Ia') {
-        myObj = { Ia: '01', FID: 1 };
+        myObj = { Ia: payload.Ia, FID: payload.FID };
       }
       if (myType === 'Mng') {
-        myObj = { Ia: '01', FID: payload.FID };
+        myObj = { Ia: payload.Ia, FID: payload.FID };
       }
       if (myType === 'Stn') {
-        myObj = { Ia: '01', Mng: payload.Mng, FID: payload.FID };
+        myObj = { Ia: payload.Ia, Mng: payload.Mng, FID: payload.FID };
       }
       if (myType === 'Grp') {
-        myObj = { Ia: '01', Mng: payload.Mng, Stn: payload.Stn, FID: payload.FID };
+        myObj = { Ia: payload.Ia, Mng: payload.Mng, Stn: payload.Stn, FID: payload.FID };
       }
 
-      fetch(`/AERC/rest/${myType}`, {
+      let url = '';
+      if (myType === 'Ia') {
+        url = `/AERC/rest/${myType}/${this.userId}`;
+      } else {
+        url = `/AERC/rest/${myType}`;
+      }
+
+      fetch(url, {
         method: 'POST',
         headers: new Headers({
           'Content-Type': 'application/json'

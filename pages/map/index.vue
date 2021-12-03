@@ -524,7 +524,17 @@ export default {
       },
       //* 跳轉視窗 圖形
       geoData: '',
-      localGraphic: ''
+      localGraphic: '',
+      // * 圖磚是否已有
+      getCons: false,
+      getCanal: false,
+      getIa: false,
+      getMng: false,
+      getStn: false,
+      getGrp: false,
+      getRot: false,
+      getPeriod: false,
+      getPool: false
     };
   },
   // layout: 'map',
@@ -920,15 +930,22 @@ export default {
         const index = this.layerOptions.pointList.findIndex(item => item.id === id);
         this.layerOptions.pointList[index].visible = $event;
 
-        MBT.Style[layerName].visible = $event;
-        MBT.updateStyle(MBT.Style);
+        // MBT.Style[layerName].visible = $event;
+        // MBT.updateStyle(MBT.Style);
+        layerName.forEach((item, index) => {
+          allMBT[index].updateStyle({
+            [item]: { visible: $event }
+          });
+        });
       }
       if (category === 'lineList') {
         const index = this.layerOptions.lineList.findIndex(item => item.id === id);
         this.layerOptions.lineList[index].visible = $event;
 
-        MBT.updateStyle({
-          [layerName]: { visible: $event }
+        layerName.forEach((item, index) => {
+          allMBT[index].updateStyle({
+            [item]: { visible: $event }
+          });
         });
         // ARO.updateStyle({
         //   '01_Arrow': { visible: $event }
@@ -938,10 +955,10 @@ export default {
         const index = this.layerOptions.surfaceList.findIndex(item => item.id === id);
         this.layerOptions.surfaceList[index].visible = $event;
 
-        // MBT.Style[layerName].visible = $event;
-        // MBT.updateStyle(MBT.Style);
-        MBT.updateStyle({
-          [layerName]: { visible: $event }
+        layerName.forEach((item, index) => {
+          allMBT[index].updateStyle({
+            [item]: { visible: $event }
+          });
         });
       }
       // 底圖切換
@@ -970,8 +987,10 @@ export default {
         const indexB = this.layerOptions.pointList[index].type.findIndex(item => item.id === id);
         this.layerOptions.pointList[index].type[indexB].visible = $event;
 
-        MBT.updateStyle({
-          [layerName]: { subid: subId, subs: { [branchName]: { visible: $event } } }
+        layerName.forEach((item, index) => {
+          allMBT[index].updateStyle({
+            [item]: { subid: subId, subs: { [branchName]: { visible: $event } } }
+          });
         });
       }
       if (category === 'lineList') {
@@ -979,8 +998,13 @@ export default {
         const indexB = this.layerOptions.lineList[index].type.findIndex(item => item.id === id);
         this.layerOptions.lineList[index].type[indexB].visible = $event;
 
-        MBT.updateStyle({
-          [layerName]: { subid: subId, subs: { [branchName]: { visible: $event } } }
+        // MBT.updateStyle({
+        //   [layerName]: { subid: subId, subs: { [branchName]: { visible: $event } } }
+        // });
+        layerName.forEach((item, index) => {
+          allMBT[index].updateStyle({
+            [item]: { subid: subId, subs: { [branchName]: { visible: $event } } }
+          });
         });
       }
       if (category === 'surfaceList') {
@@ -988,8 +1012,10 @@ export default {
         const indexB = this.layerOptions.surfaceList[index].type.findIndex(item => item.id === id);
         this.layerOptions.surfaceList[index].type[indexB].visible = $event;
 
-        MBT.updateStyle({
-          [layerName]: { subid: subId, subs: { [branchName]: { visible: $event } } }
+        layerName.forEach((item, index) => {
+          allMBT[index].updateStyle({
+            [item]: { subid: subId, subs: { [branchName]: { visible: $event } } }
+          });
         });
       }
     },
@@ -1007,9 +1033,15 @@ export default {
         subId = item.subId;
       });
 
-      MBT.updateStyle({
-        [layerName]: { subid: subId, subs: newObj }
+      // MBT.updateStyle({
+      //   [layerName]: { subid: subId, subs: newObj }
+      // });
+      layerName.forEach((item2, index2) => {
+        allMBT[index2].updateStyle({
+          [item2]: { subid: subId, subs: newObj }
+        });
       });
+
       this.layerOptions.pointList[index].allShow = $event;
     },
     allLineCtrl ($event, id, layerName) {
@@ -1025,9 +1057,12 @@ export default {
         subId = item.subId;
       });
 
-      MBT.updateStyle({
-        [layerName]: { subid: subId, subs: newObj }
+      layerName.forEach((item2, index2) => {
+        allMBT[index2].updateStyle({
+          [item2]: { subid: subId, subs: newObj }
+        });
       });
+
       this.layerOptions.lineList[index].allShow = $event;
     },
     allSurfaceCtrl ($event, id, layerName) {
@@ -1043,9 +1078,12 @@ export default {
         subId = item.subId;
       });
 
-      MBT.updateStyle({
-        [layerName]: { subid: subId, subs: newObj }
+      layerName.forEach((item2, index2) => {
+        allMBT[index2].updateStyle({
+          [item2]: { subid: subId, subs: newObj }
+        });
       });
+
       this.layerOptions.surfaceList[index].allShow = $event;
     },
     // * @ 圖層工具：透明度調整
@@ -1057,9 +1095,9 @@ export default {
 
         this.layerOptions.pointList[index].opacity = value;
 
-        // MBT.Style[layerName].style = { opacity: value / 100 };
-        // MBT.updateStyle(MBT.Style);
-        MBT.updateStyle({ [layerName]: { style: { opacity: value / 100 } } });
+        layerName.forEach((item, index) => {
+          allMBT[index].updateStyle({ [item]: { style: { opacity: value / 100 } } });
+        });
       }
       if (category === 'lineList') {
         const index = this.layerOptions.lineList.findIndex(item => item.id === id);
@@ -1068,9 +1106,9 @@ export default {
 
         this.layerOptions.lineList[index].opacity = value;
 
-        // MBT.Style[layerName].style = { opacity: value / 100 };
-        // MBT.updateStyle(MBT.Style);
-        MBT.updateStyle({ [layerName]: { style: { opacity: value / 100 } } });
+        layerName.forEach((item, index) => {
+          allMBT[index].updateStyle({ [item]: { style: { opacity: value / 100 } } });
+        });
         // ARO.updateStyle({ '01_Arrow': { style: { opacity: value / 100 } } });
       }
       if (category === 'surfaceList') {
@@ -1082,7 +1120,9 @@ export default {
 
         // MBT.Style[layerName].style = { opacity: value / 100 };
         // MBT.updateStyle(MBT.Style);
-        MBT.updateStyle({ [layerName]: { style: { opacity: value / 100 } } });
+        layerName.forEach((item, index) => {
+          allMBT[index].updateStyle({ [item]: { style: { opacity: value / 100 } } });
+        });
       }
       // 底圖切換
       if (category === 'baseLayer') {
@@ -1572,112 +1612,143 @@ export default {
         }
         // 點線面圖資載入
         if (value === 'switchLayersWindow' && this.openOnceLa === true) {
-          Object.keys(MBT.Style).forEach((key) => {
-            console.log(key);
-            console.log(MBT.Style[key]);
-            const mName = key.substring(3);
-            const result = {
-              id: Math.random(),
-              LayerName: key,
-              visible: false,
-              opacity: 100,
-              LayerTitle: '',
-              type: [],
-              allShow: true
-            };
-            if (mName === 'Cons') {
-              result.LayerTitle = '水工構造物';
-              this.layerOptions.pointList.push(result);
-            }
-            if (mName === 'Canal') {
-              result.LayerTitle = '渠道';
-              this.layerOptions.lineList.push(result);
+          allMBT.forEach((itemBT) => {
+            Object.keys(itemBT.Style).forEach((key) => {
+              console.log(key);
+              console.log(itemBT.Style[key]);
+              const mName = key.substring(3);
 
-              const newArr = [];
-              MBT.Style[key].paint['line-color'].forEach((item, index, array) => {
-                if (index % 2 === 1 && index !== array.length - 1) {
-                  const res = {
-                    id: Math.random(),
-                    name: item[2],
-                    visible: true,
-                    subId: item[1][1]
-                  };
+              const newList = iaList.map(item => `${item}_${mName}`);
+              const result = {
+                id: Math.random(),
+                LayerName: newList,
+                visible: false,
+                opacity: 100,
+                LayerTitle: '',
+                type: [],
+                allShow: true
+              };
 
-                  newArr.push(res);
-                }
-              });
+              if (mName === 'Cons' && this.getCons === false) {
+                this.getCons = true;
+                result.LayerTitle = '水工構造物';
+                this.layerOptions.pointList.push(result);
 
-              result.type = newArr;
-            }
-            if (mName === 'Ia') {
-              result.LayerTitle = '管理處';
-              result.visible = true;
-              result.opacity = 50;
-              this.layerOptions.surfaceList.push(result);
-            }
-            if (mName === 'Mng') {
-              result.LayerTitle = '管理分處';
-              result.opacity = 50;
-              this.layerOptions.surfaceList.push(result);
-            }
-            if (mName === 'Stn') {
-              result.LayerTitle = '工作站';
-              result.opacity = 50;
-              this.layerOptions.surfaceList.push(result);
+                const newArr = [];
+                itemBT.Style[key].layout['icon-image'].forEach((item, index, array) => {
+                  if (index % 2 === 1 && index !== array.length - 1) {
+                    const res = {
+                      id: Math.random(),
+                      name: item[2],
+                      visible: true,
+                      subId: item[1][1]
+                    };
 
-              const newArr = [];
-              MBT.Style[key].paint['fill-color'].forEach((item, index, array) => {
-                if (index % 2 === 1 && index !== array.length - 1) {
-                  const res = {
-                    id: Math.random(),
-                    name: item[2],
-                    visible: true,
-                    subId: item[1][1]
-                  };
+                    newArr.push(res);
+                  }
+                });
 
-                  newArr.push(res);
-                }
-              });
+                result.type = newArr;
+              }
+              if (mName === 'Canal' && this.getCanal === false) {
+                this.getCanal = true;
+                result.LayerTitle = '渠道';
+                this.layerOptions.lineList.push(result);
 
-              result.type = newArr;
-            }
-            if (mName === 'Grp') {
-              result.LayerTitle = '小組';
-              result.opacity = 50;
-              this.layerOptions.surfaceList.push(result);
-            }
-            if (mName === 'Rot') {
-              result.LayerTitle = '輪區';
-              result.opacity = 50;
-              this.layerOptions.surfaceList.push(result);
-            }
-            if (mName === 'Period') {
-              result.LayerTitle = '期作別';
-              result.opacity = 50;
-              this.layerOptions.surfaceList.push(result);
+                const newArr = [];
+                itemBT.Style[key].paint['line-color'].forEach((item, index, array) => {
+                  if (index % 2 === 1 && index !== array.length - 1) {
+                    const res = {
+                      id: Math.random(),
+                      name: item[2],
+                      visible: true,
+                      subId: item[1][1]
+                    };
 
-              const newArr = [];
-              MBT.Style[key].paint['fill-color'].forEach((item, index, array) => {
-                if (index % 2 === 1 && index !== array.length - 1) {
-                  const res = {
-                    id: Math.random(),
-                    name: item[2],
-                    visible: true,
-                    subId: item[1][1]
-                  };
+                    newArr.push(res);
+                  }
+                });
 
-                  newArr.push(res);
-                }
-              });
+                result.type = newArr;
+              }
+              if (mName === 'Ia' && this.getIa === false) {
+                this.getIa = true;
+                result.LayerTitle = '管理處';
+                result.visible = true;
+                result.opacity = 50;
+                this.layerOptions.surfaceList.push(result);
+              }
+              if (mName === 'Mng' && this.getMng === false) {
+                this.getMng = true;
+                result.LayerTitle = '管理分處';
+                result.opacity = 50;
+                this.layerOptions.surfaceList.push(result);
+              }
+              if (mName === 'Stn' && this.getStn === false) {
+                this.getStn = true;
+                result.LayerTitle = '工作站';
+                result.opacity = 50;
+                this.layerOptions.surfaceList.push(result);
 
-              result.type = newArr;
-            }
-            if (mName === 'Pool') {
-              result.LayerTitle = '埤塘';
-              result.opacity = 50;
-              this.layerOptions.surfaceList.push(result);
-            }
+                const newArr = [];
+                itemBT.Style[key].paint['fill-color'].forEach((item, index, array) => {
+                  if (index % 2 === 1 && index !== array.length - 1) {
+                    const res = {
+                      id: Math.random(),
+                      name: item[2],
+                      visible: true,
+                      subId: item[1][1]
+                    };
+
+                    newArr.push(res);
+                  }
+                });
+
+                result.type = newArr;
+              }
+              if (mName === 'Grp' && this.getGrp === false) {
+                this.getGrp = true;
+                result.LayerTitle = '小組';
+                result.opacity = 50;
+                this.layerOptions.surfaceList.push(result);
+              }
+              if (mName === 'Rot' && this.getRot === false) {
+                this.getRot = true;
+                result.LayerTitle = '輪區';
+                result.opacity = 50;
+                this.layerOptions.surfaceList.push(result);
+              }
+              if (mName === 'Period' && this.getPeriod === false) {
+                this.getPeriod = true;
+                result.LayerTitle = '期作別';
+                result.opacity = 50;
+                this.layerOptions.surfaceList.push(result);
+
+                const newArr = [];
+                itemBT.Style[key].paint['fill-color'].forEach((item, index, array) => {
+                  if (index % 2 === 1 && index !== array.length - 1) {
+                    const res = {
+                      id: Math.random(),
+                      name: item[2],
+                      visible: true,
+                      subId: item[1][1]
+                    };
+
+                    newArr.push(res);
+                  }
+                });
+
+                result.type = newArr;
+              }
+              if (mName === 'Pool' && this.getPool === false) {
+                this.getPool = true;
+                result.LayerTitle = '埤塘';
+                result.opacity = 50;
+                this.layerOptions.surfaceList.push(result);
+              }
+            });
           });
+
           this.openOnceLa = false;
         }
       }

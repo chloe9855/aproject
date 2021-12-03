@@ -1,7 +1,7 @@
 <template>
   <div class="out_wrap">
     <Dropdown-component
-      :options="dropList"
+      :options="allIaList"
       :placeholders="'請選擇管理處'"
       :change-text="clearText"
       @DropdownVal="getCanalLists"
@@ -91,6 +91,12 @@ export default {
     'InputTool-component': InputTool,
     'Buttons-component': Buttons
   },
+  props: {
+    // 管理處下拉選單
+    allIaList: {
+      type: Array
+    }
+  },
   data () {
     return {
       dropList: [],
@@ -102,7 +108,7 @@ export default {
   },
   name: 'ChannelSearch',
   mounted () {
-    this.dropList = [{ title: '01 宜蘭', value: '1' }];
+    // this.dropList = [{ title: '01 宜蘭', value: '1' }];
   },
   methods: {
     // * 取得該管理處的所有渠道

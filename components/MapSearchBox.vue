@@ -12,6 +12,7 @@
       <keep-alive>
         <component
           :is="componentInstance"
+          :all-ia-list="myIaList"
           :click-map-list="ListCS"
           @channelSearch="$emit('search')"
           @keywordSearch="getKeywordData"
@@ -152,6 +153,7 @@ export default {
       searchResult: {
         channel: ''
       },
+      myIaList: '',
       //* 關鍵字查詢 屬性資料表格
       columnList: [],
       backList: [],
@@ -166,11 +168,15 @@ export default {
       stnData: [],
       grpData: [],
       periodData: [],
-      blockTitle: ''
+      blockTitle: '',
+      userId: ''
     };
   },
   name: 'MapSearchBox',
   mounted () {
+    this.userId = sessionStorage.getItem('loginUser');
+    this.getIaList();
+
     const data = require('~/static/channel.json');
     this.searchResult.channel = data;
 
@@ -196,6 +202,30 @@ export default {
     this.periodData = data7.data;
   },
   methods: {
+    // * @ 取得管理處資料
+    getIaList () {
+      fetch(`/AERC/rest/Ia/${this.userId}`, {
+        method: 'POST',
+        headers: new Headers({
+          'Content-Type': 'application/json'
+        }),
+        body: JSON.stringify({
+
+        })
+      }).then((response) => {
+        return response.json();
+      }).then((data) => {
+        console.log(data);
+
+        data.forEach((item) => {
+          item.value = item.FID;
+          item.title = `${item.Ia_cns}${item.Ia}`;
+        });
+        this.myIaList = data;
+      }).catch((err) => {
+        console.log(err);
+      });
+    },
     // * @ 點擊查詢 : 取得屬性資料表格
     getClickData (id, info, title) {
       this.blockTitle = title;

@@ -1,7 +1,7 @@
 <template>
   <div class="out_wrap">
     <Dropdown-component
-      :options="manList"
+      :options="allIaList"
       :placeholders="'請選擇管理處'"
       :change-text="clearText"
       @DropdownVal="getCanalLists"
@@ -33,6 +33,12 @@ export default {
     'InputTool-component': InputTool,
     'Buttons-component': Buttons
   },
+  props: {
+    // 管理處下拉選單
+    allIaList: {
+      type: Array
+    }
+  },
   data () {
     return {
       manList: [],
@@ -45,7 +51,7 @@ export default {
   },
   name: 'KeyWordSearch',
   mounted () {
-    this.manList = [{ title: '01 宜蘭', value: '1' }];
+    // this.manList = [{ title: '01 宜蘭', value: '1' }];
   },
   methods: {
     clearAllHandler () {
@@ -65,7 +71,7 @@ export default {
           'Content-Type': 'application/json'
         }),
         body: JSON.stringify({
-          Ia: '01'
+          Ia: payload.Ia
         })
       }).then((response) => {
         if (response.status === 403) {
@@ -99,7 +105,7 @@ export default {
           'Content-Type': 'application/json'
         }),
         body: JSON.stringify({
-          Ia: '01',
+          Ia: myItem[0].Ia,
           FID: myItem[0].FID
         })
       }).then((response) => {
