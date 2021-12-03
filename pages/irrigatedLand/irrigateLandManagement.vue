@@ -198,7 +198,9 @@ export default {
       alertText: '',
       topBtnText: '',
       downloadIrrigationLand: '',
-      isNoDataBg: false
+      isNoDataBg: false,
+      countyId: '',
+      countyFID: ''
     };
   },
   name: 'IrrigatedLand',
@@ -299,6 +301,8 @@ export default {
           this.searchObj = x;
           axios.post('/AERC/rest/IrrigationLand?pageCnt=1&pageRows=1', this.searchObj).then(r => {
             const x = r.data[0];
+            this.countyId = x.county_id;
+            this.countyFID = x.FID;
             if (r.data.length < 1) {
               _this.isNoDataBg = true;
             } else {
@@ -352,29 +356,29 @@ export default {
     },
     // * 跳轉地圖
     goMapPage () {
-      console.log(this.columnList);
-      // fetch(`http://192.168.3.112/AERC/rest/Sec5ByFID?CountyID=${countyid}&FID=${fid}`, {
-      //   method: 'GET',
-      //   headers: new Headers({
-      //     'Content-Type': 'application/json'
-      //   })
-      // }).then((response) => {
-      //   return response.json();
-      // }).then((jsonData) => {
-      //   console.log(jsonData);
+      const countyId = this.countyId;
+      const fid = this.countyFID;
+      this.$store.commit('TOGGLE_LOADING_STATUS');
+      fetch(`http://192.168.3.112/AERC/rest/Sec5ByFID?CountyID=${countyId}&FID=${fid}`, {
+        method: 'GET',
+        headers: new Headers({
+          'Content-Type': 'application/json'
+        })
+      }).then((response) => {
+        return response.json();
+      }).then((jsonData) => {
+        console.log(jsonData);
+        this.$store.commit('TOGGLE_LOADING_STATUS');
+        const nowUrl = window.location.origin;
+        const front = this.$router.options.base;
+        const end = 'map/';
+        const myUrl = `${nowUrl}${front}${end}`;
 
-      //   this.loadModal = false;
-
-      //   const nowUrl = window.location.href;
-      //   const front = nowUrl.substring(0, nowUrl.length - 9);
-      //   const end = 'map/';
-      //   const myUrl = `${front}${end}`;
-
-      //   window.open(myUrl);
-      //   localStorage.setItem('oriData', JSON.stringify(jsonData[0].geometry));
-      // }).catch((err) => {
-      //   console.log(err);
-      // });
+        window.open(myUrl);
+        localStorage.setItem('oriData', JSON.stringify(jsonData[0].geometry));
+      }).catch((err) => {
+        console.log(err);
+      });
     },
     phBtnEvent (e) {
       if (e) {
