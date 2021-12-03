@@ -2,6 +2,7 @@
   <div class="inputBox">
     <InputVertical
       title="身分證字號"
+      is-warn="userId"
       @inputValue="getUserID"
     />
     <DropdownVertical

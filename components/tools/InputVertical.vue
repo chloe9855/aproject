@@ -152,7 +152,8 @@ export default {
     return {
       message: '',
       RegExpType: {
-        code8: '^.{8}$'
+        code8: '^.{8}$',
+        userId: '^[A-Z]{1}.[0-9]{8}'
       },
       filterBox: false,
       filterList: [],
