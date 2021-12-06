@@ -128,7 +128,7 @@ export default {
           { val: 'editCompensate7', title: ['XX縣', 'XX鄉', 'XX段', '2,503,882', 'xx工作站', '2,506,555', '陳XX', '1/3', '公同共有', '小大', 'XX', '2,506', 'XXXXXX', '1,2,3,4'] }
         ]
       },
-      checkList: { data: [{ title: '全選', value: 'addAll' }, { title: '1.身分證(正反)影本', value: 'add0' }, { title: '2.金融帳戶影本', value: 'add1' }, { title: '3.附件一:切結書', value: 'add2' }, { title: '4.附件二:實耕者證明文件', value: 'add3' }, { title: '5.代理委任書:(授權書或同意書)', value: 'add4' }] },
+      checkList: { data: [{ title: '全選', value: 'attachmentAll' }, { title: '1.身分證(正反)影本', value: 'attachment1' }, { title: '2.金融帳戶影本', value: 'attachment2' }, { title: '3.附件一:切結書', value: 'attachment3' }, { title: '4.附件二:實耕者證明文件', value: 'attachment4' }, { title: '5.代理委任書:(授權書或同意書)', value: 'attachment5' }] },
       BreadCrumb: ['灌溉地管理', '停灌補償申報', '編輯停灌補償申請單'],
       toggleStatus: false,
       boxToggleStatus: true,

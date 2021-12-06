@@ -4,21 +4,36 @@
       <div class="listTitle">
         申請土地位置
       </div>
+      {{ searchObj }}
       <div class="flexBox">
         <Dropdown
-          :options="member"
+          title="縣市"
+          :options="member.county"
+          :change-text="isClear"
           class="flex-4"
+          @DropdownVal="countyDrop"
         />
         <Dropdown
-          :options="member"
+          title="鄉鎮"
+          :options="member.town"
+          :change-text="isClear"
           class="flex-4"
+          @DropdownVal="townDrop"
         />
         <Dropdown
-          :options="member"
+          title="段名"
+          :options="member.section"
+          :change-text="isClear"
           class="flex-4"
+          @DropdownVal="sectionDrop"
         />
         <InputTool
+          title="地號"
+          :green-hint="`地號範圍: ${minNo}-${maxNo}`"
+          :search-input="Sec5covList"
+          star-sign="*"
           class="flex-4"
+          @inputValue="getInputValue"
         />
         <Button
           :name="'button-default'"
@@ -63,7 +78,7 @@
           <TableTool
             :table-column="ownerList"
             :is-paginate="false"
-            @DropdownVal="ownerListData"
+            @checkList="ownerListData"
           />
           <div class="flexBox ownerBtnBox">
             <Button
@@ -89,8 +104,9 @@
       </div>
       <div class="flexBox">
         <Dropdown
-          :options="member"
+          :options="memberTest"
           class="flex-1"
+          @DropdownVal="getFarmerCategory"
         />
         <div class="flex-4" />
       </div>
@@ -154,6 +170,7 @@ import InputTool from '~/components/tools/InputTool';
 import CheckInput from '~/components/model/editList/CheckInput';
 import AreaNote from '~/components/tools/AreaNote.vue';
 import TableTool from '~/components/model/Table';
+import { getCounties, getTowns, getSections, getSecNo, getSecNoList } from '~/publish/Irrigation.js';
 export default {
   components: {
     Dropdown,
@@ -190,7 +207,7 @@ export default {
   },
   data: () => {
     return {
-      member: [{ title: '預設選項', value: '0' }, { title: '工作站人員', value: '1' }, { title: '管理人員', value: '2' }, { title: '民眾', value: '3' }],
+      memberTest: [{ title: '預設選項', value: '0' }, { title: '工作站人員', value: '1' }, { title: '管理人員', value: '2' }, { title: '民眾', value: '3' }],
       statusOwnerList: false,
       options: {
         current: 0,
@@ -209,25 +226,77 @@ export default {
       note: '',
       owner: '',
       category: '',
-      categoryContent: ''
+      categoryContent: '',
+      searchObj: {
+        county_id: '',
+        county_code: '',
+        town_id: '',
+        town_code: '',
+        section: '',
+        landno: '',
+        owner_id: '',
+        owner_name: '',
+        own_scro: '',
+        percent2: 0,
+        percent1: 0,
+        farmer: 0,
+        category: 0,
+        area: 0,
+        note: ''
+      },
+      attachment: {
+        attachment1: 0,
+        attachment2: 0,
+        attachment3: 0,
+        attachment4: 0,
+        attachment5: 0
+      },
+      member: {
+        county: [],
+        town: [],
+        section: [],
+        land: ''
+      },
+      // * 地號清單
+      Sec5covList: [],
+      minNo: '',
+      maxNo: '',
+      myLandnoList: [],
+      //
+      countyList: [],
+      townList: []
     };
   },
   name: 'LandSearch',
+  mounted () {
+    getCounties().then(r => {
+      this.member.county = r.data.map(x => ({ title: x.COUNTYNAME, value: x.COUNTYID }));
+      this.countyList = r.data;
+    }).catch(e => {
+      console.log(e);
+    });
+  },
   methods: {
     toggleOwnerList () {
       this.statusOwnerList = !this.statusOwnerList;
     },
     cropNote (e) {
       if (e) {
-        this.note = e;
+        console.log(e);
+        this.searchObj.note = e.val;
       }
     },
     ownerListData (e) {
+      console.log(e);
       if (e) {
         this.owner = e;
       }
     },
+    getFarmerCategory (e) {
+      console.log(e);
+    },
     getCategory (e) {
+      console.log(e);
       if (e) {
         this.category = e.ischeck;
         this.categoryContent = e.text;
@@ -243,10 +312,89 @@ export default {
       if (this.dataArr[2])result.attachment3 = this.dataArr[2];
       if (this.dataArr[3])result.attachment4 = this.dataArr[3];
       if (this.dataArr[4])result.attachment5 = this.dataArr[4];
-      console.log(result);
+    },
+    countyDrop (payload) {
+      this.searchObj.county_id = payload.value;
+      this.searchObj.town_id = '';
+      this.searchObj.section = '';
+      this.searchObj.landno = '';
+      this.searchObj.county_code = this.getCountyCode(this.searchObj.county_id);
+      this.member.town = [];
+      this.member.section = [];
+      this.member.land = { option: [{ title: '', value: '0' }] };
+      getTowns(this.searchObj.county_id).then(r => {
+        this.townList = r.data;
+        this.member.town = r.data.map(x => ({ title: x.TOWNNAME, value: x.TOWNID }));
+      });
+    },
+    townDrop (payload) {
+      this.searchObj.town_id = payload.value;
+      this.searchObj.section = '';
+      this.searchObj.landno = '';
+      this.member.section = [];
+      this.member.land = { option: [{ title: '', value: '0' }] };
+      this.searchObj.town_code = this.getTownCode(this.searchObj.town_id);
+      getSections(this.searchObj.county_id, this.searchObj.town_id).then(r => {
+        this.member.section = r.data.map(x => ({ title: x.Sec_cns, value: x.Section }));
+      });
+    },
+    sectionDrop (payload) {
+      this.searchObj.section = payload.value;
+      this.searchObj.landno = '';
+      this.member.land = { option: [{ title: '', value: '0' }] };
+      // getLands(this.searchObj.county, this.searchObj.town, this.searchObj.section).then(r => {
+      //   this.member.land = { option: r.data.map(x => ({ title: x.Land, value: x.Land_no })) };
+      // });
+      getSecNo(this.searchObj.county_id, this.searchObj.section).then(r => {
+        this.maxNo = r.data[0].Max;
+        this.minNo = r.data[0].Min;
+      });
+      getSecNoList(this.searchObj.county_id, this.searchObj.section).then(r => {
+        this.Sec5covList = r.data.map(item => item.Land_no);
+      });
+    },
+    getInputValue (e) {
+      if (e) {
+        this.inputValue = e;
+        this.searchObj.landno = e.val;
+      }
+    },
+    getCountyCode (e) {
+      const result = this.countyList.filter(item => item.COUNTYID === e);
+      return result[0].COUNTYCODE;
+    },
+    getTownCode (e) {
+      const result = this.townList.filter(item => item.TOWNID === e);
+      return result[0].TOWNCODE;
     }
   },
   computed: {
+  },
+  watch: {
+    dataArr (n, o) {
+      const all = 'attachmentAll';
+      const isAll = this.dataArr.indexOf(all) > -1;
+      const dataLength = this.dataArr.length;
+      if (isAll && dataLength < 6) {
+        if (o.indexOf(all) > -1) {
+          const a = this.dataArr.indexOf(all);
+          this.dataArr.splice(a, 1);
+        } else {
+          this.dataArr = ['attachmentAll', 'attachment1', 'attachment2', 'attachment3', 'attachment4', 'attachment5'];
+        }
+      } else if (!isAll && dataLength >= 5) {
+        if (o.indexOf(all) > -1) {
+          this.dataArr = [];
+        } else {
+          this.dataArr.unshift(all);
+        }
+      }
+      this.attachment.attachment1 = this.dataArr.indexOf('attachment1') > -1 ? 1 : 0;
+      this.attachment.attachment2 = this.dataArr.indexOf('attachment2') > -1 ? 1 : 0;
+      this.attachment.attachment3 = this.dataArr.indexOf('attachment3') > -1 ? 1 : 0;
+      this.attachment.attachment4 = this.dataArr.indexOf('attachment4') > -1 ? 1 : 0;
+      this.attachment.attachment5 = this.dataArr.indexOf('attachment5') > -1 ? 1 : 0;
+    }
   }
 };
 </script>
