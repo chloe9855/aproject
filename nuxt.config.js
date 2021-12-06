@@ -25,14 +25,14 @@ export default {
       { name: 'format-detection', content: 'telephone=no' }
     ],
     script: [
-      {
-        src: '/test008/scripts/Base.js',
-        async: true
-      },
-      {
-        src: '/test008/scripts/OperationBase.js',
-        async: true
-      },
+      // {
+      //   src: '/test008/scripts/Base.js',
+      //   async: true
+      // },
+      // {
+      //   src: '/test008/scripts/OperationBase.js',
+      //   async: true
+      // },
       {
         src: '/test008/scripts/SuperGeoUtility.js',
         async: true

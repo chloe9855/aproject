@@ -167,6 +167,9 @@ export default {
       canalData: [],
       stnData: [],
       grpData: [],
+      mngData: [],
+      poolData: [],
+      rotData: [],
       periodData: [],
       blockTitle: '',
       userId: ''
@@ -200,6 +203,15 @@ export default {
 
     const data7 = require('~/static/clickPeriod.json');
     this.periodData = data7.data;
+
+    const data8 = require('~/static/clickMng.json');
+    this.mngData = data8.data;
+
+    const data9 = require('~/static/clickPool.json');
+    this.poolData = data9.data;
+
+    const data10 = require('~/static/clickRot.json');
+    this.rotData = data10.data;
   },
   methods: {
     // * @ 取得管理處資料
@@ -474,6 +486,123 @@ export default {
 
         this.allClickData = [];
         this.allClickData = this.periodData;
+      }
+
+      // 管理分處
+      if (id === 'Mng') {
+        this.mngData.forEach((item) => {
+          if (item.name === '管理處代碼') {
+            item.value = info.Ia;
+          }
+          if (item.name === '管理處名稱') {
+            item.value = info.Ia_cns;
+          }
+          if (item.name === '面積(m2)') {
+            item.value = info.Area;
+          }
+          if (item.name === '管理分處代碼') {
+            item.value = info.Mng;
+          }
+          if (item.name === '管理分處名稱') {
+            item.value = info.Mng_cns;
+          }
+          if (item.name === '資料日期') {
+            item.value = info.Ymd;
+          }
+        });
+
+        this.allClickData = [];
+        this.allClickData = this.mngData;
+      }
+
+      // 池塘
+      if (id === 'Pool') {
+        this.poolData.forEach((item) => {
+          if (item.name === '管理處代碼') {
+            item.value = info.Ia;
+          }
+          if (item.name === '管理處名稱') {
+            item.value = info.Ia_cns;
+          }
+          if (item.name === '面積(m2)') {
+            item.value = info.Area;
+          }
+          if (item.name === '管理分處代碼') {
+            item.value = info.Mng;
+          }
+          if (item.name === '管理分處名稱') {
+            item.value = info.Mng_cns;
+          }
+          if (item.name === '資料日期') {
+            item.value = info.Ymd;
+          }
+          if (item.name === '工作站代碼') {
+            item.value = info.Stn;
+          }
+          if (item.name === '工作站名稱') {
+            item.value = info.Stn_cns;
+          }
+          if (item.name === '小組代碼') {
+            item.value = info.Grp;
+          }
+          if (item.name === '小組名稱') {
+            item.value = info.Grp_cns;
+          }
+          if (item.name === '碼池塘名稱') {
+            item.value = info.Pool_cns;
+          }
+          if (item.name === '池塘編號-通用碼') {
+            item.value = info.Ex_poolno;
+          }
+        });
+
+        this.allClickData = [];
+        this.allClickData = this.poolData;
+      }
+
+      // 輪區
+      if (id === 'Rot') {
+        this.rotData.forEach((item) => {
+          if (item.name === '管理處代碼') {
+            item.value = info.Ia;
+          }
+          if (item.name === '管理處名稱') {
+            item.value = info.Ia_cns;
+          }
+          if (item.name === '面積(m2)') {
+            item.value = info.Area;
+          }
+          if (item.name === '管理分處代碼') {
+            item.value = info.Mng;
+          }
+          if (item.name === '管理分處名稱') {
+            item.value = info.Mng_cns;
+          }
+          if (item.name === '資料日期') {
+            item.value = info.Ymd;
+          }
+          if (item.name === '工作站代碼') {
+            item.value = info.Stn;
+          }
+          if (item.name === '工作站名稱') {
+            item.value = info.Stn_cns;
+          }
+          if (item.name === '小組代碼') {
+            item.value = info.Grp;
+          }
+          if (item.name === '小組名稱') {
+            item.value = info.Grp_cns;
+          }
+          if (item.name === '輪區代碼') {
+            item.value = info.Rot;
+          }
+          if (item.name === '輪區名稱') {
+            item.value = info.Rot_cns;
+          }
+        });
+
+        this.allClickData = [];
+        this.allClickData = this.rotData;
       }
     },
     // * @ 點擊查詢 : 清除全部

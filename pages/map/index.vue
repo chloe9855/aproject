@@ -1533,8 +1533,9 @@ export default {
     },
     // * 回到全圖
     fullMapCtrl () {
-      pMapBase.ZoomMapTo(pMapBase.getExtent());
-      pMapBase.RefreshMap(true);
+      // pMapBase.ZoomMapTo(pMapBase.getExtent());
+      // pMapBase.RefreshMap(true);
+      ResetZoom();
     },
     // * 放大
     zoomInCtrl () {
@@ -1641,7 +1642,8 @@ export default {
                       id: Math.random(),
                       name: item[2],
                       visible: true,
-                      subId: item[1][1]
+                      subId: item[1][1],
+                      picCons: item[2]
                     };
 
                     newArr.push(res);
@@ -1662,8 +1664,10 @@ export default {
                       id: Math.random(),
                       name: item[2],
                       visible: true,
-                      subId: item[1][1]
+                      subId: item[1][1],
+                      picCanal: ''
                     };
+                    res.picCanal = array[index + 1];
 
                     newArr.push(res);
                   }
@@ -1697,8 +1701,10 @@ export default {
                       id: Math.random(),
                       name: item[2],
                       visible: true,
-                      subId: item[1][1]
+                      subId: item[1][1],
+                      picStn: ''
                     };
+                    res.picStn = array[index + 1];
 
                     newArr.push(res);
                   }
@@ -1731,8 +1737,10 @@ export default {
                       id: Math.random(),
                       name: item[2],
                       visible: true,
-                      subId: item[1][1]
+                      subId: item[1][1],
+                      picPeriod: ''
                     };
+                    res.picPeriod = array[index + 1];
 
                     newArr.push(res);
                   }
