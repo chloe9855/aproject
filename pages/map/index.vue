@@ -926,6 +926,8 @@ export default {
     layerVisibleCtrl ($event, id, category, layerName) {
       console.log(id);
       console.log($event);
+      console.log(layerName);
+
       if (category === 'pointList') {
         const index = this.layerOptions.pointList.findIndex(item => item.id === id);
         this.layerOptions.pointList[index].visible = $event;
@@ -1533,9 +1535,7 @@ export default {
     },
     // * 回到全圖
     fullMapCtrl () {
-      // pMapBase.ZoomMapTo(pMapBase.getExtent());
-      // pMapBase.RefreshMap(true);
-      ResetZoom();
+      backFullMap();
     },
     // * 放大
     zoomInCtrl () {
@@ -1631,6 +1631,8 @@ export default {
               };
 
               if (mName === 'Cons' && this.getCons === false) {
+                if (itemBT.Style[key].layout['icon-image'] === undefined) { return; }
+
                 this.getCons = true;
                 result.LayerTitle = '水工構造物';
                 this.layerOptions.pointList.push(result);
@@ -1653,6 +1655,8 @@ export default {
                 result.type = newArr;
               }
               if (mName === 'Canal' && this.getCanal === false) {
+                if (itemBT.Style[key].paint['line-color'] === undefined) { return; }
+
                 this.getCanal = true;
                 result.LayerTitle = '渠道';
                 this.layerOptions.lineList.push(result);
@@ -1689,6 +1693,8 @@ export default {
                 this.layerOptions.surfaceList.push(result);
               }
               if (mName === 'Stn' && this.getStn === false) {
+                if (itemBT.Style[key].paint['fill-color'] === undefined) { return; }
+
                 this.getStn = true;
                 result.LayerTitle = '工作站';
                 result.opacity = 50;
@@ -1725,6 +1731,8 @@ export default {
                 this.layerOptions.surfaceList.push(result);
               }
               if (mName === 'Period' && this.getPeriod === false) {
+                if (itemBT.Style[key].paint['fill-color'] === undefined) { return; }
+
                 this.getPeriod = true;
                 result.LayerTitle = '期作別';
                 result.opacity = 50;

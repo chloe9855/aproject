@@ -22,13 +22,13 @@ export default {
   },
   name: 'StakeSearch',
   mounted () {
-    this.dropList = [{ title: '01 宜蘭', value: '1' }];
+    //
 
     allMBT.forEach((item) => {
       sg.events.on(item, 'click', (e) => {
         if (e.graphic.id[0].substring(3) === 'Canal') {
           this.title = e.graphic.id[0];
-          this.nowFid = parseInt(e.graphic.id[1], 10);
+          this.nowFid = parseInt(e.graphic.id[2], 10);
           this.nowInfo = e.graphic.attributes;
           this.geoData = e.graphic.geometry;
           this.canalName = e.graphic.attributes.Sys_cns;

@@ -9,18 +9,20 @@
     <InputTool-component
       :input-text="'輸入渠道關鍵字或是點擊地圖'"
       :search-input="canalList"
-      :change-text="clearKeyText"
+      :change-text="clearText2"
+      :add-text="addCanalText"
       @inputValue="searchCanal"
     />
     <div class="input_wrap">
       <div>
         <span class="s1">渠道總長度(公尺)</span>
-        <span>0</span>
+        <span>{{ canalLength }}</span>
       </div>
 
       <div class="theme_checkbox">
         <input
           id="check1"
+          v-model="isReverse"
           type="checkbox"
         >
         <label
@@ -35,11 +37,13 @@
         <InputTool-component
           :input-text="'0'"
           sizing="w-30"
+          @inputValue="(payload) => { range1 = parseInt(payload.val, 10) }"
         />
         ~
         <InputTool-component
           :input-text="'800'"
           sizing="w-30"
+          @inputValue="(payload) => { range2 = parseInt(payload.val, 10) }"
         />
       </div>
       <div class="theme_checkbox box_margin">
@@ -73,7 +77,7 @@
         <Buttons-component
           :name="'button-primary'"
           :text="'查詢'"
-          @click="$emit('channelSearch', 'CHANNEL')"
+          @click="searchHandler"
         />
       </div>
     </div>
@@ -99,21 +103,54 @@ export default {
   },
   data () {
     return {
-      dropList: [],
       allCanalList: [],
       canalList: [],
       clearText: false,
-      clearKeyText: false
+      clearText2: false,
+      // * 目前選擇的管理處
+      nowIa: '',
+      // * 目前渠道的FID值
+      nowFid: '',
+      // * 渠道總長
+      canalLength: '',
+      // * 點擊渠道 輸入框文字
+      addCanalText: '',
+      // * 反向
+      isReverse: false,
+      // * 渠道圖形
+      canalGraphic: '',
+      // * 樁號範圍
+      range1: 0,
+      range2: 0,
+      // * icon
+      iconStart: '',
+      icon1: '',
+      icon2: '',
+      iconEnd: ''
     };
   },
   name: 'ChannelSearch',
   mounted () {
-    // this.dropList = [{ title: '01 宜蘭', value: '1' }];
+    //
+
+    allMBT.forEach((item) => {
+      sg.events.on(item, 'click', (e) => {
+        if (e.graphic.id[0].substring(3) === 'Canal' && e.graphic.attributes.Ia === this.nowIa) {
+          console.log(e);
+
+          this.addCanalText = e.graphic.attributes.Sys_cns;
+          this.nowFid = parseInt(e.graphic.id[2], 10);
+          // 渠道總長
+          this.canalLength = e.graphic.attributes.Length;
+        }
+      });
+    });
   },
   methods: {
     // * 取得該管理處的所有渠道
     getCanalLists (payload) {
       this.clearText = false;
+      this.nowIa = payload.Ia;
 
       fetch('/AERC/rest/Canal', {
         method: 'POST',
@@ -121,7 +158,7 @@ export default {
           'Content-Type': 'application/json'
         }),
         body: JSON.stringify({
-          Ia: '01'
+          Ia: payload.Ia
         })
       }).then((response) => {
         if (response.status === 403) {
@@ -135,6 +172,110 @@ export default {
 
         const nameList = jsonData.map(item => item.Sys_cns);
         this.canalList = nameList;
+      }).catch((err) => {
+        console.log(err);
+      });
+    },
+    // * 取得特定渠道之總長
+    searchCanal (payload) {
+      this.clearText2 = false;
+
+      const myItem = this.allCanalList.filter(item => item.Sys_cns === payload.val);
+      if (myItem.length < 1) {
+        return;
+      }
+
+      this.canalLength = myItem[0].Length;
+      this.nowFid = myItem[0].FID;
+    },
+    // * 查詢
+    searchHandler () {
+      // this.$emit('channelSearch', 'CHANNEL');
+
+      fetch('/AERC/rest/Canal', {
+        method: 'POST',
+        headers: new Headers({
+          'Content-Type': 'application/json'
+        }),
+        body: JSON.stringify({
+          Ia: this.nowIa,
+          FID: this.nowFid
+        })
+      }).then((response) => {
+        return response.json();
+      }).then((jsonData) => {
+        console.log(jsonData);
+
+        // 先清除之前的
+        pMapBase.drawingGraphicsLayer.remove(this.canalGraphic);
+        pMapBase.drawingGraphicsLayer.remove(this.iconStart);
+        pMapBase.drawingGraphicsLayer.remove(this.icon1);
+        pMapBase.drawingGraphicsLayer.remove(this.icon2);
+        pMapBase.drawingGraphicsLayer.remove(this.iconEnd);
+
+        // 畫渠道圖
+        const geometry = sg.geometry.Geometry.fromGeoJson(jsonData[0].geometry);
+        this.canalGraphic = sg.Graphic.createFromGeometry(geometry, { linewidth: 5, linecolor: new sg.Color(126, 255, 178, 1) });
+        pMapBase.drawingGraphicsLayer.add(this.canalGraphic);
+
+        // 定位
+        let point1;
+        let point2;
+        let xMin;
+        let xMax;
+        let yMin;
+        let yMax;
+        if (this.isReverse === false) {
+          // 沒勾反向
+          point1 = geometry.getPoint(this.range1);
+          point2 = geometry.getPoint(this.range2);
+        } else {
+          point1 = geometry.getPoint(this.canalLength - this.range1);
+          point2 = geometry.getPoint(this.canalLength - this.range2);
+        }
+
+        if (point1.x < point2.x) {
+          xMin = point1.x;
+          xMax = point2.x;
+        } else {
+          xMin = point2.x;
+          xMax = point1.x;
+        }
+
+        if (point1.y < point2.y) {
+          yMin = point1.y;
+          yMax = point2.y;
+        } else {
+          yMin = point2.y;
+          yMax = point1.y;
+        }
+
+        const extent = new sg.geometry.Extent();
+        extent.xmax = xMax;
+        extent.xmin = xMin;
+        extent.ymax = yMax;
+        extent.ymin = yMin;
+        pMapBase.ZoomMapTo(extent);
+        pMapBase.RefreshMap(true);
+
+        // 畫icon
+        const start = geometry.getPoint(0);
+        const end = geometry.getPoint(this.canalLength);
+
+        this.icon1 = sg.Graphic.createFromGeometry(new sg.geometry.Point(point1.x, point1.y), { markerurl: require('~/assets/img/marker-big.svg'), markersize: 50, markercolor: new sg.Color(25, 112, 93, 1), text: `0K+${this.range1}`, textsize: 20 });
+
+        this.icon2 = sg.Graphic.createFromGeometry(new sg.geometry.Point(point2.x, point2.y), { markerurl: require('~/assets/img/marker-big.svg'), markersize: 50, markercolor: new sg.Color(25, 112, 93, 1), text: `0K+${this.range2}`, textsize: 20 });
+
+        this.iconStart = sg.Graphic.createFromGeometry(new sg.geometry.Point(start.x, start.y), { markerurl: require('~/assets/img/marker-big.svg'), markersize: 50, markercolor: new sg.Color(25, 112, 93, 1), text: '起始點', textsize: 20 });
+
+        this.iconEnd = sg.Graphic.createFromGeometry(new sg.geometry.Point(end.x, end.y), { markerurl: require('~/assets/img/marker-big.svg'), markersize: 50, markercolor: new sg.Color(25, 112, 93, 1), text: '結束點', textsize: 20 });
+
+        pMapBase.drawingGraphicsLayer.add(this.icon1);
+        pMapBase.drawingGraphicsLayer.add(this.icon2);
+        pMapBase.drawingGraphicsLayer.add(this.iconStart);
+        pMapBase.drawingGraphicsLayer.add(this.iconEnd);
+
+        //
       }).catch((err) => {
         console.log(err);
       });

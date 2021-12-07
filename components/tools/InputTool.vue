@@ -102,6 +102,10 @@ export default {
     alterCoor: {
       type: String,
       default: ''
+    },
+    addText: {
+      type: String,
+      default: ''
     }
   },
   data: () => {
@@ -174,6 +178,11 @@ export default {
     },
     alterCoor (value) {
       this.message = value;
+    },
+    addText (value) {
+      if (value !== '') {
+        this.message = value;
+      }
     }
   }
 };
