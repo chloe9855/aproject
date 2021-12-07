@@ -4,7 +4,6 @@
       <div class="listTitle">
         申請土地位置
       </div>
-      {{ searchObj }}
       <div class="flexBox">
         <Dropdown
           title="縣市"
@@ -312,6 +311,7 @@ export default {
       if (this.dataArr[2])result.attachment3 = this.dataArr[2];
       if (this.dataArr[3])result.attachment4 = this.dataArr[3];
       if (this.dataArr[4])result.attachment5 = this.dataArr[4];
+      this.$emit('addCompensate', this.searchObj);
     },
     countyDrop (payload) {
       this.searchObj.county_id = payload.value;

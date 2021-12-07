@@ -428,9 +428,11 @@ export default {
   },
   name: 'TableTool',
   mounted: function () {
-    this.getPageNum(1);
-    console.log('table');
-    console.log(this.tableColumn);
+    if (this.isPaginate) {
+      this.getPageNum(1);
+    } else {
+      this.tableColumnBody = this.tableColumn.body;
+    }
   },
   methods: {
     inputVal (e) { // 取得INPUT內容
