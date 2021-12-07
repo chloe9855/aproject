@@ -18,7 +18,7 @@ export function applySettingCheck () {
 
 /* API未完成 */
 export function getApplyEvent (data) {
-  return request.get('/AERC/rest/Event', data);
+  return request.post('/AERC/rest/GetEvent', data);
 }
 
 export function editApplyEvent (data) {

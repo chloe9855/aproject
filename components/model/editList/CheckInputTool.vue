@@ -1,0 +1,94 @@
+<template>
+  <div class="flexBox">
+    <div class="flex-1 flexCheckBox checkBoxOption">
+      <input
+        :id="checkObject.id"
+        v-model="isCheck"
+        type="checkbox"
+        :name="name"
+        :value="checkObject.id"
+      ><label :for="checkObject.id" />
+      {{ checkObject.text }}<span>面積(㎡)</span>
+    </div>
+    <InputTool
+      class="flex-1"
+      @inputValue="checkText"
+    />
+  </div>
+</template>
+
+<script>
+import InputTool from '~/components/tools/InputTool.vue';
+export default {
+  components: {
+    InputTool
+  },
+  props: {
+    text: {
+      type: String,
+      default: '態樣1(93000)'
+    },
+    sizing: {
+      type: String,
+      default: 'w-100'
+    },
+    name: {
+      type: String,
+      default: 'category'
+    },
+    value: {
+      type: String,
+      default: ''
+    }
+  },
+  data: () => {
+    return {
+      isCheck: false,
+      checkObject: {
+        id: 'category01', text: '態樣1(93000)'
+      }
+    };
+  },
+  name: 'CheckInputTool',
+  methods: {
+    checkText (e) {
+      if (e) {
+        console.log(this.isCheck);
+        console.log(e);
+        // this.$emit('checkInputVal', { ischeck: this.isCheck, text: e.val });
+      }
+    }
+  },
+  computed: {
+  }
+};
+</script>
+
+<style lang="scss" scoped>
+.flexCheckBox{
+  min-width: 180px;
+}
+.checkBoxOption{
+  input[type="checkbox"] {
+    display:none;
+  }
+  input[type="checkbox"] + label
+  {
+    height: 14px;
+    width: 14px;
+    display:inline-block;
+    margin: 0 5px;
+    cursor: pointer;
+    @include checkbox;
+  }
+  input[type="checkbox"]:checked + label
+  {
+    background: url("~/assets/img/check.svg");
+    height: 14px;
+    width: 14px;
+    display:inline-block;
+    margin: 0 5px;
+    cursor: pointer;
+  }
+}
+</style>

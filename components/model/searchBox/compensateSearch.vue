@@ -47,11 +47,11 @@ export default {
     return {
       // member: [{ title: '預設選項', value: '0' }, { title: '工作站人員', value: '1' }, { title: '管理人員', value: '2' }, { title: '民眾', value: '3' }],
       searchObj: {
-        userId: '',
-        county: '',
-        town: '',
+        id: '',
+        county_id: '',
+        town_id: '',
         section: '',
-        land: ''
+        landno: ''
       },
       member: {
         county: [],
@@ -84,21 +84,21 @@ export default {
       }
     },
     countyDrop (payload) {
-      this.searchObj.county = payload.value;
-      this.searchObj.town = '';
+      this.searchObj.county_id = payload.value;
+      this.searchObj.town_id = '';
       this.searchObj.section = '';
-      this.searchObj.land = '';
+      this.searchObj.landno = '';
       this.member.town = [];
       this.member.section = [];
       this.member.land = { option: [{ title: '', value: '0' }] };
-      getTowns(this.searchObj.county).then(r => {
+      getTowns(this.searchObj.county_id).then(r => {
         this.member.town = r.data.map(x => ({ title: x.TOWNNAME, value: x.TOWNID }));
       });
     },
     townDrop (payload) {
-      this.searchObj.town = payload.value;
+      this.searchObj.town_id = payload.value;
       this.searchObj.section = '';
-      this.searchObj.land = '';
+      this.searchObj.landno = '';
       this.member.section = [];
       this.member.land = { option: [{ title: '', value: '0' }] };
       getSections(this.searchObj.county, this.searchObj.town).then(r => {
@@ -107,18 +107,18 @@ export default {
     },
     sectionDrop (payload) {
       this.searchObj.section = payload.value;
-      this.searchObj.land = '';
+      this.searchObj.landno = '';
       this.member.land = { option: [{ title: '', value: '0' }] };
-      getSecNo(this.searchObj.county, this.searchObj.section).then(r => {
+      getSecNo(this.searchObj.county_id, this.searchObj.section).then(r => {
         this.maxNo = r.data[0].Max;
         this.minNo = r.data[0].Min;
       });
-      getSecNoList(this.searchObj.county, this.searchObj.section).then(r => {
+      getSecNoList(this.searchObj.county_id, this.searchObj.section).then(r => {
         this.Sec5covList = r.data.map(item => item.Land_no);
       });
     },
     landDrop (payload) {
-      this.searchObj.land = payload.value;
+      this.searchObj.landno = payload.value;
     },
     getLandValue (e) {
       console.log(e);
@@ -127,9 +127,8 @@ export default {
       }
     },
     search () {
-      this.searchObj.userId = this.userId;
-      this.searchObj.land = this.landValue;
-      console.log(this.searchObj);
+      this.searchObj.id = this.userId;
+      this.searchObj.landno = this.landValue;
       this.$emit('onsearch', { obj: this.searchObj });
     }
   }

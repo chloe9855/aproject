@@ -43,7 +43,7 @@
         :is-paginate="false"
         class="w-90"
         :is-del="true"
-        :is-scroll-table="true"
+        :is-scroll-table="false"
         @tableEvent="tableEvent"
       />
       <SubTitleTool
@@ -56,6 +56,7 @@
       >
         <input
           id="self"
+          v-model="userConfirm"
           type="checkbox"
           name="self"
           value="self"
@@ -82,6 +83,7 @@ import PageHeader from '~/components/tools/PageHeader.vue';
 import BreadCrumbTool from '~/components/tools/BreadCrumbTool.vue';
 import SubTitleTool from '~/components/tools/SubTitleTool.vue';
 import AddLand from '~/components/model/editList/AddLand.vue';
+import { getBankList } from '~/api/bank';
 
 export default {
   components: {
@@ -125,11 +127,17 @@ export default {
       BreadCrumb: ['灌溉地管理', '停灌補償申報', '編輯停灌補償申請單'],
       toggleStatus: false,
       boxToggleStatus: true,
+      userConfirm: false,
       RequisitionDqata1: { data: [{ title: '姓名', name: '', isRequire: true }, { title: '身份證字號', name: '', isRequire: true }, { title: '出生日期', name: '', isRequire: true }, { title: '地址', name: '', isRequire: true }, { title: '連絡電話', name: '', isRequire: true }, { title: '匯款資訊', name: '', isRequire: true, isSecondInput: true }] },
       RequisitionDqata2: { data: [{ title: '代理人姓名', name: '', isRequire: true }, { title: '代理人身份證字號', name: '', isRequire: true }, { title: '代理人地址', name: '', isRequire: true }, { title: '代理人連絡電話', name: '', isRequire: true }] }
     };
   },
   name: 'EditCompensate',
+  mounted () {
+    getBankList().then(r => {
+      console.log(r);
+    });
+  },
   methods: {
     getToggleStatus (e) {
       this.toggleStatus = e;
@@ -319,18 +327,18 @@ export default {
 
 .tableTool{
   min-height: 10px;
-  max-height: 200px;
+  max-height: 360px;
   overflow: auto;
   background-image: none;
-  // &::-webkit-scrollbar{
-  //   width: 6px;
-  //   height: 6px;
-  // }
-  // &::-webkit-scrollbar-track{
-  //   background: #FFF;
-  // }
-  // &::-webkit-scrollbar-thumb{
-  //   background: #A1BFB8;
-  // }
+  &::-webkit-scrollbar{
+    width: 6px;
+    height: 6px;
+  }
+  &::-webkit-scrollbar-track{
+    background: #FFF;
+  }
+  &::-webkit-scrollbar-thumb{
+    background: #A1BFB8;
+  }
 }
 </style>

@@ -28,16 +28,16 @@
         />
         <InputTool
           title="地號"
-          :green-hint="`地號範圍: ${minNo}-${maxNo}`"
           :search-input="Sec5covList"
           star-sign="*"
           class="flex-4"
           @inputValue="getInputValue"
         />
+        <span class="flex-4">地號範圍:{{ minNo }}-{{ maxNo }}</span>
         <Button
           :name="'button-default'"
           :text="'查詢'"
-          @click="$emit('clear')"
+          @click="getArea"
         />
         <div>
           <img
@@ -57,7 +57,10 @@
     </div>
     <div class="listBox Box2">
       <div class="listTitle" />
-      <AreaNote />
+      <AreaNote
+        v-show="areaText!==''"
+        :text="areaText"
+      />
     </div>
     <div class="listBox Box2">
       <div class="listTitle">
@@ -166,9 +169,10 @@
 import Dropdown from '~/components/tools/Dropdown.vue';
 import Button from '~/components/tools/Buttons';
 import InputTool from '~/components/tools/InputTool';
-import CheckInput from '~/components/model/editList/CheckInput';
+import CheckInput from '~/components/model/editList/CheckInputTool';
 import AreaNote from '~/components/tools/AreaNote.vue';
 import TableTool from '~/components/model/Table';
+import axios from 'axios';
 import { getCounties, getTowns, getSections, getSecNo, getSecNoList } from '~/publish/Irrigation.js';
 export default {
   components: {
@@ -208,6 +212,7 @@ export default {
     return {
       memberTest: [{ title: '預設選項', value: '0' }, { title: '工作站人員', value: '1' }, { title: '管理人員', value: '2' }, { title: '民眾', value: '3' }],
       statusOwnerList: false,
+      areaText: '',
       options: {
         current: 0,
         typeList: [
@@ -224,8 +229,8 @@ export default {
       dataArr: [],
       note: '',
       owner: '',
-      category: '',
-      categoryContent: '',
+      category: [],
+      // categoryContent: '',
       searchObj: {
         county_id: '',
         county_code: '',
@@ -297,8 +302,8 @@ export default {
     getCategory (e) {
       console.log(e);
       if (e) {
-        this.category = e.ischeck;
-        this.categoryContent = e.text;
+        this.category.push(e);
+        // this.categoryContent = e.text;
       }
     },
     addCompensate () {
@@ -366,6 +371,18 @@ export default {
     getTownCode (e) {
       const result = this.townList.filter(item => item.TOWNID === e);
       return result[0].TOWNCODE;
+    },
+    getArea () {
+      const data = {
+        county: this.searchObj.county_id,
+        town: this.searchObj.town_id,
+        Section: this.searchObj.section,
+        land_no: this.searchObj.landno
+      };
+
+      axios.post('/AERC/rest/IrrigationLand?pageCnt=1&pageRows=1', data).then(r => {
+        this.areaText = `本地號 地籍面積${r.data[0].tolarea}平方公尺 灌溉面積${r.data[0].irgarea}平方公尺 已申請面積 平方公尺`;
+      });
     }
   },
   computed: {
