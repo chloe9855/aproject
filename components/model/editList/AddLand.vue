@@ -8,21 +8,21 @@
         <Dropdown
           title="縣市"
           :options="member.county"
-          :change-text="isClear"
+          :change-text="isClearCounty"
           class="flex-4"
           @DropdownVal="countyDrop"
         />
         <Dropdown
           title="鄉鎮"
           :options="member.town"
-          :change-text="isClear"
+          :change-text="isClearTown"
           class="flex-4"
           @DropdownVal="townDrop"
         />
         <Dropdown
           title="段名"
           :options="member.section"
-          :change-text="isClear"
+          :change-text="isClearSection"
           class="flex-4"
           @DropdownVal="sectionDrop"
         />
@@ -31,6 +31,7 @@
           :search-input="Sec5covList"
           star-sign="*"
           class="flex-4"
+          :change-text="isClearLandNo"
           @inputValue="getInputValue"
         />
         <span class="flex-4">地號範圍:{{ minNo }}-{{ maxNo }}</span>
@@ -44,6 +45,7 @@
             alt=""
             class="vector"
             :src="require('~/assets/img/delete.svg')"
+            @click="clearLandLocation"
           >
         </div>
         <div>
@@ -268,7 +270,11 @@ export default {
       myLandnoList: [],
       //
       countyList: [],
-      townList: []
+      townList: [],
+      isClearCounty: false,
+      isClearTown: false,
+      isClearSection: false,
+      isClearLandNo: false
     };
   },
   name: 'LandSearch',
@@ -330,6 +336,7 @@ export default {
       getTowns(this.searchObj.county_id).then(r => {
         this.townList = r.data;
         this.member.town = r.data.map(x => ({ title: x.TOWNNAME, value: x.TOWNID }));
+        this.isClearCounty = false;
       });
     },
     townDrop (payload) {
@@ -341,6 +348,7 @@ export default {
       this.searchObj.town_code = this.getTownCode(this.searchObj.town_id);
       getSections(this.searchObj.county_id, this.searchObj.town_id).then(r => {
         this.member.section = r.data.map(x => ({ title: x.Sec_cns, value: x.Section }));
+        this.isClearTown = false;
       });
     },
     sectionDrop (payload) {
@@ -356,12 +364,14 @@ export default {
       });
       getSecNoList(this.searchObj.county_id, this.searchObj.section).then(r => {
         this.Sec5covList = r.data.map(item => item.Land_no);
+        this.isClearSection = false;
       });
     },
     getInputValue (e) {
       if (e) {
         this.inputValue = e;
         this.searchObj.landno = e.val;
+        this.isClearLandNo = false;
       }
     },
     getCountyCode (e) {
@@ -383,6 +393,12 @@ export default {
       axios.post('/AERC/rest/IrrigationLand?pageCnt=1&pageRows=1', data).then(r => {
         this.areaText = `本地號 地籍面積${r.data[0].tolarea}平方公尺 灌溉面積${r.data[0].irgarea}平方公尺 已申請面積 平方公尺`;
       });
+    },
+    clearLandLocation () {
+      this.isClearCounty = true;
+      this.isClearTown = true;
+      this.isClearSection = true;
+      this.isClearLandNo = true;
     }
   },
   computed: {
