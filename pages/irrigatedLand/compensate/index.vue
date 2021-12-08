@@ -64,7 +64,7 @@ export default {
           { title: '農田水利資料', col: 2 },
           { title: '土地所有權人', col: 3 },
           { title: '農民類別', col: 1 },
-          { title: '申請項目', col: 2 }
+          { title: '申請項目', col: 4 }
         ],
         head: [
           { title: '縣市' },
@@ -78,22 +78,11 @@ export default {
           { title: '權利類別' },
           { title: '申請人類別' },
           { title: '申請類別' },
-          { title: '申請面積㎡' }
+          { title: '申請面積㎡' },
+          { title: '作物備註' },
+          { title: '檢附資料' }
         ],
-        body: [
-          { val: 1, title: ['XX縣', 'XX鄉', 'XX段', '2,503,882', 'xx工作站', '2,506,555', '陳XX', '1/3', '公同共有', '小大', 'XX', '2,506'] },
-          { val: 2, title: ['XX縣', 'XX鄉', 'XX段', '2,503,882', 'xx工作站', '2,506,555', '陳XX', '1/3', '公同共有', '小大', 'XX', '2,506'] },
-          { val: 3, title: ['XX縣', 'XX鄉', 'XX段', '2,503,882', 'xx工作站', '2,506,555', '陳XX', '1/3', '公同共有', '小大', 'XX', '2,506'] },
-          { val: 4, title: ['XX縣', 'XX鄉', 'XX段', '2,503,882', 'xx工作站', '2,506,555', '陳XX', '1/3', '公同共有', '小大', 'XX', '2,506'] },
-          { val: 5, title: ['XX縣', 'XX鄉', 'XX段', '2,503,882', 'xx工作站', '2,506,555', '陳XX', '1/3', '公同共有', '小大', 'XX', '2,506'] },
-          { val: 6, title: ['XX縣', 'XX鄉', 'XX段', '2,503,882', 'xx工作站', '2,506,555', '陳XX', '1/3', '公同共有', '小大', 'XX', '2,506'] },
-          { val: 7, title: ['XX縣', 'XX鄉', 'XX段', '2,503,882', 'xx工作站', '2,506,555', '陳XX', '1/3', '公同共有', '小大', 'XX', '2,506'] },
-          { val: 8, title: ['XX縣', 'XX鄉', 'XX段', '2,503,882', 'xx工作站', '2,506,555', '陳XX', '1/3', '公同共有', '小大', 'XX', '2,506'] },
-          { val: 9, title: ['XX縣', 'XX鄉', 'XX段', '2,503,882', 'xx工作站', '2,506,555', '陳XX', '1/3', '公同共有', '小大', 'XX', '2,506'] },
-          { val: 10, title: ['XX縣', 'XX鄉', 'XX段', '2,503,882', 'xx工作站', '2,506,555', '陳XX', '1/3', '公同共有', '小大', 'XX', '2,506'] },
-          { val: 11, title: ['XX縣', 'XX鄉', 'XX段', '2,503,882', 'xx工作站', '2,506,555', '陳XX', '1/3', '公同共有', '小大', 'XX', '2,506'] },
-          { val: 12, title: ['XX縣', 'XX鄉', 'XX段', '2,503,882', 'xx工作站', '2,506,555', '陳XX', '1/3', '公同共有', '小大', 'XX', '2,506'] }
-        ]
+        body: []
       },
       BreadCrumb: ['灌溉地管理', '停灌補償案件'],
       toggleStatus: false
@@ -114,8 +103,12 @@ export default {
         this.columnList = [];
         console.log(e.obj);
         getApplyEvent(e.obj).then(r => {
-          r.data.forEach(element => {
-            console.log(element);
+          r.data.forEach(item => {
+            console.log(item);
+            const result = {};
+            result.val = item.applyer_id;
+            result.title = [item.county_name, item.town_name, item.section_name, item.tolarea, item.owner_name, item.percent1 + '/' + item.percent2, item.own_scro, item.farmername, item.category, item.area, item.note];
+            this.tableList.body.push(result);
           });
           // this.tableList.body =
         }).catch(err => {

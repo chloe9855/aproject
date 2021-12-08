@@ -257,7 +257,6 @@ export default {
       this.columnList = [];
     },
     onsearch (o) {
-      // console.log(o);
       const e = o.obj;
       if (this.toggleCurrent === 0) {
         this.clearSearchIrrigatedLand();
@@ -273,7 +272,6 @@ export default {
             this.searchObj = [x];
           }
           axios.post('/AERC/rest/IrrigationLandArea', { query: this.searchObj }).then(r => {
-            console.log('test');
             this.sum_grp = r.data[0].data[0].sum_grp;
             this.sum_irgarea = r.data[0].data[0].sum_irgarea;
             this.sum_tolarea = r.data[0].data[0].sum_tolarea;

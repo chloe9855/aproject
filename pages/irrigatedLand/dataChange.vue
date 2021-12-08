@@ -35,6 +35,7 @@ import TableTool from '~/components/model/Table.vue';
 import PageHeader from '~/components/tools/PageHeader.vue';
 import BreadCrumbTool from '~/components/tools/BreadCrumbTool.vue';
 import SubTitleTool from '~/components/tools/SubTitleTool.vue';
+import { getApplySetting } from '~/api/apply';
 
 export default {
   components: {
@@ -52,16 +53,26 @@ export default {
           { title: '開放申請截止日' },
           { title: '開放申請區域' }
         ],
-        body: [
-          { title: ['109年第2期', '109/6/10', '109/7/10', 'XX管理處XX水利小組、XX管理處XX水利小組、XX管理處XX水利小組'] },
-          { title: ['109年第1期', '109/3/10', '109/4/10', 'XX管理處XX水利小組、XX管理處XX水利小組、XX管理處XX水利小組'] }
-        ]
+        body: []
       },
       BreadCrumb: ['灌溉地管理', '停灌資料異動'],
       toggleStatus: false
     };
   },
   name: 'DataChange',
+  mounted () {
+    getApplySetting().then(r => {
+      r.data.forEach(element => {
+        const result = {};
+        let text = '';
+        element.open.forEach(item => {
+          text += `${item.Ia_cns}-${item.Mng_cns}-${item.Stn_cns}-${item.Grp_cns},`;
+        });
+        result.title = [element.name, element.start, element.end, text];
+        this.tableList.body.push(result);
+      });
+    });
+  },
   methods: {
     toEditCompensateEvent (e) {
       console.log(e);
