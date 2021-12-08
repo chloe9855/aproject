@@ -434,6 +434,9 @@ export default {
       this.tableColumnBody = this.tableColumn.body;
     }
   },
+  updated () {
+    this.tableColumnBody = this.tableColumn.body;
+  },
   methods: {
     inputVal (e) { // 取得INPUT內容
       const arr = this.inputList;
@@ -503,10 +506,6 @@ export default {
         }
       });
       return num;
-    },
-    dataLength: function () {
-      const data = this.tableColumn.body;
-      return data.length;
     },
     isCheck: function () {
       const data = this.tableColumn.body;

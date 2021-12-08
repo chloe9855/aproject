@@ -36,7 +36,10 @@
         class="w-90"
         :btn-text="isAddLandDataBtn"
         :btn-add="true"
+        :btn-sec-text="isDelLandDataBtn"
+        btn-sec-name="button-red"
         @STbtnStatus="boxToggle"
+        @STbtnSecStatus="delLandData"
       />
       <TableTool
         :table-column="tableList"
@@ -44,6 +47,7 @@
         class="w-90"
         :is-del="true"
         :is-scroll-table="false"
+        @checkList="getDelList"
         @tableEvent="tableEvent"
       />
       <SubTitleTool
@@ -129,13 +133,13 @@ export default {
       toggleStatus: false,
       boxToggleStatus: true,
       userConfirm: false,
-      bankList: []
+      bankList: [],
+      delCompensateList: []
     };
   },
   name: 'EditCompensate',
   mounted () {
     getBankList().then(r => {
-      console.log(r);
       this.bankList = r.data.map(item => item.Bank_sno + item.Name);
     });
   },
@@ -146,17 +150,32 @@ export default {
     boxToggle (e) {
       this.boxToggleStatus = e;
     },
+    getDelList (e) {
+      if (e) {
+        this.delCompensateList = e;
+      }
+    },
     addCompensate (e) {
       if (e) {
         const tableListLength = this.tableList.body.length;
         this.tableList.body.push({ val: `editCompensate${tableListLength}`, title: [`XX縣${tableListLength}`, 'XX鄉', 'XX段', '2,503,882', 'xx工作站', '2,506,555', '陳XX', '1/3', '公同共有', '小大', 'XX', '2,506', 'XXXXXX', '1,2,3,4'] });
       }
-      console.log(this.tableList.body);
     },
     tableEvent (e) {
       if (e.event === 'isDel') {
         const a = this.tableList.body.findIndex(x => x.val === e.item.val);
         this.tableList.body.splice(a, 1);
+        console.log(this.tableList);
+      }
+    },
+    delLandData (e) {
+      if (e) {
+        const _this = this;
+        const z = this.tableList.body.filter(function (item) {
+          return _this.delCompensateList.indexOf(item.val) === -1;
+        });
+        this.tableList.body = z;
+        console.log(this.tableList);
       }
     }
   },
@@ -166,6 +185,9 @@ export default {
     },
     isAddLandDataBtn () {
       return this.boxToggleStatus ? '' : '新增土地資料';
+    },
+    isDelLandDataBtn () {
+      return this.delCompensateList.length > 0 ? '刪除土地資料' : '';
     },
     boxWidth () {
       const setWidth = this.toggleStatus ? 'tg-75' : 'w-90';
