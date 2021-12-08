@@ -599,6 +599,12 @@ export default {
         allArr = [];
       }
       this.checkScrollList = allArr;
+    },
+    tableColumnBody: function (n, o) {
+      if (n.length < o.length) {
+        this.checkList = [];
+        this.isCheckedAll = false;
+      };
     }
   }
 };
