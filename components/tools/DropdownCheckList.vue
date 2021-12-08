@@ -107,6 +107,11 @@ export default {
       if (n) {
         this.dataArr = [];
       }
+    },
+    options: function (n) {
+      if (n.length === 0) {
+        this.dataArr = [];
+      }
     }
   }
 };

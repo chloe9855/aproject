@@ -97,7 +97,8 @@ export function getMngs (Ia) {
 }
 
 export function getStns (Ia, Mng) {
-  const data = { Ia: Ia, Mng: Mng || '' };
+  // const data = { Ia: Ia, Mng: Mng || '' };
+  const data = Mng !== '' ? { Ia: Ia, Mng: Mng } : { Ia: Ia };
   return request.post('/aerc/rest/Stn', data);
 }
 

@@ -272,15 +272,16 @@ export default {
             x.push(e.grp || '');
             this.searchObj = [x];
           }
-          axios.post('http://210.65.139.69/AERC/rest/IrrigationLandArea', { query: this.searchObj }).then(r => {
+          axios.post('/AERC/rest/IrrigationLandArea', { query: this.searchObj }).then(r => {
             this.sum_grp = r.data[0].data[0].sum_grp;
             this.sum_irgarea = r.data[0].data[0].sum_irgarea;
             this.sum_tolarea = r.data[0].data[0].sum_tolarea;
             this.dataCount = r.data[0].totalCount;
             this.getPageNum({ page: 1, size: 10 });
             this.topBtnText = '資料下載';
-          }).catch(function (error) {
+          }).catch(error => {
             console.log(error);
+            this.isNoDataBg = true;
           });
         } else {
           this.alertText = '管理處為必選';
@@ -339,7 +340,7 @@ export default {
     getPageNum (e) { // 換頁取得DATA
       const _this = this;
       this.$store.commit('TOGGLE_LOADING_STATUS');
-      axios.post(`http://210.65.139.69/AERC/rest/IrrigationLand?pageCnt=${e.page}&pageRows=${e.size}`, { query: _this.searchObj }).then(r => {
+      axios.post(`/AERC/rest/IrrigationLand?pageCnt=${e.page}&pageRows=${e.size}`, { query: _this.searchObj }).then(r => {
         _this.tableList.body = r.data.map(x => {
           return { title: [x.ia_cns, x.mng_cns, x.stn_cns, x.grp_cns, x.grparea, x.tolarea, x.irgarea] };
         });
@@ -363,7 +364,7 @@ export default {
       const countyId = this.countyId;
       const fid = this.countyFID;
       this.$store.commit('TOGGLE_LOADING_STATUS');
-      fetch(`http://210.65.139.69/AERC/rest/Sec5ByFID?CountyID=${countyId}&FID=${fid}`, {
+      fetch(`/AERC/rest/Sec5ByFID?CountyID=${countyId}&FID=${fid}`, {
         method: 'GET',
         headers: new Headers({
           'Content-Type': 'application/json'
