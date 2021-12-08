@@ -80,7 +80,7 @@ export default {
         }
         return response.json();
       }).then((jsonData) => {
-        console.log(jsonData);
+        // console.log(jsonData);
         this.allCanalList = jsonData;
 
         const nameList = jsonData.map(item => item.Sys_cns);

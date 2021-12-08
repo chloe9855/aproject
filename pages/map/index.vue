@@ -912,10 +912,10 @@ export default {
     clearMeasureResult () {
       this.drawTool.ClearMap();
     },
-    // * @ 左側搜尋
-    searchHandler () {
-      const data = require('~/static/channel.json');
-      this.searchResult.channel = data;
+    // * @ 左側搜尋 渠道查詢 表格結果
+    searchHandler (payload) {
+      // const data = require('~/static/channel.json');
+      this.searchResult.channel = payload;
     },
     // * @ 左側搜尋：清除搜尋結果
     clearSearchResult () {
@@ -1615,8 +1615,8 @@ export default {
         if (value === 'switchLayersWindow' && this.openOnceLa === true) {
           allMBT.forEach((itemBT) => {
             Object.keys(itemBT.Style).forEach((key) => {
-              console.log(key);
-              console.log(itemBT.Style[key]);
+              // console.log(key);
+              // console.log(itemBT.Style[key]);
               const mName = key.substring(3);
 
               const newList = iaList.map(item => `${item}_${mName}`);
