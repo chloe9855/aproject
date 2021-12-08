@@ -62,15 +62,14 @@
           value="self"
         >確定為本人申請<label for="self" />
       </div>
-      <Requisition
+      <RequisitionBox1
         class="w-90"
         :class="[{isToggle:toggleStatus}]"
-        :option="RequisitionDqata1"
+        :bank-list="bankList"
       />
-      <Requisition
+      <RequisitionBox2
         class="w-90"
         :class="[{isToggle:toggleStatus}]"
-        :option="RequisitionDqata2"
       />
     </div>
   </div>
@@ -78,7 +77,8 @@
 
 <script>
 import TableTool from '~/components/model/Table.vue';
-import Requisition from '~/components/model/editList/Requisition.vue';
+import RequisitionBox2 from '~/components/model/editList/RequisitionBox2.vue';
+import RequisitionBox1 from '~/components/model/editList/RequisitionBox1.vue';
 import PageHeader from '~/components/tools/PageHeader.vue';
 import BreadCrumbTool from '~/components/tools/BreadCrumbTool.vue';
 import SubTitleTool from '~/components/tools/SubTitleTool.vue';
@@ -91,7 +91,8 @@ export default {
     TableTool,
     BreadCrumbTool,
     SubTitleTool,
-    Requisition,
+    RequisitionBox1,
+    RequisitionBox2,
     AddLand
   },
   data () {
@@ -128,14 +129,14 @@ export default {
       toggleStatus: false,
       boxToggleStatus: true,
       userConfirm: false,
-      RequisitionDqata1: { data: [{ title: '姓名', name: '', isRequire: true }, { title: '身份證字號', name: '', isRequire: true }, { title: '出生日期', name: '', isRequire: true }, { title: '地址', name: '', isRequire: true }, { title: '連絡電話', name: '', isRequire: true }, { title: '匯款資訊', name: '', isRequire: true, isSecondInput: true }] },
-      RequisitionDqata2: { data: [{ title: '代理人姓名', name: '', isRequire: true }, { title: '代理人身份證字號', name: '', isRequire: true }, { title: '代理人地址', name: '', isRequire: true }, { title: '代理人連絡電話', name: '', isRequire: true }] }
+      bankList: []
     };
   },
   name: 'EditCompensate',
   mounted () {
     getBankList().then(r => {
       console.log(r);
+      this.bankList = r.data.map(item => item.Bank_sno + item.Name);
     });
   },
   methods: {

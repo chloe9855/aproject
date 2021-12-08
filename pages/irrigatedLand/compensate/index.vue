@@ -114,7 +114,10 @@ export default {
         this.columnList = [];
         console.log(e.obj);
         getApplyEvent(e.obj).then(r => {
-          console.log(r);
+          r.data.forEach(element => {
+            console.log(element);
+          });
+          // this.tableList.body =
         }).catch(err => {
           console.log(err);
         });

@@ -437,6 +437,7 @@ export default {
     display: flex;
     margin: 5px 0;
     flex-wrap:initial;
+    align-items: center;
     .listTitle{
         padding-right: 1em;
         min-width: 100px;

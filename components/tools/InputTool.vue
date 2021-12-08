@@ -36,6 +36,8 @@
     <div
       v-show="filterBox"
       class="filterBox"
+      :class="setFilterPos"
+      :style="{width:setFilterW,height:setFilterH}"
     >
       <ul>
         <li
@@ -102,6 +104,18 @@ export default {
     alterCoor: {
       type: String,
       default: ''
+    },
+    filterPos: {
+      type: String,
+      default: ''
+    },
+    filterW: {
+      type: String,
+      default: ''
+    },
+    filterH: {
+      type: String,
+      default: ''
     }
   },
   data: () => {
@@ -153,6 +167,31 @@ export default {
       } else {
         return false;
       }
+    },
+    setFilterW () {
+      let result = '';
+      if (this.filterW !== '') {
+        result = this.filterW + 'px';
+      }
+      return result;
+    },
+    setFilterH () {
+      let result = '';
+      if (this.filterH !== '') {
+        result = this.filterH + 'px';
+      }
+      return result;
+    },
+    setFilterPos () {
+      let result = '';
+      if (this.filterPos !== '') {
+        if (this.filterPos === 'right') {
+          result = 'filterRight';
+        } else if (this.filterPos === 'left') {
+          result = 'filterLeft';
+        }
+      }
+      return result;
     }
   },
   watch: {
