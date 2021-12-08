@@ -272,15 +272,17 @@ export default {
             x.push(e.grp || '');
             this.searchObj = [x];
           }
-          axios.post('http://192.168.3.112/AERC/rest/IrrigationLandArea', { query: this.searchObj }).then(r => {
+          axios.post('/AERC/rest/IrrigationLandArea', { query: this.searchObj }).then(r => {
+            console.log('test');
             this.sum_grp = r.data[0].data[0].sum_grp;
             this.sum_irgarea = r.data[0].data[0].sum_irgarea;
             this.sum_tolarea = r.data[0].data[0].sum_tolarea;
             this.dataCount = r.data[0].totalCount;
             this.getPageNum({ page: 1, size: 10 });
             this.topBtnText = '資料下載';
-          }).catch(function (error) {
+          }).catch(error => {
             console.log(error);
+            this.isNoDataBg = true;
           });
         } else {
           this.alertText = '管理處為必選';

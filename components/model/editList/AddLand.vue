@@ -53,6 +53,7 @@
             alt=""
             class="vector"
             :src="require('~/assets/img/map.svg')"
+            @click="goMapPage"
           >
         </div>
       </div>
@@ -274,7 +275,9 @@ export default {
       isClearCounty: false,
       isClearTown: false,
       isClearSection: false,
-      isClearLandNo: false
+      isClearLandNo: false,
+      countyId: '',
+      countyFID: ''
     };
   },
   name: 'LandSearch',
@@ -391,6 +394,8 @@ export default {
       };
 
       axios.post('/AERC/rest/IrrigationLand?pageCnt=1&pageRows=1', data).then(r => {
+        this.countyId = r.data[0].county_id;
+        this.countyFID = r.data[0].FID;
         this.areaText = `本地號 地籍面積${r.data[0].tolarea}平方公尺 灌溉面積${r.data[0].irgarea}平方公尺 已申請面積 平方公尺`;
       });
     },
@@ -399,6 +404,32 @@ export default {
       this.isClearTown = true;
       this.isClearSection = true;
       this.isClearLandNo = true;
+    },
+    // * 跳轉地圖
+    goMapPage () {
+      const countyId = this.countyId;
+      const fid = this.countyFID;
+      this.$store.commit('TOGGLE_LOADING_STATUS');
+      fetch(`http://192.168.3.112/AERC/rest/Sec5ByFID?CountyID=${countyId}&FID=${fid}`, {
+        method: 'GET',
+        headers: new Headers({
+          'Content-Type': 'application/json'
+        })
+      }).then((response) => {
+        return response.json();
+      }).then((jsonData) => {
+        console.log(jsonData);
+        this.$store.commit('TOGGLE_LOADING_STATUS');
+        const nowUrl = window.location.origin;
+        const front = this.$router.options.base;
+        const end = 'map/';
+        const myUrl = `${nowUrl}${front}${end}`;
+
+        window.open(myUrl);
+        localStorage.setItem('oriData', JSON.stringify(jsonData[0].geometry));
+      }).catch((err) => {
+        console.log(err);
+      });
     }
   },
   computed: {
