@@ -202,7 +202,7 @@ export default {
     const data3 = require('~/static/clickIa.json');
     this.iaData = data3.data;
     this.newIa = data3.data.map(item => {
-      return { title: [item.name] };
+      return { title: item.name };
     });
 
     const data4 = require('~/static/clickCanal.json');
@@ -211,47 +211,47 @@ export default {
     const data5 = require('~/static/clickStn.json');
     this.stnData = data5.data;
     this.newStn = data5.data.map(item => {
-      return { title: [item.name] };
+      return { title: item.name };
     });
 
     const data6 = require('~/static/clickGrp.json');
     this.grpData = data6.data;
     this.newGrp = data6.data.map(item => {
-      return { title: [item.name] };
+      return { title: item.name };
     });
 
     const data7 = require('~/static/clickPeriod.json');
     this.periodData = data7.data;
     this.newPeriod = data7.data.map(item => {
-      return { title: [item.name] };
+      return { title: item.name };
     });
 
     const data8 = require('~/static/clickMng.json');
     this.mngData = data8.data;
     this.newMng = data8.data.map(item => {
-      return { title: [item.name] };
+      return { title: item.name };
     });
 
     const data9 = require('~/static/clickPool.json');
     this.poolData = data9.data;
     this.newPool = data9.data.map(item => {
-      return { title: [item.name] };
+      return { title: item.name };
     });
 
     const data10 = require('~/static/clickRot.json');
     this.rotData = data10.data;
     this.newRot = data10.data.map(item => {
-      return { title: [item.name] };
+      return { title: item.name };
     });
 
     const data11 = require('~/static/AddSection.json');
     this.newSection = data11.data.map(item => {
-      return { title: [item.name] };
+      return { title: item.name };
     });
 
     const data12 = require('~/static/AddSec5cov.json');
     this.newSec5cov = data12.data.map(item => {
-      return { title: [item.name] };
+      return { title: item.name };
     });
   },
   methods: {
@@ -272,7 +272,7 @@ export default {
 
         data.forEach((item) => {
           item.value = item.FID;
-          item.title = `${item.Ia_cns}${item.Ia}`;
+          item.title = item.Ia_cns;
         });
         this.myIaList = data;
       }).catch((err) => {
@@ -872,6 +872,7 @@ export default {
       text-align: left;
       margin: 0 auto;
       width: 100%;
+      word-break: break-all;
 
       td {
         padding: 10px;

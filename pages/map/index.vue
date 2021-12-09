@@ -347,7 +347,7 @@
       <div
         v-if="searchResult.channel !== ''"
         class="result_table"
-        :class="{'hide_block': hideResult, 'show_block': !hideResult}"
+        :class="{'hide_block66': hideResult, 'show_block': !hideResult}"
       >
         <div
           class="hide_button_bigTable"
@@ -924,10 +924,6 @@ export default {
     },
     // * @ 圖層工具：切換圖層 顯示/隱藏
     layerVisibleCtrl ($event, id, category, layerName) {
-      console.log(id);
-      console.log($event);
-      console.log(layerName);
-
       if (category === 'pointList') {
         const index = this.layerOptions.pointList.findIndex(item => item.id === id);
         this.layerOptions.pointList[index].visible = $event;
@@ -1680,17 +1676,47 @@ export default {
                 result.type = newArr;
               }
               if (mName === 'Ia' && this.getIa === false) {
+                if (itemBT.Style[key].paint === undefined || itemBT.Style[key].layout === undefined) { return; }
+
                 this.getIa = true;
                 result.LayerTitle = '管理處';
                 result.visible = true;
                 result.opacity = 50;
                 this.layerOptions.surfaceList.push(result);
+
+                const newArr = [];
+                const res = {
+                  id: Math.random(),
+                  name: '',
+                  visible: true,
+                  subId: itemBT.Style[key].layout['text-field'][1],
+                  bgColor: itemBT.Style[key].paint['fill-color'],
+                  border: itemBT.Style[key].paint['fill-outline-color']
+                };
+                newArr.push(res);
+
+                result.type = newArr;
               }
               if (mName === 'Mng' && this.getMng === false) {
+                if (itemBT.Style[key].paint === undefined || itemBT.Style[key].layout === undefined) { return; }
+
                 this.getMng = true;
                 result.LayerTitle = '管理分處';
                 result.opacity = 50;
                 this.layerOptions.surfaceList.push(result);
+
+                const newArr = [];
+                const res = {
+                  id: Math.random(),
+                  name: '',
+                  visible: true,
+                  subId: itemBT.Style[key].layout['text-field'][1],
+                  bgColor: itemBT.Style[key].paint['fill-color'],
+                  border: itemBT.Style[key].paint['fill-outline-color']
+                };
+                newArr.push(res);
+
+                result.type = newArr;
               }
               if (mName === 'Stn' && this.getStn === false) {
                 if (itemBT.Style[key].paint['fill-color'] === undefined) { return; }
@@ -1719,16 +1745,46 @@ export default {
                 result.type = newArr;
               }
               if (mName === 'Grp' && this.getGrp === false) {
+                if (itemBT.Style[key].paint === undefined || itemBT.Style[key].layout === undefined) { return; }
+
                 this.getGrp = true;
                 result.LayerTitle = '小組';
                 result.opacity = 50;
                 this.layerOptions.surfaceList.push(result);
+
+                const newArr = [];
+                const res = {
+                  id: Math.random(),
+                  name: '',
+                  visible: true,
+                  subId: itemBT.Style[key].layout['text-field'][1],
+                  bgColor: itemBT.Style[key].paint['fill-color'],
+                  border: itemBT.Style[key].paint['fill-outline-color']
+                };
+                newArr.push(res);
+
+                result.type = newArr;
               }
               if (mName === 'Rot' && this.getRot === false) {
+                if (itemBT.Style[key].paint === undefined || itemBT.Style[key].layout === undefined) { return; }
+
                 this.getRot = true;
                 result.LayerTitle = '輪區';
                 result.opacity = 50;
                 this.layerOptions.surfaceList.push(result);
+
+                const newArr = [];
+                const res = {
+                  id: Math.random(),
+                  name: '',
+                  visible: true,
+                  subId: itemBT.Style[key].layout['text-field'][1],
+                  bgColor: itemBT.Style[key].paint['fill-color'],
+                  border: itemBT.Style[key].paint['fill-outline-color']
+                };
+                newArr.push(res);
+
+                result.type = newArr;
               }
               if (mName === 'Period' && this.getPeriod === false) {
                 if (itemBT.Style[key].paint['fill-color'] === undefined) { return; }
@@ -1757,10 +1813,25 @@ export default {
                 result.type = newArr;
               }
               if (mName === 'Pool' && this.getPool === false) {
+                if (itemBT.Style[key].paint === undefined || itemBT.Style[key].layout === undefined) { return; }
+
                 this.getPool = true;
                 result.LayerTitle = '埤塘';
                 result.opacity = 50;
                 this.layerOptions.surfaceList.push(result);
+
+                const newArr = [];
+                const res = {
+                  id: Math.random(),
+                  name: '',
+                  visible: true,
+                  subId: itemBT.Style[key].layout['text-field'][1],
+                  bgColor: itemBT.Style[key].paint['fill-color'],
+                  border: itemBT.Style[key].paint['fill-outline-color']
+                };
+                newArr.push(res);
+
+                result.type = newArr;
               }
             });
           });
@@ -1843,9 +1914,10 @@ export default {
     background: url('~/assets/img/white-triangle.svg') no-repeat right/contain !important;
   }
 
-  .hide_block {
+  .hide_block66 {
     transition: transform 0.4s;
-    transform: translateY(62.5%);
+    // transform: translateY(62.5%);
+    transform: translateY(100%);
   }
 
   .show_block {
@@ -2057,7 +2129,7 @@ export default {
     background: white;
     z-index: 100000;
     width: 100%;
-    height: 430px;
+    // height: 430px;
   }
 
   .checkBoxOption{

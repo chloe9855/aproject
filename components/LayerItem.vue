@@ -30,7 +30,10 @@
       class="info_block"
     >
       <div v-if="item.type.length === 1">
-        <img :src="require(`~/assets/img/${item.pic[0]}.svg`)">
+        <div
+          class="only_pic"
+          :style="`background-color: ${item.type[0].bgColor}; border: 1px solid ${item.type[0].border};`"
+        />
       </div>
 
       <div v-if="item.type.length > 1">
@@ -187,6 +190,12 @@ export default {
         border: 1px solid #4E4E4E;
       }
     }
+  }
+
+  .only_pic {
+    width: 16px;
+    height: 16px;
+    margin-left: 10px;
   }
 
 </style>

@@ -434,7 +434,7 @@ export default {
         }
         return response.json();
       }).then((jsonData) => {
-        console.log(jsonData);
+        // console.log(jsonData);
 
         jsonData.forEach((item) => {
           item.value = item.FID;
@@ -506,7 +506,7 @@ export default {
       }).then((response) => {
         return response.json();
       }).then((jsonData) => {
-        console.log(jsonData);
+        // console.log(jsonData);
 
         // 先清除之前的
         pMapBase.drawingGraphicsLayer.remove(this.myLandGraphic);
@@ -686,8 +686,8 @@ export default {
     nextListHandler (payload, nextType) {
       if (payload === '') { return; }
 
-      console.log(payload);
-      console.log(nextType);
+      // console.log(payload);
+      // console.log(nextType);
 
       let myObj = {};
       if (nextType === 'Mng') {
@@ -719,7 +719,7 @@ export default {
         }
         return response.json();
       }).then((jsonData) => {
-        console.log(jsonData);
+        // console.log(jsonData);
 
         jsonData.forEach((item) => {
           item.value = item.FID;
