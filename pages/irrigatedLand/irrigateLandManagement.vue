@@ -35,13 +35,13 @@
             :area-num="numfmt(sum_grp)"
           />
           <CalNote
-            name="水利小組轄區農地"
-            area="地籍面積總計㎡"
+            name="宗地地籍面積"
+            area="總計㎡"
             :area-num="numfmt(sum_tolarea)"
           />
           <CalNote
-            name="水利小組轄區農地"
-            area="灌溉面積總計㎡"
+            name="灌溉地面積"
+            area="總計㎡"
             :area-num="numfmt(sum_irgarea)"
           />
         </div>
@@ -108,8 +108,8 @@ export default {
           { title: '工作站' },
           { title: '水利小組' },
           { title: '水利小組面積㎡' },
-          { title: '水利小組轄區 農地地籍面積㎡' },
-          { title: '水利小組轄區 農地灌溉面積㎡' }
+          { title: '宗地地籍面積㎡' },
+          { title: '灌溉地面積㎡' }
         ],
         body: []
       },
