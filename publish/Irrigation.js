@@ -103,11 +103,12 @@ export function getStns (Ia, Mng) {
 }
 
 export function getGrps (Ia, Mng, Stn) {
-  const data = {
-    Ia: Ia,
-    Mng: Mng || '',
-    Stn: Stn || ''
-  };
+  const data = Mng !== '' ? { Ia: Ia, Mng: Mng, Stn: Stn } : { Ia: Ia, Stn: Stn };
+  // const data = {
+  //   Ia: Ia,
+  //   Mng: Mng || '',
+  //   Stn: Stn || ''
+  // };
   return request.post('/aerc/rest/Grp', data);
 }
 
