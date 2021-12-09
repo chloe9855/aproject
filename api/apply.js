@@ -4,6 +4,10 @@ export function getApplySetting () {
   return request.get('/AERC/rest/ApplySetting');
 }
 
+export function getEditApplySetting (id) {
+  return request.get(`/AERC/rest/ApplySetting?ID=${id}`);
+}
+
 export function editApplySetting (data) {
   return request.patch('/AERC/rest/ApplySetting', data);
 }

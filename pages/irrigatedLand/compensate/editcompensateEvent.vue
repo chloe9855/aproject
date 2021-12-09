@@ -15,6 +15,7 @@
       :btn-sec-add="false"
       btn-sec-name="button-primary"
       :is-border="true"
+      @PHSecBtnStatus="confirmEvent"
     />
     <SubTitleTool
       title="停灌補償申請事件綁定"
@@ -39,6 +40,7 @@
     <Textarea
       class="w-90"
       :class="boxWidth"
+      :default-text="textAreaText"
     />
     <SubTitleTool
       title="停灌補償申請別"
@@ -50,12 +52,14 @@
       btn-sec-text="新增申請類別"
       :btn-sec-add="true"
       btn-sec-name="button-add"
+      @STbtnSecStatus="addCategory"
     />
     <TableTool
       :table-column="tableList2"
       :is-paginate="false"
       :is-del="true"
       :class="boxWidth"
+      @tableEvent="removeCategory"
     />
   </div>
 </template>
@@ -66,6 +70,7 @@ import PageHeader from '~/components/tools/PageHeader.vue';
 import BreadCrumbTool from '~/components/tools/BreadCrumbTool.vue';
 import SubTitleTool from '~/components/tools/SubTitleTool.vue';
 import Textarea from '~/components/tools/Textarea.vue';
+import { getEditApplySetting, editApplySetting } from '~/api/apply';
 
 export default {
   components: {
@@ -88,24 +93,97 @@ export default {
           { title: [{ type: 'input' }, { type: 'date' }, { type: 'date' }, { type: 'dropdownTreeList' }] }
         ]
       },
+      textAreaText: '',
+      editType: 'add',
       tableList2: {
         head: [
           { title: '類別名稱' },
           { title: '補償金額(元)' }
         ],
         body: [
-          { val: 0, title: [{ type: 'input' }, { type: 'input' }] },
-          { val: 1, title: [{ type: 'input' }, { type: 'input' }] }
+          { val: 0, title: [{ type: 'input' }, { type: 'input' }] }
         ]
       },
       BreadCrumb: ['灌溉地管理', '停灌補償申報', '編輯停灌補償申請事件'],
-      toggleStatus: false
+      toggleStatus: false,
+      editData: {}
     };
   },
   name: 'EditCompensateEvent',
+  mounted () {
+    if (this.$store.state.editDataID !== '') {
+      this.getEditData();
+    }
+  },
   methods: {
     getToggleStatus (e) {
       this.toggleStatus = e;
+    },
+    getEditData () {
+      getEditApplySetting(this.$store.state.editDataID).then(r => {
+        console.log(r.data[0]);
+        this.editData = r.data[0];
+        this.editType = 'edit';
+        this.textAreaText = r.data[0].note;
+        this.tableList1.body[0].title = [{ type: 'input', title: r.data[0].name }, { type: 'date', val: r.data[0].start }, { type: 'date', val: r.data[0].end }, { type: 'dropdownTreeList' }];
+        if (r.data[0].category.length > 0) {
+          this.tableList2.body = [];
+          r.data[0].category.forEach((t, i) => {
+            console.log(t);
+            this.tableList2.body.push({ val: i, title: [{ type: 'input', title: t.type }, { type: 'input', title: t.money }] });
+          });
+        }
+      });
+    },
+    addCategory (e) {
+      if (e) {
+        const num = this.tableList2.body.length;
+        this.tableList2.body.push({ val: num, title: [{ type: 'input' }, { type: 'input' }] });
+      }
+    },
+    removeCategory (e) {
+      console.log(e);
+      if (e.event === 'isDel') {
+        console.log(this.tableList2.body);
+        const z = this.tableList2.body.filter(a => {
+          return a.val !== e.item.val;
+        });
+        this.tableList2.body = z;
+        console.log(this.tableList2.body);
+      }
+    },
+    confirmEvent () {
+      const data = {
+        applysno: 16,
+        name: '109年第2期',
+        start: '2021-01-01 00:00:00',
+        end: '2022-05-01 00:00:00',
+        open: [
+          {
+            Ia: '01',
+            Ia_cns: '宜蘭',
+            Mng: '0',
+            Mng_cns: '無',
+            Stn: '01',
+            Stn_cns: '頭城站',
+            Grp: '01',
+            Grp_cns: '五股小組'
+          }
+        ],
+        note: '申請人承諾下列事項，絕無虛假不實情事：',
+        Category:
+        [
+          { type: '玉米', money: 90000 },
+          { type: '水果', money: 50000 }
+        ]
+      };
+      if (this.editType === 'edit') {
+        editApplySetting(data).then(r => {
+          console.log(r);
+        }).catch(e => {
+          console.log(e);
+        });
+      }
     }
   },
   computed: {

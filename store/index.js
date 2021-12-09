@@ -7,6 +7,7 @@ export const state = () => ({
   popupState: false,
   isLoading: false,
   popupType: { type: 'editAccount', title: '請設定查詢作業標題', editId: {} },
+  editDataID: '',
   mouseEventMin: 0,
   userInfo: {},
   editAccount: '',
@@ -34,6 +35,9 @@ export const mutations = {
     if (payload.editId) {
       state.popupType.editId = payload.editId;
     }
+  },
+  SET_EDIT_DATA (state, payload) {
+    state.editDataID = payload.id;
   },
   SET_LOUOUT_COUNTDOWN (state, payload) {
     state.mouseEventMin = payload.min;

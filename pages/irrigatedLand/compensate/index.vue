@@ -176,6 +176,8 @@ export default {
     tableEvent (e) {
       if (e.event === 'isEdit') {
         console.log(e);
+        this.$router.push('/irrigatedLand/compensate/editcompensate');
+        // this.$store.commit('SET_EDIT_DATA', { item: e.item });
       }
     }
   },

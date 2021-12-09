@@ -138,6 +138,7 @@
                 v-else-if="tableType(text)&&typeof text === 'object' && text.type === 'input'"
                 :input-id="text.key"
                 :input-text="text.title"
+                :alter-coor="text.title"
                 @inputValue="inputVal"
               />
               <Dropdown
@@ -152,6 +153,7 @@
                 :input-id="textIndex"
                 :type="text.dateType"
                 :value-type="text.valueType"
+                :date-time="text.val"
                 @DateValue="dateVal"
               />
               <TableLink

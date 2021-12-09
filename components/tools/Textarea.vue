@@ -42,6 +42,10 @@ export default {
     isRequire: {
       type: Boolean,
       default: false
+    },
+    defaultText: {
+      type: String,
+      default: ''
     }
   },
   data () {
@@ -62,6 +66,13 @@ export default {
         return false;
       } else {
         return true;
+      }
+    }
+  },
+  watch: {
+    defaultText (n) {
+      if (n) {
+        this.textContent = n;
       }
     }
   }

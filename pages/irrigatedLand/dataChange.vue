@@ -18,13 +18,14 @@
         btn-text="新增事件"
         :btn-add="true"
         btn-name="button-add"
-        @STbtnStatus="toEditCompensateEvent"
+        @STbtnStatus="toAddCompensateEvent"
       />
       <TableTool
         :table-column="tableList"
         :is-paginate="false"
         :is-edit="true"
         :class="boxWidth"
+        @tableEvent="tableEvent"
       />
     </div>
   </div>
@@ -69,15 +70,23 @@ export default {
           text += `${item.Ia_cns}-${item.Mng_cns}-${item.Stn_cns}-${item.Grp_cns},`;
         });
         result.title = [element.name, element.start, element.end, text];
+        result.id = element.Apply_sno;
         this.tableList.body.push(result);
       });
     });
   },
   methods: {
-    toEditCompensateEvent (e) {
+    toAddCompensateEvent (e) {
       console.log(e);
       if (e) {
         this.$router.push({ path: '/irrigatedLand/compensate/editcompensateEvent' });
+      }
+    },
+    tableEvent (e) {
+      if (e.event === 'isEdit') {
+        // console.log(e);
+        this.$store.commit('SET_EDIT_DATA', { id: e.item.id });
+        this.$router.push('/irrigatedLand/compensate/editcompensateEvent');
       }
     }
   },
