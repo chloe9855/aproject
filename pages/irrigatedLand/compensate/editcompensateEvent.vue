@@ -121,15 +121,14 @@ export default {
     },
     getEditData () {
       getEditApplySetting(this.$store.state.editDataID).then(r => {
-        console.log(r.data[0]);
         this.editData = r.data[0];
         this.editType = 'edit';
         this.textAreaText = r.data[0].note;
-        this.tableList1.body[0].title = [{ type: 'input', title: r.data[0].name }, { type: 'date', val: r.data[0].start }, { type: 'date', val: r.data[0].end }, { type: 'dropdownTreeList' }];
+        this.tableList1.body[0].title = [{ type: 'input', title: r.data[0].name }, { type: 'date', val: r.data[0].start }, { type: 'date', val: r.data[0].end }, { type: 'dropdownTreeList', option: r.data[0].open }];
+        console.log(r.data[0].open);
         if (r.data[0].category.length > 0) {
           this.tableList2.body = [];
           r.data[0].category.forEach((t, i) => {
-            console.log(t);
             this.tableList2.body.push({ val: i, title: [{ type: 'input', title: t.type }, { type: 'input', title: t.money }] });
           });
         }

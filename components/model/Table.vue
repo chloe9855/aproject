@@ -161,7 +161,10 @@
                 :key="textIndex"
                 :link="text"
               />
-              <DropdownTreeList v-else-if="tableType(text)&&typeof text === 'object' && text.type === 'dropdownTreeList'" />
+              <DropdownTreeList
+                v-else-if="tableType(text)&&typeof text === 'object' && text.type === 'dropdownTreeList'"
+                :option="text.option"
+              />
               <span v-else>{{ text }}</span>
               <span v-if="tableType(text)&&isAttachText(text)">{{ text.attachText }}</span>
             </td>
