@@ -107,19 +107,21 @@ export default {
     onsearch (e) {
       if (e) {
         this.columnList = [];
-        console.log(e.obj);
         getApplyEvent(e.obj).then(r => {
           r.data.forEach(item => {
-            const result = {};
             const attachmentContent = this.switchAttachment(1, item.attachment1) + this.switchAttachment(2, item.attachment2) + this.switchAttachment(3, item.attachment3) + this.switchAttachment(4, item.attachment4) + this.switchAttachment(5, item.attachment5);
-            const areaData = this.getLandArea(item.county_id, item.town_id, item.section, item.landno);
-            result.val = item.applyer_id;
-            console.log(areaData);
-            console.log(areaData[irgarea]);
-            console.log(areaData.irgarea);
-            console.log(areaData.tolarea);
-            result.title = [item.county_name, item.town_name, item.section_name, areaData.tolarea, item.stn_name, areaData.irgarea, item.owner_name, item.percent1 + '/' + item.percent2, item.own_scro, item.farmername, item.category, item.area, item.note, attachmentContent];
-            this.tableList.body.push(result);
+            const data = {
+              county: item.county_id,
+              town: item.town_id,
+              section: item.section,
+              land_no: item.landno
+            };
+            axios.post('/AERC/rest/IrrigationLand?pageCnt=1&pageRows=1', data).then(r => {
+              const result = {};
+              result.val = item.applyer_id;
+              result.title = [item.county_name, item.town_name, item.section_name, r.data[0].tolarea, item.stn_name, r.data[0].irgarea, item.owner_name, item.percent1 + '/' + item.percent2, item.own_scro, item.farmername, item.category, item.area, item.note, attachmentContent];
+              this.tableList.body.push(result);
+            });
           });
         }).catch(err => {
           console.log(err);
