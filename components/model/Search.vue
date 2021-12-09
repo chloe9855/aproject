@@ -9,8 +9,8 @@
     />
     <component
       :is="componentInstance"
-      ref="searchComp"
       :is-clear="isClearAll"
+      :is-clear-test="isClearTest"
       @tabCurrent="current"
       @onsearch="onsearch"
     />
@@ -81,7 +81,9 @@ export default {
       toggleState: false,
       toggleBox: '',
       arrow: 'arrowLeft',
-      isClearAll: false
+      isClearAll: false,
+      isClearTest: false,
+      submitObj: null
     };
   },
   name: 'SearchBox',
@@ -105,17 +107,18 @@ export default {
     current (e) {
       this.$emit('toggleCurrent', e);
     },
-    search () {
-      if (this.$refs.searchComp && this.$refs.searchComp.search) {
-        this.$refs.searchComp.search();
-      }
-    },
     onsearch (e) {
-      this.$emit('onsearch', e);
+      this.isClearAll = false;
+      this.isClearTest = false;
+      this.submitObj = e;
+    },
+    search () {
+      this.$emit('onsearch', this.submitObj);
     },
     clearAll (e) {
       if (e) {
-        this.isClearAll = !this.isClearAll;
+        this.isClearAll = true;
+        this.isClearTest = true;
       }
     }
   },

@@ -177,7 +177,7 @@ export default {
       if (e.event === 'isEdit') {
         console.log(e);
         this.$router.push('/irrigatedLand/compensate/editcompensate');
-        // this.$store.commit('SET_EDIT_DATA', { item: e.item });
+        this.$store.commit('SET_COMPENSATE_DATA', { item: e.item });
       }
     }
   },

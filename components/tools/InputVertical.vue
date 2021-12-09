@@ -199,7 +199,9 @@ export default {
   },
   watch: {
     message (n) {
-      this.$emit('inputValue', n);
+      if (n !== '') {
+        this.$emit('inputValue', n);
+      }
       const events = this.searchInput;
       const fileList = events.filter(function (event) {
         return event.indexOf(n) > -1 && n !== '';

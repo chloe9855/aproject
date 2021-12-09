@@ -8,25 +8,26 @@
     <DropdownVertical
       title="縣市"
       :options="member.county"
-      :change-text="isClear"
+      :change-text="isClear1"
       @DropdownVal="countyDrop"
     />
     <DropdownVertical
       title="鄉鎮"
       :options="member.town"
-      :change-text="isClear"
+      :change-text="isClear2"
       @DropdownVal="townDrop"
     />
     <DropdownVertical
       title="段名"
       :options="member.section"
-      :change-text="isClear"
+      :change-text="isClear3"
       @DropdownVal="sectionDrop"
     />
     <InputVertical
       title="地號"
       :green-hint="`地號範圍: ${minNo}-${maxNo}`"
       :search-input="Sec5covList"
+      :change-text="isClear4"
       star-sign="*"
       @inputValue="getLandValue"
     />
@@ -42,7 +43,12 @@ export default {
     DropdownVertical,
     InputVertical
   },
-  props: {},
+  props: {
+    isClear: {
+      type: Boolean,
+      default: false
+    }
+  },
   data: () => {
     return {
       // member: [{ title: '預設選項', value: '0' }, { title: '工作站人員', value: '1' }, { title: '管理人員', value: '2' }, { title: '民眾', value: '3' }],
@@ -65,8 +71,12 @@ export default {
       Sec5covList: [],
       minNo: '',
       maxNo: '',
-      myLandnoList: []
+      myLandnoList: [],
       //
+      isClear1: false,
+      isClear2: false,
+      isClear3: false,
+      isClear4: false
     };
   },
   name: 'CompensateSearch',
@@ -101,7 +111,7 @@ export default {
       this.searchObj.landno = '';
       this.member.section = [];
       this.member.land = { option: [{ title: '', value: '0' }] };
-      getSections(this.searchObj.county, this.searchObj.town).then(r => {
+      getSections(this.searchObj.county_id, this.searchObj.town_id).then(r => {
         this.member.section = r.data.map(x => ({ title: x.Sec_cns, value: x.Section }));
       });
     },
@@ -131,6 +141,14 @@ export default {
       this.searchObj.id = '7eYXGw66I2tilK8qDRnzWg==';
       this.searchObj.landno = this.landValue;
       this.$emit('onsearch', { obj: this.searchObj });
+    }
+  },
+  watch: {
+    isClear (n) {
+      this.isClear1 = true;
+      this.isClear2 = true;
+      this.isClear3 = true;
+      this.isClear4 = true;
     }
   }
 };
