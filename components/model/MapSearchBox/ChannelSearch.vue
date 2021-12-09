@@ -86,6 +86,24 @@
         />
       </div>
     </div>
+
+    <!-- 彈窗lightbox -->
+    <AlertBox-component
+      v-if="alertBox === true"
+      title="渠道位置僅供參考"
+      text="查詢結果不得作證明文件使用"
+      box-icon="warning"
+      @close="alertBox = false"
+      @confirm="alertBox = false"
+    />
+    <AlertBox-component
+      v-if="alertBox2 === true"
+      title="樁號定位輸入錯誤"
+      text="您所輸入的樁號位置大於總長度"
+      box-icon="warning"
+      @close="alertBox2 = false"
+      @confirm="alertBox2 = false"
+    />
   </div>
 </template>
 
@@ -93,12 +111,14 @@
 import Dropdown from '~/components/tools/Dropdown.vue';
 import InputTool from '~/components/tools/InputTool.vue';
 import Buttons from '~/components/tools/Buttons.vue';
+import AlertBox from '~/components/tools/AlertBox.vue';
 
 export default {
   components: {
     'Dropdown-component': Dropdown,
     'InputTool-component': InputTool,
-    'Buttons-component': Buttons
+    'Buttons-component': Buttons,
+    'AlertBox-component': AlertBox
   },
   props: {
     // 管理處下拉選單
@@ -108,6 +128,9 @@ export default {
   },
   data () {
     return {
+      userId: '',
+      alertBox: false,
+      alertBox2: false,
       allCanalList: [],
       canalList: [],
       clearText: false,
@@ -149,7 +172,7 @@ export default {
   },
   name: 'ChannelSearch',
   mounted () {
-    //
+    this.userId = sessionStorage.getItem('loginUser');
 
     allMBT.forEach((item) => {
       sg.events.on(item, 'click', (e) => {
@@ -212,6 +235,12 @@ export default {
     },
     // * 查詢
     searchHandler () {
+      if (this.range2 > this.canalLength) {
+        this.alertBox2 = true;
+        return;
+      }
+      this.alertBox = true;
+
       fetch('/AERC/rest/Canal', {
         method: 'POST',
         headers: new Headers({
@@ -348,12 +377,16 @@ export default {
     // * 取得表格資料 emit上層
     getBufferTable (geoGraphic) {
       let result;
+      let url;
+
       if (this.engName === 'Ia') {
+        url = `/AERC/rest/${this.engName}/${this.userId}`;
         result = {
           Ia: this.nowIa,
           geom: geoGraphic
         };
       } else {
+        url = `/AERC/rest/${this.engName}`;
         result = {
           geom: geoGraphic
         };
@@ -364,61 +397,64 @@ export default {
         return;
       }
 
-      fetch(`/AERC/rest/${this.engName}`, {
+      fetch(url, {
         method: 'POST',
         headers: new Headers({
           'Content-Type': 'application/json'
         }),
         body: JSON.stringify(result)
       }).then((response) => {
+        if (response.status === 403) {
+          return Promise.reject(response);
+        }
         return response.json();
       }).then((jsonData) => {
         console.log(jsonData);
 
         if (this.engName === 'Section') {
-          this.myTableData.body = jsonData[0].map(item => {
+          this.myTableData.body = jsonData.map(item => {
             return { title: [item.City, item.City_no, item.Town, item.Town_no, item.Section, item.Sec_cns, item.Area, item.Ymd], info: item };
           });
         }
 
         if (this.engName === 'Ia') {
-          this.myTableData.body = jsonData[0].map(item => {
+          this.myTableData.body = jsonData.map(item => {
             return { title: [item.Ia, item.Ia_cns, item.Area, item.Ymd], info: item };
           });
         }
 
         if (this.engName === 'Mng') {
-          this.myTableData.body = jsonData[0].map(item => {
+          this.myTableData.body = jsonData.map(item => {
             return { title: [item.Ia, item.Ia_cns, item.Mng, item.Mng_cns, item.Area, item.Ymd], info: item };
           });
         }
 
         if (this.engName === 'Stn') {
-          this.myTableData.body = jsonData[0].map(item => {
+          this.myTableData.body = jsonData.map(item => {
             return { title: [item.Ia, item.Ia_cns, item.Mng, item.Mng_cns, item.Stn, item.Stn_cns, item.Area, item.Ymd], info: item };
           });
         }
 
         if (this.engName === 'Grp') {
-          this.myTableData.body = jsonData[0].map(item => {
+          this.myTableData.body = jsonData.map(item => {
             return { title: [item.Ia, item.Ia_cns, item.Mng, item.Mng_cns, item.Stn, item.Stn_cns, item.Grp, item.Grp_cns, item.Area, item.Ymd], info: item };
           });
         }
 
         if (this.engName === 'Rot') {
-          this.myTableData.body = jsonData[0].map(item => {
+          this.myTableData.body = jsonData.map(item => {
             return { title: [item.Ia, item.Ia_cns, item.Mng, item.Mng_cns, item.Stn, item.Stn_cns, item.Grp, item.Grp_cns, item.Rot, item.Rot_cns, item.Area, item.Ymd], info: item };
           });
         }
 
         if (this.engName === 'Period') {
-          this.myTableData.body = jsonData[0].map(item => {
+          this.myTableData.body = jsonData.map(item => {
             return { title: [item.Ia, item.Ia_cns, item.Period, item.Period_cns, item.Mng, item.Mng_cns, item.Stn, item.Stn_cns, item.Grp, item.Grp_cns, item.Area, item.Ymd], info: item };
           });
         }
 
         if (this.engName === 'Pool') {
-          this.myTableData.body = jsonData[0].map(item => {
+          this.myTableData.body = jsonData.map(item => {
             return { title: [item.Ia, item.Ia_cns, item.Mng, item.Mng_cns, item.Stn, item.Stn_cns, item.Grp, item.Grp_cns, item.Pool_cns, item.Ex_poolno, item.Area, item.Ymd], info: item };
           });
         }
@@ -463,7 +499,7 @@ export default {
       }).then((jsonData) => {
         console.log(jsonData);
 
-        this.myTableData.body = jsonData[0].map(item => {
+        this.myTableData.body = jsonData.map(item => {
           return { title: [item.Section_no, item.Land, item.Ltype_cns2, item.Section, item.Sec_cns, item.Land_no, item.Desc_area, item.Maparea, item.L_type, item.Ltype_cns, item.Town, item.Class, item.Class_cns, item.Use_dir, item.Use_dircns, item.Cur_price, item.Land_price, item.Dec_price, item.Ymd], info: item };
         });
 

@@ -38,16 +38,16 @@ export default {
       nowLayer: '',
       nowId: '',
       nowInfo: '',
-      myWord: ''
+      myWord: '',
+      fnList: []
     };
   },
   name: 'ClickSearch',
-  mounted () {
-    console.log(allMBT);
+  activated () {
     allMBT.forEach((item) => {
-      sg.events.on(item, 'click', (e) => {
-        console.log(e.graphic.id);
-        console.log(e.graphic.attributes);
+      this.fnList.push(sg.events.on(item, 'click', (e) => {
+        // console.log(e.graphic.id);
+        // console.log(e.graphic.attributes);
 
         this.nowId = e.graphic.id[0].substring(3);
         this.nowInfo = e.graphic.attributes;
@@ -82,18 +82,16 @@ export default {
           }
           this.$emit('clickSearch', this.nowId, this.nowInfo, this.myWord);
         }
-      });
+      }));
+    });
+  },
+  deactivated () {
+    this.fnList.forEach((item) => {
+      item.remove();
     });
   },
   methods: {
-    selectLayer (payload) {
-      console.log(payload);
-      // this.nowLayer = payload.LayerName;
 
-      // if (this.nowId === payload.LayerName) {
-      //   this.$emit('clickSearch', this.nowId, this.nowInfo);
-      // }
-    }
   }
 };
 </script>

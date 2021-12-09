@@ -17,15 +17,16 @@ export default {
       totalLength: '',
       startLength: '',
       endLength: '',
-      canalName: ''
+      canalName: '',
+      fnList: []
     };
   },
   name: 'StakeSearch',
-  mounted () {
+  activated () {
     //
 
     allMBT.forEach((item) => {
-      sg.events.on(item, 'click', (e) => {
+      this.fnList.push(sg.events.on(item, 'click', (e) => {
         if (e.graphic.id[0].substring(3) === 'Canal') {
           this.title = e.graphic.id[0];
           this.nowFid = parseInt(e.graphic.id[2], 10);
@@ -33,7 +34,6 @@ export default {
           this.geoData = e.graphic.geometry;
           this.canalName = e.graphic.attributes.Sys_cns;
 
-          console.log(e);
           // 渠道總長
           this.totalLength = this.geoData.getLength().toFixed(2);
           // 起點至點擊位置的距離
@@ -50,7 +50,12 @@ export default {
           pMapBase.infoWindow.setTitle('');
           pMapBase.infoWindow.show(new sg.geometry.Point(e.point.x, e.point.y));
         }
-      });
+      }));
+    });
+  },
+  deactivated () {
+    this.fnList.forEach((item) => {
+      item.remove();
     });
   },
   methods: {

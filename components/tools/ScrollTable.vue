@@ -93,7 +93,7 @@ export default {
 
   .tableFixHead {
     overflow: auto;
-    height: 410px;
+    // height: 410px;
 
   }
 

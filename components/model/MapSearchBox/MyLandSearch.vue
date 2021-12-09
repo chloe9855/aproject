@@ -48,6 +48,12 @@
       class="landUnit"
     >
       <DropdownVertical
+        title="管理處"
+        :options="countyList2.Ia"
+        :change-text="clearLand7"
+        @DropdownVal="(payload) => { nextListHandler(payload, 'Mng'), clearLand7 = false, payload !== '' ? coData2.Ia = payload.Ia : coData2.Ia = '' }"
+      />
+      <DropdownVertical
         title="縣市"
         :options="countyList2.County"
         :change-text="clearLand5"
@@ -59,27 +65,6 @@
         :change-text="clearLand6"
         @DropdownVal="(payload) => { clearLand6 = false, payload !== '' ? coData2.Town = payload.TOWNID : coData2.Town = '' }"
       />
-      <DropdownVertical
-        title="管理處"
-        :options="countyList2.Ia"
-        :change-text="clearLand7"
-        @DropdownVal="(payload) => { nextListHandler(payload, 'Mng'), clearLand7 = false, payload !== '' ? coData2.Ia = payload.Ia : coData2.Ia = '' }"
-      />
-      <!-- <DropdownVertical
-        title="管理分處"
-        :options="countyList2.Mng"
-        @DropdownVal="(payload) => { nextListHandler(payload, 'Stn'), coData2.Mng = payload.Mng }"
-      />
-      <DropdownVertical
-        title="工作站"
-        :options="countyList2.Stn"
-        @DropdownVal="(payload) => { nextListHandler(payload, 'Grp'), coData2.Stn = payload.Stn }"
-      />
-      <DropdownVertical
-        title="水利小組"
-        :options="countyList2.Grp"
-        @DropdownVal="(payload) => { coData2.Grp = payload.Grp }"
-      /> -->
     </div>
     <div class="buttonBox">
       <Button
@@ -110,7 +95,7 @@ export default {
   },
   data: () => {
     return {
-      member: [{ title: '01 宜蘭', value: '1' }, { title: '02 宜蘭', value: '2' }, { title: '03 宜蘭', value: '3' }, { title: '04 宜蘭', value: '4' }],
+      userId: '',
       options: {
         current: 0,
         typeList: [
@@ -170,13 +155,9 @@ export default {
   },
   name: 'MyLandSearch',
   mounted () {
+    this.userId = sessionStorage.getItem('loginUser');
     this.getCountyData();
-    this.countyList2.Ia = [{
-      title: '宜蘭01',
-      value: 1,
-      Ia_cns: '宜蘭01',
-      Ia: '01'
-    }];
+    this.getIaList();
   },
   methods: {
     // * 搜尋
@@ -223,6 +204,30 @@ export default {
         console.log(err);
       });
     },
+    // * @ 取得管理處資料
+    getIaList () {
+      fetch(`/AERC/rest/Ia/${this.userId}`, {
+        method: 'POST',
+        headers: new Headers({
+          'Content-Type': 'application/json'
+        }),
+        body: JSON.stringify({
+
+        })
+      }).then((response) => {
+        return response.json();
+      }).then((data) => {
+        // console.log(data);
+
+        data.forEach((item) => {
+          item.value = item.FID;
+          item.title = item.Ia_cns;
+        });
+        this.countyList2.Ia = data;
+      }).catch((err) => {
+        console.log(err);
+      });
+    },
     // * @ 取得縣市資料
     getCountyData () {
       fetch('/AERC/rest/County', {
@@ -236,7 +241,7 @@ export default {
       }).then((response) => {
         return response.json();
       }).then((data) => {
-        console.log(data);
+        // console.log(data);
 
         data.forEach((item) => {
           item.value = item.FID;
@@ -274,18 +279,18 @@ export default {
     },
     // * @ 管理單位 取得管理處以下 之下一排清單資料
     nextListHandler (payload, nextType) {
-      console.log(payload);
-      console.log(nextType);
+      // console.log(payload);
+      // console.log(nextType);
 
       let myObj = {};
       if (nextType === 'Mng') {
-        myObj = { Ia: '01' };
+        myObj = { Ia: payload.Ia };
       }
       if (nextType === 'Stn') {
-        myObj = { Ia: '01', Mng: payload.Mng };
+        myObj = { Ia: payload.Ia, Mng: payload.Mng };
       }
       if (nextType === 'Grp') {
-        myObj = { Ia: '01', Mng: payload.Mng, Stn: payload.Stn };
+        myObj = { Ia: payload.Ia, Mng: payload.Mng, Stn: payload.Stn };
       }
 
       fetch(`/AERC/rest/${nextType}`, {
@@ -307,7 +312,7 @@ export default {
         }
         return response.json();
       }).then((jsonData) => {
-        console.log(jsonData);
+        // console.log(jsonData);
 
         jsonData.forEach((item) => {
           item.value = item.FID;
@@ -324,8 +329,8 @@ export default {
     nextMenuHandler (payload, nextType) {
       if (payload === '') { return; }
 
-      console.log(payload);
-      console.log(nextType);
+      // console.log(payload);
+      // console.log(nextType);
 
       let myObj = {};
       if (nextType === 'Town') {
@@ -355,7 +360,7 @@ export default {
         }
         return response.json();
       }).then((jsonData) => {
-        console.log(jsonData);
+        // console.log(jsonData);
 
         jsonData.forEach((item) => {
           item.value = item.FID;
