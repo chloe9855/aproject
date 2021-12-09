@@ -172,7 +172,7 @@
               v-show="isEdit && !isScrollTable"
               class="editOption"
             >
-              <div @click="sendEvent('isEdit')">
+              <div @click="sendEvent('isEdit',item)">
                 <img
                   alt=""
                   class="vector"

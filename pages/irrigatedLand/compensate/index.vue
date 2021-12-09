@@ -24,6 +24,7 @@
           :is-scroll-table="true"
           :is-toggle="toggleStatus"
           :column-min-width="80"
+          @tableEvent="tableEvent"
         />
         <div
           class="calNoteBox w-90"
@@ -171,6 +172,11 @@ export default {
     },
     clearSearchIrrigatedInfo () {
       this.columnList = [];
+    },
+    tableEvent (e) {
+      if (e.event === 'isEdit') {
+        console.log(e);
+      }
     }
   },
   computed: {
