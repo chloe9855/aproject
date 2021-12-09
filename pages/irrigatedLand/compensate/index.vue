@@ -46,6 +46,7 @@ import PageHeader from '~/components/tools/PageHeader.vue';
 import BreadCrumbTool from '~/components/tools/BreadCrumbTool.vue';
 import Search from '~/components/model/Search.vue';
 import CalNote from '~/components/tools/CalNote.vue';
+import axios from 'axios';
 import { getApplySetting, getApplyEvent } from '~/api/apply';
 
 export default {
@@ -111,14 +112,36 @@ export default {
           r.data.forEach(item => {
             const result = {};
             const attachmentContent = this.switchAttachment(1, item.attachment1) + this.switchAttachment(2, item.attachment2) + this.switchAttachment(3, item.attachment3) + this.switchAttachment(4, item.attachment4) + this.switchAttachment(5, item.attachment5);
+            const areaData = this.getLandArea(item.county_id, item.town_id, item.section, item.landno);
             result.val = item.applyer_id;
-            result.title = [item.county_name, item.town_name, item.section_name, item.tolarea, item.stn_name, item.tolarea, item.owner_name, item.percent1 + '/' + item.percent2, item.own_scro, item.farmername, item.category, item.area, item.note, attachmentContent];
+            console.log(areaData);
+            console.log(areaData[irgarea]);
+            console.log(areaData.irgarea);
+            console.log(areaData.tolarea);
+            result.title = [item.county_name, item.town_name, item.section_name, areaData.tolarea, item.stn_name, areaData.irgarea, item.owner_name, item.percent1 + '/' + item.percent2, item.own_scro, item.farmername, item.category, item.area, item.note, attachmentContent];
             this.tableList.body.push(result);
           });
         }).catch(err => {
           console.log(err);
         });
       }
+    },
+    getLandArea (countyID, townID, section, landNO) {
+      const data = {
+        county: countyID,
+        town: townID,
+        section: section,
+        land_no: landNO
+      };
+      const result = {
+        irgarea: '',
+        tolarea: ''
+      };
+      axios.post('/AERC/rest/IrrigationLand?pageCnt=1&pageRows=1', data).then(r => {
+        result.irgarea = r.data[0].irgarea;
+        result.tolarea = r.data[0].tolarea;
+      });
+      return result;
     },
     switchAttachment (item, status) {
       let result = '';
