@@ -46,7 +46,7 @@ import PageHeader from '~/components/tools/PageHeader.vue';
 import BreadCrumbTool from '~/components/tools/BreadCrumbTool.vue';
 import Search from '~/components/model/Search.vue';
 import CalNote from '~/components/tools/CalNote.vue';
-import { getApplyEvent } from '~/api/apply';
+import { getApplySetting, getApplyEvent } from '~/api/apply';
 
 export default {
   components: {
@@ -89,6 +89,11 @@ export default {
     };
   },
   name: 'Compensate',
+  mounted () {
+    getApplySetting().then(r => {
+      console.log(r);
+    });
+  },
   methods: {
     getToggleStatus (e) {
       this.toggleStatus = e;
@@ -104,17 +109,40 @@ export default {
         console.log(e.obj);
         getApplyEvent(e.obj).then(r => {
           r.data.forEach(item => {
-            console.log(item);
             const result = {};
+            const attachmentContent = this.switchAttachment(1, item.attachment1) + this.switchAttachment(2, item.attachment2) + this.switchAttachment(3, item.attachment3) + this.switchAttachment(4, item.attachment4) + this.switchAttachment(5, item.attachment5);
             result.val = item.applyer_id;
-            result.title = [item.county_name, item.town_name, item.section_name, item.tolarea, item.owner_name, item.percent1 + '/' + item.percent2, item.own_scro, item.farmername, item.category, item.area, item.note];
+            result.title = [item.county_name, item.town_name, item.section_name, item.tolarea, item.stn_name, item.tolarea, item.owner_name, item.percent1 + '/' + item.percent2, item.own_scro, item.farmername, item.category, item.area, item.note, attachmentContent];
             this.tableList.body.push(result);
           });
-          // this.tableList.body =
         }).catch(err => {
           console.log(err);
         });
       }
+    },
+    switchAttachment (item, status) {
+      let result = '';
+      let attachment = '';
+      switch (item) {
+        case 1:
+          attachment = '身分證(正反)影本,';
+          break;
+        case 2:
+          attachment = '金融帳戶影本,';
+          break;
+        case 3:
+          attachment = '附件一:切結書,';
+          break;
+        case 4:
+          attachment = '附件二:實耕者證明文件,';
+          break;
+        case 5:
+          attachment = '代理委任書:(授權書或同意書)';
+          break;
+      }
+
+      result = status === 1 ? attachment : '';
+      return result;
     },
     clearSearchIrrigatedInfo () {
       this.columnList = [];
