@@ -22,9 +22,6 @@
       class="w-90"
       :class="boxWidth"
     />
-    {{ eventName }}
-    {{ start }}
-    {{ end }}
     <TableTool
       :table-column="tableList1"
       :is-paginate="false"
@@ -61,7 +58,6 @@
       btn-sec-name="button-add"
       @STbtnSecStatus="addCategory"
     />
-    {{ categoryArr }}
     <TableTool
       :table-column="tableList2"
       :is-paginate="false"
@@ -117,8 +113,8 @@ export default {
       editData: {
         applysno: 16,
         name: '109年第2期',
-        start: '2021-01-01 00:00:00',
-        end: '2022-05-01 00:00:00',
+        start: '2021-11-01 01:00:00',
+        end: '2021-11-02 02:00:00',
         open: [
           {
             Ia: '01',
@@ -132,8 +128,7 @@ export default {
           }
         ],
         note: '申請人承諾下列事項，絕無虛假不實情事：',
-        Category:
-        [
+        Category: [
           { type: '玉米', money: 90000 },
           { type: '水果', money: 50000 }
         ]
@@ -197,10 +192,10 @@ export default {
     },
     confirmEvent () {
       const data = {
-        applysno: 16,
-        name: '109年第2期',
-        start: '2021-12-01 01:00:00',
-        end: '2021-12-10 02:00:00',
+        applysno: this.$store.state.editDataID,
+        name: this.eventName,
+        start: this.start,
+        end: this.end,
         open: [
           {
             Ia: '01',
@@ -213,13 +208,11 @@ export default {
             Grp_cns: '五股小組'
           }
         ],
-        note: '申請人承諾下列事項，絕無虛假不實情事：',
-        Category: [
-          { type: '玉米', money: 90000 },
-          { type: '水果', money: 50000 }
-        ]
+        note: this.note,
+        Category: this.categoryArr
       };
       // const data = this.editData;
+      console.log(this.categoryArr);
       if (this.editType === 'edit') {
         editApplySetting(data).then(r => {
           // console.log(r);
@@ -229,7 +222,9 @@ export default {
       }
     },
     getEvent (e) {
+      console.log('test111');
       console.log(e);
+      this.eventName = e[0].val;
     },
     getDate (e) {
       if (e && e[0] && e[1]) {
@@ -243,7 +238,6 @@ export default {
       // console.log(e);
     },
     getTextContent (e) {
-      console.log(e);
       this.note = e;
     },
     categoryCheckList (e) {
