@@ -84,7 +84,8 @@ export default {
           { title: '作物備註' },
           { title: '檢附資料' }
         ],
-        body: []
+        body: [],
+        main: {}
       },
       BreadCrumb: ['灌溉地管理', '停灌補償案件'],
       toggleStatus: false
@@ -107,7 +108,7 @@ export default {
     },
     onsearch (e) {
       if (e) {
-        this.columnList = [];
+        this.tableList.body = [];
         getApplyEvent(e.obj).then(r => {
           r.data.forEach(item => {
             const attachmentContent = this.switchAttachment(1, item.attachment1) + this.switchAttachment(2, item.attachment2) + this.switchAttachment(3, item.attachment3) + this.switchAttachment(4, item.attachment4) + this.switchAttachment(5, item.attachment5);
@@ -117,10 +118,11 @@ export default {
               section: item.section,
               land_no: item.landno
             };
-            axios.post('/AERC/rest/IrrigationLand?pageCnt=1&pageRows=1', data).then(r => {
+            axios.post('/AERC/rest/IrrigationLand?pageCnt=1&pageRows=1', data).then(d => {
               const result = {};
-              result.val = item.applyer_id;
-              result.title = [item.county_name, item.town_name, item.section_name, r.data[0].tolarea, item.stn_name, r.data[0].irgarea, item.owner_name, item.percent1 + '/' + item.percent2, item.own_scro, item.farmername, item.category, item.area, item.note, attachmentContent];
+              // result.val = item.applyer_id;
+              result.main = item;
+              result.title = [item.county_name, item.town_name, item.section_name, d.data[0].tolarea, item.stn_name, d.data[0].irgarea, item.owner_name, item.percent1 + '/' + item.percent2, item.own_scro, item.farmername, item.category, item.area, item.note, attachmentContent];
               this.tableList.body.push(result);
             });
           });
@@ -171,13 +173,14 @@ export default {
       return result;
     },
     clearSearchIrrigatedInfo () {
-      this.columnList = [];
+      this.tableList.body = [];
     },
     tableEvent (e) {
       if (e.event === 'isEdit') {
         console.log(e);
         this.$router.push('/irrigatedLand/compensate/editcompensate');
-        this.$store.commit('SET_COMPENSATE_DATA', { item: e.item });
+        this.$store.commit('SET_COMPENSATE_DATA', { item: e.item.main });
+        console.log(this.$store.state.compensateData);
       }
     }
   },

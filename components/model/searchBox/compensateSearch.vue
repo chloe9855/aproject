@@ -8,26 +8,26 @@
     <DropdownVertical
       title="縣市"
       :options="member.county"
-      :change-text="isClear1"
+      :change-text="isClearFirst"
       @DropdownVal="countyDrop"
     />
     <DropdownVertical
       title="鄉鎮"
       :options="member.town"
-      :change-text="isClear2"
+      :change-text="isClearFirst"
       @DropdownVal="townDrop"
     />
     <DropdownVertical
       title="段名"
       :options="member.section"
-      :change-text="isClear3"
+      :change-text="isClearFirst"
       @DropdownVal="sectionDrop"
     />
     <InputVertical
       title="地號"
       :green-hint="`地號範圍: ${minNo}-${maxNo}`"
       :search-input="Sec5covList"
-      :change-text="isClear4"
+      :change-text="isClearFirst"
       star-sign="*"
       @inputValue="getLandValue"
     />
@@ -44,7 +44,7 @@ export default {
     InputVertical
   },
   props: {
-    isClear: {
+    isClearFirst: {
       type: Boolean,
       default: false
     }
@@ -101,6 +101,7 @@ export default {
       this.member.town = [];
       this.member.section = [];
       this.member.land = { option: [{ title: '', value: '0' }] };
+      this.$emit('onsearch', { obj: this.searchObj });
       getTowns(this.searchObj.county_id).then(r => {
         this.member.town = r.data.map(x => ({ title: x.TOWNNAME, value: x.TOWNID }));
       });
@@ -111,6 +112,7 @@ export default {
       this.searchObj.landno = '';
       this.member.section = [];
       this.member.land = { option: [{ title: '', value: '0' }] };
+      this.$emit('onsearch', { obj: this.searchObj });
       getSections(this.searchObj.county_id, this.searchObj.town_id).then(r => {
         this.member.section = r.data.map(x => ({ title: x.Sec_cns, value: x.Section }));
       });
@@ -119,6 +121,7 @@ export default {
       this.searchObj.section = payload.value;
       this.searchObj.landno = '';
       this.member.land = { option: [{ title: '', value: '0' }] };
+      this.$emit('onsearch', { obj: this.searchObj });
       getSecNo(this.searchObj.county_id, this.searchObj.section).then(r => {
         this.maxNo = r.data[0].Max;
         this.minNo = r.data[0].Min;
@@ -131,24 +134,12 @@ export default {
       this.searchObj.landno = payload.value;
     },
     getLandValue (e) {
-      console.log(e);
       if (e) {
         this.landValue = e;
+        this.searchObj.id = '7eYXGw66I2tilK8qDRnzWg==';
+        this.searchObj.landno = this.landValue;
+        this.$emit('onsearch', { obj: this.searchObj });
       }
-    },
-    search () {
-      // this.searchObj.id = this.userId;
-      this.searchObj.id = '7eYXGw66I2tilK8qDRnzWg==';
-      this.searchObj.landno = this.landValue;
-      this.$emit('onsearch', { obj: this.searchObj });
-    }
-  },
-  watch: {
-    isClear (n) {
-      this.isClear1 = true;
-      this.isClear2 = true;
-      this.isClear3 = true;
-      this.isClear4 = true;
     }
   }
 };
