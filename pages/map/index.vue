@@ -284,7 +284,9 @@
         @close="activeWindow = ''"
       >
         <template #content>
-          <PositionNav-component />
+          <PositionNav-component
+            :ia-list="totalIaList"
+          />
         </template>
       </DragBox-component>
 
@@ -341,6 +343,7 @@
 
       <!--    地圖搜尋欄     -->
       <MapSearchBox-component
+        @iaList="(payload) => { totalIaList = payload }"
         @search="searchHandler"
         @clear="clearSearchResult"
       />
@@ -370,6 +373,7 @@
           <ScrollTable-component
             :table-data="searchResult.channel"
             :hide="hideResult"
+            @isMap="getChannelMap"
           />
           <div class="border_bot" />
         </div>
@@ -429,6 +433,8 @@ export default {
   data () {
     return {
       mymap: '',
+      userId: '',
+      totalIaList: '',
       // * 目前所選取的功能視窗
       activeWindow: '',
       searchResult: {
@@ -534,7 +540,9 @@ export default {
       getGrp: false,
       getRot: false,
       getPeriod: false,
-      getPool: false
+      getPool: false,
+      // * 渠道查詢表格 單筆圖形
+      channelGraphic: ''
     };
   },
   // layout: 'map',
@@ -741,17 +749,7 @@ export default {
   // },
   mounted () {
     this.getBaseLayer();
-    // this.getVectorTile();
-
-    // const point = require('~/static/pointLayer.json');
-    // const line = require('~/static/lineLayer.json');
-    // const surface = require('~/static/surfaceLayer.json');
-    // this.layerOptions.surfaceList = [...surface.data];
-    // this.layerOptions.lineList = [...line.data];
-    // this.layerOptions.pointList = [...point.data];
-
-    // console.log(gogo());
-    // console.log(coco);
+    this.userId = sessionStorage.getItem('loginUser');
 
     setTimeout(() => {
       this.getLocalStorage();
@@ -779,6 +777,7 @@ export default {
     ctx.scale(ratio, ratio);
   },
   methods: {
+
     getVectorTile () {
       SuperGIS.LoadModules(['scripts/MVTData.js', 'vector_tile.js', 'pbf.js', 'scripts/KML.js', 'scripts/Collada.js'], () => {
         this.allVectors = new sg.layers.VectorMBTLayer('http://210.65.139.69/mapcache/01', {
@@ -917,10 +916,76 @@ export default {
       // const data = require('~/static/channel.json');
       this.searchResult.channel = payload;
     },
-    // * @ 左側搜尋：清除搜尋結果
+    // * @ 左側搜尋：渠道查詢 清除搜尋結果
     clearSearchResult () {
       this.searchResult.channel = '';
       this.hideResult = false;
+      pMapBase.drawingGraphicsLayer.remove(this.channelGraphic);
+    },
+    // * @ 左側搜尋 渠道查詢結果 單筆定位
+    getChannelMap (info, type) {
+      let url;
+      if (type === 'Sec5cov') {
+        url = '/AERC/rest/Sec5ByFID';
+      } else if (type === 'Ia') {
+        url = `/AERC/rest/Ia/${this.userId}`;
+      } else {
+        url = `/AERC/rest/${type}`;
+      }
+
+      let newObj = {};
+      if (type === 'Ia') {
+        newObj = { Ia: info.Ia, FID: info.FID };
+      }
+      if (type === 'Mng') {
+        newObj = { Ia: info.Ia, FID: info.FID };
+      }
+      if (type === 'Stn') {
+        newObj = { Ia: info.Ia, Mng: info.Mng, FID: info.FID };
+      }
+      if (type === 'Grp') {
+        newObj = { Ia: info.Ia, Mng: info.Mng, Stn: info.Stn, FID: info.FID };
+      }
+      if (type === 'Rot') {
+        newObj = { Ia: info.Ia, FID: info.FID };
+      }
+      if (type === 'Period') {
+        newObj = { Ia: info.Ia, FID: info.FID };
+      }
+      if (type === 'Pool') {
+        newObj = { Ia: info.Ia, FID: info.FID };
+      }
+      if (type === 'Section') {
+        newObj = { Section: info.Section, FID: info.FID };
+      }
+      if (type === 'Sec5cov') {
+        newObj = { CountyID: info.myCountyID, FID: info.FID };
+      }
+
+      fetch(url, {
+        method: 'POST',
+        headers: new Headers({
+          'Content-Type': 'application/json'
+        }),
+        body: JSON.stringify(newObj)
+      }).then((response) => {
+        return response.json();
+      }).then((jsonData) => {
+        console.log(jsonData);
+        // 先清除之前的
+        pMapBase.drawingGraphicsLayer.remove(this.channelGraphic);
+        // 畫圖
+        const geometry = sg.geometry.Geometry.fromGeoJson(jsonData[0].geometry);
+        this.channelGraphic = sg.Graphic.createFromGeometry(geometry, { borderwidth: 1, fillcolor: new sg.Color(220, 105, 105, 0.5) });
+        pMapBase.drawingGraphicsLayer.add(this.channelGraphic);
+        // 定位
+        const extent = geometry.extent;
+        pMapBase.ZoomMapTo(extent);
+        pMapBase.getTransformation().FitLevel();
+        pMapBase.RefreshMap(true);
+      }).catch((err) => {
+        console.log(err);
+      });
     },
     // * @ 圖層工具：切換圖層 顯示/隱藏
     layerVisibleCtrl ($event, id, category, layerName) {
@@ -1159,6 +1224,11 @@ export default {
       console.log(newFile);
       console.log(`${current},${type}`);
 
+      if (type === 'shp' || type === 'zip') {
+        this.shpUploader(newFile);
+        return;
+      }
+
       if (type !== 'kml' && type !== 'kmz') {
         this.formatBox = true;
         return;
@@ -1208,9 +1278,38 @@ export default {
       pMapBase.RefreshMap(true);
     },
     zoomToLayer (layer) {
+      console.log(layer);
       const extent = layer.extent;
       pMapBase.ZoomMapTo(extent);
+      pMapBase.getTransformation().FitLevel();
       pMapBase.RefreshMap(true);
+    },
+    // * @ 圖層工具：臨時展繪 上傳shp檔
+    shpUploader (newFile) {
+      const newObject = {
+        lastModified: newFile.lastModified,
+        lastModifiedDate: newFile.lastModifiedDate,
+        name: newFile.name,
+        size: newFile.size,
+        type: newFile.type,
+        webkitRelativePath: newFile.webkitRelativePath
+      };
+
+      fetch('/AERC/rest/ShpLoader', {
+        method: 'POST',
+        headers: new Headers({
+          'Content-Type': 'application/json'
+        }),
+        body: JSON.stringify({
+          Datas: newObject
+        })
+      }).then((response) => {
+        return response.json();
+      }).then((data) => {
+        console.log(data);
+      }).catch((err) => {
+        console.log(err);
+      });
     },
     // * @ 圖層工具：OGC介接 取得服務
     getOgcHandler (current) {
@@ -1555,6 +1654,7 @@ export default {
         // 定位
         const extent = geometry.extent;
         pMapBase.ZoomMapTo(extent);
+        pMapBase.getTransformation().FitLevel();
         pMapBase.RefreshMap(true);
         // 清空localStorage
         localStorage.clear();

@@ -3,7 +3,7 @@
     <Dropdown-component
       :options="allIaList"
       :placeholders="'請選擇管理處'"
-      :change-text="clearText"
+      :change-text="clearText1"
       @DropdownVal="getCanalLists"
     />
     <InputTool-component
@@ -36,14 +36,16 @@
         <span>椿號定位</span>
         <InputTool-component
           :add-text="sContent1"
+          :change-text="clearText3"
           sizing="w-30"
-          @inputValue="(payload) => { payload.val !== '' ? range1 = parseInt(payload.val, 10) : range1 = '' }"
+          @inputValue="(payload) => { payload.val !== '' ? range1 = parseInt(payload.val, 10) : range1 = '', clearText3 = false }"
         />
         ~
         <InputTool-component
           :add-text="canalLength.toString()"
+          :change-text="clearText4"
           sizing="w-30"
-          @inputValue="(payload) => { payload.val !== '' ? range2 = parseInt(payload.val, 10) : range2 = '' }"
+          @inputValue="(payload) => { payload.val !== '' ? range2 = parseInt(payload.val, 10) : range2 = '', clearText4 = false }"
         />
       </div>
       <div class="theme_checkbox box_margin">
@@ -63,20 +65,22 @@
           :input-text="'請輸入欲查詢圖資'"
           :search-input="infoList"
           :add-text="'地籍'"
+          :change-text="clearText5"
           sizing="w-70"
-          @inputValue="(payload) => { payload.val !== '' ? nowLayer = payload.val : nowLayer = '' }"
+          @inputValue="(payload) => { payload.val !== '' ? nowLayer = payload.val : nowLayer = '', clearText5 = false }"
         />
         <InputTool-component
           :input-text="'半徑'"
+          :change-text="clearText6"
           sizing="w-25"
-          @inputValue="(payload) => { payload.val !== '' ? radius = parseInt(payload.val, 10) : radius = '' }"
+          @inputValue="(payload) => { payload.val !== '' ? radius = parseInt(payload.val, 10) : radius = '', clearText6 = false }"
         />
       </div>
       <div class="bt_wrap">
         <Buttons-component
           :name="'button-default'"
           :text="'清除全部'"
-          @click="$emit('clear')"
+          @click="clearAllHandler"
         />
         &emsp;
         <Buttons-component
@@ -133,8 +137,12 @@ export default {
       alertBox2: false,
       allCanalList: [],
       canalList: [],
-      clearText: false,
+      clearText1: false,
       clearText2: false,
+      clearText3: false,
+      clearText4: false,
+      clearText5: false,
+      clearText6: false,
       sContent1: '',
       sContent2: '',
       // * 目前選擇的管理處
@@ -190,9 +198,26 @@ export default {
     });
   },
   methods: {
+    // * 清除全部
+    clearAllHandler () {
+      this.clearText1 = true;
+      this.clearText2 = true;
+      this.clearText3 = true;
+      this.clearText4 = true;
+      this.clearText5 = true;
+      this.clearText6 = true;
+
+      this.allCanalList = [];
+      this.canalList = [];
+      this.canalLength = '';
+      this.isReverse = false;
+      this.isCircle = false;
+
+      this.$emit('clear');
+    },
     // * 取得該管理處的所有渠道
     getCanalLists (payload) {
-      this.clearText = false;
+      this.clearText1 = false;
       this.nowIa = payload.Ia;
 
       fetch('/AERC/rest/Canal', {
@@ -205,12 +230,11 @@ export default {
         })
       }).then((response) => {
         if (response.status === 403) {
-          this.countyList[nextType] = [{ title: '不拘', value: 'none' }];
           return Promise.reject(response);
         }
         return response.json();
       }).then((jsonData) => {
-        console.log(jsonData);
+        // console.log(jsonData);
         this.allCanalList = jsonData;
 
         const nameList = jsonData.map(item => item.Sys_cns);
@@ -325,6 +349,7 @@ export default {
           extent.ymax = yMax;
           extent.ymin = yMin;
           pMapBase.ZoomMapTo(extent);
+          pMapBase.getTransformation().FitLevel();
           pMapBase.RefreshMap(true);
 
           bufferGeom = geometry.slice(this.range1, this.range2);
@@ -334,6 +359,7 @@ export default {
         if (this.range1 === '' && this.range2 === '') {
           const extent = geometry.extent;
           pMapBase.ZoomMapTo(extent);
+          pMapBase.getTransformation().FitLevel();
           pMapBase.RefreshMap(true);
 
           bufferGeom = geometry;
@@ -413,49 +439,49 @@ export default {
 
         if (this.engName === 'Section') {
           this.myTableData.body = jsonData.map(item => {
-            return { title: [item.City, item.City_no, item.Town, item.Town_no, item.Section, item.Sec_cns, item.Area, item.Ymd], info: item };
+            return { title: [item.City, item.City_no, item.Town, item.Town_no, item.Section, item.Sec_cns, item.Area, item.Ymd], info: item, type: 'Section' };
           });
         }
 
         if (this.engName === 'Ia') {
           this.myTableData.body = jsonData.map(item => {
-            return { title: [item.Ia, item.Ia_cns, item.Area, item.Ymd], info: item };
+            return { title: [item.Ia, item.Ia_cns, item.Area, item.Ymd], info: item, type: 'Ia' };
           });
         }
 
         if (this.engName === 'Mng') {
           this.myTableData.body = jsonData.map(item => {
-            return { title: [item.Ia, item.Ia_cns, item.Mng, item.Mng_cns, item.Area, item.Ymd], info: item };
+            return { title: [item.Ia, item.Ia_cns, item.Mng, item.Mng_cns, item.Area, item.Ymd], info: item, type: 'Mng' };
           });
         }
 
         if (this.engName === 'Stn') {
           this.myTableData.body = jsonData.map(item => {
-            return { title: [item.Ia, item.Ia_cns, item.Mng, item.Mng_cns, item.Stn, item.Stn_cns, item.Area, item.Ymd], info: item };
+            return { title: [item.Ia, item.Ia_cns, item.Mng, item.Mng_cns, item.Stn, item.Stn_cns, item.Area, item.Ymd], info: item, type: 'Stn' };
           });
         }
 
         if (this.engName === 'Grp') {
           this.myTableData.body = jsonData.map(item => {
-            return { title: [item.Ia, item.Ia_cns, item.Mng, item.Mng_cns, item.Stn, item.Stn_cns, item.Grp, item.Grp_cns, item.Area, item.Ymd], info: item };
+            return { title: [item.Ia, item.Ia_cns, item.Mng, item.Mng_cns, item.Stn, item.Stn_cns, item.Grp, item.Grp_cns, item.Area, item.Ymd], info: item, type: 'Grp' };
           });
         }
 
         if (this.engName === 'Rot') {
           this.myTableData.body = jsonData.map(item => {
-            return { title: [item.Ia, item.Ia_cns, item.Mng, item.Mng_cns, item.Stn, item.Stn_cns, item.Grp, item.Grp_cns, item.Rot, item.Rot_cns, item.Area, item.Ymd], info: item };
+            return { title: [item.Ia, item.Ia_cns, item.Mng, item.Mng_cns, item.Stn, item.Stn_cns, item.Grp, item.Grp_cns, item.Rot, item.Rot_cns, item.Area, item.Ymd], info: item, type: 'Rot' };
           });
         }
 
         if (this.engName === 'Period') {
           this.myTableData.body = jsonData.map(item => {
-            return { title: [item.Ia, item.Ia_cns, item.Period, item.Period_cns, item.Mng, item.Mng_cns, item.Stn, item.Stn_cns, item.Grp, item.Grp_cns, item.Area, item.Ymd], info: item };
+            return { title: [item.Ia, item.Ia_cns, item.Period, item.Period_cns, item.Mng, item.Mng_cns, item.Stn, item.Stn_cns, item.Grp, item.Grp_cns, item.Area, item.Ymd], info: item, type: 'Period' };
           });
         }
 
         if (this.engName === 'Pool') {
           this.myTableData.body = jsonData.map(item => {
-            return { title: [item.Ia, item.Ia_cns, item.Mng, item.Mng_cns, item.Stn, item.Stn_cns, item.Grp, item.Grp_cns, item.Pool_cns, item.Ex_poolno, item.Area, item.Ymd], info: item };
+            return { title: [item.Ia, item.Ia_cns, item.Mng, item.Mng_cns, item.Stn, item.Stn_cns, item.Grp, item.Grp_cns, item.Pool_cns, item.Ex_poolno, item.Area, item.Ymd], info: item, type: 'Pool' };
           });
         }
 
@@ -498,9 +524,12 @@ export default {
         return response.json();
       }).then((jsonData) => {
         console.log(jsonData);
+        jsonData.forEach((item) => {
+          item.myCountyID = countyId;
+        });
 
         this.myTableData.body = jsonData.map(item => {
-          return { title: [item.Section_no, item.Land, item.Ltype_cns2, item.Section, item.Sec_cns, item.Land_no, item.Desc_area, item.Maparea, item.L_type, item.Ltype_cns, item.Town, item.Class, item.Class_cns, item.Use_dir, item.Use_dircns, item.Cur_price, item.Land_price, item.Dec_price, item.Ymd], info: item };
+          return { title: [item.Section_no, item.Land, item.Ltype_cns2, item.Section, item.Sec_cns, item.Land_no, item.Desc_area, item.Maparea, item.L_type, item.Ltype_cns, item.Town, item.Class, item.Class_cns, item.Use_dir, item.Use_dircns, item.Cur_price, item.Land_price, item.Dec_price, item.Ymd], info: item, type: 'Sec5cov' };
         });
 
         this.$emit('channelSearch', this.myTableData, this.engName);

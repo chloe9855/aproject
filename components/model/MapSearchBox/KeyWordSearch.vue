@@ -124,6 +124,7 @@ export default {
         // 定位
         const extent = geometry.extent;
         pMapBase.ZoomMapTo(extent);
+        pMapBase.getTransformation().FitLevel();
         pMapBase.RefreshMap(true);
       }).catch((err) => {
         console.log(err);

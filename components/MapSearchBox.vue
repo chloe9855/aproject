@@ -275,6 +275,7 @@ export default {
           item.title = item.Ia_cns;
         });
         this.myIaList = data;
+        this.$emit('iaList', this.myIaList);
       }).catch((err) => {
         console.log(err);
       });

@@ -215,6 +215,10 @@ export default {
         async: true
       },
       {
+        src: '/test008/scripts/MapImageLayer.js',
+        async: true
+      },
+      {
         src: '/test008/scripts/VectorTiledLayer.js',
         async: true
       },

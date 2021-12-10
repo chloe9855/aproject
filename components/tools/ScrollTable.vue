@@ -47,6 +47,7 @@
               <img
                 class="mapicon"
                 :src="require('~/assets/img/map.svg')"
+                @click="$emit('isMap', bodyItem.info, bodyItem.type)"
               >
             </div>
           </td>

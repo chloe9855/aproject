@@ -195,6 +195,7 @@ import DropdownVertical from '~/components/tools/DropdownVertical.vue';
 import Buttons from '~/components/tools/Buttons.vue';
 import SwitchTabs from '~/components/tools/SwitchTabs.vue';
 import InputTool from '~/components/tools/InputTool.vue';
+// import DropdownVertical from '~/components/tools/Dropdown.vue';
 
 export default {
   components: {
@@ -203,6 +204,12 @@ export default {
     'Buttons-component': Buttons,
     'SwitchTabs-component': SwitchTabs,
     'InputTool-component': InputTool
+    // 'Dropdown-component': Dropdown
+  },
+  props: {
+    iaList: {
+      type: Array
+    }
   },
   data () {
     return {
@@ -301,14 +308,10 @@ export default {
     proj4.defs('EPSG:3857', '+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +wktext  +no_defs');
 
     this.userId = sessionStorage.getItem('loginUser');
+    this.allDropList.Ia = this.iaList;
 
     this.getCountyData();
-    this.getIaList();
-
-    // this.allDropList.Ia = [{
-    //   title: '宜蘭01',
-    //   value: 1
-    // }];
+    // this.getIaList();
   },
   methods: {
     // * @ 坐標定位 : 清除全部
@@ -338,6 +341,7 @@ export default {
       const cData = proj4(EPSG3826, EPSG3857, [this.locate.twdX, this.locate.twdY]);
       // 定位
       pMapBase.ZoomMapTo(new sg.geometry.Point(cData[0], cData[1]));
+      pMapBase.getTransformation().FitLevel();
       pMapBase.RefreshMap(true);
       // 畫點
       this.drawPoint = sg.Graphic.createFromGeometry(new sg.geometry.Point(cData[0], cData[1]), { markerstyle: sg.symbols.SimpleMarkerSymbol.STYLE_CIRCLE, markersize: 30, markercolor: new sg.Color(25, 112, 93, 1), borderwidth: 0 });
@@ -363,6 +367,7 @@ export default {
       const cData = proj4(EPSG4326, EPSG3857, [this.locate.wgsX, this.locate.wgsY]);
       // 定位
       pMapBase.ZoomMapTo(new sg.geometry.Point(cData[0], cData[1]));
+      pMapBase.getTransformation().FitLevel();
       pMapBase.RefreshMap(true);
       // 畫點
       this.drawPoint = sg.Graphic.createFromGeometry(new sg.geometry.Point(cData[0], cData[1]), { markerstyle: sg.symbols.SimpleMarkerSymbol.STYLE_CIRCLE, markersize: 30, markercolor: new sg.Color(25, 112, 93, 1), borderwidth: 0 });
@@ -386,8 +391,6 @@ export default {
       }).then((response) => {
         return response.json();
       }).then((data) => {
-        console.log(data);
-
         data.forEach((item) => {
           item.value = item.FID;
           item.title = item.COUNTYNAME;
@@ -523,6 +526,7 @@ export default {
         // 定位
         const extent = geometry.extent;
         pMapBase.ZoomMapTo(extent);
+        pMapBase.getTransformation().FitLevel();
         pMapBase.RefreshMap(true);
       }).catch((err) => {
         console.log(err);
@@ -538,6 +542,37 @@ export default {
         countyId: this.countyIdList[this.countyIdList.length - 1]
       };
       this.landItemList.push(result);
+
+      // 按下加入 就定位畫圖至那個圖形
+      const index = this.landItemList.length - 1;
+      fetch(`/AERC/rest/Sec5ByFID?CountyID=${result.countyId}&FID=${result.fid}`, {
+        method: 'GET',
+        headers: new Headers({
+          'Content-Type': 'application/json'
+        })
+      }).then((response) => {
+        return response.json();
+      }).then((jsonData) => {
+        console.log(jsonData);
+
+        // 先清除之前的
+        pMapBase.drawingGraphicsLayer.remove(this.myLandGraphic);
+        // 畫圖
+        const geometry = sg.geometry.Geometry.fromGeoJson(jsonData[0].geometry);
+        this.allLandGraphic[index] = sg.Graphic.createFromGeometry(geometry, { borderwidth: 1, fillcolor: new sg.Color(220, 105, 105, 0.5) });
+        pMapBase.drawingGraphicsLayer.add(this.allLandGraphic[index]);
+
+        this.allMetry.push(geometry);
+        // 定位至最大範圍
+        const extent = sg.geometry.Extent.unionall(this.allMetry.map(function (geom) { return geom.extent; }));
+        pMapBase.ZoomMapTo(extent);
+        pMapBase.getTransformation().FitLevel();
+        pMapBase.RefreshMap(true);
+
+        //
+      }).catch((err) => {
+        console.log(err);
+      });
     },
     // * @ 地籍定位 : 點擊清單中某筆 畫圖+定位過去
     drawLandHandler (e, landItem, index) {
@@ -564,21 +599,22 @@ export default {
           console.log(jsonData);
 
           // 先清除之前的
-          this.allMetry = [];
-          this.allLandGraphic.forEach((item) => {
-            pMapBase.drawingGraphicsLayer.remove(item);
-          });
-          pMapBase.drawingGraphicsLayer.remove(this.myLandGraphic);
+          // this.allMetry = [];
+          // this.allLandGraphic.forEach((item) => {
+          //   pMapBase.drawingGraphicsLayer.remove(item);
+          // });
+          // pMapBase.drawingGraphicsLayer.remove(this.myLandGraphic);
 
           // 畫圖
           const geometry = sg.geometry.Geometry.fromGeoJson(jsonData[0].geometry);
-          this.allLandGraphic[index] = sg.Graphic.createFromGeometry(geometry, { borderwidth: 1, fillcolor: new sg.Color(220, 105, 105, 0.5) });
-          pMapBase.drawingGraphicsLayer.add(this.allLandGraphic[index]);
+          // this.allLandGraphic[index] = sg.Graphic.createFromGeometry(geometry, { borderwidth: 1, fillcolor: new sg.Color(220, 105, 105, 0.5) });
+          // pMapBase.drawingGraphicsLayer.add(this.allLandGraphic[index]);
 
-          this.allMetry.push(geometry);
+          // this.allMetry.push(geometry);
           // 定位
           const extent = geometry.extent;
           pMapBase.ZoomMapTo(extent);
+          pMapBase.getTransformation().FitLevel();
           pMapBase.RefreshMap(true);
         }).catch((err) => {
           console.log(err);
@@ -601,15 +637,16 @@ export default {
 
           pMapBase.drawingGraphicsLayer.remove(this.myLandGraphic);
           // 畫圖
-          const geometry = sg.geometry.Geometry.fromGeoJson(jsonData[0].geometry);
-          this.allLandGraphic[index] = sg.Graphic.createFromGeometry(geometry, { borderwidth: 1, fillcolor: new sg.Color(220, 105, 105, 0.5) });
-          pMapBase.drawingGraphicsLayer.add(this.allLandGraphic[index]);
+          // const geometry = sg.geometry.Geometry.fromGeoJson(jsonData[0].geometry);
+          // this.allLandGraphic[index] = sg.Graphic.createFromGeometry(geometry, { borderwidth: 1, fillcolor: new sg.Color(220, 105, 105, 0.5) });
+          // pMapBase.drawingGraphicsLayer.add(this.allLandGraphic[index]);
 
-          this.allMetry.push(geometry);
+          // this.allMetry.push(geometry);
 
           // 定位至最大範圍
           const extent = sg.geometry.Extent.unionall(this.allMetry.map(function (geom) { return geom.extent; }));
           pMapBase.ZoomMapTo(extent);
+          pMapBase.getTransformation().FitLevel();
           pMapBase.RefreshMap(true);
 
           console.log(extent);
@@ -675,7 +712,7 @@ export default {
 
         data.forEach((item) => {
           item.value = item.FID;
-          item.title = `${item.Ia_cns}${item.Ia}`;
+          item.title = item.Ia_cns;
         });
         this.allDropList.Ia = data;
       }).catch((err) => {
@@ -778,6 +815,7 @@ export default {
         // 定位
         const extent = geometry.extent;
         pMapBase.ZoomMapTo(extent);
+        pMapBase.getTransformation().FitLevel();
         pMapBase.RefreshMap(true);
       }).catch((err) => {
         console.log(err);
