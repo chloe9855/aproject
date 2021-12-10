@@ -91,6 +91,10 @@ export default {
       type: Number,
       default: 0
     },
+    inputNum: {
+      type: Number,
+      default: 0
+    },
     searchInput: {
       type: Array,
       default: () => {
@@ -196,7 +200,7 @@ export default {
   },
   watch: {
     message (n) {
-      const data = { val: n, id: this.inputId };
+      const data = { val: n, id: this.inputId, num: this.inputNum };
       this.$emit('inputValue', data);
       const events = this.searchInput;
       const fileList = events.filter(function (event) {

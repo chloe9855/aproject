@@ -22,6 +22,9 @@
       class="w-90"
       :class="boxWidth"
     />
+    {{ eventName }}
+    {{ start }}
+    {{ end }}
     <TableTool
       :table-column="tableList1"
       :is-paginate="false"
@@ -29,6 +32,7 @@
       :class="boxWidth"
       class="editcompensateEventBind"
       @inputData="getEvent"
+      @dateData="getDate"
       @tableEvent="eventClear"
     />
     <SubTitleTool
@@ -57,14 +61,15 @@
       btn-sec-name="button-add"
       @STbtnSecStatus="addCategory"
     />
+    {{ categoryArr }}
     <TableTool
       :table-column="tableList2"
       :is-paginate="false"
       :is-del="true"
       :class="boxWidth"
       @tableEvent="removeCategory"
-      @checkList="cateGoryCheckList"
-      @inputData="getCategoryData"
+      @checkList="categoryCheckList"
+      @inputObj="getCategoryData"
     />
   </div>
 </template>
@@ -105,59 +110,11 @@ export default {
           { title: '類別名稱' },
           { title: '補償金額(元)' }
         ],
-        body: [
-          { val: 0, title: [{ type: 'input' }, { type: 'input' }] }
-        ]
+        body: []
       },
       BreadCrumb: ['灌溉地管理', '停灌補償申報', '編輯停灌補償申請事件'],
       toggleStatus: false,
-      editData: {}
-    };
-  },
-  name: 'EditCompensateEvent',
-  mounted () {
-    if (this.$store.state.editDataID !== '') {
-      this.getEditData();
-    }
-  },
-  methods: {
-    getToggleStatus (e) {
-      this.toggleStatus = e;
-    },
-    getEditData () {
-      getEditApplySetting(this.$store.state.editDataID).then(r => {
-        this.editData = r.data[0];
-        this.editType = 'edit';
-        this.textAreaText = r.data[0].note;
-        this.tableList1.body[0].title = [{ type: 'input', title: r.data[0].name }, { type: 'date', val: r.data[0].start }, { type: 'date', val: r.data[0].end }, { type: 'dropdownTreeList', option: r.data[0].open }];
-        console.log(r.data[0].open);
-        if (r.data[0].category.length > 0) {
-          this.tableList2.body = [];
-          r.data[0].category.forEach((t, i) => {
-            this.tableList2.body.push({ val: i, title: [{ type: 'input', title: t.type }, { type: 'input', title: t.money }] });
-          });
-        }
-      });
-    },
-    addCategory (e) {
-      if (e) {
-        const num = this.tableList2.body.length;
-        this.tableList2.body.push({ val: num, title: [{ type: 'input' }, { type: 'input' }] });
-      }
-    },
-    removeCategory (e) {
-      console.log(e);
-      if (e.event === 'isDel') {
-        console.log(this.tableList2.body);
-        const z = this.tableList2.body.filter(a => {
-          return a.val !== e.item.val;
-        });
-        this.tableList2.body = z;
-        console.log(this.tableList2.body);
-      }
-    },
-    confirmEvent () {
-      const data = {
+      editData: {
         applysno: 16,
         name: '109年第2期',
         start: '2021-01-01 00:00:00',
@@ -180,29 +137,125 @@ export default {
           { type: '玉米', money: 90000 },
           { type: '水果', money: 50000 }
         ]
+      },
+      categoryArr: [],
+      start: '',
+      end: '',
+      eventName: '',
+      note: ''
+    };
+  },
+  name: 'EditCompensateEvent',
+  mounted () {
+    if (this.$store.state.editDataID !== '') {
+      this.getEditData();
+    }
+  },
+  methods: {
+    getToggleStatus (e) {
+      this.toggleStatus = e;
+    },
+    getEditData () {
+      getEditApplySetting(this.$store.state.editDataID).then(r => {
+        this.editData = r.data[0];
+        this.editType = 'edit';
+        this.textAreaText = r.data[0].note;
+        this.tableList1.body[0].title = [{ type: 'input', title: r.data[0].name }, { type: 'date', val: r.data[0].start }, { type: 'date', val: r.data[0].end }, { type: 'dropdownTreeList', option: r.data[0].open }];
+        if (r.data[0].category.length > 0) {
+          this.tableList2.body = [];
+          r.data[0].category.forEach((t, i) => {
+            this.tableList2.body.push({ val: i, title: [{ type: 'input', title: t.type }, { type: 'input', title: t.money }] });
+            this.categoryArr[i] = { type: t.type, money: t.money };
+          });
+        }
+      });
+    },
+    addCategory (e) {
+      if (e) {
+        const num = this.tableList2.body.length;
+        this.tableList2.body.push({ val: num, title: [{ type: 'input' }, { type: 'input' }] });
+      }
+    },
+    removeCategory (e) {
+      // console.log(e);
+      if (e.event === 'isDel') {
+        // console.log(this.tableList2.body);
+        const z = this.tableList2.body.filter(a => {
+          return a.val !== e.item.val;
+        });
+        this.tableList2.body = z;
+
+        // console.log(this.tableList2.body);
+
+        const arr = [];
+        this.tableList2.body.forEach(element => {
+          arr.push({ type: element.title[0].title, money: parseInt(element.title[1].title) });
+        });
+        this.categoryArr = arr;
+        this.editData.Category = arr;
+      }
+    },
+    confirmEvent () {
+      const data = {
+        applysno: 16,
+        name: '109年第2期',
+        start: '2021-12-01 01:00:00',
+        end: '2021-12-10 02:00:00',
+        open: [
+          {
+            Ia: '01',
+            Ia_cns: '宜蘭',
+            Mng: '0',
+            Mng_cns: '無',
+            Stn: '01',
+            Stn_cns: '頭城站',
+            Grp: '01',
+            Grp_cns: '五股小組'
+          }
+        ],
+        note: '申請人承諾下列事項，絕無虛假不實情事：',
+        Category: [
+          { type: '玉米', money: 90000 },
+          { type: '水果', money: 50000 }
+        ]
       };
+      // const data = this.editData;
       if (this.editType === 'edit') {
         editApplySetting(data).then(r => {
-          console.log(r);
+          // console.log(r);
         }).catch(e => {
-          console.log(e);
+          // console.log(e);
         });
       }
     },
     getEvent (e) {
       console.log(e);
     },
+    getDate (e) {
+      if (e && e[0] && e[1]) {
+        this.start = e[0].val ? e[0].val : '';
+        this.end = e[1].val ? e[1].val : '';
+        this.editData.start = e[0].val ? e[0].val : '';
+        this.editData.end = e[1].val ? e[1].val : '';
+      }
+    },
     eventClear (e) {
-      console.log(e);
+      // console.log(e);
     },
     getTextContent (e) {
       console.log(e);
+      this.note = e;
     },
-    cateGoryCheckList (e) {
-      console.log(e);
+    categoryCheckList (e) {
+      // console.log(e);
     },
     getCategoryData (e) {
-      console.log(e);
+      this.tableList2.body[e.id].title[e.num].title = e.val;
+      const arr = [];
+      this.tableList2.body.forEach(element => {
+        arr.push({ type: element.title[0].title, money: parseInt(element.title[1].title) });
+      });
+      this.categoryArr = arr;
     }
   },
   computed: {

@@ -36,7 +36,7 @@ export default {
     },
     valueType: {
       type: String,
-      default: 'date'
+      default: 'format'
     },
     dateTime: {
       type: String,

@@ -91,9 +91,7 @@
               v-for="( item, index ) in tableColumn.head"
               :key="index"
               :class="[{isRightBorder:setRightBorder(index)},item.setW]"
-            >
-              {{ item.title }}
-            </th>
+            />
             <th
               v-if="optionLength>0"
               :colspan="optionLength"
@@ -136,7 +134,8 @@
               />
               <Input
                 v-else-if="tableType(text)&&typeof text === 'object' && text.type === 'input'"
-                :input-id="text.val"
+                :input-id="item.val"
+                :input-num="textIndex"
                 :input-text="text.title"
                 :alter-coor="text.title"
                 @inputValue="inputVal"
@@ -447,13 +446,15 @@ export default {
       const arr = this.inputList;
       const arrId = this.inputListId;
       this.setDataArr(e, arr, arrId);
+      this.$emit('inputObj', e);
     },
     dateVal (e) { // 取得DATE內容
       const arr = this.dateList;
       const arrId = this.dateListId;
-      this.setDataArr(e, arr, arrId);
+      const type = 'datePicker';
+      this.setDateArr(e, arr, arrId, type);
     },
-    setDataArr (e, arr, arrId) {
+    setDateArr (e, arr, arrId, type) {
       if (arr.length < 1) {
         arr.push(e);
         arrId.push(e.id);
@@ -467,6 +468,30 @@ export default {
           }
         });
       }
+      if (type) {
+        arr.type = type;
+      }
+      console.log(arr);
+      this.$emit('dateData', arr);
+    },
+    setDataArr (e, arr, arrId, type) {
+      if (arr.length < 1) {
+        arr.push(e);
+        arrId.push(e.id);
+      } else {
+        arr.forEach(function (v, i) {
+          if (e.id === v.id) {
+            arr[i].val = e.val;
+          } else if (arrId.indexOf(e.id) < 0) {
+            arr.push(e);
+            arrId.push(e.id);
+          }
+        });
+      }
+      if (type) {
+        arr.type = type;
+      }
+      console.log(arr);
       this.$emit('inputData', arr);
     },
     getPageNum (e) { // 換頁取得DATA
