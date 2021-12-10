@@ -121,9 +121,8 @@ export default {
     defaultValue (n, o) {
       this.selectVal = n;
     },
-    changeText (value) {
-      console.log(value);
-      if (value === true) {
+    changeText (n, o) {
+      if (n) {
         this.selected = '';
       }
     },

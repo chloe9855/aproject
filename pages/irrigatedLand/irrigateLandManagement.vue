@@ -291,7 +291,6 @@ export default {
         this.search2Obj = e;
         const _this = this;
         if (e && e.county) {
-          console.log(e);
           this.$store.commit('TOGGLE_LOADING_STATUS');
           const x = {
             county: e.county,
@@ -302,7 +301,7 @@ export default {
           this.searchObj = x;
           axios.post('/AERC/rest/IrrigationLand?pageCnt=1&pageRows=1', this.searchObj).then(r => {
             const x = r.data[0];
-            this.countyId = x.county_id;
+            this.countyId = x.county;
             this.countyFID = x.FID;
             if (r.data.length < 1) {
               _this.isNoDataBg = true;
@@ -371,7 +370,6 @@ export default {
       }).then((response) => {
         return response.json();
       }).then((jsonData) => {
-        console.log(jsonData);
         this.$store.commit('TOGGLE_LOADING_STATUS');
         const nowUrl = window.location.origin;
         const front = this.$router.options.base;
@@ -395,7 +393,6 @@ export default {
       }
     },
     closeAlert (e) {
-      console.log(e);
       if (e) {
         this.alertError = false;
       };

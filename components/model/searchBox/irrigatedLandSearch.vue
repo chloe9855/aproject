@@ -12,25 +12,25 @@
       <DropdownVertical
         title="管理處"
         :options="member.ia"
-        :change-text="isClear"
+        :change-text="isClearFirst"
         @DropdownVal="iaDrop"
       />
       <DropdownVertical
         title="管理分處"
         :options="member.mng"
-        :change-text="isClear"
+        :change-text="isClearFirst"
         @DropdownVal="mngDrop"
       />
       <DropdownVertical
         title="工作站"
         :options="member.stn"
-        :change-text="isClear"
+        :change-text="isClearFirst"
         @DropdownVal="stnDrop"
       />
       <DropdownCheckList
         title="水利小組"
         :options="member.grp"
-        :change-text="isClear"
+        :change-text="isClearFirst"
         @DropdownVal="grpDrop"
       />
     </div>
@@ -41,26 +41,26 @@
       <DropdownVertical
         title="縣市"
         :options="member.county"
-        :change-text="isClear"
+        :change-text="isClearSecond"
         @DropdownVal="countyDrop"
       />
       <DropdownVertical
         title="鄉鎮"
         :options="member.town"
-        :change-text="isClear"
+        :change-text="isClearSecond"
         @DropdownVal="townDrop"
       />
       <DropdownVertical
         title="段名"
         :options="member.section"
-        :change-text="isClear"
+        :change-text="isClearSecond"
         @DropdownVal="sectionDrop"
       />
       <InputVertical
         title="地號"
         :green-hint="`地號範圍: ${minNo}-${maxNo}`"
         :search-input="Sec5covList"
-        :change-text="isClear"
+        :change-text="isClearSecond"
         star-sign="*"
         @inputValue="getInputValue"
       />
@@ -82,11 +82,11 @@ export default {
     InputVertical
   },
   props: {
-    isClear: {
+    isClearFirst: {
       type: Boolean,
       default: false
     },
-    isClearTest: {
+    isClearSecond: {
       type: Boolean,
       default: false
     }
@@ -242,12 +242,6 @@ export default {
         this.searchObj.land = this.inputValue;
         this.$emit('onsearch', { obj: this.searchObj, select: this.options.current });
       }
-    }
-  },
-  watch: {
-    isClear (n) {
-      console.log(this.options.current);
-      console.log('clear:' + n);
     }
   }
 };

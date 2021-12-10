@@ -9,8 +9,8 @@
     />
     <component
       :is="componentInstance"
-      :is-clear="isClearAll"
-      :is-clear-test="isClearTest"
+      :is-clear-first="isClearFirst"
+      :is-clear-second="isClearSecond"
       @tabCurrent="current"
       @onsearch="onsearch"
     />
@@ -81,9 +81,10 @@ export default {
       toggleState: false,
       toggleBox: '',
       arrow: 'arrowLeft',
-      isClearAll: false,
-      isClearTest: false,
-      submitObj: null
+      isClearFirst: false,
+      isClearSecond: false,
+      submitObj: null,
+      currentStatus: 0
     };
   },
   name: 'SearchBox',
@@ -105,11 +106,15 @@ export default {
       this.$emit('toggleStatus', this.toggleState);
     },
     current (e) {
+      this.currentStatus = e;
       this.$emit('toggleCurrent', e);
     },
     onsearch (e) {
-      this.isClearAll = false;
-      this.isClearTest = false;
+      if (e.select === 0) {
+        this.isClearFirst = false;
+      } else if (e.select === 1) {
+        this.isClearSecond = false;
+      }
       this.submitObj = e;
     },
     search () {
@@ -117,8 +122,11 @@ export default {
     },
     clearAll (e) {
       if (e) {
-        this.isClearAll = true;
-        this.isClearTest = true;
+        if (this.currentStatus === 0) {
+          this.isClearFirst = true;
+        } else if (this.currentStatus === 1) {
+          this.isClearSecond = true;
+        }
       }
     }
   },
