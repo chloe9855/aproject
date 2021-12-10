@@ -28,6 +28,8 @@
       :is-del="true"
       :class="boxWidth"
       class="editcompensateEventBind"
+      @inputData="getEvent"
+      @tableEvent="eventClear"
     />
     <SubTitleTool
       title="行政院農業委員會農田水利署停灌補償金申請書(二聯單)附款"
@@ -41,6 +43,7 @@
       class="w-90"
       :class="boxWidth"
       :default-text="textAreaText"
+      @textContent="getTextContent"
     />
     <SubTitleTool
       title="停灌補償申請別"
@@ -60,6 +63,8 @@
       :is-del="true"
       :class="boxWidth"
       @tableEvent="removeCategory"
+      @checkList="cateGoryCheckList"
+      @inputData="getCategoryData"
     />
   </div>
 </template>
@@ -183,6 +188,21 @@ export default {
           console.log(e);
         });
       }
+    },
+    getEvent (e) {
+      console.log(e);
+    },
+    eventClear (e) {
+      console.log(e);
+    },
+    getTextContent (e) {
+      console.log(e);
+    },
+    cateGoryCheckList (e) {
+      console.log(e);
+    },
+    getCategoryData (e) {
+      console.log(e);
     }
   },
   computed: {

@@ -30,7 +30,7 @@
             :key="index"
           >
             <td
-              v-show="isCheck"
+              v-if="isCheck"
               class="checkBoxOption"
             >
               <input
@@ -60,7 +60,7 @@
             class="topHeadBox"
           >
             <th
-              v-show="isCheck"
+              v-if="isCheck"
               class="checkColumn"
             />
             <th
@@ -78,7 +78,7 @@
           </tr>
           <tr>
             <th
-              v-show="isCheck"
+              v-if="isCheck"
               class="checkColumn checkBoxOption"
             >
               <input
@@ -107,7 +107,7 @@
             :key="index"
           >
             <td
-              v-show="isCheck"
+              v-if="isCheck"
               :style="{'width':'35px'}"
               class="checkBoxOption"
             >
@@ -136,7 +136,7 @@
               />
               <Input
                 v-else-if="tableType(text)&&typeof text === 'object' && text.type === 'input'"
-                :input-id="text.key"
+                :input-id="text.val"
                 :input-text="text.title"
                 :alter-coor="text.title"
                 @inputValue="inputVal"

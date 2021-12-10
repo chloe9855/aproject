@@ -27,7 +27,7 @@ export default {
       default: () => {
         return [
           {
-            id: 1,
+            id: 'a1',
             ia: '嘉南管理處',
 
             stn: [
@@ -37,7 +37,7 @@ export default {
             ]
           },
           {
-            id: 2,
+            id: 'a2',
             ia: '宜蘭管理處',
 
             stn: [
