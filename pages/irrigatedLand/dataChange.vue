@@ -85,7 +85,7 @@ export default {
     tableEvent (e) {
       if (e.event === 'isEdit') {
         // console.log(e);
-        this.$store.commit('SET_EDIT_DATA', { id: e.item.id });
+        this.$store.commit('SET_COMPENSATE_EVENT_ID', e.item.id);
         this.$router.push('/irrigatedLand/compensate/editcompensateEvent');
       }
     }

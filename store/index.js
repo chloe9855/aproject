@@ -7,7 +7,7 @@ export const state = () => ({
   popupState: false,
   isLoading: false,
   popupType: { type: 'editAccount', title: '請設定查詢作業標題', editId: {} },
-  editDataID: '',
+  editCompensateEventID: '',
   compensateData: {},
   mouseEventMin: 0,
   userInfo: {},
@@ -40,8 +40,8 @@ export const mutations = {
   SET_COMPENSATE_DATA (state, payload) {
     state.compensateData = payload.item;
   },
-  SET_EDIT_DATA (state, payload) {
-    state.editDataID = payload.id;
+  SET_COMPENSATE_EVENT_ID (state, payload) {
+    state.editCompensateEventID = payload;
   },
   SET_LOUOUT_COUNTDOWN (state, payload) {
     state.mouseEventMin = payload.min;

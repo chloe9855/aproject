@@ -15,6 +15,7 @@
       :btn-sec-add="false"
       btn-sec-name="button-primary"
       :is-border="true"
+      @PHBtnStatus="cancelEvent"
       @PHSecBtnStatus="confirmEvent"
     />
     <SubTitleTool
@@ -67,6 +68,15 @@
       @checkList="categoryCheckList"
       @inputObj="getCategoryData"
     />
+    <AlertBox
+      v-show="alertStatus"
+      :title="compensateEventTitle"
+      box-icon="warning"
+      :text="compensateEventText"
+      :cancel-button="isCancelButton"
+      @confirm="sendEvent"
+      @close="continueEdit"
+    />
   </div>
 </template>
 
@@ -76,7 +86,8 @@ import PageHeader from '~/components/tools/PageHeader.vue';
 import BreadCrumbTool from '~/components/tools/BreadCrumbTool.vue';
 import SubTitleTool from '~/components/tools/SubTitleTool.vue';
 import Textarea from '~/components/tools/Textarea.vue';
-import { getEditApplySetting, editApplySetting } from '~/api/apply';
+import AlertBox from '~/components/tools/AlertBox.vue';
+import { getEditApplySetting, editApplySetting, addApplySetting } from '~/api/apply';
 
 export default {
   components: {
@@ -84,7 +95,8 @@ export default {
     TableTool,
     BreadCrumbTool,
     SubTitleTool,
-    Textarea
+    Textarea,
+    AlertBox
   },
   data () {
     return {
@@ -110,39 +122,21 @@ export default {
       },
       BreadCrumb: ['灌溉地管理', '停灌補償申報', '編輯停灌補償申請事件'],
       toggleStatus: false,
-      editData: {
-        applysno: 16,
-        name: '109年第2期',
-        start: '2021-11-01 01:00:00',
-        end: '2021-11-02 02:00:00',
-        open: [
-          {
-            Ia: '01',
-            Ia_cns: '宜蘭',
-            Mng: '0',
-            Mng_cns: '無',
-            Stn: '01',
-            Stn_cns: '頭城站',
-            Grp: '01',
-            Grp_cns: '五股小組'
-          }
-        ],
-        note: '申請人承諾下列事項，絕無虛假不實情事：',
-        Category: [
-          { type: '玉米', money: 90000 },
-          { type: '水果', money: 50000 }
-        ]
-      },
       categoryArr: [],
       start: '',
       end: '',
       eventName: '',
-      note: ''
+      note: '',
+      alertStatus: false,
+      compensateEventTitle: '',
+      compensateEventText: '',
+      isCancelButton: false,
+      isSend: true
     };
   },
   name: 'EditCompensateEvent',
   mounted () {
-    if (this.$store.state.editDataID !== '') {
+    if (this.$store.state.editCompensateEventID !== '') {
       this.getEditData();
     }
   },
@@ -151,7 +145,7 @@ export default {
       this.toggleStatus = e;
     },
     getEditData () {
-      getEditApplySetting(this.$store.state.editDataID).then(r => {
+      getEditApplySetting(this.$store.state.editCompensateEventID).then(r => {
         this.editData = r.data[0];
         this.editType = 'edit';
         this.textAreaText = r.data[0].note;
@@ -190,9 +184,9 @@ export default {
         this.editData.Category = arr;
       }
     },
-    confirmEvent () {
+    applyEvent () {
       const data = {
-        applysno: this.$store.state.editDataID,
+        applysno: this.$store.state.editCompensateEventID,
         name: this.eventName,
         start: this.start,
         end: this.end,
@@ -211,19 +205,27 @@ export default {
         note: this.note,
         Category: this.categoryArr
       };
-      // const data = this.editData;
-      console.log(this.categoryArr);
       if (this.editType === 'edit') {
         editApplySetting(data).then(r => {
           // console.log(r);
+          this.$store.commit('SET_COMPENSATE_EVENT_ID', '');
+          this.isSend = false;
+          this.toggleAlertBox({ title: '完成編輯', text: '回到列表' });
+          // this.$router.push('/irrigatedLand/dataChange/');
         }).catch(e => {
-          // console.log(e);
+          console.log(e);
+        });
+      } else {
+        addApplySetting(data).then(r => {
+          this.isSend = false;
+          this.toggleAlertBox({ title: '完成新增', text: '回到列表' });
+          // this.$router.push('/irrigatedLand/dataChange/');
+        }).catch(e => {
+          console.log(e);
         });
       }
     },
     getEvent (e) {
-      console.log('test111');
-      console.log(e);
       this.eventName = e[0].val;
     },
     getDate (e) {
@@ -250,6 +252,47 @@ export default {
         arr.push({ type: element.title[0].title, money: parseInt(element.title[1].title) });
       });
       this.categoryArr = arr;
+    },
+    confirmEvent (e) {
+      if (e) {
+        if (this.editType === 'edit') {
+          this.toggleAlertBox({ title: '確認修改', text: '確認修改該筆資料', isCancel: true });
+        } else {
+          this.toggleAlertBox({ title: '確認新增', text: '確認新增該筆資料', isCancel: true });
+        }
+      }
+    },
+    cancelEvent (e) {
+      if (e) {
+        this.toggleAlertBox({ title: '取消編輯', text: '該筆編輯將不會儲存', isCancel: true });
+      }
+    },
+    sendEvent (e) {
+      if (e) {
+        console.log(this.isSend);
+        if (this.isSend) {
+          this.applyEvent();
+        } else {
+          this.closeAlert(true);
+        }
+      }
+    },
+    closeAlert (e) {
+      if (e) {
+        this.$router.push('/irrigatedLand/dataChange/');
+      }
+    },
+    continueEdit () {
+      this.alertStatus = !this.alertStatus;
+      this.compensateEventTitle = '';
+      this.compensateEventText = '';
+      this.isCancelButton = !e.isCancel;
+    },
+    toggleAlertBox (e) {
+      this.alertStatus = true;
+      this.compensateEventTitle = e.title;
+      this.compensateEventText = e.text;
+      this.isCancelButton = e.isCancel;
     }
   },
   computed: {
