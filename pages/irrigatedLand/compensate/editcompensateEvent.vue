@@ -51,12 +51,13 @@
       title="停灌補償申請別"
       class="w-90"
       :class="boxWidth"
-      btn-text="存檔"
+      :btn-text="categoryBtnText"
       :btn-add="false"
-      btn-name="button-primary"
+      :btn-name="categoryBtnName"
       btn-sec-text="新增申請類別"
       :btn-sec-add="true"
       btn-sec-name="button-add"
+      @STbtnStatus="adjustCategory"
       @STbtnSecStatus="addCategory"
     />
     <TableTool
@@ -64,6 +65,7 @@
       :is-paginate="false"
       :is-del="true"
       :class="boxWidth"
+      :is-scroll-table="false"
       @tableEvent="removeCategory"
       @checkList="categoryCheckList"
       @inputObj="getCategoryData"
@@ -71,10 +73,18 @@
     <AlertBox
       v-show="alertStatus"
       :title="compensateEventTitle"
-      box-icon="warning"
+      :box-icon="compensateEventIIcon"
       :text="compensateEventText"
       :cancel-button="isCancelButton"
       @confirm="sendEvent"
+      @close="continueEdit"
+    />
+    <AlertBox
+      v-show="alertErrorStatus"
+      :title="errorEventTitle"
+      box-icon="warning"
+      :text="errorEventText"
+      @confirm="continueEdit"
       @close="continueEdit"
     />
   </div>
@@ -123,15 +133,22 @@ export default {
       BreadCrumb: ['灌溉地管理', '停灌補償申報', '編輯停灌補償申請事件'],
       toggleStatus: false,
       categoryArr: [],
+      delCategoryList: [],
       start: '',
       end: '',
       eventName: '',
       note: '',
       alertStatus: false,
+      alertErrorStatus: false,
+      errorEventTitle: '',
+      errorEventText: '',
       compensateEventTitle: '',
       compensateEventText: '',
       isCancelButton: false,
-      isSend: true
+      isSend: true,
+      categoryBtnText: '存檔',
+      categoryBtnName: 'button-primary',
+      compensateEventIIcon: 'warning'
     };
   },
   name: 'EditCompensateEvent',
@@ -166,15 +183,11 @@ export default {
       }
     },
     removeCategory (e) {
-      // console.log(e);
       if (e.event === 'isDel') {
-        // console.log(this.tableList2.body);
         const z = this.tableList2.body.filter(a => {
           return a.val !== e.item.val;
         });
         this.tableList2.body = z;
-
-        // console.log(this.tableList2.body);
 
         const arr = [];
         this.tableList2.body.forEach(element => {
@@ -184,12 +197,19 @@ export default {
         this.editData.Category = arr;
       }
     },
+    changeDate (e) {
+      let result = e;
+      if (e) {
+        result = e.replace('T', ' ');
+        return result;
+      }
+    },
     applyEvent () {
       const data = {
         applysno: this.$store.state.editCompensateEventID,
         name: this.eventName,
-        start: this.start,
-        end: this.end,
+        start: this.changeDate(this.start),
+        end: this.changeDate(this.end),
         open: [
           {
             Ia: '01',
@@ -207,20 +227,29 @@ export default {
       };
       if (this.editType === 'edit') {
         editApplySetting(data).then(r => {
-          // console.log(r);
           this.$store.commit('SET_COMPENSATE_EVENT_ID', '');
           this.isSend = false;
+          this.compensateEventIIcon = 'success';
           this.toggleAlertBox({ title: '完成編輯', text: '回到列表' });
-          // this.$router.push('/irrigatedLand/dataChange/');
         }).catch(e => {
+          if (e.response.status === 400) {
+            this.alertErrorStatus = true;
+            this.errorEventTitle = '發送失敗';
+            this.errorEventText = e.response.data;
+          }
           console.log(e);
         });
       } else {
         addApplySetting(data).then(r => {
           this.isSend = false;
+          this.compensateEventIIcon = 'success';
           this.toggleAlertBox({ title: '完成新增', text: '回到列表' });
-          // this.$router.push('/irrigatedLand/dataChange/');
         }).catch(e => {
+          if (e.response.status === 400) {
+            this.alertErrorStatus = true;
+            this.errorEventTitle = '發送失敗';
+            this.errorEventText = e.response.data;
+          }
           console.log(e);
         });
       }
@@ -243,7 +272,32 @@ export default {
       this.note = e;
     },
     categoryCheckList (e) {
-      // console.log(e);
+      console.log(e);
+      if (e.length > 0) {
+        this.delCategoryList = e;
+        this.categoryBtnText = '刪除';
+        this.categoryBtnName = 'button-red';
+      } else {
+        this.categoryBtnText = '存檔';
+        this.categoryBtnName = 'button-primary';
+      }
+    },
+    delCategoryData (e) {
+      if (e) {
+        const _this = this;
+        const z = this.tableList2.body.filter(function (item) {
+          return _this.delCategoryList.indexOf(item.val) === -1;
+        });
+        this.tableList2.body = z;
+        this.delCategoryList = [];
+      }
+    },
+    adjustCategory (e) {
+      if (e) {
+        if (this.delCategoryList.length > 0) {
+          this.delCategoryData(e);
+        }
+      }
     },
     getCategoryData (e) {
       this.tableList2.body[e.id].title[e.num].title = e.val;
@@ -282,11 +336,15 @@ export default {
         this.$router.push('/irrigatedLand/dataChange/');
       }
     },
-    continueEdit () {
+    continueEdit (e) {
       this.alertStatus = !this.alertStatus;
       this.compensateEventTitle = '';
       this.compensateEventText = '';
       this.isCancelButton = !e.isCancel;
+
+      this.alertErrorStatus = !this.alertErrorStatus;
+      this.errorEventTitle = '';
+      this.errorEventText = '';
     },
     toggleAlertBox (e) {
       this.alertStatus = true;

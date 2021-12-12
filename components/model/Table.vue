@@ -541,7 +541,7 @@ export default {
       const data = this.tableColumn.body;
       let result = false;
       data.forEach(function (v) {
-        if (v.val) {
+        if (v.val || v.val === 0) {
           result = true;
         } else {
           result = false;
