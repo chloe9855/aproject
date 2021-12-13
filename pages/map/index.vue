@@ -100,7 +100,7 @@
               class="layer__list"
             >
               <div
-                v-for="item in layerOptions.surfaceList.slice().reverse()"
+                v-for="item in layerOptions.surfaceList"
                 :key="item.id"
                 class="layer__item"
               >
@@ -1788,7 +1788,9 @@ export default {
     }
   },
   computed: {
-
+    // sortSurfaceList () {
+    //   this.layerOptions.surfaceList.sort((a, b) => { return a.id < b.id; });
+    // }
   },
   watch: {
     'searchResult.channel': {
@@ -1800,6 +1802,11 @@ export default {
         }
       }
     },
+    // 'layerOptions.surfaceList': {
+    //   handler (value) {
+    //     this.layerOptions.surfaceList.sort((a, b) => { return a.id > b.id ? 1 : -1; });
+    //   }
+    // },
     activeWindow: {
       handler (value) {
         // 只會載入一次 new MeasureTool
@@ -1908,6 +1915,7 @@ export default {
                 result.LayerTitle = '管理處';
                 result.visible = true;
                 result.opacity = 50;
+                result.id = 71;
                 this.layerOptions.surfaceList.push(result);
 
                 const newArr = [];
@@ -1929,6 +1937,7 @@ export default {
                 this.getMng = true;
                 result.LayerTitle = '管理分處';
                 result.opacity = 50;
+                result.id = 72;
                 this.layerOptions.surfaceList.push(result);
 
                 const newArr = [];
@@ -1950,6 +1959,7 @@ export default {
                 this.getStn = true;
                 result.LayerTitle = '工作站';
                 result.opacity = 50;
+                result.id = 73;
                 this.layerOptions.surfaceList.push(result);
 
                 const newArr = [];
@@ -1976,6 +1986,7 @@ export default {
                 this.getGrp = true;
                 result.LayerTitle = '小組';
                 result.opacity = 50;
+                result.id = 74;
                 this.layerOptions.surfaceList.push(result);
 
                 const newArr = [];
@@ -1997,6 +2008,7 @@ export default {
                 this.getRot = true;
                 result.LayerTitle = '輪區';
                 result.opacity = 50;
+                result.id = 75;
                 this.layerOptions.surfaceList.push(result);
 
                 const newArr = [];
@@ -2018,6 +2030,7 @@ export default {
                 this.getPeriod = true;
                 result.LayerTitle = '期作別';
                 result.opacity = 50;
+                result.id = 76;
                 this.layerOptions.surfaceList.push(result);
 
                 const newArr = [];
@@ -2044,6 +2057,7 @@ export default {
                 this.getPool = true;
                 result.LayerTitle = '埤塘';
                 result.opacity = 50;
+                result.id = 80;
                 this.layerOptions.surfaceList.push(result);
 
                 const newArr = [];
@@ -2061,6 +2075,8 @@ export default {
               }
             });
           });
+
+          this.layerOptions.surfaceList.sort((a, b) => { return a.id > b.id ? 1 : -1; });
 
           this.openOnceLa = false;
         }

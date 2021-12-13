@@ -530,7 +530,7 @@ export default {
     flex-direction: column;
     background: #EFF4F3;
     color: #3E9F88;
-    height: 450px;
+    height: 300px;
     @include noto-sans-tc-16-regular;
   }
 
