@@ -105,7 +105,7 @@
           </div>
         </div>
         <div class="tips flex-16">
-          <span>已選擇{{ ownerList.body.length }}位所有權人</span>
+          <span>已選擇{{ owner.length }}位所有權人</span>
         </div>
       </div>
     </div>
@@ -115,7 +115,7 @@
       </div>
       <div class="flexBox">
         <Dropdown
-          :options="memberTest"
+          :options="farmerList"
           class="flex-1"
           @DropdownVal="getFarmerCategory"
         />
@@ -182,6 +182,7 @@ import CheckInput from '~/components/model/editList/CheckInputTool';
 import AreaNote from '~/components/tools/AreaNote.vue';
 import TableTool from '~/components/model/Table';
 import axios from 'axios';
+import { getApplySetting } from '~/api/apply';
 import { getCounties, getTowns, getSections, getSecNo, getSecNoList, getFarmer, getOwner } from '~/publish/Irrigation.js';
 export default {
   components: {
@@ -202,7 +203,7 @@ export default {
   },
   data: () => {
     return {
-      memberTest: [{ title: '預設選項', value: '0' }, { title: '工作站人員', value: '1' }, { title: '管理人員', value: '2' }, { title: '民眾', value: '3' }],
+      farmerList: [],
       statusOwnerList: false,
       areaText: '',
       options: {
@@ -220,7 +221,7 @@ export default {
       },
       dataArr: [],
       note: '',
-      owner: '',
+      owner: [],
       category: [],
       // categoryContent: '',
       searchObj: {
@@ -261,7 +262,6 @@ export default {
       //
       countyList: [],
       townList: [],
-      farmerList: [],
       isClearCounty: false,
       isClearTown: false,
       isClearSection: false,
@@ -286,6 +286,21 @@ export default {
     }).catch(e => {
       console.log(e);
     });
+    getFarmer().then(r => {
+      this.farmerList = r;
+      const result = [];
+      r.data.forEach(item => {
+        result.push({ title: item.Name, value: item.Code });
+      });
+      this.farmerList = result;
+    }).catch(e => {
+      console.log(e);
+    });
+    getApplySetting().then(r => {
+      console.log(r);
+    }).catch(e => {
+      console.log(e);
+    });
   },
   methods: {
     toggleOwnerList () {
@@ -298,26 +313,14 @@ export default {
           land_no: this.searchObj.landno
         };
         getOwner(data).then(r => {
-          // this.ownerList.body = {
-
-          // };
-          console.log(r.data);
           const result = [];
           r.data.forEach(item => {
-            console.log(item);
             result.push({ val: item.owner_id, title: [item.name, item.percent1 + '/' + item.percent2, item.own_scro] });
           });
-          console.log(result);
           this.ownerList.body = result;
         }).catch(e => {
           console.log(e);
         });
-
-        // body: [
-        //   { val: 0, title: ['陳旺旺', '1/3', '公同共有'] },
-        //   { val: 1, title: ['張旺旺', '1/3', '公同共有'] },
-        //   { val: 2, title: ['鄧旺旺', '1/3', '公同共有'] }
-        // ];
       }
     },
     cropNote (e) {
@@ -334,12 +337,6 @@ export default {
     },
     getFarmerCategory (e) {
       console.log(e);
-      getFarmer().then(r => {
-        console.log(r);
-        this.farmerList = r;
-      }).catch(e => {
-        console.log(e);
-      });
     },
     getCategory (e) {
       console.log(e);

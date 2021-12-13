@@ -46,6 +46,7 @@
       </table>
     </div>
     <div
+      v-show="!isShowBg"
       ref="tableContent"
       class="tableBox w-100 tableContent"
       :class="'minWidth'+columnMinWidth"
@@ -91,7 +92,9 @@
               v-for="( item, index ) in tableColumn.head"
               :key="index"
               :class="[{isRightBorder:setRightBorder(index)},item.setW]"
-            />
+            >
+              {{ item.title }}
+            </th>
             <th
               v-if="optionLength>0"
               :colspan="optionLength"
@@ -237,7 +240,7 @@
       </table>
     </div>
     <div
-      v-if="optionLength > 0 && isScrollTable"
+      v-if="optionLength > 0 && isScrollTable && !isShowBg"
       class="tableBox tableBtn"
       :class="[!!tableColumn.topHead?'tableTopL':'tableTopS']"
     >
@@ -319,7 +322,7 @@
       </table>
     </div>
     <Paginate
-      v-show="isPaginate"
+      v-show="isPaginate && !isShowBg"
       :total="dataNum"
       :per-page="10"
       @nowPage="getPageNum"
