@@ -127,6 +127,13 @@
         申請類別
       </div>
       <CheckInput
+        v-for="(item, index) in categoryList"
+        :key="index"
+        :num="index"
+        :text="item.text"
+        :val="item.id"
+        :type="item.type"
+        :money="item.money"
         name="category"
         @checkInputVal="getCategory"
       />
@@ -262,6 +269,7 @@ export default {
       //
       countyList: [],
       townList: [],
+      categoryList: [],
       isClearCounty: false,
       isClearTown: false,
       isClearSection: false,
@@ -296,8 +304,13 @@ export default {
     }).catch(e => {
       console.log(e);
     });
-    getApplySetting().then(r => {
-      console.log(r);
+    getApplySetting(new Date()).then(r => {
+      const result = [];
+      r.data[0].category.forEach((item, i) => {
+        result.push({ id: `category${i}`, text: `${item.type}(${item.money})`, type: item.type, money: item.money });
+      });
+      this.categoryList = result;
+      // [{ id: 'category01', text: '態樣1(93000)' }, { id: 'category02', text: '態樣2(93000)' }, { id: 'category03', text: '態樣3(93000)' }];
     }).catch(e => {
       console.log(e);
     });
@@ -325,12 +338,10 @@ export default {
     },
     cropNote (e) {
       if (e) {
-        console.log(e);
         this.searchObj.note = e.val;
       }
     },
     ownerListData (e) {
-      console.log(e);
       if (e) {
         this.owner = e;
       }
@@ -339,10 +350,10 @@ export default {
       console.log(e);
     },
     getCategory (e) {
-      console.log(e);
       if (e) {
-        this.category.push(e);
-        // this.categoryContent = e.text;
+        if (e.isCheck) {
+          this.category[e.num] = { category: e.category, ApplyArea: e.text };
+        }
       }
     },
     addCompensate () {

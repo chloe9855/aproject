@@ -2,13 +2,13 @@
   <div class="flexBox">
     <div class="flex-1 flexCheckBox checkBoxOption">
       <input
-        :id="checkObject.id"
+        :id="val"
         v-model="isCheck"
         type="checkbox"
         :name="name"
-        :value="checkObject.id"
-      ><label :for="checkObject.id" />
-      {{ checkObject.text }}<span>面積(㎡)</span>
+        :value="val"
+      ><label :for="val" />
+      {{ text }}<span>面積(㎡)</span>
     </div>
     <InputTool
       class="flex-1"
@@ -27,6 +27,22 @@ export default {
     text: {
       type: String,
       default: '態樣1(93000)'
+    },
+    val: {
+      type: String,
+      default: ''
+    },
+    type: {
+      type: String,
+      default: ''
+    },
+    money: {
+      type: Number,
+      default: 0
+    },
+    num: {
+      type: Number,
+      default: 0
     },
     sizing: {
       type: String,
@@ -53,9 +69,7 @@ export default {
   methods: {
     checkText (e) {
       if (e) {
-        console.log(this.isCheck);
-        console.log(e);
-        // this.$emit('checkInputVal', { ischeck: this.isCheck, text: e.val });
+        this.$emit('checkInputVal', { isCheck: this.isCheck, category: this.type, money: this.money, text: e.val, num: this.num });
       }
     }
   },

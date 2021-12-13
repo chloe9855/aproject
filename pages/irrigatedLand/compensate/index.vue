@@ -27,9 +27,13 @@
           @tableEvent="tableEvent"
         />
         <div
-          class="calNoteBox w-90"
+          class="calNoteBox w-100"
         >
-          <CalNote />
+          <CalNote
+            :date-note="true"
+            :date1="dateName"
+            :date2="dateOpen"
+          />
         </div>
       </div>
     </div>
@@ -88,14 +92,14 @@ export default {
         main: {}
       },
       BreadCrumb: ['灌溉地管理', '停灌補償案件'],
-      toggleStatus: false
+      toggleStatus: false,
+      dateName: '',
+      dateOpen: ''
     };
   },
   name: 'Compensate',
   mounted () {
-    getApplySetting().then(r => {
-      console.log(r);
-    });
+    this.getDateNote();
   },
   methods: {
     getToggleStatus (e) {
@@ -105,6 +109,12 @@ export default {
       if (e) {
         this.$router.push({ path: '/irrigatedLand/compensate/editcompensate' });
       }
+    },
+    getDateNote () {
+      getApplySetting(new Date()).then(r => {
+        this.dateName = r.data[0].name;
+        this.dateOpen = r.data[0].start.split('T')[0] + '~' + r.data[0].end.split('T')[0];
+      });
     },
     onsearch (e) {
       if (e) {
@@ -177,10 +187,8 @@ export default {
     },
     tableEvent (e) {
       if (e.event === 'isEdit') {
-        console.log(e);
         this.$router.push('/irrigatedLand/compensate/editcompensate');
         this.$store.commit('SET_COMPENSATE_DATA', { item: e.item.main });
-        console.log(this.$store.state.compensateData);
       }
     }
   },
@@ -205,7 +213,7 @@ export default {
     justify-content:flex-end;
     margin: 0 auto;
     div{
-        margin: 0 2.5px;
+      margin: 0.5em 0;
     }
 }
 .tableTool{

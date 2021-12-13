@@ -1,7 +1,8 @@
 import request from '~/service';
 
-export function getApplySetting () {
-  return request.get('/AERC/rest/ApplySetting');
+export function getApplySetting (date) {
+  const result = date ? `/AERC/rest/ApplySetting?time=${date}` : '/AERC/rest/ApplySetting';
+  return request.get(result);
 }
 
 export function getEditApplySetting (id) {
