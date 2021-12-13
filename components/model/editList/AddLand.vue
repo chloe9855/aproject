@@ -233,6 +233,7 @@ export default {
       // categoryContent: '',
       searchObj: {
         county_id: '',
+        county_name: '',
         county_code: '',
         town_id: '',
         town_code: '',
@@ -310,7 +311,6 @@ export default {
         result.push({ id: `category${i}`, text: `${item.type}(${item.money})`, type: item.type, money: item.money });
       });
       this.categoryList = result;
-      // [{ id: 'category01', text: '態樣1(93000)' }, { id: 'category02', text: '態樣2(93000)' }, { id: 'category03', text: '態樣3(93000)' }];
     }).catch(e => {
       console.log(e);
     });
@@ -357,16 +357,49 @@ export default {
       }
     },
     addCompensate () {
-      const result = {};
-      if (this.note)result.note = this.note;
-      if (this.category)result.category = this.category;
-      if (this.categoryContent)result.categoryContent = this.categoryContent;
-      if (this.dataArr[0])result.attachment1 = this.dataArr[0];
-      if (this.dataArr[1])result.attachment2 = this.dataArr[1];
-      if (this.dataArr[2])result.attachment3 = this.dataArr[2];
-      if (this.dataArr[3])result.attachment4 = this.dataArr[3];
-      if (this.dataArr[4])result.attachment5 = this.dataArr[4];
+      // const result = {};
+      // if (this.note)result.note = this.note;
+      // if (this.category)result.category = this.category;
+      // if (this.categoryContent)result.categoryContent = this.categoryContent;
+      // if (this.dataArr[0])result.attachment1 = this.dataArr[0];
+      // if (this.dataArr[1])result.attachment2 = this.dataArr[1];
+      // if (this.dataArr[2])result.attachment3 = this.dataArr[2];
+      // if (this.dataArr[3])result.attachment4 = this.dataArr[3];
+      // if (this.dataArr[4])result.attachment5 = this.dataArr[4];
+      const resultTest = [];
+      this.owner.forEach(ownerID => {
+        console.log(this.ownerList.body);
+        const ownerName = (this.ownerList.body.filter(item => item.val === ownerID))[0].title[0];
+        const ownerScro = (this.ownerList.body.filter(item => item.val === ownerID))[0].title[1];
+        this.category.forEach(item2 => {
+          console.log(item2.ApplyArea);
+          console.log(this.fractionCalculate(ownerScro));
+          resultTest.push({
+            owner_id: ownerID,
+            owner_name: ownerName,
+            county_id: this.searchObj.county_id,
+            county_code: this.searchObj.county_code,
+            town_id: this.searchObj.town_id,
+            section: this.searchObj.section,
+            landno: this.searchObj.landno,
+            test2: item2
+          });
+          // console.log(item2);
+          // resultTest.push({
+          //   county_id: this.searchObj.county_id,
+          //   town_id: this.searchObj.town_id,
+          //   section: this.searchObj.section,
+          //   landno: this.searchObj.landno,
+          //   test1: item1,
+          //   test2: item2
+          // });
+        });
+      });
       this.$emit('addCompensate', this.searchObj);
+    },
+    fractionCalculate (data) {
+      const fraction = data.split('/');
+      return Math.round((1000 * fraction[0]) / fraction[1]);
     },
     countyDrop (payload) {
       this.searchObj.county_id = payload.value;
