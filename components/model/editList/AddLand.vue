@@ -58,14 +58,19 @@
         </div>
       </div>
     </div>
-    <div class="listBox Box2">
+    <div
+      v-show="areaText!==''"
+      class="listBox Box2"
+    >
       <div class="listTitle" />
       <AreaNote
-        v-show="areaText!==''"
         :text="areaText"
       />
     </div>
-    <div class="listBox Box2">
+    <div
+      v-show="areaText!==''"
+      class="listBox Box2"
+    >
       <div class="listTitle">
         土地所有權人
       </div>
@@ -76,6 +81,7 @@
           class="flex-2"
           @click="toggleOwnerList"
         />
+        {{ owner }}
         <div
           v-show="statusOwnerList"
           class="ownerList"
@@ -99,7 +105,7 @@
           </div>
         </div>
         <div class="tips flex-16">
-          <span>已選擇2位所有權人</span>
+          <span>已選擇{{ ownerList.body.length }}位所有權人</span>
         </div>
       </div>
     </div>
@@ -176,7 +182,7 @@ import CheckInput from '~/components/model/editList/CheckInputTool';
 import AreaNote from '~/components/tools/AreaNote.vue';
 import TableTool from '~/components/model/Table';
 import axios from 'axios';
-import { getCounties, getTowns, getSections, getSecNo, getSecNoList } from '~/publish/Irrigation.js';
+import { getCounties, getTowns, getSections, getSecNo, getSecNoList, getFarmer, getOwner } from '~/publish/Irrigation.js';
 export default {
   components: {
     Dropdown,
@@ -191,23 +197,6 @@ export default {
       type: Object,
       default: () => {
         return { data: [{ title: '無清單資料1', value: '0' }, { title: '無清單資料2', value: '1' }] };
-      }
-    },
-    ownerList: {
-      type: Object,
-      default: () => {
-        return {
-          head: [
-            { title: '所有權人' },
-            { title: '權力範圍' },
-            { title: '權力類別' }
-          ],
-          body: [
-            { val: 0, title: ['陳旺旺', '1/3', '公同共有'] },
-            { val: 1, title: ['張旺旺', '1/3', '公同共有'] },
-            { val: 2, title: ['鄧旺旺', '1/3', '公同共有'] }
-          ]
-        };
       }
     }
   },
@@ -272,12 +261,21 @@ export default {
       //
       countyList: [],
       townList: [],
+      farmerList: [],
       isClearCounty: false,
       isClearTown: false,
       isClearSection: false,
       isClearLandNo: false,
       countyId: '',
-      countyFID: ''
+      countyFID: '',
+      ownerList: {
+        head: [
+          { title: '所有權人' },
+          { title: '權力範圍' },
+          { title: '權力類別' }
+        ],
+        body: []
+      }
     };
   },
   name: 'LandSearch',
@@ -292,6 +290,35 @@ export default {
   methods: {
     toggleOwnerList () {
       this.statusOwnerList = !this.statusOwnerList;
+      if (this.statusOwnerList) {
+        const data = {
+          county: this.searchObj.county_id,
+          town: this.searchObj.town_id,
+          Section: this.searchObj.section,
+          land_no: this.searchObj.landno
+        };
+        getOwner(data).then(r => {
+          // this.ownerList.body = {
+
+          // };
+          console.log(r.data);
+          const result = [];
+          r.data.forEach(item => {
+            console.log(item);
+            result.push({ val: item.owner_id, title: [item.name, item.percent1 + '/' + item.percent2, item.own_scro] });
+          });
+          console.log(result);
+          this.ownerList.body = result;
+        }).catch(e => {
+          console.log(e);
+        });
+
+        // body: [
+        //   { val: 0, title: ['陳旺旺', '1/3', '公同共有'] },
+        //   { val: 1, title: ['張旺旺', '1/3', '公同共有'] },
+        //   { val: 2, title: ['鄧旺旺', '1/3', '公同共有'] }
+        // ];
+      }
     },
     cropNote (e) {
       if (e) {
@@ -307,6 +334,12 @@ export default {
     },
     getFarmerCategory (e) {
       console.log(e);
+      getFarmer().then(r => {
+        console.log(r);
+        this.farmerList = r;
+      }).catch(e => {
+        console.log(e);
+      });
     },
     getCategory (e) {
       console.log(e);

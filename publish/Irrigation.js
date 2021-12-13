@@ -165,3 +165,11 @@ export function getDownloadIrrigationLand (data) {
   const secNoListRequest = '/aerc/rest/DownloadIrrigationLand';
   return request.post(secNoListRequest, data);
 }
+
+export function getFarmer (data) {
+  return request.get('/AERC/rest/Farmer');
+}
+
+export function getOwner (data) {
+  return request.post('/AERC/rest/Owner', data);
+}

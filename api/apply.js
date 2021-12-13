@@ -20,7 +20,6 @@ export function applySettingCheck () {
   return request.post('/AERC/rest/ApplySettingCheck');
 }
 
-/* API未完成 */
 export function getApplyEvent (data) {
   return request.post('/AERC/rest/GetEvent', data);
 }
