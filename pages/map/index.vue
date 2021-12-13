@@ -147,7 +147,28 @@
               <p class="tit">
                 請以 .zip 封存檔案，.zip檔案內需含有.shp .shx .dbf .prj 四種檔案類型
               </p>
-              <div class="bt_wrap">
+              <div
+                v-if="shpOptions.current === 0"
+                class="bt_wrap"
+              >
+                <Buttons-component
+                  :name="'button-add'"
+                  :text="'新增圖層'"
+                  :add="true"
+                  @click="$refs.formBt1.click() "
+                />
+                <input
+                  id="formBt1"
+                  ref="formBt1"
+                  type="file"
+                  style="display: none;"
+                  @change="getShpHandler"
+                >
+              </div>
+              <div
+                v-if="shpOptions.current === 1"
+                class="bt_wrap"
+              >
                 <Buttons-component
                   :name="'button-add'"
                   :text="'新增圖層'"
@@ -169,6 +190,7 @@
                   category="shpitem"
                   @changeVisible="layerVisibleCtrl"
                   @updateOpacity="layerOpacityCtrl"
+                  @locate="zoomToSHP"
                   @delete="deleteShpLayer"
                 />
               </div>
@@ -528,6 +550,8 @@ export default {
         layerList: [],
         kmlLayer: ''
       },
+      allShpGraphic: [],
+      allGeotry: [],
       //* 跳轉視窗 圖形
       geoData: '',
       localGraphic: '',
@@ -1040,7 +1064,15 @@ export default {
         const index = this.shpOptions.layerList.findIndex(item => item.id === id);
         this.shpOptions.layerList[index].visible = $event;
 
-        this.shpOptions.kmlLayer.putVisible($event);
+        if (this.shpOptions.kmlLayer !== '') {
+          this.shpOptions.kmlLayer.putVisible($event);
+        }
+
+        if (this.allShpGraphic !== []) {
+          this.allShpGraphic.forEach((item) => {
+            item.layer.putVisible($event);
+          });
+        }
       }
     },
     // * @ 圖層工具：單一支線圖層 顯示/隱藏
@@ -1197,7 +1229,17 @@ export default {
       if (category === 'shpitem') {
         const index = this.shpOptions.layerList.findIndex(item => item.id === id);
         this.shpOptions.layerList[index].opacity = value;
-        this.shpOptions.kmlLayer.setOpacity(value / 100);
+
+        if (this.shpOptions.kmlLayer !== '') {
+          this.shpOptions.kmlLayer.setOpacity(value / 100);
+        }
+
+        if (this.allShpGraphic !== []) {
+          this.allShpGraphic.forEach((item) => {
+            item.layer.setOpacity(value / 100);
+          });
+        }
+
         pMapBase.RefreshMap(true);
       }
     },
@@ -1224,17 +1266,17 @@ export default {
       console.log(newFile);
       console.log(`${current},${type}`);
 
-      if (type === 'shp' || type === 'zip') {
-        this.shpUploader(newFile);
-        return;
-      }
-
       if (type !== 'kml' && type !== 'kmz') {
         this.formatBox = true;
         return;
       }
       if (fileSize > 8388608) {
         this.sizeBox = true;
+        return;
+      }
+
+      if (type === 'kmz') {
+        this.getKmzHandler(newFile);
         return;
       }
 
@@ -1266,7 +1308,7 @@ export default {
         this.shpOptions.layerList.push(result);
         this.zoomToLayer(this.shpOptions.kmlLayer);
 
-        this.shpOptions.kmlLayer = new sg.layers.KMLLayer(null, { data: newFile });
+        // this.shpOptions.kmlLayer = new sg.layers.KMLLayer(null, { data: newFile });
       });
 
       pMapBase.RefreshMap(true);
@@ -1275,6 +1317,12 @@ export default {
     deleteShpLayer () {
       this.shpOptions.layerList = [];
       pMapBase.RemoveLayer(this.shpOptions.kmlLayer);
+
+      this.allShpGraphic.forEach((item) => {
+        pMapBase.drawingGraphicsLayer.remove(item);
+      });
+      this.allShpGraphic = [];
+
       pMapBase.RefreshMap(true);
     },
     zoomToLayer (layer) {
@@ -1284,33 +1332,111 @@ export default {
       pMapBase.getTransformation().FitLevel();
       pMapBase.RefreshMap(true);
     },
-    // * @ 圖層工具：臨時展繪 上傳shp檔
-    shpUploader (newFile) {
-      const newObject = {
-        lastModified: newFile.lastModified,
-        lastModifiedDate: newFile.lastModifiedDate,
-        name: newFile.name,
-        size: newFile.size,
-        type: newFile.type,
-        webkitRelativePath: newFile.webkitRelativePath
-      };
+    // * @ 圖層工具：臨時展繪 定位(只有SHP可)
+    zoomToSHP () {
+      const extent = sg.geometry.Extent.unionall(this.allGeotry.map(function (geom) { return geom.extent; }));
+      pMapBase.ZoomMapTo(extent);
+      pMapBase.getTransformation().FitLevel();
+      pMapBase.RefreshMap(true);
+    },
+    // * @ 圖層工具：臨時展繪 上傳kmz檔
+    getKmzHandler (myFile) {
+      const fileName = myFile.name.substring(0, myFile.name.length - 4);
+      const formData = new FormData();
+      formData.append('Datas', myFile);
 
-      fetch('/AERC/rest/ShpLoader', {
+      fetch('/AERC/rest/KmzLoader', {
         method: 'POST',
-        headers: new Headers({
-          'Content-Type': 'application/json'
-        }),
-        body: JSON.stringify({
-          Datas: newObject
-        })
+        body: formData
       }).then((response) => {
         return response.json();
       }).then((data) => {
         console.log(data);
+        const newArr = data[0].File.filter(item => item.substring(item.length - 3, item.length) === 'kml');
+        const newUrl = `${data[0].Folder}/${newArr[0]}`;
+        const newFile = new File([''], newUrl);
+        console.log(newFile);
+
+        // 先移除舊的檔案
+        pMapBase.RemoveLayer(this.shpOptions.kmlLayer);
+        pMapBase.RefreshMap(true);
+        this.shpOptions.layerList = [];
+        //
+        SuperGIS.LoadModules(['scripts/MVTData.js', 'vector_tile.js', 'pbf.js', 'scripts/KML.js', 'scripts/Collada.js'], () => {
+          this.shpOptions.kmlLayer = new sg.layers.KMLLayer(null, { data: newFile });
+          pMapBase.AddLayer(this.shpOptions.kmlLayer);
+          const result = {
+            id: Math.random(),
+            name: fileName,
+            visible: true,
+            opacity: 100
+          };
+          this.shpOptions.layerList.push(result);
+          this.zoomToLayer(this.shpOptions.kmlLayer);
+        });
+
+        pMapBase.RefreshMap(true);
       }).catch((err) => {
         console.log(err);
       });
     },
+
+    // * @ 圖層工具：臨時展繪 上傳shp檔
+    getShpHandler () {
+      const newFile = document.getElementById('formBt1').files[0];
+      const fileName = newFile.name.substring(0, newFile.name.length - 4);
+      console.log(newFile);
+
+      const formData = new FormData();
+      formData.append('Datas', newFile);
+
+      fetch('/AERC/rest/ShpLoader', {
+        method: 'POST',
+        // headers: new Headers({
+        //   'Content-Type': 'application/json'
+        // }),
+        body: formData
+      }).then((response) => {
+        return response.json();
+      }).then((data) => {
+        console.log(data);
+
+        // 先清除之前的
+        this.shpOptions.layerList = [];
+
+        this.allShpGraphic.forEach((item) => {
+          pMapBase.drawingGraphicsLayer.remove(item);
+        });
+        this.allShpGraphic = [];
+        // 畫圖
+        data.forEach((item) => {
+          const geometry = sg.geometry.Geometry.fromGeoJson(item.geometry);
+          this.allShpGraphic.push(sg.Graphic.createFromGeometry(geometry, { borderwidth: 1, fillcolor: new sg.Color(220, 105, 105, 0.5) }));
+          this.allGeotry.push(geometry);
+        });
+
+        this.allShpGraphic.forEach((item) => {
+          pMapBase.drawingGraphicsLayer.add(item);
+        });
+        // 加清單
+        const result = {
+          id: Math.random(),
+          name: fileName,
+          visible: true,
+          opacity: 100
+        };
+        this.shpOptions.layerList.push(result);
+
+        // 定位
+        const extent = sg.geometry.Extent.unionall(this.allGeotry.map(function (geom) { return geom.extent; }));
+        pMapBase.ZoomMapTo(extent);
+        pMapBase.getTransformation().FitLevel();
+        pMapBase.RefreshMap(true);
+      }).catch((err) => {
+        console.log(err);
+      });
+    },
+
     // * @ 圖層工具：OGC介接 取得服務
     getOgcHandler (current) {
       // const wmsUrl = this.$refs.wms.value;

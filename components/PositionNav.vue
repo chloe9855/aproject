@@ -45,21 +45,24 @@
       </div>
 
       <div v-show="posOptions.current === 1">
-        <DropdownVertical-component
+        <span class="sptitle">縣市</span>
+        <Dropdown-component
+          sizing="w-88"
           :options="countyList.County"
-          :title="'縣市'"
           :change-text="clearLand1"
           @DropdownVal="(payload) => { nextCountHandler(payload, 'Town'), positionCtrl(payload, 'County'), countyIdList.push(payload.COUNTYID), clearLand1 = false, payload !== '' ? counData.County = payload.COUNTYNAME : counData.County = '' }"
         />
-        <DropdownVertical-component
+        <span class="sptitle">鄉鎮市區</span>
+        <Dropdown-component
+          sizing="w-78"
           :options="countyList.Town"
-          :title="'鄉鎮市區'"
           :change-text="clearLand2"
           @DropdownVal="(payload) => { nextCountHandler(payload, 'Section'), positionCtrl(payload, 'Town'), clearLand2 = false, payload !== '' ? counData.Town = payload.TOWNNAME : counData.Town = '' }"
         />
-        <DropdownVertical-component
+        <span class="sptitle">地段</span>
+        <Dropdown-component
+          sizing="w-88"
           :options="countyList.Section"
-          :title="'地段'"
           :change-text="clearLand3"
           @DropdownVal="(payload) => { getLandnoList(payload), positionCtrl(payload, 'Section'), clearLand3 = false, payload !== '' ? counData.Section = payload.Section : counData.Section = '' }"
         />
@@ -195,7 +198,7 @@ import DropdownVertical from '~/components/tools/DropdownVertical.vue';
 import Buttons from '~/components/tools/Buttons.vue';
 import SwitchTabs from '~/components/tools/SwitchTabs.vue';
 import InputTool from '~/components/tools/InputTool.vue';
-// import DropdownVertical from '~/components/tools/Dropdown.vue';
+import Dropdown from '~/components/tools/Dropdown.vue';
 
 export default {
   components: {
@@ -203,8 +206,8 @@ export default {
     'DropdownVertical-component': DropdownVertical,
     'Buttons-component': Buttons,
     'SwitchTabs-component': SwitchTabs,
-    'InputTool-component': InputTool
-    // 'Dropdown-component': Dropdown
+    'InputTool-component': InputTool,
+    'Dropdown-component': Dropdown
   },
   props: {
     iaList: {
@@ -827,8 +830,13 @@ export default {
 
 <style lang="scss" scoped>
 
+  .sptitle {
+    font-weight: bold;
+  }
+
   .land_wrap{
-    max-height: 90px;
+    // max-height: 90px;
+    max-height: 156px;
     overflow-y: scroll;
   }
 
@@ -879,7 +887,8 @@ export default {
     justify-content: center;
     align-items: center;
     color: #3E9F88;
-    padding: 4px 0;
+    // padding: 4px 0;
+    padding: 22px 0;
     @include noto-sans-tc-16-regular;
   }
 
