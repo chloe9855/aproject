@@ -213,6 +213,13 @@ export default {
       this.isReverse = false;
       this.isCircle = false;
 
+      // 清除圖形
+      pMapBase.drawingGraphicsLayer.remove(this.canalGraphic);
+      pMapBase.drawingGraphicsLayer.remove(this.iconStart);
+      pMapBase.drawingGraphicsLayer.remove(this.icon1);
+      pMapBase.drawingGraphicsLayer.remove(this.icon2);
+      pMapBase.drawingGraphicsLayer.remove(this.iconEnd);
+
       this.$emit('clear');
     },
     // * 取得該管理處的所有渠道
@@ -349,6 +356,7 @@ export default {
           extent.ymax = yMax;
           extent.ymin = yMin;
           pMapBase.ZoomMapTo(extent);
+          ZoomOut();
           pMapBase.getTransformation().FitLevel();
           pMapBase.RefreshMap(true);
 
@@ -359,6 +367,7 @@ export default {
         if (this.range1 === '' && this.range2 === '') {
           const extent = geometry.extent;
           pMapBase.ZoomMapTo(extent);
+          ZoomOut();
           pMapBase.getTransformation().FitLevel();
           pMapBase.RefreshMap(true);
 

@@ -144,44 +144,46 @@
                 :type-list="shpOptions.typeList"
                 @current="payload => shpOptions.current = payload"
               />
-              <p class="tit">
-                請以 .zip 封存檔案，.zip檔案內需含有.shp .shx .dbf .prj 四種檔案類型
-              </p>
-              <div
-                v-if="shpOptions.current === 0"
-                class="bt_wrap"
-              >
-                <Buttons-component
-                  :name="'button-add'"
-                  :text="'新增圖層'"
-                  :add="true"
-                  @click="$refs.formBt1.click() "
-                />
-                <input
-                  id="formBt1"
-                  ref="formBt1"
-                  type="file"
-                  style="display: none;"
-                  @change="getShpHandler"
-                >
+              <div v-if="shpOptions.current === 0">
+                <p class="tit">
+                  請以 .zip 封存檔案，.zip檔案內需含有.shp .shx .dbf .prj 四種檔案類型
+                </p>
+                <div class="bt_wrap">
+                  <Buttons-component
+                    :name="'button-add'"
+                    :text="'新增圖層'"
+                    :add="true"
+                    @click="$refs.formBt1.click()"
+                  />
+                  <input
+                    id="formBt1"
+                    ref="formBt1"
+                    type="file"
+                    style="display: none;"
+                    @change="getShpHandler"
+                  >
+                </div>
               </div>
-              <div
-                v-if="shpOptions.current === 1"
-                class="bt_wrap"
-              >
-                <Buttons-component
-                  :name="'button-add'"
-                  :text="'新增圖層'"
-                  :add="true"
-                  @click="$refs.upfile.click()"
-                />
-                <input
-                  id="upfile"
-                  ref="upfile"
-                  type="file"
-                  style="display: none;"
-                  @change="fileUploader(shpOptions.current)"
-                >
+
+              <div v-if="shpOptions.current === 1">
+                <p class="tit">
+                  上傳格式限kml或是kmz，8MB為限
+                </p>
+                <div class="bt_wrap">
+                  <Buttons-component
+                    :name="'button-add'"
+                    :text="'新增圖層'"
+                    :add="true"
+                    @click="$refs.upfile.click()"
+                  />
+                  <input
+                    id="upfile"
+                    ref="upfile"
+                    type="file"
+                    style="display: none;"
+                    @change="fileUploader(shpOptions.current)"
+                  >
+                </div>
               </div>
 
               <div v-if="shpOptions.layerList.length >= 1">
@@ -416,6 +418,14 @@
         @close="sizeBox = false"
         @confirm="sizeBox = false"
       />
+
+      <!-- loading載入中視窗 -->
+      <div
+        v-if="loadModal === true"
+        class="modal_wrapper888888"
+      >
+        <div class="modal888888" />
+      </div>
     </div>
   </div>
 </template>
@@ -457,6 +467,8 @@ export default {
       mymap: '',
       userId: '',
       totalIaList: '',
+      // * loading視窗
+      loadModal: false,
       // * 目前所選取的功能視窗
       activeWindow: '',
       searchResult: {
@@ -837,10 +849,6 @@ export default {
             item.visible = true;
           }
 
-          if (item.LayerTitle === '段籍圖') {
-            item.LayerName = 'LANDSECT';
-          }
-
           // 載入底圖 wmts
           if (item.LayerType === '1') {
             this.loadAllBaseLayerTS(item.LayerName, index);
@@ -888,18 +896,30 @@ export default {
     loadAllBaseLayer (layerName, index) {
       this.allBaseLayer.push(new sg.layers.WMSLayer('https://wms.nlsc.gov.tw/wms', {
         imageFormat: 'image/png',
-        loadEffect: true
+        loadEffect: true,
+        loaded: () => {
+          this.getMyWMS(layerName, index);
+        }
       }));
 
-      setTimeout(() => {
-        this.allBaseLayer[index].visibleLayers = [];
-        this.allBaseLayer[index].visibleLayers[0] = layerName;
-        pMapBase.AddLayer(this.allBaseLayer[index]);
-        if (layerName !== 'EMAP5_OPENDATA') {
-          this.allBaseLayer[index].hide();
-        }
-        pMapBase.RefreshMap(true);
-      }, 2000);
+      // setTimeout(() => {
+      //   this.allBaseLayer[index].visibleLayers = [];
+      //   this.allBaseLayer[index].visibleLayers[0] = layerName;
+      //   pMapBase.AddLayer(this.allBaseLayer[index]);
+      //   if (layerName !== 'EMAP5_OPENDATA') {
+      //     this.allBaseLayer[index].hide();
+      //   }
+      //   pMapBase.RefreshMap(true);
+      // }, 2000);
+    },
+    getMyWMS (layerName, index) {
+      this.allBaseLayer[index].visibleLayers = [];
+      this.allBaseLayer[index].visibleLayers[0] = layerName;
+      pMapBase.AddLayer(this.allBaseLayer[index]);
+      if (layerName !== 'EMAP5_OPENDATA') {
+        this.allBaseLayer[index].hide();
+      }
+      pMapBase.RefreshMap(true);
     },
     // * 控制視窗顯示
     ctrlDragBoxVisible (payload) {
@@ -1005,6 +1025,7 @@ export default {
         // 定位
         const extent = geometry.extent;
         pMapBase.ZoomMapTo(extent);
+        ZoomOut();
         pMapBase.getTransformation().FitLevel();
         pMapBase.RefreshMap(true);
       }).catch((err) => {
@@ -1058,6 +1079,11 @@ export default {
         } else {
           this.allBaseLayer[index].hide();
         }
+
+        if (layerName === 'EMAP5') {
+          firstLayer.putVisible($event);
+        }
+
         pMapBase.RefreshMap(true);
       }
       if (category === 'shpitem') {
@@ -1224,6 +1250,11 @@ export default {
         const index = this.layerOptions.baseLayerList.findIndex(item => item.id === id);
         this.layerOptions.baseLayerList[index].opacity = value;
         this.allBaseLayer[index].setOpacity(value / 100);
+
+        if (layerName === 'EMAP5') {
+          firstLayer.setOpacity(value / 100);
+        }
+
         pMapBase.RefreshMap(true);
       }
       if (category === 'shpitem') {
@@ -1257,6 +1288,7 @@ export default {
     },
     // * @ 圖層工具：臨時展繪 新增圖層
     fileUploader (current) {
+      this.loadModal = true;
       const newFile = document.getElementById('upfile').files[0];
       if (newFile === undefined) { return; }
       const type = newFile.name.substring(newFile.name.length - 3, newFile.name.length);
@@ -1312,6 +1344,7 @@ export default {
       });
 
       pMapBase.RefreshMap(true);
+      this.loadModal = false;
     },
     // * @ 圖層工具：臨時展繪 刪除圖層
     deleteShpLayer () {
@@ -1336,6 +1369,7 @@ export default {
     zoomToSHP () {
       const extent = sg.geometry.Extent.unionall(this.allGeotry.map(function (geom) { return geom.extent; }));
       pMapBase.ZoomMapTo(extent);
+      ZoomOut();
       pMapBase.getTransformation().FitLevel();
       pMapBase.RefreshMap(true);
     },
@@ -1376,6 +1410,7 @@ export default {
         });
 
         pMapBase.RefreshMap(true);
+        this.loadModal = false;
       }).catch((err) => {
         console.log(err);
       });
@@ -1383,6 +1418,7 @@ export default {
 
     // * @ 圖層工具：臨時展繪 上傳shp檔
     getShpHandler () {
+      this.loadModal = true;
       const newFile = document.getElementById('formBt1').files[0];
       const fileName = newFile.name.substring(0, newFile.name.length - 4);
       console.log(newFile);
@@ -1430,8 +1466,11 @@ export default {
         // 定位
         const extent = sg.geometry.Extent.unionall(this.allGeotry.map(function (geom) { return geom.extent; }));
         pMapBase.ZoomMapTo(extent);
+        ZoomOut();
         pMapBase.getTransformation().FitLevel();
         pMapBase.RefreshMap(true);
+
+        this.loadModal = false;
       }).catch((err) => {
         console.log(err);
       });
@@ -1583,6 +1622,7 @@ export default {
     },
     // * @ 截圖工具：JPG下載
     downloadJPG () {
+      this.loadModal = true;
       const node = this.$refs.mapBox;
       const canvas = document.getElementsByTagName('canvas')[0];
       const ctx = canvas.getContext('2d');
@@ -1640,6 +1680,7 @@ export default {
             saveAs(blob, 'iamap.jpg');
             console.log('印出來');
 
+            this.loadModal = false;
             this.openPicPage();
           });
         };
@@ -1649,7 +1690,7 @@ export default {
         const date = new Date();
         const nowDate = `列印時間 : ${date.getFullYear()}/${date.getMonth()}/${date.getDate()} ${date.getHours()}:${date.getMinutes()}`;
         ctx.fillText(nowDate, 1290, 610);
-        console.log('日期');
+        // console.log('日期');
 
         // 加版權
         ctx.fillText('地圖平台 : 農田水利署地理空間處理平台', 235, 610);
@@ -1664,6 +1705,7 @@ export default {
     },
     // * @ 截圖工具：PDF下載
     downloadPDF () {
+      this.loadModal = true;
       const node = this.$refs.mapBox;
       const canvas = document.getElementsByTagName('canvas')[0];
       const ctx = canvas.getContext('2d');
@@ -1681,14 +1723,13 @@ export default {
         });
       mapImg.style.border = '2px solid #EA0000';
 
-      mapImg.onload = function () {
+      mapImg.onload = () => {
         ctx.drawImage(mapImg, 100, 48.5, 1300, 538);
         console.log('地圖');
-      };
 
-      ctx.globalCompositeOperation = 'destination-over';
+        // =============
+        ctx.globalCompositeOperation = 'destination-over';
 
-      setTimeout(() => {
         // 加上指北針圖
         const imgObj = new Image();
         imgObj.src = require('~/assets/img/compass.png');
@@ -1713,7 +1754,9 @@ export default {
           .then((dataUrl) => {
             scaleImg.src = dataUrl;
           });
-        scaleImg.onload = function () {
+        scaleImg.onload = () => {
+          this.loadModal = false;
+
           ctx.drawImage(scaleImg, 100, 550);
           console.log('比例尺');
 
@@ -1731,16 +1774,56 @@ export default {
 
         // 加版權
         ctx.fillText('地圖平台 : 農田水利署地理空間處理平台', 235, 610);
-      }, 2500);
+      };
 
-      // window.jsPDF = window.jspdf.jsPDF;
-      // // eslint-disable-next-line new-cap
-      // const doc = new jsPDF('l', 'px', [canvas.width, canvas.height]);
+      // ctx.globalCompositeOperation = 'destination-over';
+
       // setTimeout(() => {
-      //   const image = canvas.toDataURL();
-      //   doc.addImage(image, 'JPEG', 0, 0, canvas.width, canvas.height);
-      //   doc.save('iamap.pdf');
-      // }, 7000);
+      //   // 加上指北針圖
+      //   const imgObj = new Image();
+      //   imgObj.src = require('~/assets/img/compass.png');
+      //   imgObj.onload = function () {
+      //     ctx.drawImage(imgObj, 1250, 60);
+      //     console.log('指北針');
+      //   };
+
+      //   // 加標題
+      //   const textWidth = ctx.measureText(this.screenTitle).width;
+      //   ctx.font = '28px sans-serif';
+      //   ctx.textAlign = 'center';
+      //   ctx.fillStyle = '#000000';
+      //   ctx.fillText(this.screenTitle, (canvas.width / 2) - (textWidth / 2) - 80, 30);
+
+      //   // 加比例尺
+      //   ctx.globalCompositeOperation = 'source-over';
+
+      //   const scale = document.getElementById('ScaleTools');
+      //   const scaleImg = new Image();
+      //   domtoimage.toPng(scale, { quality: 0.95 })
+      //     .then((dataUrl) => {
+      //       scaleImg.src = dataUrl;
+      //     });
+      //   scaleImg.onload = () => {
+      //     this.loadModal = false;
+
+      //     ctx.drawImage(scaleImg, 100, 550);
+      //     console.log('比例尺');
+
+      //     const image = canvas.toDataURL();
+      //     doc.addImage(image, 'JPEG', 0, 0, canvas.width, canvas.height);
+      //     doc.save('iamap.pdf');
+      //   };
+
+      //   // 加日期
+      //   ctx.font = '13px sans-serif';
+      //   const date = new Date();
+      //   const nowDate = `列印時間 : ${date.getFullYear()}/${date.getMonth()}/${date.getDate()} ${date.getHours()}:${date.getMinutes()}`;
+      //   ctx.fillText(nowDate, 1290, 610);
+      //   console.log('日期');
+
+      //   // 加版權
+      //   ctx.fillText('地圖平台 : 農田水利署地理空間處理平台', 235, 610);
+      // }, 6000);
     },
     openPicPage () {
       const canvas = document.getElementsByTagName('canvas')[0];
@@ -1780,6 +1863,7 @@ export default {
         // 定位
         const extent = geometry.extent;
         pMapBase.ZoomMapTo(extent);
+        ZoomOut();
         pMapBase.getTransformation().FitLevel();
         pMapBase.RefreshMap(true);
         // 清空localStorage
@@ -2101,6 +2185,32 @@ export default {
     100% {
       stroke-dashoffset: 0;
     }
+  }
+
+  .modal_wrapper888888 {
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 10000000000;
+    cursor: default;
+  }
+
+  .modal888888 {
+    width: 100px;
+    height: 100px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    z-index: 9999;
+    transform: translate(-50%, -50%);
+    flex-direction: column;
+    background: url('~/assets/img/loading_icon.svg') no-repeat center/contain;
   }
 
   .scbar_wrap {

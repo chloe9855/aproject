@@ -2,7 +2,8 @@
   <div class="inputBox">
     <DropdownVertical
       title="管理處"
-      :options="member"
+      :options="myIaList"
+      @DropdownVal="searchAmount"
     />
   </div>
 </template>
@@ -16,10 +17,63 @@ export default {
   props: {},
   data: () => {
     return {
-      member: [{ title: '預設選項', value: '0' }, { title: '工作站人員', value: '1' }, { title: '管理人員', value: '2' }, { title: '民眾', value: '3' }]
+      userId: '',
+      myIaList: '',
+      useAmountData: ''
     };
   },
-  name: 'UsageAmountSearch'
+  name: 'UsageAmountSearch',
+  mounted () {
+    this.userId = sessionStorage.getItem('loginUser');
+    this.getIaList();
+  },
+  methods: {
+    // * @ 取得管理處資料
+    getIaList () {
+      fetch(`/AERC/rest/Ia/${this.userId}`, {
+        method: 'POST',
+        headers: new Headers({
+          'Content-Type': 'application/json'
+        }),
+        body: JSON.stringify({
+
+        })
+      }).then((response) => {
+        return response.json();
+      }).then((data) => {
+        // console.log(data);
+
+        data.forEach((item) => {
+          item.value = item.Ia;
+          item.title = item.Ia_cns;
+        });
+        this.myIaList = data;
+      }).catch((err) => {
+        console.log(err);
+      });
+    },
+    // * 查各管理處統計量
+    searchAmount (payload) {
+      fetch(`/AERC/rest/UsageAmount/?Ia=${payload.Ia}`, {
+        method: 'GET',
+        headers: new Headers({
+          'Content-Type': 'application/json'
+        })
+      }).then((response) => {
+        return response.json();
+      }).then((data) => {
+        console.log(data);
+
+        this.useAmountData = data;
+      }).catch((err) => {
+        console.log(err);
+      });
+    },
+    // * 查詢
+    search () {
+
+    }
+  }
 };
 </script>
 

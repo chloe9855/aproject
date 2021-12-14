@@ -93,19 +93,12 @@
       </div>
     </div>
 
+    <!-- loading載入中視窗 -->
     <div
       v-if="loadModal === true"
       class="modal_wrapper"
     >
-      <div class="modal">
-        <!-- <p
-          class="p3"
-          style="margin-bottom: 10px;"
-        >
-          載入中
-        </p>
-        <div class="bar" /> -->
-      </div>
+      <div class="modal" />
     </div>
   </div>
 </template>

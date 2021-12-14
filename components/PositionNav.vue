@@ -344,6 +344,7 @@ export default {
       const cData = proj4(EPSG3826, EPSG3857, [this.locate.twdX, this.locate.twdY]);
       // 定位
       pMapBase.ZoomMapTo(new sg.geometry.Point(cData[0], cData[1]));
+      ZoomOut();
       pMapBase.getTransformation().FitLevel();
       pMapBase.RefreshMap(true);
       // 畫點
@@ -370,6 +371,7 @@ export default {
       const cData = proj4(EPSG4326, EPSG3857, [this.locate.wgsX, this.locate.wgsY]);
       // 定位
       pMapBase.ZoomMapTo(new sg.geometry.Point(cData[0], cData[1]));
+      ZoomOut();
       pMapBase.getTransformation().FitLevel();
       pMapBase.RefreshMap(true);
       // 畫點
@@ -529,6 +531,7 @@ export default {
         // 定位
         const extent = geometry.extent;
         pMapBase.ZoomMapTo(extent);
+        ZoomOut();
         pMapBase.getTransformation().FitLevel();
         pMapBase.RefreshMap(true);
       }).catch((err) => {
@@ -569,6 +572,7 @@ export default {
         // 定位至最大範圍
         const extent = sg.geometry.Extent.unionall(this.allMetry.map(function (geom) { return geom.extent; }));
         pMapBase.ZoomMapTo(extent);
+        ZoomOut();
         pMapBase.getTransformation().FitLevel();
         pMapBase.RefreshMap(true);
 
@@ -617,6 +621,7 @@ export default {
           // 定位
           const extent = geometry.extent;
           pMapBase.ZoomMapTo(extent);
+          ZoomOut();
           pMapBase.getTransformation().FitLevel();
           pMapBase.RefreshMap(true);
         }).catch((err) => {
@@ -649,6 +654,7 @@ export default {
           // 定位至最大範圍
           const extent = sg.geometry.Extent.unionall(this.allMetry.map(function (geom) { return geom.extent; }));
           pMapBase.ZoomMapTo(extent);
+          ZoomOut();
           pMapBase.getTransformation().FitLevel();
           pMapBase.RefreshMap(true);
 
@@ -818,6 +824,7 @@ export default {
         // 定位
         const extent = geometry.extent;
         pMapBase.ZoomMapTo(extent);
+        ZoomOut();
         pMapBase.getTransformation().FitLevel();
         pMapBase.RefreshMap(true);
       }).catch((err) => {
