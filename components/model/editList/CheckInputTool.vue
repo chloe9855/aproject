@@ -12,6 +12,7 @@
     </div>
     <InputTool
       class="flex-1"
+      :change-text="!isCheck"
       @inputValue="checkText"
     />
   </div>
@@ -55,6 +56,10 @@ export default {
     value: {
       type: String,
       default: ''
+    },
+    setCheck: {
+      type: Boolean,
+      default: false
     }
   },
   data: () => {
@@ -74,6 +79,11 @@ export default {
     }
   },
   computed: {
+  },
+  watch: {
+    setCheck (n) {
+      this.isCheck = false;
+    }
   }
 };
 </script>

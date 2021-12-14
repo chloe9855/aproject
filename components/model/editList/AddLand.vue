@@ -10,6 +10,7 @@
           :options="member.county"
           :change-text="isClearCounty"
           class="flex-4"
+          :placeholders="compensateData.county_name"
           @DropdownVal="countyDrop"
         />
         <Dropdown
@@ -17,6 +18,7 @@
           :options="member.town"
           :change-text="isClearTown"
           class="flex-4"
+          :placeholders="compensateData.town_name"
           @DropdownVal="townDrop"
         />
         <Dropdown
@@ -24,6 +26,7 @@
           :options="member.section"
           :change-text="isClearSection"
           class="flex-4"
+          :placeholders="compensateData.section"
           @DropdownVal="sectionDrop"
         />
         <InputTool
@@ -32,13 +35,14 @@
           star-sign="*"
           class="flex-4"
           :change-text="isClearLandNo"
+          :input-text="compensateData.landno"
           @inputValue="getInputValue"
         />
         <span class="flex-4">地號範圍:{{ minNo }}-{{ maxNo }}</span>
         <Button
           :name="'button-default'"
           :text="'查詢'"
-          @click="getArea"
+          @click="getArea(searchObj)"
         />
         <div>
           <img
@@ -81,7 +85,6 @@
           class="flex-2"
           @click="toggleOwnerList"
         />
-        {{ owner }}
         <div
           v-show="statusOwnerList"
           class="ownerList"
@@ -117,6 +120,8 @@
         <Dropdown
           :options="farmerList"
           class="flex-1"
+          :placeholders="compensateData.farmername"
+          :change-text="isClearFarmer"
           @DropdownVal="getFarmerCategory"
         />
         <div class="flex-4" />
@@ -134,6 +139,7 @@
         :val="item.id"
         :type="item.type"
         :money="item.money"
+        :set-check="isCategoryCheck"
         name="category"
         @checkInputVal="getCategory"
       />
@@ -143,7 +149,11 @@
         作物備註
       </div>
       <div class="flexBox">
-        <InputTool @inputValue="cropNote" />
+        <InputTool
+          :input-text="compensateData.note"
+          :change-text="isClearNote"
+          @inputValue="cropNote"
+        />
       </div>
     </div>
     <div class="listBox Box6">
@@ -191,6 +201,7 @@ import TableTool from '~/components/model/Table';
 import axios from 'axios';
 import { getApplySetting } from '~/api/apply';
 import { getCounties, getTowns, getSections, getSecNo, getSecNoList, getFarmer, getOwner } from '~/publish/Irrigation.js';
+import { mapState } from 'vuex';
 export default {
   components: {
     Dropdown,
@@ -236,8 +247,10 @@ export default {
         county_name: '',
         county_code: '',
         town_id: '',
+        town_name: '',
         town_code: '',
         section: '',
+        section_name: '',
         landno: '',
         owner_id: '',
         owner_name: '',
@@ -271,12 +284,22 @@ export default {
       countyList: [],
       townList: [],
       categoryList: [],
+      farmer: {
+        value: '',
+        title: ''
+      },
       isClearCounty: false,
       isClearTown: false,
       isClearSection: false,
       isClearLandNo: false,
+      isClearFarmer: false,
+      isClearNote: false,
+      isCategoryCheck: false,
       countyId: '',
       countyFID: '',
+      tolarea: '',
+      irgarea: '',
+      stnCns: '',
       ownerList: {
         head: [
           { title: '所有權人' },
@@ -348,61 +371,63 @@ export default {
     },
     getFarmerCategory (e) {
       console.log(e);
+      if (e) {
+        this.farmer = e;
+      }
     },
     getCategory (e) {
       if (e) {
         if (e.isCheck) {
           this.category[e.num] = { category: e.category, ApplyArea: e.text };
+        } else {
+          // this.category[e.num] = '';
+          delete this.category[e.num];
         }
       }
     },
     addCompensate () {
-      // const result = {};
-      // if (this.note)result.note = this.note;
-      // if (this.category)result.category = this.category;
-      // if (this.categoryContent)result.categoryContent = this.categoryContent;
-      // if (this.dataArr[0])result.attachment1 = this.dataArr[0];
-      // if (this.dataArr[1])result.attachment2 = this.dataArr[1];
-      // if (this.dataArr[2])result.attachment3 = this.dataArr[2];
-      // if (this.dataArr[3])result.attachment4 = this.dataArr[3];
-      // if (this.dataArr[4])result.attachment5 = this.dataArr[4];
-      const resultTest = [];
+      const CompensateData = [];
       this.owner.forEach(ownerID => {
-        console.log(this.ownerList.body);
         const ownerName = (this.ownerList.body.filter(item => item.val === ownerID))[0].title[0];
-        const ownerScro = (this.ownerList.body.filter(item => item.val === ownerID))[0].title[1];
+        const ownerPercent = (this.ownerList.body.filter(item => item.val === ownerID))[0].title[1];
+        const ownerScro = (this.ownerList.body.filter(item => item.val === ownerID))[0].title[2];
         this.category.forEach(item2 => {
-          console.log(item2.ApplyArea);
-          console.log(this.fractionCalculate(ownerScro));
-          resultTest.push({
+          CompensateData.push({
             owner_id: ownerID,
             owner_name: ownerName,
+            own_scro: this.switchOwnerScro(ownerScro),
+            owner_percent: ownerPercent,
+            farmer: this.farmer.value,
+            farmer_title: this.farmer.title,
             county_id: this.searchObj.county_id,
             county_code: this.searchObj.county_code,
+            county_name: this.searchObj.county_name,
             town_id: this.searchObj.town_id,
+            town_code: this.searchObj.town_code,
+            town_name: this.searchObj.town_name,
             section: this.searchObj.section,
+            section_name: this.searchObj.section_name,
+            irgarea: this.irgarea,
+            tolarea: this.tolarea,
             landno: this.searchObj.landno,
-            test2: item2
+            stnCns: this.stnCns,
+            landdetail: { category: item2.category, ApplyArea: this.fractionCalculate(item2.ApplyArea, ownerPercent) },
+            note: this.searchObj.note
           });
-          // console.log(item2);
-          // resultTest.push({
-          //   county_id: this.searchObj.county_id,
-          //   town_id: this.searchObj.town_id,
-          //   section: this.searchObj.section,
-          //   landno: this.searchObj.landno,
-          //   test1: item1,
-          //   test2: item2
-          // });
         });
       });
-      this.$emit('addCompensate', this.searchObj);
+      console.log(this.attachment);
+      this.$emit('addCompensate', { compensateData: CompensateData, attachment: this.attachment });
+      this.clearLandLocation();
+      // this.$emit('attachment', this.attachment);
     },
-    fractionCalculate (data) {
+    fractionCalculate (num, data) {
       const fraction = data.split('/');
-      return Math.round((1000 * fraction[0]) / fraction[1]);
+      return Math.round((num * fraction[0]) / fraction[1]);
     },
     countyDrop (payload) {
       this.searchObj.county_id = payload.value;
+      this.searchObj.county_name = payload.title;
       this.searchObj.town_id = '';
       this.searchObj.section = '';
       this.searchObj.landno = '';
@@ -410,6 +435,7 @@ export default {
       this.member.town = [];
       this.member.section = [];
       this.member.land = { option: [{ title: '', value: '0' }] };
+      this.toggleClear();
       getTowns(this.searchObj.county_id).then(r => {
         this.townList = r.data;
         this.member.town = r.data.map(x => ({ title: x.TOWNNAME, value: x.TOWNID }));
@@ -418,6 +444,7 @@ export default {
     },
     townDrop (payload) {
       this.searchObj.town_id = payload.value;
+      this.searchObj.town_name = payload.title;
       this.searchObj.section = '';
       this.searchObj.landno = '';
       this.member.section = [];
@@ -430,11 +457,9 @@ export default {
     },
     sectionDrop (payload) {
       this.searchObj.section = payload.value;
+      this.searchObj.section_name = payload.title;
       this.searchObj.landno = '';
       this.member.land = { option: [{ title: '', value: '0' }] };
-      // getLands(this.searchObj.county, this.searchObj.town, this.searchObj.section).then(r => {
-      //   this.member.land = { option: r.data.map(x => ({ title: x.Land, value: x.Land_no })) };
-      // });
       getSecNo(this.searchObj.county_id, this.searchObj.section).then(r => {
         this.maxNo = r.data[0].Max;
         this.minNo = r.data[0].Min;
@@ -459,25 +484,60 @@ export default {
       const result = this.townList.filter(item => item.TOWNID === e);
       return result[0].TOWNCODE;
     },
-    getArea () {
+    getArea (obj) {
       const data = {
-        county: this.searchObj.county_id,
-        town: this.searchObj.town_id,
-        Section: this.searchObj.section,
-        land_no: this.searchObj.landno
+        county: obj.county_id,
+        town: obj.town_id,
+        Section: obj.section,
+        land_no: obj.landno
       };
 
       axios.post('/AERC/rest/IrrigationLand?pageCnt=1&pageRows=1', data).then(r => {
         this.countyId = r.data[0].county_id;
         this.countyFID = r.data[0].FID;
+        this.tolarea = r.data[0].tolarea;
+        this.irgarea = r.data[0].irgarea;
+        this.stnCns = r.data[0].stn_cns;
         this.areaText = `本地號 地籍面積${r.data[0].tolarea}平方公尺 灌溉面積${r.data[0].irgarea}平方公尺 已申請面積 平方公尺`;
       });
+    },
+    switchOwnerScro (data) {
+      let result = '';
+      switch (data) {
+        case 'A':
+          result = '全部';
+          break;
+        case 'B':
+          result = '公同共有';
+          break;
+        case 'C':
+          result = '見地價備註事項';
+          break;
+        case 'Z':
+          result = '見其他登記事項';
+          break;
+        default:
+          result = data;
+          break;
+      }
+      return result;
     },
     clearLandLocation () {
       this.isClearCounty = true;
       this.isClearTown = true;
       this.isClearSection = true;
       this.isClearLandNo = true;
+      this.isClearFarmer = true;
+      this.isClearNote = true;
+      this.isCategoryCheck = true;
+      this.areaText = '';
+      this.ownerList.body = [];
+      this.dataArr = [];
+    },
+    toggleClear () {
+      this.isClearFarmer = false;
+      this.isClearNote = false;
+      this.isCategoryCheck = false;
     },
     // * 跳轉地圖
     goMapPage () {
@@ -507,6 +567,9 @@ export default {
     }
   },
   computed: {
+    ...mapState([
+      'compensateData'
+    ])
   },
   watch: {
     dataArr (n, o) {

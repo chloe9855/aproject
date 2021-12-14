@@ -57,7 +57,11 @@ export default {
   name: 'Dropdown',
   watch: {
     selected (n, o) {
-      this.$emit('DropdownVal', n);
+      // console.log(n);
+      // this.$emit('DropdownVal', n);
+      if (n !== '') {
+        this.$emit('DropdownVal', n);
+      }
     },
     changeText (value) {
       if (value === true) {

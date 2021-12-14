@@ -134,7 +134,8 @@ export default {
       boxToggleStatus: true,
       userConfirm: false,
       bankList: [],
-      delCompensateList: []
+      delCompensateList: [],
+      attachmentText: ''
     };
   },
   name: 'EditCompensate',
@@ -157,8 +158,17 @@ export default {
     },
     addCompensate (e) {
       if (e) {
-        const tableListLength = this.tableList.body.length;
-        this.tableList.body.push({ val: `editCompensate${tableListLength}`, title: [`XX縣${tableListLength}`, 'XX鄉', 'XX段', '2,503,882', 'xx工作站', '2,506,555', '陳XX', '1/3', '公同共有', '小大', 'XX', '2,506', 'XXXXXX', '1,2,3,4'] });
+        let tableListLength = this.tableList.body.length;
+        this.attachmentText = '';
+        Object.keys(e.attachment).forEach((key, i) => {
+          if (e.attachment[key] === 1) {
+            this.attachmentText += (i + 1) + ',';
+          }
+        });
+        e.compensateData.forEach(r => {
+          const num = tableListLength += 1;
+          this.tableList.body.push({ val: `editCompensate${num}`, title: [`${r.county_name}`, `${r.town_name}`, `${r.section_name}`, `${r.tolarea}`, `${r.stnCns}`, `${r.irgarea}`, `${r.owner_name}`, `${r.owner_percent}`, `${r.own_scro}`, `${r.farmer_title}`, `${r.landdetail.category}`, `${r.landdetail.ApplyArea}`, `${r.note}`, this.attachmentText] });
+        });
       }
     },
     tableEvent (e) {
