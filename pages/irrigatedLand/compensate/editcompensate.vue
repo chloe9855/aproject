@@ -94,7 +94,7 @@ import BreadCrumbTool from '~/components/tools/BreadCrumbTool.vue';
 import SubTitleTool from '~/components/tools/SubTitleTool.vue';
 import AddLand from '~/components/model/editList/AddLand.vue';
 import { getBankList } from '~/api/bank';
-import { addApplyEvent } from '~/api/apply';
+import { addApplyEvent, editApplyEvent } from '~/api/apply';
 import { mapState } from 'vuex';
 
 export default {
@@ -194,8 +194,49 @@ export default {
       let tableListLength = this.tableList.body.length;
       const num = tableListLength += 1;
       const attachmentContent = this.switchAttachment(1, r.attachment1) + this.switchAttachment(2, r.attachment2) + this.switchAttachment(3, r.attachment3) + this.switchAttachment(4, r.attachment4) + this.switchAttachment(5, r.attachment5);
-      this.tableList.body.push({ val: `editCompensate${num}`, title: [`${r.county_name}`, `${r.town_name}`, `${r.section_name}`, `${r.tolarea}`, `${r.stn_name}`, `${r.tolarea}`, `${r.owner_name}`, `${r.percent1 / r.percent2}`, `${r.own_scro}`, `${r.farmername}`, `${r.category}`, `${r.area}`, `${r.note}`, attachmentContent] });
+      this.tableList.body.push({ val: `editCompensate${num}`, title: [`${r.county_name}`, `${r.town_name}`, `${r.section_name}`, `${r.tolarea}`, `${r.stn_name}`, `${r.tolarea}`, `${r.owner_name}`, `${r.percent1 / r.percent2}`, `${r.owner_scro}`, `${r.farmername}`, `${r.category}`, `${r.area}`, `${r.note}`, attachmentContent] });
       console.log(r);
+      this.sendData.push({
+        county_id: r.county_id,
+        county_code: r.county_code,
+        town_id: r.town_id,
+        town_code: r.town_code,
+        section: r.section,
+        landno: r.landno,
+        owner_id: r.owner_id,
+        owner_name: r.owner_name,
+        own_scro: 'A',
+        percent2: r.percent2,
+        percent1: r.percent1,
+        farmer: r.farmer,
+        landdetail: [{ category: r.category, ApplyArea: r.area }],
+        note: r.note
+      });
+      console.log(r.attachment1);
+      this.attachmentList = {
+        attachment1: r.attachment1 ? 1 : 0,
+        attachment2: r.attachment1 ? 1 : 0,
+        attachment3: r.attachment1 ? 1 : 0,
+        attachment4: r.attachment1 ? 1 : 0,
+        attachment5: r.attachment1 ? 1 : 0
+      };
+      console.log(this.attachmentList);
+      this.userInfo = {
+        name: r.applyer_name,
+        id: r.applyer_id,
+        birth: r.applyer_birth,
+        address: r.applyer_address,
+        phone: r.applyer_phone,
+        account: r.applyer_account,
+        bank: r.bank
+      };
+      this.agentInfo = {
+        name: r.agent_name,
+        id: r.agent_id,
+        address: r.agent_address,
+        phone: r.agent_phone
+      };
+
       this.userInfo1 = {
         name: r.applyer_name,
         id: r.applyer_id,
@@ -284,7 +325,9 @@ export default {
       this.userInfo.address = e.address;
       this.userInfo.phone = e.phone;
       this.userInfo.account = e.account;
-      this.userInfo.bank = e.bank.val.split(' ')[0];
+      if (e.bank.val) {
+        this.userInfo.bank = e.bank.val.split(' ')[0];
+      }
     },
     getagentInfo (e) {
       this.agentInfo.name = e.name;
@@ -321,7 +364,7 @@ export default {
     sendCompensateData (e) {
       if (e) {
         console.log(this.attachmentList);
-        console.log(this.tableList.body);
+        console.log(this.userInfo);
         console.log(this.sendData);
         const data = {
           applyer: {
@@ -381,12 +424,24 @@ export default {
           // }]
         };
         console.log(data);
-        addApplyEvent(data).then(r => {
-          console.log(r);
-          alert('發送成功');
-        }).catch(e => {
-          console.log(e);
-        });
+        if (this.compensateData.event === 'isEdit') {
+          editApplyEvent(data).then(r => {
+            console.log(r);
+            alert('發送成功');
+            this.$store.commit('SET_COMPENSATE_DATA', {});
+            this.$router.push('/irrigatedLand/compensate/');
+          }).catch(e => {
+            console.log(e);
+          });
+        } else {
+          addApplyEvent(data).then(r => {
+            console.log(r);
+            alert('發送成功');
+            this.$router.push('/irrigatedLand/compensate/');
+          }).catch(e => {
+            console.log(e);
+          });
+        }
       }
     }
   },
