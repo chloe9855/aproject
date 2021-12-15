@@ -13,6 +13,8 @@
     <InputTool
       class="flex-1"
       :change-text="!isCheck"
+      :set-error="true"
+      :error-tip="errorText"
       @inputValue="checkText"
     />
   </div>
@@ -54,6 +56,10 @@ export default {
       default: 'category'
     },
     value: {
+      type: String,
+      default: ''
+    },
+    errorText: {
       type: String,
       default: ''
     },

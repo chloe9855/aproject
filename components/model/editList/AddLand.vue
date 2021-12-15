@@ -92,6 +92,7 @@
           <TableTool
             :table-column="ownerList"
             :is-paginate="false"
+            class="ownerListTable"
             @checkList="ownerListData"
           />
           <div class="flexBox ownerBtnBox">
@@ -140,6 +141,7 @@
         :type="item.type"
         :money="item.money"
         :set-check="isCategoryCheck"
+        :error-text="categoryAreaError"
         name="category"
         @checkInputVal="getCategory"
       />
@@ -295,11 +297,13 @@ export default {
       isClearFarmer: false,
       isClearNote: false,
       isCategoryCheck: false,
+      categoryAreaError: '',
       countyId: '',
       countyFID: '',
       tolarea: '',
       irgarea: '',
       stnCns: '',
+      categoryAreaSum: 0,
       ownerList: {
         head: [
           { title: '所有權人' },
@@ -377,6 +381,7 @@ export default {
     },
     getCategory (e) {
       if (e) {
+        this.categoryAreaError = '';
         if (e.isCheck) {
           this.category[e.num] = { category: e.category, ApplyArea: e.text };
         } else {
@@ -387,11 +392,14 @@ export default {
     },
     addCompensate () {
       const CompensateData = [];
+      this.categoryAreaSum = 0;
       this.owner.forEach(ownerID => {
         const ownerName = (this.ownerList.body.filter(item => item.val === ownerID))[0].title[0];
         const ownerPercent = (this.ownerList.body.filter(item => item.val === ownerID))[0].title[1];
         const ownerScro = (this.ownerList.body.filter(item => item.val === ownerID))[0].title[2];
         this.category.forEach(item2 => {
+          const getCategoryArea = this.fractionCalculate(item2.ApplyArea, ownerPercent);
+          this.categoryAreaSum += getCategoryArea;
           CompensateData.push({
             owner_id: ownerID,
             owner_name: ownerName,
@@ -411,14 +419,18 @@ export default {
             tolarea: this.tolarea,
             landno: this.searchObj.landno,
             stnCns: this.stnCns,
-            landdetail: { category: item2.category, ApplyArea: this.fractionCalculate(item2.ApplyArea, ownerPercent) },
+            landdetail: { category: item2.category, ApplyArea: getCategoryArea },
             note: this.searchObj.note
           });
         });
       });
-      console.log(this.attachment);
-      this.$emit('addCompensate', { compensateData: CompensateData, attachment: this.attachment });
-      this.clearLandLocation();
+      if (this.categoryAreaSum > this.irgarea) {
+        this.categoryAreaError = '申請面積超過 請重新輸入';
+      } else {
+        this.$emit('addCompensate', { compensateData: CompensateData, attachment: this.attachment });
+        this.clearLandLocation();
+      };
+
       // this.$emit('attachment', this.attachment);
     },
     fractionCalculate (num, data) {
@@ -538,6 +550,9 @@ export default {
       this.isClearFarmer = false;
       this.isClearNote = false;
       this.isCategoryCheck = false;
+    },
+    categoryArea () {
+      // const irgarea = this.irgarea;
     },
     // * 跳轉地圖
     goMapPage () {
@@ -695,6 +710,9 @@ export default {
   padding: 10px;
   text-align: center;
   border-radius: 5px;
+}
+.ownerListTable{
+  max-height: 150px;
 }
 .ownerBox{
   position: relative;

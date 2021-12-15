@@ -5,25 +5,25 @@
         class="flex-3"
         title="代理人姓名"
         input-text="請輸入代理人姓名"
-        @inputValue="agentName"
+        @inputValue="getAgentName"
       />
       <InputHorizontal
         class="flex-3"
         title="代理人身分證字號"
         input-text="請輸入代理人身分證字號"
-        @inputValue="agentID"
+        @inputValue="getAgentID"
       />
       <InputHorizontal
         class="flex-3"
         title="代理人地址"
         input-text="請輸入代理人地址"
-        @inputValue="agentAddress"
+        @inputValue="getAgentAddress"
       />
       <InputHorizontal
         class="flex-3"
         title="代理人連絡電話"
         input-text="請輸入代理人連絡電話"
-        @inputValue="agentPhone"
+        @inputValue="getAgentPhone"
       />
     </div>
   </div>
@@ -40,12 +40,6 @@ export default {
       type: Object,
       default: () => {
         return { data: [{ title: '姓名', name: '', isRequire: true }, { title: '身份證字號', name: '', isRequire: true }, { title: '出生日期', name: '', isRequire: true }, { title: '地址', name: '', isRequire: true }, { title: '連絡電話', name: '', isRequire: true }, { title: '匯款資訊', name: '', isRequire: true, isSecondInput: true }] };
-      }
-    },
-    bankList: {
-      type: Array,
-      default: () => {
-        return [];
       }
     }
   },
@@ -65,10 +59,34 @@ export default {
           }
         ]
       },
+      agentInfo: {
+        name: '',
+        id: '',
+        address: '',
+        phone: ''
+      },
       dataArr: []
     };
   },
   name: 'Requisition',
+  methods: {
+    getAgentName (e) {
+      this.agentInfo.name = e;
+      this.$emit('agentInfo', this.agentInfo);
+    },
+    getAgentID (e) {
+      this.agentInfo.id = e;
+      this.$emit('agentInfo', this.agentInfo);
+    },
+    getAgentAddress (e) {
+      this.agentInfo.address = e;
+      this.$emit('agentInfo', this.agentInfo);
+    },
+    getAgentPhone (e) {
+      this.agentInfo.phone = e;
+      this.$emit('agentInfo', this.agentInfo);
+    }
+  },
   computed: {
   }
 };

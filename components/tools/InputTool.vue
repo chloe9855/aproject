@@ -65,13 +65,17 @@ export default {
     },
     errorTip: {
       type: String,
-      default: '輸入文字格式錯誤'
+      default: ''
     },
     isWarn: {
       type: String,
       default: ''
     },
     isDisable: {
+      type: Boolean,
+      default: false
+    },
+    setError: {
       type: Boolean,
       default: false
     },
@@ -150,10 +154,14 @@ export default {
       const defaultStatus = this.isWarn;
       const regtype = this.RegExpType[defaultStatus];
       const rules = new RegExp(regtype);
-      if (defaultStatus === '' || this.message === '' || !regtype) {
-        return false;
+      if (this.errorTip !== '' && this.setError) {
+        return true;
       } else {
-        return !rules.test(this.message);
+        if (defaultStatus === '' || this.message === '' || !regtype) {
+          return false;
+        } else {
+          return !rules.test(this.message);
+        }
       }
     },
     iconImg () {
@@ -228,5 +236,17 @@ export default {
   display: flex;
   align-items: center;
   justify-content: flex-end;
+}
+.filterBox{
+  ul{
+    li{
+      padding-bottom: 2px;
+    }
+    li:hover{
+      cursor: pointer;
+      background-color: #007bff;
+      color:white;
+    }
+  }
 }
 </style>

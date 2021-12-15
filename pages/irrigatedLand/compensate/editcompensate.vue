@@ -18,6 +18,8 @@
         :is-border="true"
         :is-bg="true"
         :is-sticky="true"
+        @PHBtnStatus="cancelEdit"
+        @PHSecBtnStatus="sendCompensateData"
       />
       <SubTitleTool
         title="新增土地資料"
@@ -70,10 +72,12 @@
         class="w-90"
         :class="[{isToggle:toggleStatus}]"
         :bank-list="bankList"
+        @userInfo="getuserInfo"
       />
       <RequisitionBox2
         class="w-90"
         :class="[{isToggle:toggleStatus}]"
+        @agentInfo="getagentInfo"
       />
     </div>
   </div>
@@ -88,6 +92,7 @@ import BreadCrumbTool from '~/components/tools/BreadCrumbTool.vue';
 import SubTitleTool from '~/components/tools/SubTitleTool.vue';
 import AddLand from '~/components/model/editList/AddLand.vue';
 import { getBankList } from '~/api/bank';
+import { addApplyEvent } from '~/api/apply';
 
 export default {
   components: {
@@ -135,13 +140,28 @@ export default {
       userConfirm: false,
       bankList: [],
       delCompensateList: [],
-      attachmentText: ''
+      attachmentText: '',
+      userInfo: {
+        name: '',
+        id: '',
+        birth: '',
+        address: '',
+        phone: '',
+        account: '',
+        bank: ''
+      },
+      agentInfo: {
+        name: '',
+        id: '',
+        address: '',
+        phone: ''
+      }
     };
   },
   name: 'EditCompensate',
   mounted () {
     getBankList().then(r => {
-      this.bankList = r.data.map(item => item.Bank_sno + item.Name);
+      this.bankList = r.data.map(item => item.Bank_sno + ' ' + item.Name);
     });
   },
   methods: {
@@ -186,6 +206,69 @@ export default {
         });
         this.tableList.body = z;
         console.log(this.tableList);
+      }
+    },
+    getuserInfo (e) {
+      this.userInfo.name = e.name;
+      this.userInfo.id = e.id;
+      this.userInfo.birth = e.birth;
+      this.userInfo.address = e.address;
+      this.userInfo.phone = e.phone;
+      this.userInfo.account = e.account;
+      this.userInfo.bank = e.bank.val.split(' ')[0];
+    },
+    getagentInfo (e) {
+      this.agentInfo.name = e.name;
+      this.agentInfo.id = e.id;
+      this.agentInfo.address = e.address;
+      this.agentInfo.phone = e.phone;
+    },
+    sendCompensateData (e) {
+      if (e) {
+        const data = {
+          applyer: {
+            applyer_id: 'A122222222',
+            applyer_name: '王小明',
+            applyer_birth: '1900-01-01 00:00:00',
+            applyer_address: '我家',
+            applyer_phone: '0912345678',
+            bank: '004107',
+            account: '11122233344455',
+            agent_name: '我是代理人',
+            agent_id: 'C122222222',
+            agent_address: '代理人的家',
+            agent_phone: '0912345678',
+            attachment1: 1,
+            attachment2: 1,
+            attachment3: 0,
+            attachment4: 0,
+            attachment5: 0
+          },
+          data: [{
+            county_id: 'D',
+            county_code: '67000',
+            town_id: '09',
+            town_code: '67000010',
+            section: 'DD2001',
+            landno: '766-12',
+            owner_id: 'A123456789',
+            owner_name: '王大明',
+            own_scro: 'B',
+            percent2: 50,
+            percent1: 10,
+            farmer: 0,
+            landdetail: [
+              { category: '水果', ApplyArea: 500.3 }
+            ],
+            note: '首次申請'
+          }]
+        };
+        addApplyEvent(data).then(r => {
+          console.log(r);
+          alert('發送成功');
+        }).catch(e => {
+          console.log(e);
+        });
       }
     }
   },

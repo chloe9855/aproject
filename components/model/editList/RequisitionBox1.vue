@@ -88,6 +88,15 @@ export default {
           }
         ]
       },
+      userInfo: {
+        name: '',
+        id: '',
+        birth: '',
+        address: '',
+        phone: '',
+        account: '',
+        bank: ''
+      },
       dataArr: []
     };
   },
@@ -95,37 +104,44 @@ export default {
   methods: {
     getName (e) {
       if (e) {
-        console.log(e);
+        this.userInfo.name = e;
+        this.$emit('userInfo', this.userInfo);
       }
     },
     getID (e) {
       if (e) {
-        console.log(e);
+        this.userInfo.id = e;
+        this.$emit('userInfo', this.userInfo);
       }
     },
     getBirthDay (e) {
       if (e) {
-        console.log(e);
+        this.userInfo.birth = e.val;
+        this.$emit('userInfo', this.userInfo);
       }
     },
     getAddress (e) {
       if (e) {
-        console.log(e);
+        this.userInfo.address = e;
+        this.$emit('userInfo', this.userInfo);
       }
     },
     getPhone (e) {
       if (e) {
-        console.log(e);
+        this.userInfo.phone = e;
+        this.$emit('userInfo', this.userInfo);
       }
     },
     getTransfer (e) {
       if (e) {
-        console.log(e);
+        this.userInfo.account = e;
+        this.$emit('userInfo', this.userInfo);
       }
     },
     getBank (e) {
       if (e) {
-        console.log(e);
+        this.userInfo.bank = e;
+        this.$emit('userInfo', this.userInfo);
       }
     }
   },
