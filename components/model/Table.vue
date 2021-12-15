@@ -172,7 +172,7 @@
               v-show="isEdit && !isScrollTable"
               class="editOption"
             >
-              <div @click="sendEvent('isEdit')">
+              <div @click="sendEvent('isEdit', item.info)">
                 <img
                   alt=""
                   class="vector"
@@ -428,7 +428,12 @@ export default {
   },
   name: 'TableTool',
   mounted: function () {
-    this.getPageNum(1);
+    // this.getPageNum(1);
+    if (this.isPaginate) {
+      this.getPageNum(1);
+    } else {
+      this.tableColumnBody = this.tableColumn.body;
+    }
     console.log('table');
     console.log(this.tableColumn);
   },

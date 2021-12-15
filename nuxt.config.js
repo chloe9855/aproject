@@ -25,56 +25,8 @@ export default {
       { name: 'format-detection', content: 'telephone=no' }
     ],
     script: [
-      // {
-      //   src: 'http://192.168.3.112/test008/scripts/Base.js',
-      //   async: true
-      // },
-      // {
-      //   src: 'http://192.168.3.112/test008/scripts/OperationBase.js',
-      //   async: true
-      // },
       {
         src: 'http://192.168.3.112/test008/scripts/Framework.js',
-        async: true
-      },
-      {
-        src: 'http://192.168.3.112/test008/scripts/SuperGeoUtility.js',
-        async: true
-      },
-      {
-        src: 'http://192.168.3.112/test008/scripts/AjaxAgent.js',
-        async: true
-      },
-      // {
-      //   src: 'http://192.168.3.112/test008/scripts/Framework.js',
-      //   async: true
-      // },
-      {
-        src: 'http://192.168.3.112/test008/scripts/MapBase.js',
-        async: true
-      },
-      {
-        src: 'http://192.168.3.112/test008/scripts/Controls.js',
-        async: true
-      },
-      {
-        src: 'http://192.168.3.112/test008/scripts/MapLayer.js',
-        async: true
-      },
-      {
-        src: 'http://192.168.3.112/test008/scripts/Navigate.js',
-        async: true
-      },
-      {
-        src: 'http://192.168.3.112/test008/scripts/CachedLayer.js',
-        async: true
-      },
-      {
-        src: 'http://192.168.3.112/test008/scripts/OpenStreetMap.js',
-        async: true
-      },
-      {
-        src: 'http://192.168.3.112/test008/scripts/ToolControls.js',
         async: true
       },
       {
@@ -90,11 +42,32 @@ export default {
         async: true
       },
       {
+        src: 'http://192.168.3.112/test008/scripts/MapBase.js',
+        async: true
+      },
+      {
+        src: 'http://192.168.3.112/test008/scripts/Controls.js',
+        async: true
+      },
+
+      {
+        src: 'http://192.168.3.112/test008/scripts/MapLayer.js',
+        async: true
+      },
+      {
         src: 'http://192.168.3.112/test008/scripts/Compass.js',
         async: true
       },
       {
+        src: 'http://192.168.3.112/test008/scripts/Navigate.js',
+        async: true
+      },
+      {
         src: 'http://192.168.3.112/test008/scripts/Tracker.js',
+        async: true
+      },
+      {
+        src: 'http://192.168.3.112/test008/scripts/CachedLayer.js',
         async: true
       },
       {
@@ -126,15 +99,11 @@ export default {
         async: true
       },
       {
-        src: 'http://192.168.3.112/test008/scripts/TiledLayer.js',
-        async: true
-      },
-      {
-        src: 'http://192.168.3.112/test008/scripts/TileLayer.js',
-        async: true
-      },
-      {
         src: 'http://192.168.3.112/test008/scripts/DynamicLayer.js',
+        async: true
+      },
+      {
+        src: 'http://192.168.3.112/test008/scripts/Symbol.js',
         async: true
       },
       {
@@ -145,7 +114,10 @@ export default {
         src: 'http://192.168.3.112/test008/scripts/GraphicsLayer.js',
         async: true
       },
-
+      {
+        src: 'http://192.168.3.112/test008/scripts/TileLayer.js',
+        async: true
+      },
       {
         src: 'http://192.168.3.112/test008/scripts/OSMLayer.js',
         async: true
@@ -164,6 +136,10 @@ export default {
       },
       {
         src: 'http://192.168.3.112/test008/scripts/CoordSys.js',
+        async: true
+      },
+      {
+        src: 'http://192.168.3.112/test008/scripts/Bookmark.js',
         async: true
       },
       {
@@ -199,6 +175,18 @@ export default {
         async: true
       },
       {
+        src: 'http://192.168.3.112/test008/scripts/GroupLayer.js',
+        async: true
+      },
+      {
+        src: 'http://192.168.3.112/test008/scripts/MapImageLayer.js',
+        async: true
+      },
+      {
+        src: 'http://192.168.3.112/test008/scripts/KMLLayer.js',
+        async: true
+      },
+      {
         src: 'http://192.168.3.112/test008/scripts/Google.js',
         async: true
       },
@@ -207,29 +195,34 @@ export default {
         async: true
       },
       {
+        src: 'http://192.168.3.112/test008/scripts/ToolControls.js',
+        async: true
+      },
+      {
+        src: 'http://192.168.3.112/test008/scripts/SuperGeoUtility.js',
+        async: true
+      },
+      {
+        src: 'http://192.168.3.112/test008/scripts/jquery-3.4.0.min.js',
+        async: true
+      },
+      {
+        src: 'http://192.168.3.112/test008/scripts/CoordSys.js',
+        async: true
+      },
+      {
+        src: 'http://192.168.3.112/test008/scripts/Mercator.js',
+        async: true
+      },
+      {
         src: 'http://192.168.3.112/test008/scripts/Projection.js',
-        async: true
-      },
-      {
-        src: 'http://192.168.3.112/test008/scripts/GroupLayer.js',
-        async: true
-      },
-      {
-        src: 'http://192.168.3.112/test008/scripts/KMLLayer.js',
-        async: true
-      },
-      {
-        src: 'http://192.168.3.112/test008/scripts/MapImageLayer.js',
         async: true
       },
       {
         src: 'http://192.168.3.112/test008/scripts/VectorTiledLayer.js',
         async: true
       },
-      // {
-      //   src: '/ServerGate/SGSGate.ashx?F=~/scripts/Framework.js',
-      //   async: true
-      // },
+
       {
         src: 'http://192.168.3.112/test008/scripts/setMap.js',
         async: true

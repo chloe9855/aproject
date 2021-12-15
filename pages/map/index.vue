@@ -1298,7 +1298,7 @@ export default {
       console.log(newFile);
       console.log(`${current},${type}`);
 
-      if (type !== 'kml' && type !== 'kmz') {
+      if (type !== 'kml' && type !== 'kmz' && type !== 'KML' && type !== 'KMZ') {
         this.formatBox = true;
         return;
       }
@@ -1307,7 +1307,7 @@ export default {
         return;
       }
 
-      if (type === 'kmz') {
+      if (type === 'kmz' || type === 'KMZ') {
         this.getKmzHandler(newFile);
         return;
       }

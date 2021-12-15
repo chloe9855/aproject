@@ -21,7 +21,7 @@ export function tableData (data, category = 0) {
       titleObj.push(linkObj);
     };
     if (element.status && category === element.category) {
-      body.push({ title: titleObj });
+      body.push({ title: titleObj, info: element.bulletinsno });
     }
   });
   console.log('body:');

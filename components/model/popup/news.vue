@@ -35,7 +35,7 @@
 <script>
 import InputVertical from '~/components/tools/InputVertical.vue';
 import Button from '~/components/tools/Buttons.vue';
-import Table from '~/components/model/Table.vue';
+import Table from '~/components/model/TableForJoy.vue';
 import Textarea from '~/components/tools/Textarea.vue';
 import { bulletinInputDataName, bulletinInputData } from '~/publish/bulletinData';
 import { addBulletin } from '~/api/bulletin';

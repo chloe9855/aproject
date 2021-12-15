@@ -1,6 +1,9 @@
 <template>
   <div class="inputBox">
-    <InputVertical title="表單名稱" />
+    <InputVertical
+      title="表單名稱"
+      @inputValue="getFormName"
+    />
     <div class="buttonBox">
       <Button
         v-show="delBtn"
@@ -47,7 +50,8 @@ export default {
         ]
       },
       delBtn: false,
-      num: 0
+      num: 0,
+      formName: ''
     };
   },
   methods: {
@@ -63,6 +67,11 @@ export default {
     addFile () {
       this.num += 1;
       this.tableList.body.push({ val: `addTable${this.num}`, title: [{ type: 'input', key: `a${this.num}` }, { type: 'btn', key: `b${this.num}` }] });
+    },
+    getFormName (e) {
+      if (e) {
+        this.formName = e;
+      }
     }
   },
   computed: {}

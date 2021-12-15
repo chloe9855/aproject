@@ -70,7 +70,7 @@ import TableTool from '~/components/model/Table.vue';
 import SubTitleTool from '~/components/tools/SubTitleTool.vue';
 import PageHeader from '~/components/tools/PageHeader.vue';
 import BreadCrumbTool from '~/components/tools/BreadCrumbTool.vue';
-import { editNewsData } from '~/publish/editNewsData';
+// import { editNewsData } from '~/publish/editNewsData';
 import { getBulletin, editBulletin } from '~/api/bulletin';
 import { tableData } from '~/publish/tableData';
 
@@ -183,10 +183,10 @@ export default {
       }
     },
     changeGroup (e) {
-      if (e === 'isEdit') {
+      if (e.event === 'isEdit') {
         this.$store.commit('TOGGLE_POPUP_STATUS');
         this.$store.commit('TOGGLE_POPUP_TYPE', { type: 'news', title: '編輯公告' });
-      } else if (e === 'isDel') {
+      } else if (e.event === 'isDel') {
         console.log('isDel');
       }
     },
