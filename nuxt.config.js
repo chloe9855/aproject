@@ -34,6 +34,10 @@ export default {
       //   async: true
       // },
       {
+        src: 'http://192.168.3.112/test008/scripts/Framework.js',
+        async: true
+      },
+      {
         src: 'http://192.168.3.112/test008/scripts/SuperGeoUtility.js',
         async: true
       },
@@ -41,10 +45,10 @@ export default {
         src: 'http://192.168.3.112/test008/scripts/AjaxAgent.js',
         async: true
       },
-      {
-        src: 'http://192.168.3.112/test008/scripts/Framework.js',
-        async: true
-      },
+      // {
+      //   src: 'http://192.168.3.112/test008/scripts/Framework.js',
+      //   async: true
+      // },
       {
         src: 'http://192.168.3.112/test008/scripts/MapBase.js',
         async: true

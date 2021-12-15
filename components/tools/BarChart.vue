@@ -1,7 +1,8 @@
 <template>
   <div
     class="barChart"
-    :class="[barLength,barColor,barWidth]"
+    :class="[barColor,barWidth]"
+    :style="`width: ${setbarLength}%;`"
   />
 </template>
 
@@ -50,4 +51,6 @@ export default {
 .blueBar{background-color: #5CA6BD}
 .redBar{background-color: #E06C6C}
 .orangeBar{background-color: #EAB565}
+.lightGreenBar{background-color: #79DBC9}
+
 </style>

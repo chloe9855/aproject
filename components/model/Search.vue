@@ -13,6 +13,8 @@
       :is-clear="isClearAll"
       @tabCurrent="current"
       @onsearch="onsearch"
+      @useAmountSearch="(payload, nowIa) => { $emit('useAmountSearch', payload, nowIa) }"
+      @clearUseAmount="() => { $emit('clearUseAmount') }"
     />
     <div class="buttonBox">
       <Button

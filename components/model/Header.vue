@@ -65,7 +65,6 @@
         <div class="menu-list">
           <div
             v-for="item of menuList"
-            v-show="isLimit(item.name)"
             :key="item.name"
             class="submenu-group"
             @mouseover="mouseOver(item.name)"
@@ -98,7 +97,6 @@
             >
               <li
                 v-for="side of sideList1"
-                v-show="isLimit(side.name)"
                 :key="side.name"
               >
                 <a

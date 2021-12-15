@@ -1,11 +1,16 @@
 <template>
   <div>
-    <span
+    <p
       v-for="(item,index) in link.data"
       :key="index"
     >
-      <nuxt-link :to="item">連結{{ index }}</nuxt-link>
-    </span>
+      <a
+        :href="link.url[index]"
+        target="_blank"
+      >
+        {{ item }}
+      </a>
+    </p>
   </div>
 </template>
 
@@ -26,4 +31,11 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+
+  a {
+    text-decoration: underline;
+    color: #3e9f88;
+    font-weight: bold;
+  }
+
 </style>
