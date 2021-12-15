@@ -72,11 +72,13 @@
         class="w-90"
         :class="[{isToggle:toggleStatus}]"
         :bank-list="bankList"
+        :data-list="userInfo1"
         @userInfo="getuserInfo"
       />
       <RequisitionBox2
         class="w-90"
         :class="[{isToggle:toggleStatus}]"
+        :data-list="agentInfo1"
         @agentInfo="getagentInfo"
       />
     </div>
@@ -93,6 +95,7 @@ import SubTitleTool from '~/components/tools/SubTitleTool.vue';
 import AddLand from '~/components/model/editList/AddLand.vue';
 import { getBankList } from '~/api/bank';
 import { addApplyEvent } from '~/api/apply';
+import { mapState } from 'vuex';
 
 export default {
   components: {
@@ -129,7 +132,7 @@ export default {
           { title: '申請類別' },
           { title: '申請面積㎡' },
           { title: '作物備註' },
-          { title: '檢附資料' }
+          { title: '檢附資料', setW: 'setWidth720' }
         ],
         body: []
       },
@@ -140,8 +143,25 @@ export default {
       userConfirm: false,
       bankList: [],
       delCompensateList: [],
+      sendData: [],
       attachmentText: '',
+      attachmentList: {
+        attachment1: '',
+        attachment2: '',
+        attachment3: '',
+        attachment4: '',
+        attachment5: ''
+      },
       userInfo: {
+        name: '',
+        id: '',
+        birth: '',
+        address: '',
+        phone: '',
+        account: '',
+        bank: ''
+      },
+      userInfo1: {
         name: '',
         id: '',
         birth: '',
@@ -155,6 +175,12 @@ export default {
         id: '',
         address: '',
         phone: ''
+      },
+      agentInfo1: {
+        name: '',
+        id: '',
+        address: '',
+        phone: ''
       }
     };
   },
@@ -163,6 +189,31 @@ export default {
     getBankList().then(r => {
       this.bankList = r.data.map(item => item.Bank_sno + ' ' + item.Name);
     });
+    if (this.compensateData.event === 'isEdit') {
+      const r = this.compensateData.item;
+      let tableListLength = this.tableList.body.length;
+      const num = tableListLength += 1;
+      const attachmentContent = this.switchAttachment(1, r.attachment1) + this.switchAttachment(2, r.attachment2) + this.switchAttachment(3, r.attachment3) + this.switchAttachment(4, r.attachment4) + this.switchAttachment(5, r.attachment5);
+      this.tableList.body.push({ val: `editCompensate${num}`, title: [`${r.county_name}`, `${r.town_name}`, `${r.section_name}`, `${r.tolarea}`, `${r.stn_name}`, `${r.tolarea}`, `${r.owner_name}`, `${r.percent1 / r.percent2}`, `${r.own_scro}`, `${r.farmername}`, `${r.category}`, `${r.area}`, `${r.note}`, attachmentContent] });
+      console.log(r);
+      this.userInfo1 = {
+        name: r.applyer_name,
+        id: r.applyer_id,
+        birth: r.applyer_birth,
+        address: r.applyer_address,
+        phone: r.applyer_phone,
+        account: r.applyer_account,
+        bank: r.applyer_bank
+      };
+      this.agentInfo1 = {
+        name: r.agent_name,
+        id: r.agent_id,
+        address: r.agent_address,
+        phone: r.agent_phone
+      };
+    } else {
+      console.log('test111');
+    }
   },
   methods: {
     getToggleStatus (e) {
@@ -180,6 +231,7 @@ export default {
       if (e) {
         console.log(e);
         let tableListLength = this.tableList.body.length;
+        this.attachmentList = e.attachment;
         this.attachmentText = '';
         Object.keys(e.attachment).forEach((key, i) => {
           if (e.attachment[key] === 1) {
@@ -188,7 +240,23 @@ export default {
         });
         e.compensateData.forEach(r => {
           const num = tableListLength += 1;
-          this.tableList.body.push({ val: `editCompensate${num}`, title: [`${r.county_name}`, `${r.town_name}`, `${r.section_name}`, `${r.tolarea}`, `${r.stnCns}`, `${r.irgarea}`, `${r.owner_name}`, `${r.owner_percent}`, `${r.own_scro}`, `${r.farmer_title}`, `${r.landdetail.category}`, `${r.landdetail.ApplyArea}`, `${r.note}`, this.attachmentText] });
+          this.tableList.body.push({ val: `editCompensate${num}`, title: [`${r.county_name}`, `${r.town_name}`, `${r.section_name}`, `${r.tolarea}`, `${r.stnCns}`, `${r.irgarea}`, `${r.owner_name}`, `${r.owner_percent}`, `${r.own_scro_text}`, `${r.farmer_title}`, `${r.landdetail[0].category}`, `${r.landdetail[0].ApplyArea}`, `${r.note}`, this.attachmentText] });
+          this.sendData.push({
+            county_id: r.county_id,
+            county_code: r.county_code,
+            town_id: r.town_id,
+            town_code: r.town_code,
+            section: r.section,
+            landno: r.landno,
+            owner_id: r.owner_id,
+            owner_name: r.owner_name,
+            own_scro: 'A',
+            percent2: (r.owner_percent.split('/'))[1],
+            percent1: (r.owner_percent.split('/'))[0],
+            farmer: r.farmer,
+            landdetail: [r.landdetail],
+            note: r.note
+          });
         });
       }
     },
@@ -224,13 +292,42 @@ export default {
       this.agentInfo.address = e.address;
       this.agentInfo.phone = e.phone;
     },
+    switchAttachment (item, status) {
+      let result = '';
+      let attachment = '';
+      if (status) {
+        switch (item) {
+          case 1:
+            attachment = '身分證(正反)影本,';
+            break;
+          case 2:
+            attachment = '金融帳戶影本,';
+            break;
+          case 3:
+            attachment = '附件一:切結書,';
+            break;
+          case 4:
+            attachment = '附件二:實耕者證明文件,';
+            break;
+          case 5:
+            attachment = '代理委任書:(授權書或同意書)';
+            break;
+        }
+      }
+      // result = status === 1 ? attachment : '';
+      result = attachment;
+      return result;
+    },
     sendCompensateData (e) {
       if (e) {
+        console.log(this.attachmentList);
+        console.log(this.tableList.body);
+        console.log(this.sendData);
         const data = {
           applyer: {
             applyer_id: this.userInfo.id,
             applyer_name: this.userInfo.name,
-            applyer_birth: this.userInfo.birth,
+            applyer_birth: '1900-01-01 00:00:00',
             applyer_address: this.userInfo.address,
             applyer_phone: this.userInfo.phone,
             bank: this.userInfo.bank,
@@ -239,31 +336,51 @@ export default {
             agent_id: this.agentInfo.id,
             agent_address: this.agentInfo.address,
             agent_phone: this.agentInfo.phone,
-            attachment1: 1,
-            attachment2: 1,
-            attachment3: 0,
-            attachment4: 0,
-            attachment5: 0
+            attachment1: this.attachmentList.attachment1,
+            attachment2: this.attachmentList.attachment2,
+            attachment3: this.attachmentList.attachment3,
+            attachment4: this.attachmentList.attachment4,
+            attachment5: this.attachmentList.attachment5
           },
-          data: [{
-            county_id: 'D',
-            county_code: '67000',
-            town_id: '09',
-            town_code: '67000010',
-            section: 'DD2001',
-            landno: '766-12',
-            owner_id: 'A123456789',
-            owner_name: '王大明',
-            own_scro: 'B',
-            percent2: 50,
-            percent1: 10,
-            farmer: 0,
-            landdetail: [
-              { category: '水果', ApplyArea: 500.3 }
-            ],
-            note: '首次申請'
-          }]
+          data: this.sendData
+          // data: [{
+          //   county_id: 'D',
+          //   county_code: '67000',
+          //   town_id: '09',
+          //   town_code: '67000010',
+          //   section: 'DD2001',
+          //   landno: '766-12',
+          //   owner_id: 'A123456789',
+          //   owner_name: '王大明',
+          //   own_scro: null,
+          //   percent2: 1,
+          //   percent1: 1,
+          //   farmer: 0,
+          //   landdetail: [
+          //     { category: '水果', ApplyArea: 500.3 }
+          //   ],
+          //   note: '首次申請'
+          // },
+          // {
+          //   county_id: 'D',
+          //   county_code: '67000',
+          //   town_id: '09',
+          //   town_code: '67000010',
+          //   section: 'DD2001',
+          //   landno: '766-12',
+          //   owner_id: 'A123456789',
+          //   owner_name: '陳大明',
+          //   own_scro: null,
+          //   percent2: 1,
+          //   percent1: 1,
+          //   farmer: 0,
+          //   landdetail: [
+          //     { category: '水果', ApplyArea: 500.3 }
+          //   ],
+          //   note: '首次申請'
+          // }]
         };
+        console.log(data);
         addApplyEvent(data).then(r => {
           console.log(r);
           alert('發送成功');
@@ -293,7 +410,10 @@ export default {
     },
     test () {
       return this.boxToggleStatus ? '' : 'closeBox';
-    }
+    },
+    ...mapState([
+      'compensateData'
+    ])
   }
 };
 </script>

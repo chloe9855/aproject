@@ -21,7 +21,6 @@
         <TableTool
           :table-column="tableList"
           :is-paginate="true"
-          :column-min-width="150"
           :data-count="dataCount"
           :is-no-data-bg="isNoDataBg"
           @nowPage="getPageNum"

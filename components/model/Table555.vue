@@ -390,7 +390,7 @@ export default {
     },
     columnMinWidth: {
       type: Number,
-      default: 80
+      default: 50
     },
     columnLength: {
       type: Number,
@@ -676,7 +676,7 @@ export default {
         border-bottom: 6px solid $main-green;
         th{
             padding: 0 10px;
-            text-align:left;
+            text-align:right;
             line-height: 24px !important;
             word-break: keep-all;
             @include noto-sans-tc-16-medium;
@@ -703,7 +703,7 @@ export default {
           line-height: 33px;
           height: 33px;
           padding: 2px 10px;
-          text-align: left;
+          text-align: right;
         }
     }
   }

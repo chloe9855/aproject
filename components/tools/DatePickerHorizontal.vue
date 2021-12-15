@@ -38,7 +38,7 @@ export default {
     },
     type: {
       type: String,
-      default: 'date'
+      default: 'datetime'
     },
     sizing: {
       type: String,

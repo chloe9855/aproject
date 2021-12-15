@@ -5,24 +5,28 @@
         class="flex-3"
         title="代理人姓名"
         input-text="請輸入代理人姓名"
+        :change-text="dataList.agent_name"
         @inputValue="getAgentName"
       />
       <InputHorizontal
         class="flex-3"
         title="代理人身分證字號"
         input-text="請輸入代理人身分證字號"
+        :change-text="dataList.agent_id"
         @inputValue="getAgentID"
       />
       <InputHorizontal
         class="flex-3"
         title="代理人地址"
         input-text="請輸入代理人地址"
+        :change-text="dataList.agent_address"
         @inputValue="getAgentAddress"
       />
       <InputHorizontal
         class="flex-3"
         title="代理人連絡電話"
         input-text="請輸入代理人連絡電話"
+        :change-text="dataList.agent_phone"
         @inputValue="getAgentPhone"
       />
     </div>

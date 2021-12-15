@@ -136,7 +136,9 @@ export default {
     getLandValue (e) {
       if (e) {
         this.landValue = e;
-        this.searchObj.id = '7eYXGw66I2tilK8qDRnzWg==';
+        // this.searchObj.id = '7eYXGw66I2tilK8qDRnzWg==';
+        // this.searchObj.id = this.userId;
+        this.searchObj.id = '2dOSGMoDxjUg04XwoMcTSw==';
         this.searchObj.landno = this.landValue;
         this.$emit('onsearch', { obj: this.searchObj });
       }

@@ -86,7 +86,7 @@ export default {
           { title: '申請類別' },
           { title: '申請面積㎡' },
           { title: '作物備註' },
-          { title: '檢附資料' }
+          { title: '檢附資料', setW: 'setWidth720' }
         ],
         body: [],
         main: {}
@@ -121,6 +121,7 @@ export default {
         this.tableList.body = [];
         getApplyEvent(e.obj).then(r => {
           r.data.forEach(item => {
+            console.log(item);
             const attachmentContent = this.switchAttachment(1, item.attachment1) + this.switchAttachment(2, item.attachment2) + this.switchAttachment(3, item.attachment3) + this.switchAttachment(4, item.attachment4) + this.switchAttachment(5, item.attachment5);
             const data = {
               county: item.county_id,
@@ -161,25 +162,27 @@ export default {
     switchAttachment (item, status) {
       let result = '';
       let attachment = '';
-      switch (item) {
-        case 1:
-          attachment = '身分證(正反)影本,';
-          break;
-        case 2:
-          attachment = '金融帳戶影本,';
-          break;
-        case 3:
-          attachment = '附件一:切結書,';
-          break;
-        case 4:
-          attachment = '附件二:實耕者證明文件,';
-          break;
-        case 5:
-          attachment = '代理委任書:(授權書或同意書)';
-          break;
+      if (status) {
+        switch (item) {
+          case 1:
+            attachment = '身分證(正反)影本,';
+            break;
+          case 2:
+            attachment = '金融帳戶影本,';
+            break;
+          case 3:
+            attachment = '附件一:切結書,';
+            break;
+          case 4:
+            attachment = '附件二:實耕者證明文件,';
+            break;
+          case 5:
+            attachment = '代理委任書:(授權書或同意書)';
+            break;
+        }
       }
-
-      result = status === 1 ? attachment : '';
+      // result = status === 1 ? attachment : '';
+      result = attachment;
       return result;
     },
     clearSearchIrrigatedInfo () {
@@ -187,8 +190,9 @@ export default {
     },
     tableEvent (e) {
       if (e.event === 'isEdit') {
+        console.log(e);
         this.$router.push('/irrigatedLand/compensate/editcompensate');
-        this.$store.commit('SET_COMPENSATE_DATA', { item: e.item.main });
+        this.$store.commit('SET_COMPENSATE_DATA', { item: e.item.main, event: e.event });
       }
     }
   },

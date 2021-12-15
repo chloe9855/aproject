@@ -38,7 +38,7 @@ export const mutations = {
     }
   },
   SET_COMPENSATE_DATA (state, payload) {
-    state.compensateData = payload.item;
+    state.compensateData = payload;
   },
   SET_COMPENSATE_EVENT_ID (state, payload) {
     state.editCompensateEventID = payload;

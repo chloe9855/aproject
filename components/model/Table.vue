@@ -829,6 +829,18 @@ export default {
 .setWidth200{
   min-width: 200px !important;
 }
+.setWidth360{
+  min-width: 360px !important;
+}
+.setWidth480{
+  min-width: 480px !important;
+}
+.setWidth600{
+  min-width: 600px !important;
+}
+.setWidth720{
+  min-width: 720px !important;
+}
 .isRightBorder{
   border-right:1px solid $light-green;
 }

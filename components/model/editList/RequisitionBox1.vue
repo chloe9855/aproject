@@ -5,12 +5,14 @@
         class="flex-3"
         title="姓名"
         input-text="請輸入姓名"
+        :change-text="dataList.name"
         @inputValue="getName"
       />
       <InputHorizontal
         class="flex-3"
         title="身份證字號"
         input-text="請輸入身分證字號"
+        :change-text="dataList.id"
         @inputValue="getID"
       />
       <DatePickerHorizontal
@@ -22,22 +24,26 @@
         class="flex-3"
         title="地址"
         input-text="請輸入地址"
+        :change-text="dataList.address"
         @inputValue="getAddress"
       />
       <InputHorizontal
         class="flex-3"
         title="請輸入連絡電話"
         input-text="請輸入姓名"
+        :change-text="dataList.phone"
         @inputValue="getPhone"
       />
       <InputHorizontal
         title="匯款資訊"
         input-text="輸入金融帳戶"
+        :change-text="dataList.account"
         class="flex-2 transferInput"
         @inputValue="getTransfer"
       />
       <InputTool
         :search-input="bankList"
+        :change-text="dataList.bank"
         class="flex-1 bankInput"
         filter-pos="right"
         :filter-w="500"
@@ -69,6 +75,13 @@ export default {
       type: Array,
       default: () => {
         return [];
+      }
+    },
+    dataList: {
+      type: Object,
+      default: () => {
+        return {
+        };
       }
     }
   },

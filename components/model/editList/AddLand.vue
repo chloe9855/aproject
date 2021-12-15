@@ -10,7 +10,6 @@
           :options="member.county"
           :change-text="isClearCounty"
           class="flex-4"
-          :placeholders="compensateData.county_name"
           @DropdownVal="countyDrop"
         />
         <Dropdown
@@ -18,7 +17,6 @@
           :options="member.town"
           :change-text="isClearTown"
           class="flex-4"
-          :placeholders="compensateData.town_name"
           @DropdownVal="townDrop"
         />
         <Dropdown
@@ -26,7 +24,6 @@
           :options="member.section"
           :change-text="isClearSection"
           class="flex-4"
-          :placeholders="compensateData.section"
           @DropdownVal="sectionDrop"
         />
         <InputTool
@@ -35,7 +32,6 @@
           star-sign="*"
           class="flex-4"
           :change-text="isClearLandNo"
-          :input-text="compensateData.landno"
           @inputValue="getInputValue"
         />
         <span class="flex-4">地號範圍:{{ minNo }}-{{ maxNo }}</span>
@@ -152,7 +148,6 @@
       </div>
       <div class="flexBox">
         <InputTool
-          :input-text="compensateData.note"
           :change-text="isClearNote"
           @inputValue="cropNote"
         />
@@ -403,7 +398,8 @@ export default {
           CompensateData.push({
             owner_id: ownerID,
             owner_name: ownerName,
-            own_scro: this.switchOwnerScro(ownerScro),
+            own_scro_text: this.switchOwnerScro(ownerScro),
+            own_scro: ownerScro,
             owner_percent: ownerPercent,
             farmer: this.farmer.value,
             farmer_title: this.farmer.title,
@@ -544,7 +540,7 @@ export default {
       this.isCategoryCheck = true;
       this.areaText = '';
       this.ownerList.body = [];
-      this.dataArr = [];
+      // this.dataArr = [];
     },
     toggleClear () {
       this.isClearFarmer = false;

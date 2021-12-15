@@ -83,6 +83,10 @@ export default {
       type: String,
       default: '輸入文字'
     },
+    changeText: {
+      type: String,
+      default: ''
+    },
     errorTip: {
       type: String,
       default: '輸入文字格式錯誤'
@@ -184,6 +188,9 @@ export default {
       this.filterList = fileList;
       this.filterBox = fileList.length > 0 && !this.isCloseFilter;
       this.isCloseFilter = false;
+    },
+    changeText (n) {
+      this.message = n;
     }
   }
 };
