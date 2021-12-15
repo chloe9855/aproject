@@ -100,7 +100,7 @@
               class="layer__list"
             >
               <div
-                v-for="item in layerOptions.surfaceList.slice().reverse()"
+                v-for="item in layerOptions.surfaceList"
                 :key="item.id"
                 class="layer__item"
               >
@@ -144,23 +144,46 @@
                 :type-list="shpOptions.typeList"
                 @current="payload => shpOptions.current = payload"
               />
-              <p class="tit">
-                請以 .zip 封存檔案，.zip檔案內需含有.shp .shx .dbf .prj 四種檔案類型
-              </p>
-              <div class="bt_wrap">
-                <Buttons-component
-                  :name="'button-add'"
-                  :text="'新增圖層'"
-                  :add="true"
-                  @click="$refs.upfile.click()"
-                />
-                <input
-                  id="upfile"
-                  ref="upfile"
-                  type="file"
-                  style="display: none;"
-                  @change="fileUploader(shpOptions.current)"
-                >
+              <div v-if="shpOptions.current === 0">
+                <p class="tit">
+                  請以 .zip 封存檔案，.zip檔案內需含有.shp .shx .dbf .prj 四種檔案類型
+                </p>
+                <div class="bt_wrap">
+                  <Buttons-component
+                    :name="'button-add'"
+                    :text="'新增圖層'"
+                    :add="true"
+                    @click="$refs.formBt1.click()"
+                  />
+                  <input
+                    id="formBt1"
+                    ref="formBt1"
+                    type="file"
+                    style="display: none;"
+                    @change="getShpHandler"
+                  >
+                </div>
+              </div>
+
+              <div v-if="shpOptions.current === 1">
+                <p class="tit">
+                  上傳格式限kml或是kmz，8MB為限
+                </p>
+                <div class="bt_wrap">
+                  <Buttons-component
+                    :name="'button-add'"
+                    :text="'新增圖層'"
+                    :add="true"
+                    @click="$refs.upfile.click()"
+                  />
+                  <input
+                    id="upfile"
+                    ref="upfile"
+                    type="file"
+                    style="display: none;"
+                    @change="fileUploader(shpOptions.current)"
+                  >
+                </div>
               </div>
 
               <div v-if="shpOptions.layerList.length >= 1">
@@ -169,6 +192,7 @@
                   category="shpitem"
                   @changeVisible="layerVisibleCtrl"
                   @updateOpacity="layerOpacityCtrl"
+                  @locate="zoomToSHP"
                   @delete="deleteShpLayer"
                 />
               </div>
@@ -284,7 +308,9 @@
         @close="activeWindow = ''"
       >
         <template #content>
-          <PositionNav-component />
+          <PositionNav-component
+            :ia-list="totalIaList"
+          />
         </template>
       </DragBox-component>
 
@@ -341,13 +367,14 @@
 
       <!--    地圖搜尋欄     -->
       <MapSearchBox-component
+        @iaList="(payload) => { totalIaList = payload }"
         @search="searchHandler"
         @clear="clearSearchResult"
       />
       <div
         v-if="searchResult.channel !== ''"
         class="result_table"
-        :class="{'hide_block': hideResult, 'show_block': !hideResult}"
+        :class="{'hide_block66': hideResult, 'show_block': !hideResult}"
       >
         <div
           class="hide_button_bigTable"
@@ -370,6 +397,7 @@
           <ScrollTable-component
             :table-data="searchResult.channel"
             :hide="hideResult"
+            @isMap="getChannelMap"
           />
           <div class="border_bot" />
         </div>
@@ -390,6 +418,14 @@
         @close="sizeBox = false"
         @confirm="sizeBox = false"
       />
+
+      <!-- loading載入中視窗 -->
+      <div
+        v-if="loadModal === true"
+        class="modal_wrapper888888"
+      >
+        <div class="modal888888" />
+      </div>
     </div>
   </div>
 </template>
@@ -429,6 +465,10 @@ export default {
   data () {
     return {
       mymap: '',
+      userId: '',
+      totalIaList: '',
+      // * loading視窗
+      loadModal: false,
       // * 目前所選取的功能視窗
       activeWindow: '',
       searchResult: {
@@ -522,9 +562,23 @@ export default {
         layerList: [],
         kmlLayer: ''
       },
+      allShpGraphic: [],
+      allGeotry: [],
       //* 跳轉視窗 圖形
       geoData: '',
-      localGraphic: ''
+      localGraphic: '',
+      // * 圖磚是否已有
+      getCons: false,
+      getCanal: false,
+      getIa: false,
+      getMng: false,
+      getStn: false,
+      getGrp: false,
+      getRot: false,
+      getPeriod: false,
+      getPool: false,
+      // * 渠道查詢表格 單筆圖形
+      channelGraphic: ''
     };
   },
   // layout: 'map',
@@ -731,17 +785,7 @@ export default {
   // },
   mounted () {
     this.getBaseLayer();
-    // this.getVectorTile();
-
-    // const point = require('~/static/pointLayer.json');
-    // const line = require('~/static/lineLayer.json');
-    // const surface = require('~/static/surfaceLayer.json');
-    // this.layerOptions.surfaceList = [...surface.data];
-    // this.layerOptions.lineList = [...line.data];
-    // this.layerOptions.pointList = [...point.data];
-
-    // console.log(gogo());
-    // console.log(coco);
+    this.userId = sessionStorage.getItem('loginUser');
 
     setTimeout(() => {
       this.getLocalStorage();
@@ -769,6 +813,7 @@ export default {
     ctx.scale(ratio, ratio);
   },
   methods: {
+
     getVectorTile () {
       SuperGIS.LoadModules(['scripts/MVTData.js', 'vector_tile.js', 'pbf.js', 'scripts/KML.js', 'scripts/Collada.js'], () => {
         this.allVectors = new sg.layers.VectorMBTLayer('http://210.65.139.69/mapcache/01', {
@@ -802,10 +847,6 @@ export default {
           item.opacity = 100;
           if (item.LayerName === 'EMAP5') {
             item.visible = true;
-          }
-
-          if (item.LayerTitle === '段籍圖') {
-            item.LayerName = 'LANDSECT';
           }
 
           // 載入底圖 wmts
@@ -855,18 +896,30 @@ export default {
     loadAllBaseLayer (layerName, index) {
       this.allBaseLayer.push(new sg.layers.WMSLayer('https://wms.nlsc.gov.tw/wms', {
         imageFormat: 'image/png',
-        loadEffect: true
+        loadEffect: true,
+        loaded: () => {
+          this.getMyWMS(layerName, index);
+        }
       }));
 
-      setTimeout(() => {
-        this.allBaseLayer[index].visibleLayers = [];
-        this.allBaseLayer[index].visibleLayers[0] = layerName;
-        pMapBase.AddLayer(this.allBaseLayer[index]);
-        if (layerName !== 'EMAP5_OPENDATA') {
-          this.allBaseLayer[index].hide();
-        }
-        pMapBase.RefreshMap(true);
-      }, 2000);
+      // setTimeout(() => {
+      //   this.allBaseLayer[index].visibleLayers = [];
+      //   this.allBaseLayer[index].visibleLayers[0] = layerName;
+      //   pMapBase.AddLayer(this.allBaseLayer[index]);
+      //   if (layerName !== 'EMAP5_OPENDATA') {
+      //     this.allBaseLayer[index].hide();
+      //   }
+      //   pMapBase.RefreshMap(true);
+      // }, 2000);
+    },
+    getMyWMS (layerName, index) {
+      this.allBaseLayer[index].visibleLayers = [];
+      this.allBaseLayer[index].visibleLayers[0] = layerName;
+      pMapBase.AddLayer(this.allBaseLayer[index]);
+      if (layerName !== 'EMAP5_OPENDATA') {
+        this.allBaseLayer[index].hide();
+      }
+      pMapBase.RefreshMap(true);
     },
     // * 控制視窗顯示
     ctrlDragBoxVisible (payload) {
@@ -902,33 +955,105 @@ export default {
     clearMeasureResult () {
       this.drawTool.ClearMap();
     },
-    // * @ 左側搜尋
-    searchHandler () {
-      const data = require('~/static/channel.json');
-      this.searchResult.channel = data;
+    // * @ 左側搜尋 渠道查詢 表格結果
+    searchHandler (payload) {
+      // const data = require('~/static/channel.json');
+      this.searchResult.channel = payload;
     },
-    // * @ 左側搜尋：清除搜尋結果
+    // * @ 左側搜尋：渠道查詢 清除搜尋結果
     clearSearchResult () {
       this.searchResult.channel = '';
       this.hideResult = false;
+      pMapBase.drawingGraphicsLayer.remove(this.channelGraphic);
+    },
+    // * @ 左側搜尋 渠道查詢結果 單筆定位
+    getChannelMap (info, type) {
+      let url;
+      if (type === 'Sec5cov') {
+        url = '/AERC/rest/Sec5ByFID';
+      } else if (type === 'Ia') {
+        url = `/AERC/rest/Ia/${this.userId}`;
+      } else {
+        url = `/AERC/rest/${type}`;
+      }
+
+      let newObj = {};
+      if (type === 'Ia') {
+        newObj = { Ia: info.Ia, FID: info.FID };
+      }
+      if (type === 'Mng') {
+        newObj = { Ia: info.Ia, FID: info.FID };
+      }
+      if (type === 'Stn') {
+        newObj = { Ia: info.Ia, Mng: info.Mng, FID: info.FID };
+      }
+      if (type === 'Grp') {
+        newObj = { Ia: info.Ia, Mng: info.Mng, Stn: info.Stn, FID: info.FID };
+      }
+      if (type === 'Rot') {
+        newObj = { Ia: info.Ia, FID: info.FID };
+      }
+      if (type === 'Period') {
+        newObj = { Ia: info.Ia, FID: info.FID };
+      }
+      if (type === 'Pool') {
+        newObj = { Ia: info.Ia, FID: info.FID };
+      }
+      if (type === 'Section') {
+        newObj = { Section: info.Section, FID: info.FID };
+      }
+      if (type === 'Sec5cov') {
+        newObj = { CountyID: info.myCountyID, FID: info.FID };
+      }
+
+      fetch(url, {
+        method: 'POST',
+        headers: new Headers({
+          'Content-Type': 'application/json'
+        }),
+        body: JSON.stringify(newObj)
+      }).then((response) => {
+        return response.json();
+      }).then((jsonData) => {
+        console.log(jsonData);
+        // 先清除之前的
+        pMapBase.drawingGraphicsLayer.remove(this.channelGraphic);
+        // 畫圖
+        const geometry = sg.geometry.Geometry.fromGeoJson(jsonData[0].geometry);
+        this.channelGraphic = sg.Graphic.createFromGeometry(geometry, { borderwidth: 1, fillcolor: new sg.Color(220, 105, 105, 0.5) });
+        pMapBase.drawingGraphicsLayer.add(this.channelGraphic);
+        // 定位
+        const extent = geometry.extent;
+        pMapBase.ZoomMapTo(extent);
+        ZoomOut();
+        pMapBase.getTransformation().FitLevel();
+        pMapBase.RefreshMap(true);
+      }).catch((err) => {
+        console.log(err);
+      });
     },
     // * @ 圖層工具：切換圖層 顯示/隱藏
     layerVisibleCtrl ($event, id, category, layerName) {
-      console.log(id);
-      console.log($event);
       if (category === 'pointList') {
         const index = this.layerOptions.pointList.findIndex(item => item.id === id);
         this.layerOptions.pointList[index].visible = $event;
 
-        MBT.Style[layerName].visible = $event;
-        MBT.updateStyle(MBT.Style);
+        // MBT.Style[layerName].visible = $event;
+        // MBT.updateStyle(MBT.Style);
+        layerName.forEach((item, index) => {
+          allMBT[index].updateStyle({
+            [item]: { visible: $event }
+          });
+        });
       }
       if (category === 'lineList') {
         const index = this.layerOptions.lineList.findIndex(item => item.id === id);
         this.layerOptions.lineList[index].visible = $event;
 
-        MBT.updateStyle({
-          [layerName]: { visible: $event }
+        layerName.forEach((item, index) => {
+          allMBT[index].updateStyle({
+            [item]: { visible: $event }
+          });
         });
         // ARO.updateStyle({
         //   '01_Arrow': { visible: $event }
@@ -938,10 +1063,10 @@ export default {
         const index = this.layerOptions.surfaceList.findIndex(item => item.id === id);
         this.layerOptions.surfaceList[index].visible = $event;
 
-        // MBT.Style[layerName].visible = $event;
-        // MBT.updateStyle(MBT.Style);
-        MBT.updateStyle({
-          [layerName]: { visible: $event }
+        layerName.forEach((item, index) => {
+          allMBT[index].updateStyle({
+            [item]: { visible: $event }
+          });
         });
       }
       // 底圖切換
@@ -954,13 +1079,26 @@ export default {
         } else {
           this.allBaseLayer[index].hide();
         }
+
+        if (layerName === 'EMAP5') {
+          firstLayer.putVisible($event);
+        }
+
         pMapBase.RefreshMap(true);
       }
       if (category === 'shpitem') {
         const index = this.shpOptions.layerList.findIndex(item => item.id === id);
         this.shpOptions.layerList[index].visible = $event;
 
-        this.shpOptions.kmlLayer.putVisible($event);
+        if (this.shpOptions.kmlLayer !== '') {
+          this.shpOptions.kmlLayer.putVisible($event);
+        }
+
+        if (this.allShpGraphic !== []) {
+          this.allShpGraphic.forEach((item) => {
+            item.layer.putVisible($event);
+          });
+        }
       }
     },
     // * @ 圖層工具：單一支線圖層 顯示/隱藏
@@ -970,8 +1108,10 @@ export default {
         const indexB = this.layerOptions.pointList[index].type.findIndex(item => item.id === id);
         this.layerOptions.pointList[index].type[indexB].visible = $event;
 
-        MBT.updateStyle({
-          [layerName]: { subid: subId, subs: { [branchName]: { visible: $event } } }
+        layerName.forEach((item, index) => {
+          allMBT[index].updateStyle({
+            [item]: { subid: subId, subs: { [branchName]: { visible: $event } } }
+          });
         });
       }
       if (category === 'lineList') {
@@ -979,8 +1119,13 @@ export default {
         const indexB = this.layerOptions.lineList[index].type.findIndex(item => item.id === id);
         this.layerOptions.lineList[index].type[indexB].visible = $event;
 
-        MBT.updateStyle({
-          [layerName]: { subid: subId, subs: { [branchName]: { visible: $event } } }
+        // MBT.updateStyle({
+        //   [layerName]: { subid: subId, subs: { [branchName]: { visible: $event } } }
+        // });
+        layerName.forEach((item, index) => {
+          allMBT[index].updateStyle({
+            [item]: { subid: subId, subs: { [branchName]: { visible: $event } } }
+          });
         });
       }
       if (category === 'surfaceList') {
@@ -988,8 +1133,10 @@ export default {
         const indexB = this.layerOptions.surfaceList[index].type.findIndex(item => item.id === id);
         this.layerOptions.surfaceList[index].type[indexB].visible = $event;
 
-        MBT.updateStyle({
-          [layerName]: { subid: subId, subs: { [branchName]: { visible: $event } } }
+        layerName.forEach((item, index) => {
+          allMBT[index].updateStyle({
+            [item]: { subid: subId, subs: { [branchName]: { visible: $event } } }
+          });
         });
       }
     },
@@ -1007,9 +1154,15 @@ export default {
         subId = item.subId;
       });
 
-      MBT.updateStyle({
-        [layerName]: { subid: subId, subs: newObj }
+      // MBT.updateStyle({
+      //   [layerName]: { subid: subId, subs: newObj }
+      // });
+      layerName.forEach((item2, index2) => {
+        allMBT[index2].updateStyle({
+          [item2]: { subid: subId, subs: newObj }
+        });
       });
+
       this.layerOptions.pointList[index].allShow = $event;
     },
     allLineCtrl ($event, id, layerName) {
@@ -1025,9 +1178,12 @@ export default {
         subId = item.subId;
       });
 
-      MBT.updateStyle({
-        [layerName]: { subid: subId, subs: newObj }
+      layerName.forEach((item2, index2) => {
+        allMBT[index2].updateStyle({
+          [item2]: { subid: subId, subs: newObj }
+        });
       });
+
       this.layerOptions.lineList[index].allShow = $event;
     },
     allSurfaceCtrl ($event, id, layerName) {
@@ -1043,9 +1199,12 @@ export default {
         subId = item.subId;
       });
 
-      MBT.updateStyle({
-        [layerName]: { subid: subId, subs: newObj }
+      layerName.forEach((item2, index2) => {
+        allMBT[index2].updateStyle({
+          [item2]: { subid: subId, subs: newObj }
+        });
       });
+
       this.layerOptions.surfaceList[index].allShow = $event;
     },
     // * @ 圖層工具：透明度調整
@@ -1057,9 +1216,9 @@ export default {
 
         this.layerOptions.pointList[index].opacity = value;
 
-        // MBT.Style[layerName].style = { opacity: value / 100 };
-        // MBT.updateStyle(MBT.Style);
-        MBT.updateStyle({ [layerName]: { style: { opacity: value / 100 } } });
+        layerName.forEach((item, index) => {
+          allMBT[index].updateStyle({ [item]: { style: { opacity: value / 100 } } });
+        });
       }
       if (category === 'lineList') {
         const index = this.layerOptions.lineList.findIndex(item => item.id === id);
@@ -1068,9 +1227,9 @@ export default {
 
         this.layerOptions.lineList[index].opacity = value;
 
-        // MBT.Style[layerName].style = { opacity: value / 100 };
-        // MBT.updateStyle(MBT.Style);
-        MBT.updateStyle({ [layerName]: { style: { opacity: value / 100 } } });
+        layerName.forEach((item, index) => {
+          allMBT[index].updateStyle({ [item]: { style: { opacity: value / 100 } } });
+        });
         // ARO.updateStyle({ '01_Arrow': { style: { opacity: value / 100 } } });
       }
       if (category === 'surfaceList') {
@@ -1082,19 +1241,36 @@ export default {
 
         // MBT.Style[layerName].style = { opacity: value / 100 };
         // MBT.updateStyle(MBT.Style);
-        MBT.updateStyle({ [layerName]: { style: { opacity: value / 100 } } });
+        layerName.forEach((item, index) => {
+          allMBT[index].updateStyle({ [item]: { style: { opacity: value / 100 } } });
+        });
       }
       // 底圖切換
       if (category === 'baseLayer') {
         const index = this.layerOptions.baseLayerList.findIndex(item => item.id === id);
         this.layerOptions.baseLayerList[index].opacity = value;
         this.allBaseLayer[index].setOpacity(value / 100);
+
+        if (layerName === 'EMAP5') {
+          firstLayer.setOpacity(value / 100);
+        }
+
         pMapBase.RefreshMap(true);
       }
       if (category === 'shpitem') {
         const index = this.shpOptions.layerList.findIndex(item => item.id === id);
         this.shpOptions.layerList[index].opacity = value;
-        this.shpOptions.kmlLayer.setOpacity(value / 100);
+
+        if (this.shpOptions.kmlLayer !== '') {
+          this.shpOptions.kmlLayer.setOpacity(value / 100);
+        }
+
+        if (this.allShpGraphic !== []) {
+          this.allShpGraphic.forEach((item) => {
+            item.layer.setOpacity(value / 100);
+          });
+        }
+
         pMapBase.RefreshMap(true);
       }
     },
@@ -1112,6 +1288,7 @@ export default {
     },
     // * @ 圖層工具：臨時展繪 新增圖層
     fileUploader (current) {
+      this.loadModal = true;
       const newFile = document.getElementById('upfile').files[0];
       if (newFile === undefined) { return; }
       const type = newFile.name.substring(newFile.name.length - 3, newFile.name.length);
@@ -1127,6 +1304,11 @@ export default {
       }
       if (fileSize > 8388608) {
         this.sizeBox = true;
+        return;
+      }
+
+      if (type === 'kmz') {
+        this.getKmzHandler(newFile);
         return;
       }
 
@@ -1158,22 +1340,142 @@ export default {
         this.shpOptions.layerList.push(result);
         this.zoomToLayer(this.shpOptions.kmlLayer);
 
-        this.shpOptions.kmlLayer = new sg.layers.KMLLayer(null, { data: newFile });
+        // this.shpOptions.kmlLayer = new sg.layers.KMLLayer(null, { data: newFile });
       });
 
       pMapBase.RefreshMap(true);
+      this.loadModal = false;
     },
     // * @ 圖層工具：臨時展繪 刪除圖層
     deleteShpLayer () {
       this.shpOptions.layerList = [];
       pMapBase.RemoveLayer(this.shpOptions.kmlLayer);
+
+      this.allShpGraphic.forEach((item) => {
+        pMapBase.drawingGraphicsLayer.remove(item);
+      });
+      this.allShpGraphic = [];
+
       pMapBase.RefreshMap(true);
     },
     zoomToLayer (layer) {
+      console.log(layer);
       const extent = layer.extent;
       pMapBase.ZoomMapTo(extent);
+      pMapBase.getTransformation().FitLevel();
       pMapBase.RefreshMap(true);
     },
+    // * @ 圖層工具：臨時展繪 定位(只有SHP可)
+    zoomToSHP () {
+      const extent = sg.geometry.Extent.unionall(this.allGeotry.map(function (geom) { return geom.extent; }));
+      pMapBase.ZoomMapTo(extent);
+      ZoomOut();
+      pMapBase.getTransformation().FitLevel();
+      pMapBase.RefreshMap(true);
+    },
+    // * @ 圖層工具：臨時展繪 上傳kmz檔
+    getKmzHandler (myFile) {
+      const fileName = myFile.name.substring(0, myFile.name.length - 4);
+      const formData = new FormData();
+      formData.append('Datas', myFile);
+
+      fetch('/AERC/rest/KmzLoader', {
+        method: 'POST',
+        body: formData
+      }).then((response) => {
+        return response.json();
+      }).then((data) => {
+        console.log(data);
+        const newArr = data[0].File.filter(item => item.substring(item.length - 3, item.length) === 'kml');
+        const newUrl = `${data[0].Folder}/${newArr[0]}`;
+        const newFile = new File([''], newUrl);
+        console.log(newFile);
+
+        // 先移除舊的檔案
+        pMapBase.RemoveLayer(this.shpOptions.kmlLayer);
+        pMapBase.RefreshMap(true);
+        this.shpOptions.layerList = [];
+        //
+        SuperGIS.LoadModules(['scripts/MVTData.js', 'vector_tile.js', 'pbf.js', 'scripts/KML.js', 'scripts/Collada.js'], () => {
+          this.shpOptions.kmlLayer = new sg.layers.KMLLayer(null, { data: newFile });
+          pMapBase.AddLayer(this.shpOptions.kmlLayer);
+          const result = {
+            id: Math.random(),
+            name: fileName,
+            visible: true,
+            opacity: 100
+          };
+          this.shpOptions.layerList.push(result);
+          this.zoomToLayer(this.shpOptions.kmlLayer);
+        });
+
+        pMapBase.RefreshMap(true);
+        this.loadModal = false;
+      }).catch((err) => {
+        console.log(err);
+      });
+    },
+
+    // * @ 圖層工具：臨時展繪 上傳shp檔
+    getShpHandler () {
+      this.loadModal = true;
+      const newFile = document.getElementById('formBt1').files[0];
+      const fileName = newFile.name.substring(0, newFile.name.length - 4);
+      console.log(newFile);
+
+      const formData = new FormData();
+      formData.append('Datas', newFile);
+
+      fetch('/AERC/rest/ShpLoader', {
+        method: 'POST',
+        // headers: new Headers({
+        //   'Content-Type': 'application/json'
+        // }),
+        body: formData
+      }).then((response) => {
+        return response.json();
+      }).then((data) => {
+        console.log(data);
+
+        // 先清除之前的
+        this.shpOptions.layerList = [];
+
+        this.allShpGraphic.forEach((item) => {
+          pMapBase.drawingGraphicsLayer.remove(item);
+        });
+        this.allShpGraphic = [];
+        // 畫圖
+        data.forEach((item) => {
+          const geometry = sg.geometry.Geometry.fromGeoJson(item.geometry);
+          this.allShpGraphic.push(sg.Graphic.createFromGeometry(geometry, { borderwidth: 1, fillcolor: new sg.Color(220, 105, 105, 0.5) }));
+          this.allGeotry.push(geometry);
+        });
+
+        this.allShpGraphic.forEach((item) => {
+          pMapBase.drawingGraphicsLayer.add(item);
+        });
+        // 加清單
+        const result = {
+          id: Math.random(),
+          name: fileName,
+          visible: true,
+          opacity: 100
+        };
+        this.shpOptions.layerList.push(result);
+
+        // 定位
+        const extent = sg.geometry.Extent.unionall(this.allGeotry.map(function (geom) { return geom.extent; }));
+        pMapBase.ZoomMapTo(extent);
+        ZoomOut();
+        pMapBase.getTransformation().FitLevel();
+        pMapBase.RefreshMap(true);
+
+        this.loadModal = false;
+      }).catch((err) => {
+        console.log(err);
+      });
+    },
+
     // * @ 圖層工具：OGC介接 取得服務
     getOgcHandler (current) {
       // const wmsUrl = this.$refs.wms.value;
@@ -1320,6 +1622,7 @@ export default {
     },
     // * @ 截圖工具：JPG下載
     downloadJPG () {
+      this.loadModal = true;
       const node = this.$refs.mapBox;
       const canvas = document.getElementsByTagName('canvas')[0];
       const ctx = canvas.getContext('2d');
@@ -1377,6 +1680,7 @@ export default {
             saveAs(blob, 'iamap.jpg');
             console.log('印出來');
 
+            this.loadModal = false;
             this.openPicPage();
           });
         };
@@ -1386,7 +1690,7 @@ export default {
         const date = new Date();
         const nowDate = `列印時間 : ${date.getFullYear()}/${date.getMonth()}/${date.getDate()} ${date.getHours()}:${date.getMinutes()}`;
         ctx.fillText(nowDate, 1290, 610);
-        console.log('日期');
+        // console.log('日期');
 
         // 加版權
         ctx.fillText('地圖平台 : 農田水利署地理空間處理平台', 235, 610);
@@ -1401,6 +1705,7 @@ export default {
     },
     // * @ 截圖工具：PDF下載
     downloadPDF () {
+      this.loadModal = true;
       const node = this.$refs.mapBox;
       const canvas = document.getElementsByTagName('canvas')[0];
       const ctx = canvas.getContext('2d');
@@ -1418,14 +1723,13 @@ export default {
         });
       mapImg.style.border = '2px solid #EA0000';
 
-      mapImg.onload = function () {
+      mapImg.onload = () => {
         ctx.drawImage(mapImg, 100, 48.5, 1300, 538);
         console.log('地圖');
-      };
 
-      ctx.globalCompositeOperation = 'destination-over';
+        // =============
+        ctx.globalCompositeOperation = 'destination-over';
 
-      setTimeout(() => {
         // 加上指北針圖
         const imgObj = new Image();
         imgObj.src = require('~/assets/img/compass.png');
@@ -1450,7 +1754,9 @@ export default {
           .then((dataUrl) => {
             scaleImg.src = dataUrl;
           });
-        scaleImg.onload = function () {
+        scaleImg.onload = () => {
+          this.loadModal = false;
+
           ctx.drawImage(scaleImg, 100, 550);
           console.log('比例尺');
 
@@ -1468,16 +1774,56 @@ export default {
 
         // 加版權
         ctx.fillText('地圖平台 : 農田水利署地理空間處理平台', 235, 610);
-      }, 2500);
+      };
 
-      // window.jsPDF = window.jspdf.jsPDF;
-      // // eslint-disable-next-line new-cap
-      // const doc = new jsPDF('l', 'px', [canvas.width, canvas.height]);
+      // ctx.globalCompositeOperation = 'destination-over';
+
       // setTimeout(() => {
-      //   const image = canvas.toDataURL();
-      //   doc.addImage(image, 'JPEG', 0, 0, canvas.width, canvas.height);
-      //   doc.save('iamap.pdf');
-      // }, 7000);
+      //   // 加上指北針圖
+      //   const imgObj = new Image();
+      //   imgObj.src = require('~/assets/img/compass.png');
+      //   imgObj.onload = function () {
+      //     ctx.drawImage(imgObj, 1250, 60);
+      //     console.log('指北針');
+      //   };
+
+      //   // 加標題
+      //   const textWidth = ctx.measureText(this.screenTitle).width;
+      //   ctx.font = '28px sans-serif';
+      //   ctx.textAlign = 'center';
+      //   ctx.fillStyle = '#000000';
+      //   ctx.fillText(this.screenTitle, (canvas.width / 2) - (textWidth / 2) - 80, 30);
+
+      //   // 加比例尺
+      //   ctx.globalCompositeOperation = 'source-over';
+
+      //   const scale = document.getElementById('ScaleTools');
+      //   const scaleImg = new Image();
+      //   domtoimage.toPng(scale, { quality: 0.95 })
+      //     .then((dataUrl) => {
+      //       scaleImg.src = dataUrl;
+      //     });
+      //   scaleImg.onload = () => {
+      //     this.loadModal = false;
+
+      //     ctx.drawImage(scaleImg, 100, 550);
+      //     console.log('比例尺');
+
+      //     const image = canvas.toDataURL();
+      //     doc.addImage(image, 'JPEG', 0, 0, canvas.width, canvas.height);
+      //     doc.save('iamap.pdf');
+      //   };
+
+      //   // 加日期
+      //   ctx.font = '13px sans-serif';
+      //   const date = new Date();
+      //   const nowDate = `列印時間 : ${date.getFullYear()}/${date.getMonth()}/${date.getDate()} ${date.getHours()}:${date.getMinutes()}`;
+      //   ctx.fillText(nowDate, 1290, 610);
+      //   console.log('日期');
+
+      //   // 加版權
+      //   ctx.fillText('地圖平台 : 農田水利署地理空間處理平台', 235, 610);
+      // }, 6000);
     },
     openPicPage () {
       const canvas = document.getElementsByTagName('canvas')[0];
@@ -1493,8 +1839,7 @@ export default {
     },
     // * 回到全圖
     fullMapCtrl () {
-      pMapBase.ZoomMapTo(pMapBase.getExtent());
-      pMapBase.RefreshMap(true);
+      backFullMap();
     },
     // * 放大
     zoomInCtrl () {
@@ -1518,6 +1863,8 @@ export default {
         // 定位
         const extent = geometry.extent;
         pMapBase.ZoomMapTo(extent);
+        ZoomOut();
+        pMapBase.getTransformation().FitLevel();
         pMapBase.RefreshMap(true);
         // 清空localStorage
         localStorage.clear();
@@ -1525,7 +1872,9 @@ export default {
     }
   },
   computed: {
-
+    // sortSurfaceList () {
+    //   this.layerOptions.surfaceList.sort((a, b) => { return a.id < b.id; });
+    // }
   },
   watch: {
     'searchResult.channel': {
@@ -1537,6 +1886,11 @@ export default {
         }
       }
     },
+    // 'layerOptions.surfaceList': {
+    //   handler (value) {
+    //     this.layerOptions.surfaceList.sort((a, b) => { return a.id > b.id ? 1 : -1; });
+    //   }
+    // },
     activeWindow: {
       handler (value) {
         // 只會載入一次 new MeasureTool
@@ -1572,112 +1926,242 @@ export default {
         }
         // 點線面圖資載入
         if (value === 'switchLayersWindow' && this.openOnceLa === true) {
-          Object.keys(MBT.Style).forEach((key) => {
-            console.log(key);
-            console.log(MBT.Style[key]);
-            const mName = key.substring(3);
-            const result = {
-              id: Math.random(),
-              LayerName: key,
-              visible: false,
-              opacity: 100,
-              LayerTitle: '',
-              type: [],
-              allShow: true
-            };
-            if (mName === 'Cons') {
-              result.LayerTitle = '水工構造物';
-              this.layerOptions.pointList.push(result);
-            }
-            if (mName === 'Canal') {
-              result.LayerTitle = '渠道';
-              this.layerOptions.lineList.push(result);
+          allMBT.forEach((itemBT) => {
+            Object.keys(itemBT.Style).forEach((key) => {
+              // console.log(key);
+              // console.log(itemBT.Style[key]);
+              const mName = key.substring(3);
 
-              const newArr = [];
-              MBT.Style[key].paint['line-color'].forEach((item, index, array) => {
-                if (index % 2 === 1 && index !== array.length - 1) {
-                  const res = {
-                    id: Math.random(),
-                    name: item[2],
-                    visible: true,
-                    subId: item[1][1]
-                  };
+              const newList = iaList.map(item => `${item}_${mName}`);
+              const result = {
+                id: Math.random(),
+                LayerName: newList,
+                visible: false,
+                opacity: 100,
+                LayerTitle: '',
+                type: [],
+                allShow: true
+              };
 
-                  newArr.push(res);
-                }
-              });
+              if (mName === 'Cons' && this.getCons === false) {
+                if (itemBT.Style[key].layout['icon-image'] === undefined) { return; }
 
-              result.type = newArr;
-            }
-            if (mName === 'Ia') {
-              result.LayerTitle = '管理處';
-              result.visible = true;
-              result.opacity = 50;
-              this.layerOptions.surfaceList.push(result);
-            }
-            if (mName === 'Mng') {
-              result.LayerTitle = '管理分處';
-              result.opacity = 50;
-              this.layerOptions.surfaceList.push(result);
-            }
-            if (mName === 'Stn') {
-              result.LayerTitle = '工作站';
-              result.opacity = 50;
-              this.layerOptions.surfaceList.push(result);
+                this.getCons = true;
+                result.LayerTitle = '水工構造物';
+                this.layerOptions.pointList.push(result);
 
-              const newArr = [];
-              MBT.Style[key].paint['fill-color'].forEach((item, index, array) => {
-                if (index % 2 === 1 && index !== array.length - 1) {
-                  const res = {
-                    id: Math.random(),
-                    name: item[2],
-                    visible: true,
-                    subId: item[1][1]
-                  };
+                const newArr = [];
+                itemBT.Style[key].layout['icon-image'].forEach((item, index, array) => {
+                  if (index % 2 === 1 && index !== array.length - 1) {
+                    const res = {
+                      id: Math.random(),
+                      name: item[2],
+                      visible: true,
+                      subId: item[1][1],
+                      picCons: item[2]
+                    };
 
-                  newArr.push(res);
-                }
-              });
+                    newArr.push(res);
+                  }
+                });
 
-              result.type = newArr;
-            }
-            if (mName === 'Grp') {
-              result.LayerTitle = '小組';
-              result.opacity = 50;
-              this.layerOptions.surfaceList.push(result);
-            }
-            if (mName === 'Rot') {
-              result.LayerTitle = '輪區';
-              result.opacity = 50;
-              this.layerOptions.surfaceList.push(result);
-            }
-            if (mName === 'Period') {
-              result.LayerTitle = '期作別';
-              result.opacity = 50;
-              this.layerOptions.surfaceList.push(result);
+                result.type = newArr;
+              }
+              if (mName === 'Canal' && this.getCanal === false) {
+                if (itemBT.Style[key].paint['line-color'] === undefined) { return; }
 
-              const newArr = [];
-              MBT.Style[key].paint['fill-color'].forEach((item, index, array) => {
-                if (index % 2 === 1 && index !== array.length - 1) {
-                  const res = {
-                    id: Math.random(),
-                    name: item[2],
-                    visible: true,
-                    subId: item[1][1]
-                  };
+                this.getCanal = true;
+                result.LayerTitle = '渠道';
+                this.layerOptions.lineList.push(result);
 
-                  newArr.push(res);
-                }
-              });
+                const newArr = [];
+                itemBT.Style[key].paint['line-color'].forEach((item, index, array) => {
+                  if (index % 2 === 1 && index !== array.length - 1) {
+                    const res = {
+                      id: Math.random(),
+                      name: item[2],
+                      visible: true,
+                      subId: item[1][1],
+                      picCanal: ''
+                    };
+                    res.picCanal = array[index + 1];
 
-              result.type = newArr;
-            }
-            if (mName === 'Pool') {
-              result.LayerTitle = '埤塘';
-              result.opacity = 50;
-              this.layerOptions.surfaceList.push(result);
-            }
+                    newArr.push(res);
+                  }
+                });
+
+                result.type = newArr;
+              }
+              if (mName === 'Ia' && this.getIa === false) {
+                if (itemBT.Style[key].paint === undefined || itemBT.Style[key].layout === undefined) { return; }
+
+                this.getIa = true;
+                result.LayerTitle = '管理處';
+                result.visible = true;
+                result.opacity = 50;
+                result.id = 71;
+                this.layerOptions.surfaceList.push(result);
+
+                const newArr = [];
+                const res = {
+                  id: Math.random(),
+                  name: '',
+                  visible: true,
+                  subId: itemBT.Style[key].layout['text-field'][1],
+                  bgColor: itemBT.Style[key].paint['fill-color'],
+                  border: itemBT.Style[key].paint['fill-outline-color']
+                };
+                newArr.push(res);
+
+                result.type = newArr;
+              }
+              if (mName === 'Mng' && this.getMng === false) {
+                if (itemBT.Style[key].paint === undefined || itemBT.Style[key].layout === undefined) { return; }
+
+                this.getMng = true;
+                result.LayerTitle = '管理分處';
+                result.opacity = 50;
+                result.id = 72;
+                this.layerOptions.surfaceList.push(result);
+
+                const newArr = [];
+                const res = {
+                  id: Math.random(),
+                  name: '',
+                  visible: true,
+                  subId: itemBT.Style[key].layout['text-field'][1],
+                  bgColor: itemBT.Style[key].paint['fill-color'],
+                  border: itemBT.Style[key].paint['fill-outline-color']
+                };
+                newArr.push(res);
+
+                result.type = newArr;
+              }
+              if (mName === 'Stn' && this.getStn === false) {
+                if (itemBT.Style[key].paint['fill-color'] === undefined) { return; }
+
+                this.getStn = true;
+                result.LayerTitle = '工作站';
+                result.opacity = 50;
+                result.id = 73;
+                this.layerOptions.surfaceList.push(result);
+
+                const newArr = [];
+                itemBT.Style[key].paint['fill-color'].forEach((item, index, array) => {
+                  if (index % 2 === 1 && index !== array.length - 1) {
+                    const res = {
+                      id: Math.random(),
+                      name: item[2],
+                      visible: true,
+                      subId: item[1][1],
+                      picStn: ''
+                    };
+                    res.picStn = array[index + 1];
+
+                    newArr.push(res);
+                  }
+                });
+
+                result.type = newArr;
+              }
+              if (mName === 'Grp' && this.getGrp === false) {
+                if (itemBT.Style[key].paint === undefined || itemBT.Style[key].layout === undefined) { return; }
+
+                this.getGrp = true;
+                result.LayerTitle = '小組';
+                result.opacity = 50;
+                result.id = 74;
+                this.layerOptions.surfaceList.push(result);
+
+                const newArr = [];
+                const res = {
+                  id: Math.random(),
+                  name: '',
+                  visible: true,
+                  subId: itemBT.Style[key].layout['text-field'][1],
+                  bgColor: itemBT.Style[key].paint['fill-color'],
+                  border: itemBT.Style[key].paint['fill-outline-color']
+                };
+                newArr.push(res);
+
+                result.type = newArr;
+              }
+              if (mName === 'Rot' && this.getRot === false) {
+                if (itemBT.Style[key].paint === undefined || itemBT.Style[key].layout === undefined) { return; }
+
+                this.getRot = true;
+                result.LayerTitle = '輪區';
+                result.opacity = 50;
+                result.id = 75;
+                this.layerOptions.surfaceList.push(result);
+
+                const newArr = [];
+                const res = {
+                  id: Math.random(),
+                  name: '',
+                  visible: true,
+                  subId: itemBT.Style[key].layout['text-field'][1],
+                  bgColor: itemBT.Style[key].paint['fill-color'],
+                  border: itemBT.Style[key].paint['fill-outline-color']
+                };
+                newArr.push(res);
+
+                result.type = newArr;
+              }
+              if (mName === 'Period' && this.getPeriod === false) {
+                if (itemBT.Style[key].paint['fill-color'] === undefined) { return; }
+
+                this.getPeriod = true;
+                result.LayerTitle = '期作別';
+                result.opacity = 50;
+                result.id = 76;
+                this.layerOptions.surfaceList.push(result);
+
+                const newArr = [];
+                itemBT.Style[key].paint['fill-color'].forEach((item, index, array) => {
+                  if (index % 2 === 1 && index !== array.length - 1) {
+                    const res = {
+                      id: Math.random(),
+                      name: item[2],
+                      visible: true,
+                      subId: item[1][1],
+                      picPeriod: ''
+                    };
+                    res.picPeriod = array[index + 1];
+
+                    newArr.push(res);
+                  }
+                });
+
+                result.type = newArr;
+              }
+              if (mName === 'Pool' && this.getPool === false) {
+                if (itemBT.Style[key].paint === undefined || itemBT.Style[key].layout === undefined) { return; }
+
+                this.getPool = true;
+                result.LayerTitle = '埤塘';
+                result.opacity = 50;
+                result.id = 80;
+                this.layerOptions.surfaceList.push(result);
+
+                const newArr = [];
+                const res = {
+                  id: Math.random(),
+                  name: '',
+                  visible: true,
+                  subId: itemBT.Style[key].layout['text-field'][1],
+                  bgColor: itemBT.Style[key].paint['fill-color'],
+                  border: itemBT.Style[key].paint['fill-outline-color']
+                };
+                newArr.push(res);
+
+                result.type = newArr;
+              }
+            });
           });
+
+          this.layerOptions.surfaceList.sort((a, b) => { return a.id > b.id ? 1 : -1; });
+
           this.openOnceLa = false;
         }
       }
@@ -1701,6 +2185,32 @@ export default {
     100% {
       stroke-dashoffset: 0;
     }
+  }
+
+  .modal_wrapper888888 {
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 10000000000;
+    cursor: default;
+  }
+
+  .modal888888 {
+    width: 100px;
+    height: 100px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    z-index: 9999;
+    transform: translate(-50%, -50%);
+    flex-direction: column;
+    background: url('~/assets/img/loading_icon.svg') no-repeat center/contain;
   }
 
   .scbar_wrap {
@@ -1756,9 +2266,10 @@ export default {
     background: url('~/assets/img/white-triangle.svg') no-repeat right/contain !important;
   }
 
-  .hide_block {
+  .hide_block66 {
     transition: transform 0.4s;
-    transform: translateY(62.5%);
+    // transform: translateY(62.5%);
+    transform: translateY(100%);
   }
 
   .show_block {
@@ -1970,7 +2481,7 @@ export default {
     background: white;
     z-index: 100000;
     width: 100%;
-    height: 430px;
+    // height: 430px;
   }
 
   .checkBoxOption{

@@ -12,8 +12,9 @@
       <keep-alive>
         <component
           :is="componentInstance"
+          :all-ia-list="myIaList"
           :click-map-list="ListCS"
-          @channelSearch="$emit('search')"
+          @channelSearch="getChannelData"
           @keywordSearch="getKeywordData"
           @clickSearch="getClickData"
           @clearKeyword="clearKeywordData"
@@ -152,6 +153,7 @@ export default {
       searchResult: {
         channel: ''
       },
+      myIaList: '',
       //* 關鍵字查詢 屬性資料表格
       columnList: [],
       backList: [],
@@ -165,12 +167,29 @@ export default {
       canalData: [],
       stnData: [],
       grpData: [],
+      mngData: [],
+      poolData: [],
+      rotData: [],
       periodData: [],
-      blockTitle: ''
+      blockTitle: '',
+      userId: '',
+      //* 渠道查詢
+      newSection: [],
+      newIa: [],
+      newMng: [],
+      newStn: [],
+      newGrp: [],
+      newRot: [],
+      newPeriod: [],
+      newPool: [],
+      newSec5cov: []
     };
   },
   name: 'MapSearchBox',
   mounted () {
+    this.userId = sessionStorage.getItem('loginUser');
+    this.getIaList();
+
     const data = require('~/static/channel.json');
     this.searchResult.channel = data;
 
@@ -182,26 +201,91 @@ export default {
 
     const data3 = require('~/static/clickIa.json');
     this.iaData = data3.data;
+    this.newIa = data3.data.map(item => {
+      return { title: item.name };
+    });
 
     const data4 = require('~/static/clickCanal.json');
     this.canalData = data4.data;
 
     const data5 = require('~/static/clickStn.json');
     this.stnData = data5.data;
+    this.newStn = data5.data.map(item => {
+      return { title: item.name };
+    });
 
     const data6 = require('~/static/clickGrp.json');
     this.grpData = data6.data;
+    this.newGrp = data6.data.map(item => {
+      return { title: item.name };
+    });
 
     const data7 = require('~/static/clickPeriod.json');
     this.periodData = data7.data;
+    this.newPeriod = data7.data.map(item => {
+      return { title: item.name };
+    });
+
+    const data8 = require('~/static/clickMng.json');
+    this.mngData = data8.data;
+    this.newMng = data8.data.map(item => {
+      return { title: item.name };
+    });
+
+    const data9 = require('~/static/clickPool.json');
+    this.poolData = data9.data;
+    this.newPool = data9.data.map(item => {
+      return { title: item.name };
+    });
+
+    const data10 = require('~/static/clickRot.json');
+    this.rotData = data10.data;
+    this.newRot = data10.data.map(item => {
+      return { title: item.name };
+    });
+
+    const data11 = require('~/static/AddSection.json');
+    this.newSection = data11.data.map(item => {
+      return { title: item.name };
+    });
+
+    const data12 = require('~/static/AddSec5cov.json');
+    this.newSec5cov = data12.data.map(item => {
+      return { title: item.name };
+    });
   },
   methods: {
+    // * @ 取得管理處資料
+    getIaList () {
+      fetch(`/AERC/rest/Ia/${this.userId}`, {
+        method: 'POST',
+        headers: new Headers({
+          'Content-Type': 'application/json'
+        }),
+        body: JSON.stringify({
+
+        })
+      }).then((response) => {
+        return response.json();
+      }).then((data) => {
+        console.log(data);
+
+        data.forEach((item) => {
+          item.value = item.FID;
+          item.title = item.Ia_cns;
+        });
+        this.myIaList = data;
+        this.$emit('iaList', this.myIaList);
+      }).catch((err) => {
+        console.log(err);
+      });
+    },
     // * @ 點擊查詢 : 取得屬性資料表格
     getClickData (id, info, title) {
       this.blockTitle = title;
 
       // 管理處
-      if (id === '01_Ia') {
+      if (id === 'Ia') {
         this.iaData.forEach((item) => {
           if (item.name === '管理處代碼') {
             item.value = info.Ia;
@@ -222,7 +306,7 @@ export default {
       }
 
       // 渠道
-      if (id === '01_Canal') {
+      if (id === 'Canal') {
         this.canalData.forEach((item) => {
           if (item.name === '渠道編號-通用碼') {
             item.value = info.Ex_sys;
@@ -282,7 +366,7 @@ export default {
       }
 
       // 水工構造物
-      if (id === '01_Cons') {
+      if (id === 'Cons') {
         this.consData.forEach((item) => {
           if (item.name === '構造物名稱') {
             item.value = info.Consname;
@@ -354,7 +438,7 @@ export default {
       }
 
       // 工作站
-      if (id === '01_Stn') {
+      if (id === 'Stn') {
         this.stnData.forEach((item) => {
           if (item.name === '管理處代碼') {
             item.value = info.Ia;
@@ -371,6 +455,9 @@ export default {
           if (item.name === '管理分處代碼') {
             item.value = info.Mng;
           }
+          if (item.name === '管理分處名稱') {
+            item.value = info.Mng_cns;
+          }
           if (item.name === '工作站代碼') {
             item.value = info.Stn;
           }
@@ -384,7 +471,7 @@ export default {
       }
 
       // 小組
-      if (id === '01_Grp') {
+      if (id === 'Grp') {
         this.grpData.forEach((item) => {
           if (item.name === '管理處代碼') {
             item.value = info.Ia;
@@ -407,6 +494,9 @@ export default {
           if (item.name === '管理分處代碼') {
             item.value = info.Mng;
           }
+          if (item.name === '管理分處名稱') {
+            item.value = info.Mng_cns;
+          }
           if (item.name === '工作站代碼') {
             item.value = info.Stn;
           }
@@ -420,7 +510,7 @@ export default {
       }
 
       // 期作別
-      if (id === '01_Period') {
+      if (id === 'Period') {
         this.periodData.forEach((item) => {
           if (item.name === '管理處代碼') {
             item.value = info.Ia;
@@ -444,6 +534,123 @@ export default {
 
         this.allClickData = [];
         this.allClickData = this.periodData;
+      }
+
+      // 管理分處
+      if (id === 'Mng') {
+        this.mngData.forEach((item) => {
+          if (item.name === '管理處代碼') {
+            item.value = info.Ia;
+          }
+          if (item.name === '管理處名稱') {
+            item.value = info.Ia_cns;
+          }
+          if (item.name === '面積(m2)') {
+            item.value = info.Area;
+          }
+          if (item.name === '管理分處代碼') {
+            item.value = info.Mng;
+          }
+          if (item.name === '管理分處名稱') {
+            item.value = info.Mng_cns;
+          }
+          if (item.name === '資料日期') {
+            item.value = info.Ymd;
+          }
+        });
+
+        this.allClickData = [];
+        this.allClickData = this.mngData;
+      }
+
+      // 池塘
+      if (id === 'Pool') {
+        this.poolData.forEach((item) => {
+          if (item.name === '管理處代碼') {
+            item.value = info.Ia;
+          }
+          if (item.name === '管理處名稱') {
+            item.value = info.Ia_cns;
+          }
+          if (item.name === '面積(m2)') {
+            item.value = info.Area;
+          }
+          if (item.name === '管理分處代碼') {
+            item.value = info.Mng;
+          }
+          if (item.name === '管理分處名稱') {
+            item.value = info.Mng_cns;
+          }
+          if (item.name === '資料日期') {
+            item.value = info.Ymd;
+          }
+          if (item.name === '工作站代碼') {
+            item.value = info.Stn;
+          }
+          if (item.name === '工作站名稱') {
+            item.value = info.Stn_cns;
+          }
+          if (item.name === '小組代碼') {
+            item.value = info.Grp;
+          }
+          if (item.name === '小組名稱') {
+            item.value = info.Grp_cns;
+          }
+          if (item.name === '碼池塘名稱') {
+            item.value = info.Pool_cns;
+          }
+          if (item.name === '池塘編號-通用碼') {
+            item.value = info.Ex_poolno;
+          }
+        });
+
+        this.allClickData = [];
+        this.allClickData = this.poolData;
+      }
+
+      // 輪區
+      if (id === 'Rot') {
+        this.rotData.forEach((item) => {
+          if (item.name === '管理處代碼') {
+            item.value = info.Ia;
+          }
+          if (item.name === '管理處名稱') {
+            item.value = info.Ia_cns;
+          }
+          if (item.name === '面積(m2)') {
+            item.value = info.Area;
+          }
+          if (item.name === '管理分處代碼') {
+            item.value = info.Mng;
+          }
+          if (item.name === '管理分處名稱') {
+            item.value = info.Mng_cns;
+          }
+          if (item.name === '資料日期') {
+            item.value = info.Ymd;
+          }
+          if (item.name === '工作站代碼') {
+            item.value = info.Stn;
+          }
+          if (item.name === '工作站名稱') {
+            item.value = info.Stn_cns;
+          }
+          if (item.name === '小組代碼') {
+            item.value = info.Grp;
+          }
+          if (item.name === '小組名稱') {
+            item.value = info.Grp_cns;
+          }
+          if (item.name === '輪區代碼') {
+            item.value = info.Rot;
+          }
+          if (item.name === '輪區名稱') {
+            item.value = info.Rot_cns;
+          }
+        });
+
+        this.allClickData = [];
+        this.allClickData = this.rotData;
       }
     },
     // * @ 點擊查詢 : 清除全部
@@ -531,6 +738,38 @@ export default {
 
       this.columnList = [];
       this.columnList = this.backList;
+    },
+    // * @ 渠道查詢 : 送出表格資料 emit上層
+    getChannelData (allData, type) {
+      if (type === 'Section') {
+        allData.head = this.newSection;
+      }
+      if (type === 'Ia') {
+        allData.head = this.newIa;
+      }
+      if (type === 'Mng') {
+        allData.head = this.newMng;
+      }
+      if (type === 'Stn') {
+        allData.head = this.newStn;
+      }
+      if (type === 'Grp') {
+        allData.head = this.newGrp;
+      }
+      if (type === 'Rot') {
+        allData.head = this.newRot;
+      }
+      if (type === 'Period') {
+        allData.head = this.newPeriod;
+      }
+      if (type === 'Pool') {
+        allData.head = this.newPool;
+      }
+      if (type === 'Sec5cov') {
+        allData.head = this.newSec5cov;
+      }
+
+      this.$emit('search', allData);
     }
   },
   computed: {
@@ -543,59 +782,59 @@ export default {
     }
   },
   watch: {
-    'barOptions.current': {
-      handler (value) {
-        if (value === 3 && this.openOnceCS === true) {
-          Object.keys(MBT.Style).forEach((key) => {
-            const mName = key.substring(3);
-            const result = {
-              id: Math.random(),
-              LayerName: key,
-              title: '',
-              value: key
-            };
-            if (mName === 'Cons') {
-              result.title = '水工構造物';
-              this.ListCS.push(result);
-            }
-            if (mName === 'Canal') {
-              result.title = '渠道';
-              this.ListCS.push(result);
-            }
-            if (mName === 'Ia') {
-              result.title = '管理處';
-              this.ListCS.push(result);
-            }
-            if (mName === 'Mng') {
-              result.title = '管理分處';
-              this.ListCS.push(result);
-            }
-            if (mName === 'Stn') {
-              result.title = '工作站';
-              this.ListCS.push(result);
-            }
-            if (mName === 'Grp') {
-              result.title = '小組';
-              this.ListCS.push(result);
-            }
-            if (mName === 'Rot') {
-              result.title = '輪區';
-              this.ListCS.push(result);
-            }
-            if (mName === 'Period') {
-              result.title = '期作別';
-              this.ListCS.push(result);
-            }
-            if (mName === 'Pool') {
-              result.title = '埤塘';
-              this.ListCS.push(result);
-            }
-          });
-          this.openOnceCS = false;
-        }
-      },
-      deep: true
-    }
+    // 'barOptions.current': {
+    //   handler (value) {
+    //     if (value === 3 && this.openOnceCS === true) {
+    //       Object.keys(MBT.Style).forEach((key) => {
+    //         const mName = key.substring(3);
+    //         const result = {
+    //           id: Math.random(),
+    //           LayerName: key,
+    //           title: '',
+    //           value: key
+    //         };
+    //         if (mName === 'Cons') {
+    //           result.title = '水工構造物';
+    //           this.ListCS.push(result);
+    //         }
+    //         if (mName === 'Canal') {
+    //           result.title = '渠道';
+    //           this.ListCS.push(result);
+    //         }
+    //         if (mName === 'Ia') {
+    //           result.title = '管理處';
+    //           this.ListCS.push(result);
+    //         }
+    //         if (mName === 'Mng') {
+    //           result.title = '管理分處';
+    //           this.ListCS.push(result);
+    //         }
+    //         if (mName === 'Stn') {
+    //           result.title = '工作站';
+    //           this.ListCS.push(result);
+    //         }
+    //         if (mName === 'Grp') {
+    //           result.title = '小組';
+    //           this.ListCS.push(result);
+    //         }
+    //         if (mName === 'Rot') {
+    //           result.title = '輪區';
+    //           this.ListCS.push(result);
+    //         }
+    //         if (mName === 'Period') {
+    //           result.title = '期作別';
+    //           this.ListCS.push(result);
+    //         }
+    //         if (mName === 'Pool') {
+    //           result.title = '埤塘';
+    //           this.ListCS.push(result);
+    //         }
+    //       });
+    //       this.openOnceCS = false;
+    //     }
+    //   },
+    //   deep: true
+    // }
   }
 };
 </script>
@@ -634,6 +873,7 @@ export default {
       text-align: left;
       margin: 0 auto;
       width: 100%;
+      word-break: break-all;
 
       td {
         padding: 10px;

@@ -17,38 +17,45 @@ export default {
       totalLength: '',
       startLength: '',
       endLength: '',
-      canalName: ''
+      canalName: '',
+      fnList: []
     };
   },
   name: 'StakeSearch',
-  mounted () {
-    this.dropList = [{ title: '01 宜蘭', value: '1' }];
+  activated () {
+    //
 
-    sg.events.on(MBT, 'click', (e) => {
-      if (e.graphic.id[0] === '01_Canal') {
-        this.title = e.graphic.id[0];
-        this.nowFid = parseInt(e.graphic.id[1], 10);
-        this.nowInfo = e.graphic.attributes;
-        this.geoData = e.graphic.geometry;
-        this.canalName = e.graphic.attributes.Sys_cns;
+    allMBT.forEach((item) => {
+      this.fnList.push(sg.events.on(item, 'click', (e) => {
+        if (e.graphic.id[0].substring(3) === 'Canal') {
+          this.title = e.graphic.id[0];
+          this.nowFid = parseInt(e.graphic.id[2], 10);
+          this.nowInfo = e.graphic.attributes;
+          this.geoData = e.graphic.geometry;
+          this.canalName = e.graphic.attributes.Sys_cns;
 
-        console.log(e);
-        // 渠道總長
-        this.totalLength = this.geoData.getLength().toFixed(2);
-        // 起點至點擊位置的距離
-        this.startLength = this.geoData.getValue(new sg.geometry.Point(e.point.x, e.point.y)).toFixed(2);
-        // 終點至點擊位置的距離
-        this.endLength = this.totalLength - this.startLength;
+          // 渠道總長
+          this.totalLength = this.geoData.getLength().toFixed(2);
+          // 起點至點擊位置的距離
+          this.startLength = this.geoData.getValue(new sg.geometry.Point(e.point.x, e.point.y)).toFixed(2);
+          // 終點至點擊位置的距離
+          this.endLength = this.totalLength - this.startLength;
 
-        const start1 = parseInt(this.startLength / 1000);
-        const start2 = (this.startLength % 1000).toFixed(2);
-        const end1 = parseInt(this.endLength / 1000);
-        const end2 = (this.endLength % 1000).toFixed(2);
+          const start1 = parseInt(this.startLength / 1000);
+          const start2 = (this.startLength % 1000).toFixed(2);
+          const end1 = parseInt(this.endLength / 1000);
+          const end2 = (this.endLength % 1000).toFixed(2);
 
-        pMapBase.infoWindow.setContent(`${this.canalName}<br />${start1}K+${start2}<br />(末端起算: ${end1}K+${end2})`);
-        pMapBase.infoWindow.setTitle('');
-        pMapBase.infoWindow.show(new sg.geometry.Point(e.point.x, e.point.y));
-      }
+          pMapBase.infoWindow.setContent(`${this.canalName}<br />${start1}K+${start2}<br />(末端起算: ${end1}K+${end2})`);
+          pMapBase.infoWindow.setTitle('');
+          pMapBase.infoWindow.show(new sg.geometry.Point(e.point.x, e.point.y));
+        }
+      }));
+    });
+  },
+  deactivated () {
+    this.fnList.forEach((item) => {
+      item.remove();
     });
   },
   methods: {

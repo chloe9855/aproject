@@ -178,6 +178,7 @@ export default {
     },
     addCompensate (e) {
       if (e) {
+        console.log(e);
         let tableListLength = this.tableList.body.length;
         this.attachmentText = '';
         Object.keys(e.attachment).forEach((key, i) => {
@@ -227,17 +228,17 @@ export default {
       if (e) {
         const data = {
           applyer: {
-            applyer_id: 'A122222222',
-            applyer_name: '王小明',
-            applyer_birth: '1900-01-01 00:00:00',
-            applyer_address: '我家',
-            applyer_phone: '0912345678',
-            bank: '004107',
-            account: '11122233344455',
-            agent_name: '我是代理人',
-            agent_id: 'C122222222',
-            agent_address: '代理人的家',
-            agent_phone: '0912345678',
+            applyer_id: this.userInfo.id,
+            applyer_name: this.userInfo.name,
+            applyer_birth: this.userInfo.birth,
+            applyer_address: this.userInfo.address,
+            applyer_phone: this.userInfo.phone,
+            bank: this.userInfo.bank,
+            account: this.userInfo.account,
+            agent_name: this.agentInfo.name,
+            agent_id: this.agentInfo.id,
+            agent_address: this.agentInfo.address,
+            agent_phone: this.agentInfo.phone,
             attachment1: 1,
             attachment2: 1,
             attachment3: 0,

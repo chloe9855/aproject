@@ -30,7 +30,10 @@
       class="info_block"
     >
       <div v-if="item.type.length === 1">
-        <img :src="require(`~/assets/img/${item.pic[0]}.svg`)">
+        <div
+          class="only_pic"
+          :style="`background-color: ${item.type[0].bgColor}; border: 1px solid ${item.type[0].border};`"
+        />
       </div>
 
       <div v-if="item.type.length > 1">
@@ -50,7 +53,25 @@
           >
             <div class="twrap">
               <span>{{ typeItem.name }}</span>
-              <!-- <img :src="require(`~/assets/img/water-${typeItem.pic}.svg`)"> -->
+              <div
+                v-if="typeItem.picCanal"
+                class="canal_pic"
+                :style="`background-color: ${typeItem.picCanal};`"
+              />
+              <div
+                v-if="typeItem.picStn"
+                class="stn_pic"
+                :style="`background-color: ${typeItem.picStn};`"
+              />
+              <div
+                v-if="typeItem.picPeriod"
+                class="period_pic"
+                :style="`background-color: ${typeItem.picPeriod};`"
+              />
+              <img
+                v-if="typeItem.picCons"
+                :src="require(`~/assets/img/conspic/${typeItem.picCons}.png`)"
+              >
             </div>
 
             <ViewCheckBox-component
@@ -148,7 +169,33 @@ export default {
           margin-left: 10px;
         }
       }
+
+      .canal_pic {
+        width: 15px;
+        height: 3px;
+        margin-left: 10px;
+      }
+
+      .stn_pic{
+        width: 16px;
+        height: 16px;
+        margin-left: 10px;
+        border: 1px solid #4E4E4E;
+      }
+
+      .period_pic{
+        width: 16px;
+        height: 16px;
+        margin-left: 10px;
+        border: 1px solid #4E4E4E;
+      }
     }
+  }
+
+  .only_pic {
+    width: 16px;
+    height: 16px;
+    margin-left: 10px;
   }
 
 </style>

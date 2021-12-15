@@ -93,19 +93,12 @@
       </div>
     </div>
 
+    <!-- loading載入中視窗 -->
     <div
       v-if="loadModal === true"
       class="modal_wrapper"
     >
-      <div class="modal">
-        <!-- <p
-          class="p3"
-          style="margin-bottom: 10px;"
-        >
-          載入中
-        </p>
-        <div class="bar" /> -->
-      </div>
+      <div class="modal" />
     </div>
   </div>
 </template>
@@ -530,7 +523,7 @@ export default {
     flex-direction: column;
     background: #EFF4F3;
     color: #3E9F88;
-    height: 450px;
+    height: 300px;
     @include noto-sans-tc-16-regular;
   }
 

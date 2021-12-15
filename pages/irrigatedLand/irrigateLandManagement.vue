@@ -338,7 +338,7 @@ export default {
     getPageNum (e) { // 換頁取得DATA
       const _this = this;
       this.$store.commit('TOGGLE_LOADING_STATUS');
-      axios.post(`http://192.168.3.112/AERC/rest/IrrigationLand?pageCnt=${e.page}&pageRows=${e.size}`, { query: _this.searchObj }).then(r => {
+      axios.post(`/AERC/rest/IrrigationLand?pageCnt=${e.page}&pageRows=${e.size}`, { query: _this.searchObj }).then(r => {
         _this.tableList.body = r.data.map(x => {
           return { title: [x.ia_cns, x.mng_cns, x.stn_cns, x.grp_cns, x.grparea, x.tolarea, x.irgarea] };
         });
@@ -362,7 +362,7 @@ export default {
       const countyId = this.countyId;
       const fid = this.countyFID;
       this.$store.commit('TOGGLE_LOADING_STATUS');
-      fetch(`http://192.168.3.112/AERC/rest/Sec5ByFID?CountyID=${countyId}&FID=${fid}`, {
+      fetch(`/AERC/rest/Sec5ByFID?CountyID=${countyId}&FID=${fid}`, {
         method: 'GET',
         headers: new Headers({
           'Content-Type': 'application/json'

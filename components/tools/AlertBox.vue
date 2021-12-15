@@ -14,7 +14,10 @@
         {{ title }}
       </p>
 
-      <div class="input_wrap">
+      <div
+        v-if="addInput === true"
+        class="input_wrap"
+      >
         <InputTool-component
           v-if="addInput === true"
           sizing="w-310"

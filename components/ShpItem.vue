@@ -18,6 +18,7 @@
       <img
         class="street_map"
         :src="require('~/assets/img/street-map.svg')"
+        @click="$emit('locate')"
       >
       <img
         class="delete_icon"

@@ -47,6 +47,7 @@
               <img
                 class="mapicon"
                 :src="require('~/assets/img/map.svg')"
+                @click="$emit('isMap', bodyItem.info, bodyItem.type)"
               >
             </div>
           </td>
@@ -93,7 +94,7 @@ export default {
 
   .tableFixHead {
     overflow: auto;
-    height: 410px;
+    // height: 410px;
 
   }
 

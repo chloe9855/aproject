@@ -45,21 +45,24 @@
       </div>
 
       <div v-show="posOptions.current === 1">
-        <DropdownVertical-component
+        <span class="sptitle">縣市</span>
+        <Dropdown-component
+          sizing="w-88"
           :options="countyList.County"
-          :title="'縣市'"
           :change-text="clearLand1"
           @DropdownVal="(payload) => { nextCountHandler(payload, 'Town'), positionCtrl(payload, 'County'), countyIdList.push(payload.COUNTYID), clearLand1 = false, payload !== '' ? counData.County = payload.COUNTYNAME : counData.County = '' }"
         />
-        <DropdownVertical-component
+        <span class="sptitle">鄉鎮市區</span>
+        <Dropdown-component
+          sizing="w-78"
           :options="countyList.Town"
-          :title="'鄉鎮市區'"
           :change-text="clearLand2"
           @DropdownVal="(payload) => { nextCountHandler(payload, 'Section'), positionCtrl(payload, 'Town'), clearLand2 = false, payload !== '' ? counData.Town = payload.TOWNNAME : counData.Town = '' }"
         />
-        <DropdownVertical-component
+        <span class="sptitle">地段</span>
+        <Dropdown-component
+          sizing="w-88"
           :options="countyList.Section"
-          :title="'地段'"
           :change-text="clearLand3"
           @DropdownVal="(payload) => { getLandnoList(payload), positionCtrl(payload, 'Section'), clearLand3 = false, payload !== '' ? counData.Section = payload.Section : counData.Section = '' }"
         />
@@ -195,6 +198,7 @@ import DropdownVertical from '~/components/tools/DropdownVertical.vue';
 import Buttons from '~/components/tools/Buttons.vue';
 import SwitchTabs from '~/components/tools/SwitchTabs.vue';
 import InputTool from '~/components/tools/InputTool.vue';
+import Dropdown from '~/components/tools/Dropdown.vue';
 
 export default {
   components: {
@@ -202,7 +206,13 @@ export default {
     'DropdownVertical-component': DropdownVertical,
     'Buttons-component': Buttons,
     'SwitchTabs-component': SwitchTabs,
-    'InputTool-component': InputTool
+    'InputTool-component': InputTool,
+    'Dropdown-component': Dropdown
+  },
+  props: {
+    iaList: {
+      type: Array
+    }
   },
   data () {
     return {
@@ -289,7 +299,8 @@ export default {
       landItemList: [],
       // * 地籍定位 : graphic圖形陣列
       allLandGraphic: [],
-      allMetry: []
+      allMetry: [],
+      userId: ''
 
     };
   },
@@ -299,12 +310,11 @@ export default {
     proj4.defs('EPSG:3826', '+proj=tmerc +lat_0=0 +lon_0=121 +k=0.9999 +x_0=250000 +y_0=0 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs');
     proj4.defs('EPSG:3857', '+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +wktext  +no_defs');
 
-    this.getCountyData();
+    this.userId = sessionStorage.getItem('loginUser');
+    this.allDropList.Ia = this.iaList;
 
-    this.allDropList.Ia = [{
-      title: '宜蘭01',
-      value: 1
-    }];
+    this.getCountyData();
+    // this.getIaList();
   },
   methods: {
     // * @ 坐標定位 : 清除全部
@@ -334,6 +344,8 @@ export default {
       const cData = proj4(EPSG3826, EPSG3857, [this.locate.twdX, this.locate.twdY]);
       // 定位
       pMapBase.ZoomMapTo(new sg.geometry.Point(cData[0], cData[1]));
+      ZoomOut();
+      pMapBase.getTransformation().FitLevel();
       pMapBase.RefreshMap(true);
       // 畫點
       this.drawPoint = sg.Graphic.createFromGeometry(new sg.geometry.Point(cData[0], cData[1]), { markerstyle: sg.symbols.SimpleMarkerSymbol.STYLE_CIRCLE, markersize: 30, markercolor: new sg.Color(25, 112, 93, 1), borderwidth: 0 });
@@ -359,6 +371,8 @@ export default {
       const cData = proj4(EPSG4326, EPSG3857, [this.locate.wgsX, this.locate.wgsY]);
       // 定位
       pMapBase.ZoomMapTo(new sg.geometry.Point(cData[0], cData[1]));
+      ZoomOut();
+      pMapBase.getTransformation().FitLevel();
       pMapBase.RefreshMap(true);
       // 畫點
       this.drawPoint = sg.Graphic.createFromGeometry(new sg.geometry.Point(cData[0], cData[1]), { markerstyle: sg.symbols.SimpleMarkerSymbol.STYLE_CIRCLE, markersize: 30, markercolor: new sg.Color(25, 112, 93, 1), borderwidth: 0 });
@@ -382,8 +396,6 @@ export default {
       }).then((response) => {
         return response.json();
       }).then((data) => {
-        console.log(data);
-
         data.forEach((item) => {
           item.value = item.FID;
           item.title = item.COUNTYNAME;
@@ -430,7 +442,7 @@ export default {
         }
         return response.json();
       }).then((jsonData) => {
-        console.log(jsonData);
+        // console.log(jsonData);
 
         jsonData.forEach((item) => {
           item.value = item.FID;
@@ -502,7 +514,7 @@ export default {
       }).then((response) => {
         return response.json();
       }).then((jsonData) => {
-        console.log(jsonData);
+        // console.log(jsonData);
 
         // 先清除之前的
         pMapBase.drawingGraphicsLayer.remove(this.myLandGraphic);
@@ -519,6 +531,8 @@ export default {
         // 定位
         const extent = geometry.extent;
         pMapBase.ZoomMapTo(extent);
+        ZoomOut();
+        pMapBase.getTransformation().FitLevel();
         pMapBase.RefreshMap(true);
       }).catch((err) => {
         console.log(err);
@@ -534,6 +548,38 @@ export default {
         countyId: this.countyIdList[this.countyIdList.length - 1]
       };
       this.landItemList.push(result);
+
+      // 按下加入 就定位畫圖至那個圖形
+      const index = this.landItemList.length - 1;
+      fetch(`/AERC/rest/Sec5ByFID?CountyID=${result.countyId}&FID=${result.fid}`, {
+        method: 'GET',
+        headers: new Headers({
+          'Content-Type': 'application/json'
+        })
+      }).then((response) => {
+        return response.json();
+      }).then((jsonData) => {
+        console.log(jsonData);
+
+        // 先清除之前的
+        pMapBase.drawingGraphicsLayer.remove(this.myLandGraphic);
+        // 畫圖
+        const geometry = sg.geometry.Geometry.fromGeoJson(jsonData[0].geometry);
+        this.allLandGraphic[index] = sg.Graphic.createFromGeometry(geometry, { borderwidth: 1, fillcolor: new sg.Color(220, 105, 105, 0.5) });
+        pMapBase.drawingGraphicsLayer.add(this.allLandGraphic[index]);
+
+        this.allMetry.push(geometry);
+        // 定位至最大範圍
+        const extent = sg.geometry.Extent.unionall(this.allMetry.map(function (geom) { return geom.extent; }));
+        pMapBase.ZoomMapTo(extent);
+        ZoomOut();
+        pMapBase.getTransformation().FitLevel();
+        pMapBase.RefreshMap(true);
+
+        //
+      }).catch((err) => {
+        console.log(err);
+      });
     },
     // * @ 地籍定位 : 點擊清單中某筆 畫圖+定位過去
     drawLandHandler (e, landItem, index) {
@@ -560,21 +606,23 @@ export default {
           console.log(jsonData);
 
           // 先清除之前的
-          this.allMetry = [];
-          this.allLandGraphic.forEach((item) => {
-            pMapBase.drawingGraphicsLayer.remove(item);
-          });
-          pMapBase.drawingGraphicsLayer.remove(this.myLandGraphic);
+          // this.allMetry = [];
+          // this.allLandGraphic.forEach((item) => {
+          //   pMapBase.drawingGraphicsLayer.remove(item);
+          // });
+          // pMapBase.drawingGraphicsLayer.remove(this.myLandGraphic);
 
           // 畫圖
           const geometry = sg.geometry.Geometry.fromGeoJson(jsonData[0].geometry);
-          this.allLandGraphic[index] = sg.Graphic.createFromGeometry(geometry, { borderwidth: 1, fillcolor: new sg.Color(220, 105, 105, 0.5) });
-          pMapBase.drawingGraphicsLayer.add(this.allLandGraphic[index]);
+          // this.allLandGraphic[index] = sg.Graphic.createFromGeometry(geometry, { borderwidth: 1, fillcolor: new sg.Color(220, 105, 105, 0.5) });
+          // pMapBase.drawingGraphicsLayer.add(this.allLandGraphic[index]);
 
-          this.allMetry.push(geometry);
+          // this.allMetry.push(geometry);
           // 定位
           const extent = geometry.extent;
           pMapBase.ZoomMapTo(extent);
+          ZoomOut();
+          pMapBase.getTransformation().FitLevel();
           pMapBase.RefreshMap(true);
         }).catch((err) => {
           console.log(err);
@@ -597,15 +645,17 @@ export default {
 
           pMapBase.drawingGraphicsLayer.remove(this.myLandGraphic);
           // 畫圖
-          const geometry = sg.geometry.Geometry.fromGeoJson(jsonData[0].geometry);
-          this.allLandGraphic[index] = sg.Graphic.createFromGeometry(geometry, { borderwidth: 1, fillcolor: new sg.Color(220, 105, 105, 0.5) });
-          pMapBase.drawingGraphicsLayer.add(this.allLandGraphic[index]);
+          // const geometry = sg.geometry.Geometry.fromGeoJson(jsonData[0].geometry);
+          // this.allLandGraphic[index] = sg.Graphic.createFromGeometry(geometry, { borderwidth: 1, fillcolor: new sg.Color(220, 105, 105, 0.5) });
+          // pMapBase.drawingGraphicsLayer.add(this.allLandGraphic[index]);
 
-          this.allMetry.push(geometry);
+          // this.allMetry.push(geometry);
 
           // 定位至最大範圍
           const extent = sg.geometry.Extent.unionall(this.allMetry.map(function (geom) { return geom.extent; }));
           pMapBase.ZoomMapTo(extent);
+          ZoomOut();
+          pMapBase.getTransformation().FitLevel();
           pMapBase.RefreshMap(true);
 
           console.log(extent);
@@ -654,22 +704,46 @@ export default {
       this.allDropList.Stn = [];
       pMapBase.drawingGraphicsLayer.remove(this.geoGraphic);
     },
+    // * @ 灌溉定位 : 取得管理處資料
+    getIaList () {
+      fetch(`/AERC/rest/Ia/${this.userId}`, {
+        method: 'POST',
+        headers: new Headers({
+          'Content-Type': 'application/json'
+        }),
+        body: JSON.stringify({
+
+        })
+      }).then((response) => {
+        return response.json();
+      }).then((data) => {
+        console.log(data);
+
+        data.forEach((item) => {
+          item.value = item.FID;
+          item.title = item.Ia_cns;
+        });
+        this.allDropList.Ia = data;
+      }).catch((err) => {
+        console.log(err);
+      });
+    },
     // * @ 灌溉定位 : 點擊選單 抓出下一排選項的所有清單
     nextListHandler (payload, nextType) {
       if (payload === '') { return; }
 
-      console.log(payload);
-      console.log(nextType);
+      // console.log(payload);
+      // console.log(nextType);
 
       let myObj = {};
       if (nextType === 'Mng') {
-        myObj = { Ia: '01' };
+        myObj = { Ia: payload.Ia };
       }
       if (nextType === 'Stn') {
-        myObj = { Ia: '01', Mng: payload.Mng };
+        myObj = { Ia: payload.Ia, Mng: payload.Mng };
       }
       if (nextType === 'Grp') {
-        myObj = { Ia: '01', Mng: payload.Mng, Stn: payload.Stn };
+        myObj = { Ia: payload.Ia, Mng: payload.Mng, Stn: payload.Stn };
       }
 
       fetch(`/AERC/rest/${nextType}`, {
@@ -682,7 +756,7 @@ export default {
         if (response.status === 403) {
           this.allDropList[nextType] = [{ title: '不拘', value: 'none' }];
           if (nextType === 'Mng') {
-            this.allDropList[nextType] = [{ title: '不拘', value: 'none', Mng: 0 }];
+            this.allDropList[nextType] = [{ title: '不拘', value: 'none', Mng: 0, Ia: payload.Ia }];
           }
           if (nextType === 'Stn') {
             this.allDropList[nextType] = [{ title: '不拘', value: 'none', Stn: 0 }];
@@ -691,7 +765,7 @@ export default {
         }
         return response.json();
       }).then((jsonData) => {
-        console.log(jsonData);
+        // console.log(jsonData);
 
         jsonData.forEach((item) => {
           item.value = item.FID;
@@ -710,20 +784,28 @@ export default {
       if (payload === '') { return; }
 
       let myObj = {};
+
       if (myType === 'Ia') {
-        myObj = { Ia: '01', FID: 1 };
+        myObj = { Ia: payload.Ia, FID: payload.FID };
       }
       if (myType === 'Mng') {
-        myObj = { Ia: '01', FID: payload.FID };
+        myObj = { Ia: payload.Ia, FID: payload.FID };
       }
       if (myType === 'Stn') {
-        myObj = { Ia: '01', Mng: payload.Mng, FID: payload.FID };
+        myObj = { Ia: payload.Ia, Mng: payload.Mng, FID: payload.FID };
       }
       if (myType === 'Grp') {
-        myObj = { Ia: '01', Mng: payload.Mng, Stn: payload.Stn, FID: payload.FID };
+        myObj = { Ia: payload.Ia, Mng: payload.Mng, Stn: payload.Stn, FID: payload.FID };
       }
 
-      fetch(`/AERC/rest/${myType}`, {
+      let url = '';
+      if (myType === 'Ia') {
+        url = `/AERC/rest/${myType}/${this.userId}`;
+      } else {
+        url = `/AERC/rest/${myType}`;
+      }
+
+      fetch(url, {
         method: 'POST',
         headers: new Headers({
           'Content-Type': 'application/json'
@@ -742,6 +824,8 @@ export default {
         // 定位
         const extent = geometry.extent;
         pMapBase.ZoomMapTo(extent);
+        ZoomOut();
+        pMapBase.getTransformation().FitLevel();
         pMapBase.RefreshMap(true);
       }).catch((err) => {
         console.log(err);
@@ -753,8 +837,13 @@ export default {
 
 <style lang="scss" scoped>
 
+  .sptitle {
+    font-weight: bold;
+  }
+
   .land_wrap{
-    max-height: 90px;
+    // max-height: 90px;
+    max-height: 156px;
     overflow-y: scroll;
   }
 
@@ -805,7 +894,8 @@ export default {
     justify-content: center;
     align-items: center;
     color: #3E9F88;
-    padding: 4px 0;
+    // padding: 4px 0;
+    padding: 22px 0;
     @include noto-sans-tc-16-regular;
   }
 

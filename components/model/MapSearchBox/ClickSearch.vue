@@ -38,50 +38,60 @@ export default {
       nowLayer: '',
       nowId: '',
       nowInfo: '',
-      myWord: ''
+      myWord: '',
+      fnList: []
     };
   },
   name: 'ClickSearch',
-  mounted () {
-    sg.events.on(MBT, 'click', (e) => {
-      console.log(e.graphic.id);
-      console.log(e.graphic.attributes);
+  activated () {
+    allMBT.forEach((item) => {
+      this.fnList.push(sg.events.on(item, 'click', (e) => {
+        // console.log(e.graphic.id);
+        // console.log(e.graphic.attributes);
 
-      this.nowId = e.graphic.id[0];
-      this.nowInfo = e.graphic.attributes;
+        this.nowId = e.graphic.id[0].substring(3);
+        this.nowInfo = e.graphic.attributes;
 
-      if (e.graphic.id.length >= 1) {
-        if (this.nowId === '01_Cons') {
-          this.myWord = '水工構造物';
+        if (e.graphic.id.length >= 1) {
+          if (this.nowId === 'Cons') {
+            this.myWord = '水工構造物';
+          }
+          if (this.nowId === 'Canal') {
+            this.myWord = '渠道';
+          }
+          if (this.nowId === 'Ia') {
+            this.myWord = '管理處';
+          }
+          if (this.nowId === 'Stn') {
+            this.myWord = '工作站';
+          }
+          if (this.nowId === 'Grp') {
+            this.myWord = '小組';
+          }
+          if (this.nowId === 'Period') {
+            this.myWord = '期作別';
+          }
+          if (this.nowId === 'Rot') {
+            this.myWord = '輪區';
+          }
+          if (this.nowId === 'Pool') {
+            this.myWord = '埤塘';
+          }
+          if (this.nowId === 'Mng') {
+            this.myWord = '管理分處';
+          }
+          this.$emit('clickSearch', this.nowId, this.nowInfo, this.myWord);
         }
-        if (this.nowId === '01_Canal') {
-          this.myWord = '渠道';
-        }
-        if (this.nowId === '01_Ia') {
-          this.myWord = '管理處';
-        }
-        if (this.nowId === '01_Stn') {
-          this.myWord = '工作站';
-        }
-        if (this.nowId === '01_Grp') {
-          this.myWord = '小組';
-        }
-        if (this.nowId === '01_Period') {
-          this.myWord = '期作別';
-        }
-        this.$emit('clickSearch', this.nowId, this.nowInfo, this.myWord);
-      }
+      }));
+    });
+  },
+  deactivated () {
+    this.fnList.forEach((item) => {
+      item.remove();
     });
   },
   methods: {
-    selectLayer (payload) {
-      console.log(payload);
-      // this.nowLayer = payload.LayerName;
 
-      // if (this.nowId === payload.LayerName) {
-      //   this.$emit('clickSearch', this.nowId, this.nowInfo);
-      // }
-    }
   }
 };
 </script>
