@@ -13,6 +13,8 @@
     </div>
     <date-picker
       v-model="time"
+      :default-value="dateTime"
+      :placeholder="time"
       class="datepickerTool w-100"
       :value-type="valueType"
       :type="type"
@@ -35,6 +37,10 @@ export default {
     valueType: {
       type: String,
       default: 'format'
+    },
+    dateTime: {
+      type: String,
+      default: ''
     },
     type: {
       type: String,
@@ -73,6 +79,11 @@ export default {
     time (n, o) {
       const data = { val: n, id: this.inputId };
       this.$emit('DateValue', data);
+    },
+    dateTime (n) {
+      if (n) {
+        this.time = n;
+      }
     }
   }
 };

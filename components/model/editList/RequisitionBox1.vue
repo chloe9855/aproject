@@ -81,6 +81,12 @@ export default {
       type: Object,
       default: () => {
         return {
+          name: '',
+          id: '',
+          address: '',
+          phone: '',
+          account,
+          bank
         };
       }
     }

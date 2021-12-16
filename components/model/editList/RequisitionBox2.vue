@@ -45,6 +45,17 @@ export default {
       default: () => {
         return { data: [{ title: '姓名', name: '', isRequire: true }, { title: '身份證字號', name: '', isRequire: true }, { title: '出生日期', name: '', isRequire: true }, { title: '地址', name: '', isRequire: true }, { title: '連絡電話', name: '', isRequire: true }, { title: '匯款資訊', name: '', isRequire: true, isSecondInput: true }] };
       }
+    },
+    dataList: {
+      type: Object,
+      default: () => {
+        return {
+          agent_name: '',
+          agent_id: '',
+          agent_address: '',
+          agent_phone: ''
+        };
+      }
     }
   },
   data: () => {

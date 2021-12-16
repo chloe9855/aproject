@@ -18,8 +18,8 @@
         :is-border="true"
         :is-bg="true"
         :is-sticky="true"
-        @PHBtnStatus="cancelEdit"
-        @PHSecBtnStatus="sendCompensateData"
+        @PHBtnStatus="cancelEvent"
+        @PHSecBtnStatus="confirmEvent"
       />
       <SubTitleTool
         title="新增土地資料"
@@ -82,6 +82,23 @@
         @agentInfo="getagentInfo"
       />
     </div>
+    <AlertBox
+      v-show="alertStatus"
+      :title="compensateEventTitle"
+      :box-icon="compensateEventIIcon"
+      :text="compensateEventText"
+      :cancel-button="isCancelButton"
+      @confirm="sendEvent"
+      @close="continueEdit"
+    />
+    <AlertBox
+      v-show="alertErrorStatus"
+      :title="errorEventTitle"
+      box-icon="warning"
+      :text="errorEventText"
+      @confirm="continueEdit"
+      @close="continueEdit"
+    />
   </div>
 </template>
 
@@ -93,6 +110,7 @@ import PageHeader from '~/components/tools/PageHeader.vue';
 import BreadCrumbTool from '~/components/tools/BreadCrumbTool.vue';
 import SubTitleTool from '~/components/tools/SubTitleTool.vue';
 import AddLand from '~/components/model/editList/AddLand.vue';
+import AlertBox from '~/components/tools/AlertBox.vue';
 import { getBankList } from '~/api/bank';
 import { addApplyEvent, editApplyEvent } from '~/api/apply';
 import { mapState } from 'vuex';
@@ -105,7 +123,8 @@ export default {
     SubTitleTool,
     RequisitionBox1,
     RequisitionBox2,
-    AddLand
+    AddLand,
+    AlertBox
   },
   data () {
     return {
@@ -181,7 +200,14 @@ export default {
         id: '',
         address: '',
         phone: ''
-      }
+      },
+      alertStatus: false,
+      alertErrorStatus: false,
+      errorEventTitle: '',
+      errorEventText: '',
+      compensateEventTitle: '',
+      compensateEventText: '',
+      isSend: true
     };
   },
   name: 'EditCompensate',
@@ -270,7 +296,6 @@ export default {
     },
     addCompensate (e) {
       if (e) {
-        console.log(e);
         let tableListLength = this.tableList.body.length;
         this.attachmentList = e.attachment;
         this.attachmentText = '';
@@ -281,7 +306,8 @@ export default {
         });
         e.compensateData.forEach(r => {
           const num = tableListLength += 1;
-          this.tableList.body.push({ val: `editCompensate${num}`, title: [`${r.county_name}`, `${r.town_name}`, `${r.section_name}`, `${r.tolarea}`, `${r.stnCns}`, `${r.irgarea}`, `${r.owner_name}`, `${r.owner_percent}`, `${r.own_scro_text}`, `${r.farmer_title}`, `${r.landdetail[0].category}`, `${r.landdetail[0].ApplyArea}`, `${r.note}`, this.attachmentText] });
+          console.log(r);
+          this.tableList.body.push({ val: `editCompensate${num}`, title: [`${r.county_name}`, `${r.town_name}`, `${r.section_name}`, `${r.tolarea}`, `${r.stnCns}`, `${r.irgarea}`, `${r.owner_name}`, `${r.owner_percent}`, `${r.own_scro_text}`, `${r.farmer_title}`, `${r.landdetail.category}`, `${r.landdetail.ApplyArea}`, `${r.note}`, this.attachmentText] });
           this.sendData.push({
             county_id: r.county_id,
             county_code: r.county_code,
@@ -370,7 +396,7 @@ export default {
           applyer: {
             applyer_id: this.userInfo.id,
             applyer_name: this.userInfo.name,
-            applyer_birth: '1900-01-01 00:00:00',
+            applyer_birth: this.userInfo.birth,
             applyer_address: this.userInfo.address,
             applyer_phone: this.userInfo.phone,
             bank: this.userInfo.bank,
@@ -427,22 +453,87 @@ export default {
         if (this.compensateData.event === 'isEdit') {
           editApplyEvent(data).then(r => {
             console.log(r);
-            alert('發送成功');
+            // alert('發送成功');
             this.$store.commit('SET_COMPENSATE_DATA', {});
-            this.$router.push('/irrigatedLand/compensate/');
+            // this.$router.push('/irrigatedLand/compensate/');
+            this.isSend = false;
+            this.compensateEventIIcon = 'success';
+            this.toggleAlertBox({ title: '完成編輯', text: '回到列表' });
           }).catch(e => {
+            if (e.response.status === 400) {
+              this.alertErrorStatus = true;
+              this.errorEventTitle = '發送失敗';
+              this.errorEventText = e.response.data;
+            }
             console.log(e);
           });
         } else {
           addApplyEvent(data).then(r => {
             console.log(r);
-            alert('發送成功');
-            this.$router.push('/irrigatedLand/compensate/');
+            this.isSend = false;
+            this.compensateEventIIcon = 'success';
+            this.toggleAlertBox({ title: '完成新增', text: '回到列表' });
           }).catch(e => {
+            if (e.response.status === 400) {
+              this.alertErrorStatus = true;
+              this.errorEventTitle = '發送失敗';
+              this.errorEventText = e.response.data;
+            }
             console.log(e);
           });
         }
       }
+    },
+    confirmEvent (e) {
+      if (e) {
+        if (this.editType === 'edit') {
+          this.toggleAlertBox({ title: '確認修改', text: '確認修改該筆資料', isCancel: true });
+        } else {
+          this.toggleAlertBox({ title: '確認新增', text: '確認新增該筆資料', isCancel: true });
+        }
+      }
+    },
+    cancelEvent (e) {
+      if (e) {
+        this.toggleAlertBox({ title: '取消編輯', text: '該筆編輯將不會儲存', isCancel: true });
+      }
+    },
+    sendEvent (e) {
+      console.log(e);
+      if (e) {
+        if (this.isSend) {
+          if (this.userConfirm) {
+            this.sendCompensateData(e);
+          } else {
+            this.alertErrorStatus = true;
+            this.errorEventTitle = '資料錯誤';
+            this.errorEventText = '請勾選確定為本人申請';
+          }
+        } else {
+          this.closeAlert(e);
+        }
+      }
+    },
+    closeAlert (e) {
+      if (e) {
+        this.$router.push('/irrigatedLand/compensate/');
+      }
+    },
+    continueEdit (e) {
+      this.alertStatus = !this.alertStatus;
+      this.compensateEventTitle = '';
+      this.compensateEventText = '';
+      this.isCancelButton = !e.isCancel;
+
+      this.alertErrorStatus = !this.alertErrorStatus;
+      this.errorEventTitle = '';
+      this.errorEventText = '';
+    },
+    toggleAlertBox (e) {
+      this.alertStatus = true;
+      this.compensateEventTitle = e.title;
+      this.compensateEventText = e.text;
+      this.isCancelButton = e.isCancel;
     }
   },
   computed: {

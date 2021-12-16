@@ -119,6 +119,7 @@ export default {
     onsearch (e) {
       if (e) {
         this.tableList.body = [];
+        const arr = [];
         getApplyEvent(e.obj).then(r => {
           r.data.forEach(item => {
             console.log(item);
@@ -134,9 +135,10 @@ export default {
               // result.val = item.applyer_id;
               result.main = item;
               result.title = [item.county_name, item.town_name, item.section_name, d.data[0].tolarea, item.stn_name, d.data[0].irgarea, item.owner_name, item.percent1 + '/' + item.percent2, item.own_scro, item.farmername, item.category, item.area, item.note, attachmentContent];
-              this.tableList.body.push(result);
+              arr.push(result);
             });
           });
+          this.tableList.body = arr;
         }).catch(err => {
           console.log(err);
         });
