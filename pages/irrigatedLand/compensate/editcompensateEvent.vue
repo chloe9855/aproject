@@ -34,6 +34,12 @@
       @tableEvent="eventClear"
     />
     <SubTitleTool
+      title="停灌補償開放申請區域"
+      class="w-90"
+      :class="boxWidth"
+    />
+    <SelectAreaTool @onsearch="getAreaData" />
+    <SubTitleTool
       title="行政院農業委員會農田水利署停灌補償金申請書(二聯單)附款"
       class="w-90"
       :class="boxWidth"
@@ -97,6 +103,8 @@ import BreadCrumbTool from '~/components/tools/BreadCrumbTool.vue';
 import SubTitleTool from '~/components/tools/SubTitleTool.vue';
 import Textarea from '~/components/tools/Textarea.vue';
 import AlertBox from '~/components/tools/AlertBox.vue';
+import SelectAreaTool from '~/components/model/editList/selectAreaTool.vue';
+
 import { getEditApplySetting, editApplySetting, addApplySetting } from '~/api/apply';
 
 export default {
@@ -106,7 +114,8 @@ export default {
     BreadCrumbTool,
     SubTitleTool,
     Textarea,
-    AlertBox
+    AlertBox,
+    SelectAreaTool
   },
   data () {
     return {
@@ -114,11 +123,21 @@ export default {
         head: [
           { title: '事件名稱' },
           { title: '開放申請起始日' },
-          { title: '開放申請截止日' },
-          { title: '開放申請區域' }
+          { title: '開放申請截止日' }
         ],
         body: [
-          { title: [{ type: 'input' }, { type: 'date' }, { type: 'date' }, { type: 'dropdownTreeList' }] }
+          { title: [{ type: 'input' }, { type: 'date' }, { type: 'date' }] }
+        ]
+      },
+      tableAreaList: {
+        head: [
+          { title: '管理處' },
+          { title: '管理分處' },
+          { title: '工作站' },
+          { title: '水利小組' }
+        ],
+        body: [
+          { title: [{ type: 'dropDown' }, { type: 'dropDown' }, { type: 'dropDown' }, { type: 'input' }] }
         ]
       },
       textAreaText: '',
@@ -253,6 +272,9 @@ export default {
           console.log(e);
         });
       }
+    },
+    getAreaData (e) {
+      console.log(e);
     },
     getEvent (e) {
       this.eventName = e[0].val;

@@ -101,6 +101,7 @@ export default {
   },
   watch: {
     dataArr: function (n) {
+      console.log(this.options);
       this.$emit('DropdownVal', n);
     },
     changeText: function (n) {
