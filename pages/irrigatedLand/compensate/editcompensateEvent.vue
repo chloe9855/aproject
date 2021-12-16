@@ -39,6 +39,14 @@
       :class="boxWidth"
     />
     <SelectAreaTool @onsearch="getAreaData" />
+    <TableTool
+      :table-column="tableAreaList"
+      :is-paginate="false"
+      :is-del="true"
+      :class="boxWidth"
+      class="editcompensateEventBind"
+      @tableEvent="areaDel"
+    />
     <SubTitleTool
       title="行政院農業委員會農田水利署停灌補償金申請書(二聯單)附款"
       class="w-90"
@@ -136,9 +144,7 @@ export default {
           { title: '工作站' },
           { title: '水利小組' }
         ],
-        body: [
-          { title: [{ type: 'dropDown' }, { type: 'dropDown' }, { type: 'dropDown' }, { type: 'input' }] }
-        ]
+        body: []
       },
       textAreaText: '',
       editType: 'add',
@@ -167,7 +173,8 @@ export default {
       isSend: true,
       categoryBtnText: '存檔',
       categoryBtnName: 'button-primary',
-      compensateEventIIcon: 'warning'
+      compensateEventIIcon: 'warning',
+      areaOpen: []
     };
   },
   name: 'EditCompensateEvent',
@@ -185,13 +192,42 @@ export default {
         this.editData = r.data[0];
         this.editType = 'edit';
         this.textAreaText = r.data[0].note;
-        this.tableList1.body[0].title = [{ type: 'input', title: r.data[0].name }, { type: 'date', val: r.data[0].start }, { type: 'date', val: r.data[0].end }, { type: 'dropdownTreeList', option: r.data[0].open }];
+        this.tableList1.body[0].title = [{ type: 'input', title: r.data[0].name }, { type: 'date', val: r.data[0].start }, { type: 'date', val: r.data[0].end }];
+        console.log(r);
         if (r.data[0].category.length > 0) {
           this.tableList2.body = [];
           r.data[0].category.forEach((t, i) => {
             this.tableList2.body.push({ val: i, title: [{ type: 'input', title: t.type }, { type: 'input', title: t.money }] });
             this.categoryArr[i] = { type: t.type, money: t.money };
           });
+        }
+        if (r.data[0].open.length > 0) {
+          this.tableAreaList.body = [];
+          this.areaOpen = [];
+          const _this = this;
+          r.data[0].open.forEach((t, i) => {
+            let result = {};
+            let result1 = {};
+            console.log(t);
+            // this.tableList2.body.push({ val: i, title: [{ type: 'input', title: t.type }, { type: 'input', title: t.money }] });
+            // this.categoryArr[i] = { type: t.type, money: t.money };
+            result1 = { title: [t.Ia_cns, t.Mng_cns, t.Stn_cns, t.Grp_cns] };
+            result = {
+              Ia: t.Ia,
+              Ia_cns: t.Ia_cns,
+              Mng: t.Mng,
+              Mng_cns: t.Mng_cns,
+              Stn: t.Stn,
+              Stn_cns: t.Stn_cns,
+              Grp: t.Grp,
+              Grp_cns: t.Grp_cns
+            };
+            _this.tableAreaList.body.push(result1);
+            _this.areaOpen.push(result);
+          });
+
+          // result1 = { title: [e.obj.Ia_cns, e.obj.Mng_cns, e.obj.Stn_cns, item.title] };
+          // this.tableAreaList.body.push(result1);
         }
       });
     },
@@ -229,18 +265,7 @@ export default {
         name: this.eventName,
         start: this.changeDate(this.start),
         end: this.changeDate(this.end),
-        open: [
-          {
-            Ia: '01',
-            Ia_cns: '宜蘭',
-            Mng: '0',
-            Mng_cns: '無',
-            Stn: '01',
-            Stn_cns: '頭城站',
-            Grp: '01',
-            Grp_cns: '五股小組'
-          }
-        ],
+        open: this.areaOpen,
         note: this.note,
         Category: this.categoryArr
       };
@@ -274,7 +299,35 @@ export default {
       }
     },
     getAreaData (e) {
-      console.log(e);
+      if (e.obj.Grp.length > 0) {
+        this.tableAreaList.body = [];
+        this.areaOpen = [];
+        e.obj.Grp.forEach(item => {
+          let result = {};
+          let result1 = {};
+          result = {
+            Ia: e.obj.Ia,
+            Ia_cns: e.obj.Ia_cns,
+            Mng: e.obj.Mng,
+            Mng_cns: e.obj.Mng_cns,
+            Stn: e.obj.Stn,
+            Stn_cns: e.obj.Stn_cns,
+            Grp: item.value,
+            Grp_cns: item.title
+          };
+          result1 = { title: [e.obj.Ia_cns, e.obj.Mng_cns, e.obj.Stn_cns, item.title] };
+          this.tableAreaList.body.push(result1);
+          this.areaOpen.push(result);
+          console.log(this.tableAreaList.body);
+          console.log(this.areaOpen);
+        });
+      }
+
+      // e.Grp.forEach(item => {
+      //   let result = {};
+      //   result = { title: [e.Ia_cns, e.Mng_cns, e.Stn_cns, item.title] };
+      //   this.tableAreaList.body.push(result);
+      // });
     },
     getEvent (e) {
       this.eventName = e[0].val;
@@ -289,6 +342,9 @@ export default {
     },
     eventClear (e) {
       // console.log(e);
+    },
+    areaDel (e) {
+      console.log(e);
     },
     getTextContent (e) {
       this.note = e;

@@ -1,28 +1,32 @@
 <template>
-  <div class="selectArea flexBox">
+  <div class="selectArea flexBox w-90">
     <DropdownVertical
       title="管理處"
       :options="member.Ia"
       :change-text="isClearFirst"
+      class="dropDownTool"
       @DropdownVal="iaDrop"
     />
     <DropdownVertical
       title="管理分處"
       :options="member.Mng"
       :change-text="isClearFirst"
+      class="dropDownTool"
       @DropdownVal="mngDrop"
     />
     <DropdownVertical
       title="工作站"
       :options="member.Stn"
       :change-text="isClearFirst"
+      class="dropDownTool"
       @DropdownVal="stnDrop"
     />
     <DropdownCheckList
       title="水利小組"
       :options="member.Grp"
       :change-text="isClearFirst"
-      @DropdownVal="grpDrop"
+      class="dropDownTool"
+      @DropdownObj="grpDrop"
     />
   </div>
 </template>
@@ -132,5 +136,12 @@ export default {
 </script>
 
 <style lang="scss">
-
+.selectArea{
+  justify-content: center;
+  margin: 0 auto;
+  border: 1px solid #c4ded8;
+  div{
+    margin: 0 0.25em !important;
+  }
+}
 </style>

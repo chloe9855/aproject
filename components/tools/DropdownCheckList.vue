@@ -101,7 +101,8 @@ export default {
   },
   watch: {
     dataArr: function (n) {
-      console.log(this.options);
+      const a = this.options.filter(item => n.indexOf(item.value) > -1);
+      this.$emit('DropdownObj', a);
       this.$emit('DropdownVal', n);
     },
     changeText: function (n) {
