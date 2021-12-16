@@ -531,6 +531,7 @@ export default {
       return result;
     },
     clearLandLocation () {
+      const _this = this;
       this.isClearCounty = true;
       this.isClearTown = true;
       this.isClearSection = true;
@@ -540,7 +541,12 @@ export default {
       this.isCategoryCheck = true;
       this.areaText = '';
       this.ownerList.body = [];
+      this.minNo = '';
+      this.maxNo = '';
       // this.dataArr = [];
+      setTimeout(function () {
+        _this.dataArr = [];
+      }, 5000);
     },
     toggleClear () {
       this.isClearFarmer = false;

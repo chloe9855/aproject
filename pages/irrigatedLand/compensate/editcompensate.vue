@@ -12,7 +12,7 @@
         title="編輯停灌補償申請單"
         btn-text="取消"
         btn-name="button-default"
-        btn-sec-text="新增"
+        :btn-sec-text="eventTitle"
         btn-sec-name="button-primary"
         :btn-sec-add="false"
         :is-border="true"
@@ -22,7 +22,7 @@
         @PHSecBtnStatus="confirmEvent"
       />
       <SubTitleTool
-        title="新增土地資料"
+        :title="eventTitle+'土地資料'"
         class="w-90"
       />
       <component
@@ -207,7 +207,9 @@ export default {
       errorEventText: '',
       compensateEventTitle: '',
       compensateEventText: '',
-      isSend: true
+      isSend: true,
+      event_sno: '',
+      eventTitle: '新增'
     };
   },
   name: 'EditCompensate',
@@ -216,68 +218,73 @@ export default {
       this.bankList = r.data.map(item => item.Bank_sno + ' ' + item.Name);
     });
     if (this.compensateData.event === 'isEdit') {
-      const r = this.compensateData.item;
+      const a = this.compensateData.item.data;
       let tableListLength = this.tableList.body.length;
       const num = tableListLength += 1;
-      const attachmentContent = this.switchAttachment(1, r.attachment1) + this.switchAttachment(2, r.attachment2) + this.switchAttachment(3, r.attachment3) + this.switchAttachment(4, r.attachment4) + this.switchAttachment(5, r.attachment5);
-      this.tableList.body.push({ val: `editCompensate${num}`, title: [`${r.county_name}`, `${r.town_name}`, `${r.section_name}`, `${r.tolarea}`, `${r.stn_name}`, `${r.tolarea}`, `${r.owner_name}`, `${r.percent1 / r.percent2}`, `${r.owner_scro}`, `${r.farmername}`, `${r.category}`, `${r.area}`, `${r.note}`, attachmentContent] });
-      console.log(r);
-      this.sendData.push({
-        county_id: r.county_id,
-        county_code: r.county_code,
-        town_id: r.town_id,
-        town_code: r.town_code,
-        section: r.section,
-        landno: r.landno,
-        owner_id: r.owner_id,
-        owner_name: r.owner_name,
-        own_scro: 'A',
-        percent2: r.percent2,
-        percent1: r.percent1,
-        farmer: r.farmer,
-        landdetail: [{ category: r.category, ApplyArea: r.area }],
-        note: r.note
-      });
-      console.log(r.attachment1);
-      this.attachmentList = {
-        attachment1: r.attachment1 ? 1 : 0,
-        attachment2: r.attachment1 ? 1 : 0,
-        attachment3: r.attachment1 ? 1 : 0,
-        attachment4: r.attachment1 ? 1 : 0,
-        attachment5: r.attachment1 ? 1 : 0
-      };
-      console.log(this.attachmentList);
-      this.userInfo = {
-        name: r.applyer_name,
-        id: r.applyer_id,
-        birth: r.applyer_birth,
-        address: r.applyer_address,
-        phone: r.applyer_phone,
-        account: r.applyer_account,
-        bank: r.bank
-      };
-      this.agentInfo = {
-        name: r.agent_name,
-        id: r.agent_id,
-        address: r.agent_address,
-        phone: r.agent_phone
-      };
+      this.eventTitle = '編輯';
+      console.log(a);
+      a.forEach(r => {
+        console.log(r);
+        this.event_sno = r.event_sno;
+        const attachmentContent = this.switchAttachment(1, r.attachment1) + this.switchAttachment(2, r.attachment2) + this.switchAttachment(3, r.attachment3) + this.switchAttachment(4, r.attachment4) + this.switchAttachment(5, r.attachment5);
+        this.tableList.body.push({ val: `editCompensate${num}`, title: [`${r.county_name}`, `${r.town_name}`, `${r.section_name}`, `${r.tolarea}`, `${r.stn_name}`, `${r.tolarea}`, `${r.owner_name}`, `${r.percent1 / r.percent2}`, `${r.own_scro}`, `${r.farmername}`, `${r.category}`, `${r.area}`, `${r.note}`, attachmentContent] });
+        this.sendData.push({
+          County_id: r.county_id,
+          County_code: r.county_code,
+          Town_id: r.town_id,
+          Town_code: r.town_code,
+          Section: r.section,
+          landno: r.landno,
+          owner_id: r.owner_id,
+          owner_name: r.owner_name,
+          Own_scro: r.owner_scro,
+          Percent2: r.percent2,
+          Percent1: r.percent1,
+          Farmer: r.farmer,
+          landdetail: [{ category: r.category, ApplyArea: r.area }],
+          Note: r.note
+        });
+        console.log(r.attachment1);
+        this.attachmentList = {
+          attachment1: r.attachment1 ? 1 : 0,
+          attachment2: r.attachment1 ? 1 : 0,
+          attachment3: r.attachment1 ? 1 : 0,
+          attachment4: r.attachment1 ? 1 : 0,
+          attachment5: r.attachment1 ? 1 : 0
+        };
+        console.log(this.attachmentList);
+        this.userInfo = {
+          name: r.applyer_name,
+          id: r.applyer_id,
+          birth: r.applyer_birth,
+          address: r.applyer_address,
+          phone: r.applyer_phone,
+          account: r.applyer_account,
+          bank: r.bank
+        };
+        this.agentInfo = {
+          name: r.agent_name,
+          id: r.agent_id,
+          address: r.agent_address,
+          phone: r.agent_phone
+        };
 
-      this.userInfo1 = {
-        name: r.applyer_name,
-        id: r.applyer_id,
-        birth: r.applyer_birth,
-        address: r.applyer_address,
-        phone: r.applyer_phone,
-        account: r.applyer_account,
-        bank: r.applyer_bank
-      };
-      this.agentInfo1 = {
-        name: r.agent_name,
-        id: r.agent_id,
-        address: r.agent_address,
-        phone: r.agent_phone
-      };
+        this.userInfo1 = {
+          name: r.applyer_name,
+          id: r.applyer_id,
+          birth: r.applyer_birth,
+          address: r.applyer_address,
+          phone: r.applyer_phone,
+          account: r.account,
+          bank: r.bank
+        };
+        this.agentInfo1 = {
+          name: r.agent_name,
+          id: r.agent_id,
+          address: r.agent_address,
+          phone: r.agent_phone
+        };
+      });
     } else {
       console.log('test111');
     }
@@ -295,6 +302,7 @@ export default {
       }
     },
     addCompensate (e) {
+      console.log(e);
       if (e) {
         let tableListLength = this.tableList.body.length;
         this.attachmentList = e.attachment;
@@ -317,7 +325,7 @@ export default {
             landno: r.landno,
             owner_id: r.owner_id,
             owner_name: r.owner_name,
-            own_scro: 'A',
+            own_scro: r.owner_scro,
             percent2: (r.owner_percent.split('/'))[1],
             percent1: (r.owner_percent.split('/'))[0],
             farmer: r.farmer,
@@ -451,6 +459,9 @@ export default {
         };
         console.log(data);
         if (this.compensateData.event === 'isEdit') {
+          console.log(this.event_sno);
+          data.event_sno = this.event_sno;
+          data.dataDelete = [this.event_sno];
           editApplyEvent(data).then(r => {
             console.log(r);
             // alert('發送成功');
@@ -460,11 +471,9 @@ export default {
             this.compensateEventIIcon = 'success';
             this.toggleAlertBox({ title: '完成編輯', text: '回到列表' });
           }).catch(e => {
-            if (e.response.status === 400) {
-              this.alertErrorStatus = true;
-              this.errorEventTitle = '發送失敗';
-              this.errorEventText = e.response.data;
-            }
+            this.alertErrorStatus = true;
+            this.errorEventTitle = '發送失敗';
+            this.errorEventText = '請確認資料是否正確';
             console.log(e);
           });
         } else {
@@ -477,7 +486,7 @@ export default {
             if (e.response.status === 400) {
               this.alertErrorStatus = true;
               this.errorEventTitle = '發送失敗';
-              this.errorEventText = e.response.data;
+              this.errorEventText = '請確認資料是否正確';
             }
             console.log(e);
           });
@@ -486,7 +495,7 @@ export default {
     },
     confirmEvent (e) {
       if (e) {
-        if (this.editType === 'edit') {
+        if (this.compensateData.event === 'isEdit') {
           this.toggleAlertBox({ title: '確認修改', text: '確認修改該筆資料', isCancel: true });
         } else {
           this.toggleAlertBox({ title: '確認新增', text: '確認新增該筆資料', isCancel: true });

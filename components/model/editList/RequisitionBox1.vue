@@ -18,6 +18,7 @@
       <DatePickerHorizontal
         class="flex-3"
         title="出生日期"
+        :date-time="dataList.birth"
         @DateValue="getBirthDay"
       />
       <InputHorizontal
@@ -43,7 +44,7 @@
       />
       <InputTool
         :search-input="bankList"
-        :change-text="dataList.bank"
+        :alter-coor="dataList.bank"
         class="flex-1 bankInput"
         filter-pos="right"
         :filter-w="500"
@@ -85,8 +86,8 @@ export default {
           id: '',
           address: '',
           phone: '',
-          account,
-          bank
+          account: '',
+          bank: ''
         };
       }
     }
