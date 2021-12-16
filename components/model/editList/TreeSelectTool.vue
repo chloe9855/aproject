@@ -10,7 +10,11 @@
       class="w-100"
       :is-small="true"
     />
-    <TreeSelect class="treeSelect" />
+    <TreeSelect
+      class="treeSelect"
+      :all-options="options"
+      @getQuery="getQuery"
+    />
   </div>
 </template>
 
@@ -26,9 +30,39 @@ export default {
     title: {
       type: String,
       default: ''
+    },
+    options: {
+      type: Array,
+      default: () => {
+        return [];
+      }
     }
   },
-  name: 'TreeSelectBox'
+  data () {
+    return {
+      query: []
+    };
+  },
+  name: 'TreeSelectBox',
+  methods: {
+    select (e) {
+      console.log('test2222');
+      console.log(e);
+    },
+    getQuery (e) {
+      console.log(e.no);
+      if (e.isCheck) {
+        this.query.push(e.no);
+      } else {
+        const a = this.query.indexOf(e.no);
+        if (a > -1) {
+          this.query.splice(a, 1);
+        }
+      }
+
+      console.log(this.query);
+    }
+  }
 };
 </script>
 
