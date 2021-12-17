@@ -34,7 +34,7 @@
         @clear="boxToggle"
       />
       <SubTitleTool
-        title="土地資料(填寫單位:桃園管理處)"
+        :title="'土地資料(填寫單位:'+thisIa+')'"
         class="w-90"
         :btn-text="isAddLandDataBtn"
         :btn-add="true"
@@ -112,6 +112,7 @@ import SubTitleTool from '~/components/tools/SubTitleTool.vue';
 import AddLand from '~/components/model/editList/AddLand.vue';
 import AlertBox from '~/components/tools/AlertBox.vue';
 import { getBankList } from '~/api/bank';
+import { getAccount } from '~/api/account';
 import { addApplyEvent, editApplyEvent } from '~/api/apply';
 import { mapState } from 'vuex';
 
@@ -209,11 +210,16 @@ export default {
       compensateEventText: '',
       isSend: true,
       event_sno: '',
-      eventTitle: '新增'
+      eventTitle: '新增',
+      thisIa: ''
     };
   },
   name: 'EditCompensate',
   mounted () {
+    const userId = sessionStorage.getItem('loginUser');
+    getAccount(userId).then(d => {
+      this.thisIa = d.data[0].groupname;
+    });
     getBankList().then(r => {
       this.bankList = r.data.map(item => item.Bank_sno + ' ' + item.Name);
     });
@@ -487,6 +493,8 @@ export default {
               this.alertErrorStatus = true;
               this.errorEventTitle = '發送失敗';
               this.errorEventText = '請確認資料是否正確';
+            } else if ((e.response.status === 401)) {
+              this.$router.push('/login');
             }
             console.log(e);
           });

@@ -282,6 +282,8 @@ export default {
             this.alertErrorStatus = true;
             this.errorEventTitle = '發送失敗';
             this.errorEventText = e.response.data;
+          } else if ((e.response.status === 401)) {
+            this.$router.push('/login');
           }
           console.log(e);
         });
@@ -297,6 +299,8 @@ export default {
             this.alertErrorStatus = true;
             this.errorEventTitle = '發送失敗';
             this.errorEventText = e.response.data;
+          } else if ((e.response.status === 401)) {
+            this.$router.push('/login');
           }
           console.log(e);
         });
