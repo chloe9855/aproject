@@ -174,7 +174,8 @@ export default {
       categoryBtnText: '存檔',
       categoryBtnName: 'button-primary',
       compensateEventIIcon: 'warning',
-      areaOpen: []
+      areaOpen: [],
+      isChangeDate: false
     };
   },
   name: 'EditCompensateEvent',
@@ -263,13 +264,15 @@ export default {
       const data = {
         applysno: this.$store.state.editCompensateEventID,
         name: this.eventName,
-        start: this.changeDate(this.start),
-        end: this.changeDate(this.end),
         open: this.areaOpen,
         note: this.note,
         Category: this.categoryArr
       };
       if (this.editType === 'edit') {
+        if (this.isChangeDate) {
+          data.start = this.changeDate(this.start);
+          data.end = this.changeDate(this.end);
+        };
         editApplySetting(data).then(r => {
           this.$store.commit('SET_COMPENSATE_EVENT_ID', '');
           this.isSend = false;
@@ -284,6 +287,8 @@ export default {
           console.log(e);
         });
       } else {
+        data.start = this.changeDate(this.start);
+        data.end = this.changeDate(this.end);
         addApplySetting(data).then(r => {
           this.isSend = false;
           this.compensateEventIIcon = 'success';
@@ -435,6 +440,18 @@ export default {
     boxWidth () {
       const setWidth = this.toggleStatus ? 'tg-75' : 'w-90';
       return setWidth;
+    }
+  },
+  watch: {
+    start (n, o) {
+      if (o !== '') {
+        this.isChangeDate = true;
+      }
+    },
+    end (n, o) {
+      if (o !== '') {
+        this.isChangeDate = true;
+      }
     }
   }
 };
