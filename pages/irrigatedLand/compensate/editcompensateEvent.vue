@@ -353,6 +353,7 @@ export default {
     },
     areaDel (e) {
       this.tableAreaList.body.splice(e.myIndex, 1);
+      this.areaOpen.splice(e.myIndex, 1);
       console.log(e.myIndex);
     },
     getTextContent (e) {

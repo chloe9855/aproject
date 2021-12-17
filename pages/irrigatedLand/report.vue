@@ -66,7 +66,7 @@
             title="停灌補償核定統計表"
             index-no="D"
             :link="areaD_File"
-            @query="getMng"
+            @query1="getMng"
           />
           <TreeSelectBox
             class="flex-1"
@@ -74,7 +74,7 @@
             index-no="E"
             :link="areaE_File"
             title="停灌補償申報統計表(日報)"
-            @query="getMng"
+            @query1="getMng"
           />
         </div>
       </div>
@@ -123,6 +123,8 @@ export default {
       date: '',
       queryA: [],
       queryB: [],
+      queryD: [],
+      queryE: [],
       areaA_File: '',
       areaB_File: '',
       areaC_File: '',
@@ -257,6 +259,7 @@ export default {
         });
         console.log(e);
       } else if (e.type === 'E' && this.Apply_sno !== '' && this.date !== '') {
+        console.log(e);
         this.queryE = e.data;
         const data = {
           query: this.queryE,

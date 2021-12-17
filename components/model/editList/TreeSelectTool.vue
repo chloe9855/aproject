@@ -52,6 +52,7 @@ export default {
   data () {
     return {
       query: [],
+      query1: [],
       queryA: [],
       queryB: [],
       queryD: [],
@@ -88,20 +89,20 @@ export default {
     getMng (e) {
       console.log(e);
       if (e.isCheck) {
-        this.query.push(e.no);
+        this.query1.push(e.no);
       } else {
-        const a = this.query.indexOf(e.no);
+        const a = this.query1.indexOf(e.no);
         if (a > -1) {
-          this.query.splice(a, 1);
+          this.query1.splice(a, 1);
         }
       }
-      this.mngArr = this.query;
+      this.mngArr = this.query1;
       if (e.type === 'D') {
-        this.queryD = this.query;
-        this.$emit('query', { type: 'D', no: e.no, data: this.queryD });
+        this.queryD = this.query1;
+        this.$emit('query1', { type: 'D', no: e.no, data: this.queryD });
       } else if (e.type === 'E') {
-        this.queryE = this.query;
-        this.$emit('query', { type: 'E', no: e.no, data: this.queryE });
+        this.queryE = this.query1;
+        this.$emit('query1', { type: 'E', no: e.no, data: this.queryE });
       }
     },
     getFile () {
