@@ -285,7 +285,7 @@
               v-show="isPrint"
               class="printOption"
             >
-              <div @click="sendEvent('isPrint',item)">
+              <div @click="sendEvent('isPrint',{data:item,num:index})">
                 <img
                   alt=""
                   class="vector"

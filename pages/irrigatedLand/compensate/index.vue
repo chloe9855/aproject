@@ -52,7 +52,7 @@ import BreadCrumbTool from '~/components/tools/BreadCrumbTool.vue';
 import Search from '~/components/model/Search.vue';
 import CalNote from '~/components/tools/CalNote.vue';
 import axios from 'axios';
-import { getApplySetting, getApplyEvent } from '~/api/apply';
+import { getApplySetting, getApplyEvent, getApplyList } from '~/api/apply';
 
 export default {
   components: {
@@ -94,7 +94,8 @@ export default {
       BreadCrumb: ['灌溉地管理', '停灌補償案件'],
       toggleStatus: false,
       dateName: '',
-      dateOpen: ''
+      dateOpen: '',
+      Apply_sno: ''
     };
   },
   name: 'Compensate',
@@ -112,6 +113,8 @@ export default {
     },
     getDateNote () {
       getApplySetting(new Date()).then(r => {
+        console.log(r);
+        this.Apply_sno = r.data[0].Apply_sno;
         this.dateName = r.data[0].name;
         this.dateOpen = r.data[0].start.split('T')[0] + '~' + r.data[0].end.split('T')[0];
       });
@@ -195,6 +198,22 @@ export default {
         console.log(e);
         this.$router.push('/irrigatedLand/compensate/editcompensate');
         this.$store.commit('SET_COMPENSATE_DATA', { item: e.item.main, event: e.event });
+      } else if (e.event === 'isPrint') {
+        const item = e.item.data.main.data[e.item.num];
+        const data1 = {
+          apply_sno: this.Apply_sno,
+          id: item.applyer_id,
+          county_id: item.county_id,
+          town_id: item.town_id,
+          section: item.section,
+          landno: item.landno
+        };
+
+        getApplyList(data1).then(r => {
+          if (r.data !== '') {
+            window.location = r.data;
+          }
+        });
       }
     }
   },

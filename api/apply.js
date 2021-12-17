@@ -32,3 +32,7 @@ export function editApplyEvent (data) {
 export function addApplyEvent (data) {
   return request.post('/AERC/rest/Event', data);
 }
+
+export function getApplyList (data) {
+  return request.post('/AERC/rest/Apply', data);
+}
