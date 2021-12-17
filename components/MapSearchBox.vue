@@ -768,6 +768,9 @@ export default {
       if (type === 'Sec5cov') {
         allData.head = this.newSec5cov;
       }
+      if (type === 'none') {
+        allData = '';
+      }
 
       this.$emit('search', allData);
     }

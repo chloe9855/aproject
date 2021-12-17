@@ -16,13 +16,14 @@
         btn-sec-text="新增帳號"
         :btn-sec-add="true"
         btn-sec-name="button-add"
-        @PHBtnStatus="addAccount"
+        @PHBtnStatus="onBatchRemove"
         @PHSecBtnStatus="addAccount"
       />
       <div
         class="content_box"
       >
         <TableTool
+          v-if="showTable"
           :table-column="tableList"
           :is-paginate="true"
           :is-edit="true"
@@ -36,25 +37,80 @@
     </div>
     <Search
       type="userAcctSearch"
+      @search="searchAccount"
       @toggleStatus="getToggleStatus"
+      @clearSearch="clear"
+    >
+      <template #default="{ isClear }">
+        <UserAcctSearch
+          :is-clear="isClear"
+          :search-obj-prop="searchObj"
+        />
+      </template>
+    </Search>
+
+    <AlertBox
+      v-if="showRemoveConfirm"
+      :title="`確定要刪除所選的${checkedAccount.length}筆資料`"
+      @close="showRemoveConfirm = false"
+      @confirm="batchRemove"
+    />
+
+    <AlertBox
+      v-if="singleRemoveAccountId != null"
+      title="確定要刪除帳號?"
+      @close="singleRemoveAccountId = null"
+      @confirm="singleRemove"
+    />
+
+    <AlertBox
+      v-if="showSuccess"
+      box-icon="success"
+      title="刪除成功"
+      :cancel-button="false"
+      @confirm="showSuccess = false"
     />
   </div>
 </template>
 
 <script>
-import TableTool from '~/components/model/Table.vue';
+// @ts-check
+
+/**
+ * @typedef {import('types/Account').Account} Account
+ */
+
+import Vue from 'vue';
+import dayjs from 'dayjs';
+// @ts-ignore
+import TableTool from '~/components/model/TableJJ.vue';
 import PageHeader from '~/components/tools/PageHeader.vue';
 import BreadCrumbTool from '~/components/tools/BreadCrumbTool.vue';
 import Search from '~/components/model/Search.vue';
-import { getAccount } from '~/api/account';
+import { editAccount, getAccount } from '~/api/account';
 import { accountData } from '~/publish/accountData';
+import UserAcctSearch from '~/components/model/searchBox/userAcctSearch.vue';
+import AlertBox from '~/components/tools/AlertBox.vue';
 
-export default {
+function getDefaultSearchObj () {
+  return {
+    group: '',
+    ia: '',
+    site: '',
+    name: '',
+    startTime: '',
+    endTime: ''
+  };
+}
+
+export default Vue.extend({
   components: {
     PageHeader,
     TableTool,
     BreadCrumbTool,
-    Search: Search
+    Search,
+    UserAcctSearch,
+    AlertBox
   },
   data () {
     return {
@@ -82,12 +138,21 @@ export default {
       BreadCrumb: ['系統管理', '帳號管理'],
       toggleStatus: false,
       editItem: {},
-      delBtn: ''
+      delBtn: '',
+      /** @type {Account[]} */
+      accountList: [],
+      showTable: true,
+      searchObj: getDefaultSearchObj(),
+      checkedAccount: [],
+      showRemoveConfirm: false,
+      singleRemoveAccountId: null,
+      showSuccess: false
     };
   },
   name: 'Account',
   async asyncData () {
-    return getAccount().then((r) => ({
+    const r = await getAccount();
+    return {
       tableList: {
         head: [
           { title: '帳號' },
@@ -99,15 +164,9 @@ export default {
           { title: '狀態' }
         ],
         body: accountData(r.data)
-      }
-    })).catch(e => {
-      console.log(e);
-    });
-  },
-  mounted () {
-    getAccount().then(r => {
-      accountData(r.data);
-    });
+      },
+      accountList: r.data
+    };
   },
   methods: {
     getToggleStatus (e) {
@@ -128,7 +187,7 @@ export default {
             this.$store.commit('TOGGLE_POPUP_TYPE', { type: 'editAccount', title: '編輯帳號', editId: e.item.title[0] });
             break;
           case 'isDel':
-            console.log('isDel');
+            this.singleRemoveAccountId = e.item.val;
             break;
         }
       }
@@ -141,20 +200,104 @@ export default {
           this.delBtn = '';
         };
       }
+
+      this.checkedAccount = e || [];
+    },
+    async searchAccount () {
+      const { searchObj } = this;
+
+      let filtered = this.accountList;
+
+      if (searchObj.group != null || searchObj.group !== '') {
+        const group = parseInt(searchObj.group);
+
+        if (!isNaN(group)) {
+          filtered = filtered.filter(a => a.groupsno === group);
+        }
+      }
+
+      if (searchObj.name) {
+        filtered = filtered.filter(a => a.account === searchObj.name);
+      }
+
+      if (searchObj.ia) {
+        filtered = filtered.filter(a => a.ia === searchObj.ia);
+      }
+
+      if (searchObj.site) {
+        filtered = filtered.filter(a => a.stn === searchObj.site);
+      }
+
+      if (searchObj.startTime) {
+        const startTime = dayjs(searchObj.startTime).valueOf();
+
+        filtered = filtered.filter(a => dayjs(a.logintime).valueOf() >= startTime);
+      }
+
+      if (searchObj.endTime) {
+        const endTime = dayjs(searchObj.endTime).valueOf();
+
+        filtered = filtered.filter(a => dayjs(a.logintime).valueOf() < endTime);
+      }
+
+      this.tableList.body = accountData(filtered);
+    },
+    clear () {
+      this.searchObj = getDefaultSearchObj();
+    },
+    onBatchRemove () {
+      if (this.checkedAccount.length) {
+        this.showRemoveConfirm = true;
+      }
+    },
+    async batchRemove () {
+      if (!this.checkedAccount) {
+        return;
+      }
+
+      const { status } = await editAccount({
+        id: this.checkedAccount,
+        status: 2
+      });
+
+      this.checkedAccount = [];
+      this.checkAndShowSuccess(status);
+    },
+    async singleRemove () {
+      if (this.singleRemoveAccountId == null) {
+        return;
+      }
+
+      const { status } = await editAccount({
+        id: this.singleRemoveAccountId,
+        status: 2
+      });
+
+      this.singleRemoveAccountId = null;
+      this.checkAndShowSuccess(status);
+    },
+    /**
+     * @param {number} status
+     */
+    checkAndShowSuccess (status) {
+      this.showSuccess = status < 300;
     }
   },
   computed: {
+    /** @returns {string} */
     boxWidth () {
       const setWidth = this.toggleStatus ? 'tg-75' : 'w-90';
       return setWidth;
     },
+    /** @returns {string} */
     growDiv () {
       const setWidth = this.toggleStatus ? '' : 'grow';
       return setWidth;
     }
   }
-};
+});
 </script>
+
 <style lang="scss" scoped>
 .mainContent{
   position: relative;

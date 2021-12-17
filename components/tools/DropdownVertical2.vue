@@ -13,8 +13,7 @@
     </div>
     <client-only>
       <v-select
-        v-model="selected"
-        :value="selectVal"
+        :value="selectedOpt"
         label="title"
         code="value"
         :clearable="false"
@@ -22,6 +21,7 @@
         :placeholder="placeholders"
         :class="{'add_bg': bgColor}"
         class="w-100 inputSelect getMargin"
+        @input="onInput"
       />
     </client-only>
 
@@ -44,12 +44,14 @@
 </template>
 
 <script>
+// @ts-check
 export default {
   props: {
+    /** @type {import('types/DropdownVerticalOption').DropdownVerticalOptionPropOption} */
     options: {
       type: Array,
       default: () => {
-        return [{ title: '選項1', value: '0' }, { title: '選項2', value: '1' }, { title: '選項3', value: '2' }];
+        return [];
       }
     },
     title: {
@@ -72,63 +74,43 @@ export default {
       type: String,
       default: '請選擇'
     },
-    defaultData: {
-      type: String,
-      default: ''
-    },
-    defaultValue: {
-      type: [String, Number],
-      default: ''
-    },
-    changeText: {
-      type: Boolean,
-      default: false
-    },
     // 為空值跳錯誤
     showError: {
       type: Boolean,
       default: false
+    },
+    value: {
+      type: [String, Number]
     }
   },
   data: () => {
     return {
-      selected: '',
-      selectVal: '',
-      option: [{ title: '選項11', value: '0' }, { title: '選項2', value: '1' }, { title: '選項3', value: '2' }]
+      selected: /** @type {string | number} */('')
     };
   },
-  name: 'DropdownVertical',
-  mounted () {
-    this.setDefault();
-  },
   methods: {
-    setDefault () {
-      if (this.defaultData !== '' && this.defaultValue !== '') {
-        this.selected = this.defaultData;
-        this.selectVal = this.defaultValue;
-      }
+    /** @param {import('types/DropdownVerticalOption').DropdownVerticalOptionUnion} v  */
+    onInput (v) {
+      this.$emit('input', v.value);
+    }
+  },
+  computed: {
+    /** @returns {import('types/DropdownVerticalOption').DropdownVerticalOptionUnion} */
+    selectedOpt () {
+      return (this.options && this.options.find(o => o.value === this.selected)) || null;
     }
   },
   watch: {
-    selected (n, o) {
-      this.$emit('DropdownVal', n);
-    },
-    defaultData (n, o) {
-      this.selected = n;
-    },
-    defaultValue (n, o) {
-      this.selectVal = n;
-    },
-    changeText (value) {
-      console.log(value);
-      if (value === true) {
-        this.selected = '';
-      }
-    },
+    /** @param {import('types/DropdownVerticalOption').DropdownVerticalOptionUnion[]} value  */
     options (value) {
-      if (value.length === 1 && !this.changeText) {
-        this.selected = this.options[0];
+      if (value.length === 1) {
+        const [opt] = value;
+        this.selected = opt.value;
+        this.onInput(opt);
       }
+    },
+    value (value) {
+      this.selected = value;
     }
   }
 };

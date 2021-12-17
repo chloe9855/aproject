@@ -61,16 +61,17 @@
         </label>
       </div>
       <div class="wrap2">
-        <InputTool-component
-          :input-text="'請輸入欲查詢圖資'"
-          :search-input="infoList"
+        <Dropdown-component
+          :placeholders="'請輸入欲查詢圖資'"
+          :options="infoList"
           :change-text="clearText5"
           sizing="w-70"
-          @inputValue="(payload) => { payload.val !== '' ? nowLayer = payload.val : nowLayer = '', clearText5 = false }"
+          @DropdownVal="(payload) => { payload.value !== '' ? engName = payload.value : engName = '', clearText5 = false }"
         />
         <InputTool-component
           :input-text="'半徑'"
           :change-text="clearText6"
+          :add-text="setRadius"
           sizing="w-25"
           @inputValue="(payload) => { payload.val !== '' ? radius = parseInt(payload.val, 10) : radius = '', clearText6 = false }"
         />
@@ -88,6 +89,14 @@
           @click="searchHandler"
         />
       </div>
+    </div>
+
+    <!-- loading載入中視窗 -->
+    <div
+      v-if="loadModal === true"
+      class="modal_wrapperChannel"
+    >
+      <div class="modalChannel" />
     </div>
 
     <!-- 彈窗lightbox -->
@@ -134,6 +143,7 @@ export default {
       userId: '',
       alertBox: false,
       alertBox2: false,
+      loadModal: false,
       allCanalList: [],
       canalList: [],
       clearText1: false,
@@ -165,7 +175,17 @@ export default {
       icon2: '',
       iconEnd: '',
       // * 環域
-      infoList: ['地段', '地籍', '管理處', '管理分處', '工作站', '小組', '輪區', '期作別', '埤塘'],
+      infoList: [
+        { title: '地段', value: 'Section' },
+        { title: '地籍', value: 'Sec5cov' },
+        { title: '管理處', value: 'Ia' },
+        { title: '管理分處', value: 'Mng' },
+        { title: '工作站', value: 'Stn' },
+        { title: '小組', value: 'Grp' },
+        { title: '輪區', value: 'Rot' },
+        { title: '期作別', value: 'Period' },
+        { title: '埤塘', value: 'Pool' }
+      ],
       isCircle: false,
       radius: 0,
       // * 所選圖資
@@ -174,28 +194,34 @@ export default {
       myTableData: {
         head: [],
         body: []
-      }
+      },
+      // * 預設半徑 = 10
+      setRadius: '10',
+      fnList: []
     };
   },
   name: 'ChannelSearch',
   mounted () {
     this.userId = sessionStorage.getItem('loginUser');
+    this.setRadius = '10';
 
     allMBTX.forEach((item) => {
-      sg.events.on(item, 'click', (e) => {
+      this.fnList.push(sg.events.on(item, 'click', (e) => {
+        console.log(e);
         if (e.graphic.id[0].substring(3) === 'Canal' && e.graphic.attributes.Ia === this.nowIa) {
           console.log(e);
 
           this.addCanalText = e.graphic.attributes.Sys_cns;
           this.nowFid = parseInt(e.graphic.id[2], 10);
           // 渠道總長
-          this.canalLength = e.graphic.attributes.Length;
+          this.canalLength = e.graphic.geometry.length;
           // 樁號定位起點值自動代入最小值
           this.sContent1 = '0';
         }
-      });
+      }));
     });
   },
+
   methods: {
     // * 清除全部
     clearAllHandler () {
@@ -260,8 +286,27 @@ export default {
         return;
       }
 
-      this.canalLength = myItem[0].Length;
+      // this.canalLength = myItem[0].Length;
       this.nowFid = myItem[0].FID;
+
+      fetch('/AERC/rest/Canal', {
+        method: 'POST',
+        headers: new Headers({
+          'Content-Type': 'application/json'
+        }),
+        body: JSON.stringify({
+          Ia: this.nowIa,
+          FID: this.nowFid
+        })
+      }).then((response) => {
+        return response.json();
+      }).then((data) => {
+        const geoMetry = sg.geometry.Geometry.fromGeoJson(data[0].geometry);
+        // 取得渠道總長
+        this.canalLength = geoMetry.length.toFixed(2);
+      }).catch((err) => {
+        console.log(err);
+      });
     },
     // * 查詢
     searchHandler () {
@@ -296,6 +341,9 @@ export default {
         const geometry = sg.geometry.Geometry.fromGeoJson(jsonData[0].geometry);
         this.canalGraphic = sg.Graphic.createFromGeometry(geometry, { linewidth: 5, linecolor: new sg.Color(126, 255, 178, 1) });
         pMapBase.drawingGraphicsLayer.add(this.canalGraphic);
+
+        console.log(887);
+        console.log(geometry);
 
         // 定位
         let point1;
@@ -335,17 +383,21 @@ export default {
         const start = geometry.getPoint(0);
         const end = geometry.getPoint(this.canalLength);
 
-        this.iconStart = sg.Graphic.createFromGeometry(new sg.geometry.Point(start.x, start.y), { markerurl: require('~/assets/img/marker-big.svg'), markersize: 50, markercolor: new sg.Color(25, 112, 93, 1), text: '起始點', textsize: 20 });
-        this.iconEnd = sg.Graphic.createFromGeometry(new sg.geometry.Point(end.x, end.y), { markerurl: require('~/assets/img/marker-big.svg'), markersize: 50, markercolor: new sg.Color(25, 112, 93, 1), text: '結束點', textsize: 20 });
-        this.icon1 = sg.Graphic.createFromGeometry(new sg.geometry.Point(point1.x, point1.y), { markerurl: require('~/assets/img/marker-big.svg'), markersize: 50, markercolor: new sg.Color(25, 112, 93, 1), text: `0K+${this.range1}`, textsize: 20 });
-        this.icon2 = sg.Graphic.createFromGeometry(new sg.geometry.Point(point2.x, point2.y), { markerurl: require('~/assets/img/marker-big.svg'), markersize: 50, markercolor: new sg.Color(25, 112, 93, 1), text: `0K+${this.range2}`, textsize: 20 });
+        if (this.range1 !== 0 && this.range2 !== this.canalLength) {
+          this.iconStart = sg.Graphic.createFromGeometry(new sg.geometry.Point(start.x, start.y), { markerurl: require('~/assets/img/marker-big.svg'), markersize: 25, markercolor: new sg.Color(25, 112, 93, 1), text: '起始點', textsize: 14, textoffset: [0, -10] });
+          this.iconEnd = sg.Graphic.createFromGeometry(new sg.geometry.Point(end.x, end.y), { markerurl: require('~/assets/img/marker-big.svg'), markersize: 25, markercolor: new sg.Color(25, 112, 93, 1), text: '結束點', textsize: 14, textoffset: [0, -10] });
 
-        pMapBase.drawingGraphicsLayer.add(this.iconStart);
-        pMapBase.drawingGraphicsLayer.add(this.iconEnd);
+          pMapBase.drawingGraphicsLayer.add(this.iconStart);
+          pMapBase.drawingGraphicsLayer.add(this.iconEnd);
+        }
+
+        this.icon1 = sg.Graphic.createFromGeometry(new sg.geometry.Point(point1.x, point1.y), { markerurl: require('~/assets/img/marker-big.svg'), markersize: 25, markercolor: new sg.Color(25, 112, 93, 1), text: `0K+${this.range1}`, textsize: 14, textoffset: [0, -10] });
+        this.icon2 = sg.Graphic.createFromGeometry(new sg.geometry.Point(point2.x, point2.y), { markerurl: require('~/assets/img/marker-big.svg'), markersize: 25, markercolor: new sg.Color(25, 112, 93, 1), text: `0K+${this.range2}`, textsize: 14, textoffset: [0, -12] });
+
         pMapBase.drawingGraphicsLayer.add(this.icon1);
         pMapBase.drawingGraphicsLayer.add(this.icon2);
 
-        let bufferGeom;
+        // let bufferGeom;
 
         // 有寫樁號定位範圍
         if (this.range1 !== '' && this.range2 !== '') {
@@ -359,7 +411,12 @@ export default {
           pMapBase.getTransformation().FitLevel();
           pMapBase.RefreshMap(true);
 
-          bufferGeom = geometry.slice(this.range1, this.range2);
+          // if (this.range1 !== 0 && this.range2 !== this.canalLength) {
+          //   bufferGeom = geometry.slice(this.range1, this.range2);
+          // }
+          // if (this.range1 === 0 && this.range2 === this.canalLength) {
+          //   bufferGeom = geometry;
+          // }
         }
 
         // 沒寫樁號定位範圍
@@ -370,12 +427,13 @@ export default {
           pMapBase.getTransformation().FitLevel();
           pMapBase.RefreshMap(true);
 
-          bufferGeom = geometry;
+          // bufferGeom = geometry;
         }
 
         // 有勾環域
         if (this.isCircle === true) {
-          this.getBuffer(bufferGeom);
+          this.loadModal = true;
+          this.getBuffer(geometry);
         }
       }).catch((err) => {
         console.log(err);
@@ -383,8 +441,23 @@ export default {
     },
     // * 取得環域資料
     getBuffer (geoData) {
-      let newArr = [];
-      newArr = geoData.path.map(item => [item.x, item.y]);
+      let geoArr = '';
+      if (this.range1 !== '' && this.range2 !== '' && this.range1 !== 0 && this.range2 !== this.canalLength) {
+        geoArr = geoData.slice(this.range1, this.range2);
+      } else {
+        geoArr = geoData;
+      }
+
+      const newArr = [];
+      // newArr = geoData.path.map(item => {
+      //   return [[item.x, item.y]];
+      // });
+      console.log(geoData);
+      console.log(geoArr);
+      geoArr.path.forEach((item) => {
+        console.log(item);
+        newArr.push([item.x, item.y]);
+      });
       const result = {
         type: 'LineString',
         coordinates: newArr
@@ -439,12 +512,16 @@ export default {
         body: JSON.stringify(result)
       }).then((response) => {
         if (response.status === 403) {
+          this.loadModal = false;
+          this.$emit('channelSearch', '', 'none');
           return Promise.reject(response);
         }
         return response.json();
       }).then((jsonData) => {
         console.log(jsonData);
+        this.myTableData.body = [];
 
+        this.loadModal = false;
         if (this.engName === 'Section') {
           this.myTableData.body = jsonData.map(item => {
             return { title: [item.City, item.City_no, item.Town, item.Town_no, item.Section, item.Sec_cns, item.Area, item.Ymd], info: item, type: 'Section' };
@@ -547,40 +624,66 @@ export default {
     }
   },
   watch: {
-    nowLayer (value) {
-      if (value === '地段') {
-        this.engName = 'Section';
-      }
-      if (value === '地籍') {
-        this.engName = 'Sec5cov';
-      }
-      if (value === '管理處') {
-        this.engName = 'Ia';
-      }
-      if (value === '管理分處') {
-        this.engName = 'Mng';
-      }
-      if (value === '工作站') {
-        this.engName = 'Stn';
-      }
-      if (value === '小組') {
-        this.engName = 'Grp';
-      }
-      if (value === '輪區') {
-        this.engName = 'Rot';
-      }
-      if (value === '期作別') {
-        this.engName = 'Period';
-      }
-      if (value === '埤塘') {
-        this.engName = 'Pool';
-      }
-    }
+    // nowLayer (value) {
+    //   if (value === '地段') {
+    //     this.engName = 'Section';
+    //   }
+    //   if (value === '地籍') {
+    //     this.engName = 'Sec5cov';
+    //   }
+    //   if (value === '管理處') {
+    //     this.engName = 'Ia';
+    //   }
+    //   if (value === '管理分處') {
+    //     this.engName = 'Mng';
+    //   }
+    //   if (value === '工作站') {
+    //     this.engName = 'Stn';
+    //   }
+    //   if (value === '小組') {
+    //     this.engName = 'Grp';
+    //   }
+    //   if (value === '輪區') {
+    //     this.engName = 'Rot';
+    //   }
+    //   if (value === '期作別') {
+    //     this.engName = 'Period';
+    //   }
+    //   if (value === '埤塘') {
+    //     this.engName = 'Pool';
+    //   }
+    // }
   }
 };
 </script>
 
 <style lang="scss" scoped>
+
+  .modal_wrapperChannel {
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 10000000000;
+    cursor: default;
+  }
+
+  .modalChannel {
+    width: 100px;
+    height: 100px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    z-index: 9999;
+    transform: translate(-50%, -50%);
+    flex-direction: column;
+    background: url('~/assets/img/loading_icon.svg') no-repeat center/contain;
+  }
 
   .theme_checkbox {
     input {

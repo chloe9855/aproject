@@ -1,5 +1,14 @@
 import request from '~/service';
 
+/**
+ * @typedef {import('types/Group').Group} Group
+ */
+
+/**
+ *
+ * @param {string=} Ia
+ * @returns {Promise<import('axios').AxiosResponse<Group[]>}
+ */
 export function getGroup (Ia) {
   const groupRequest = Ia ? `/aerc/rest/Group?ID=${Ia}` : '/aerc/rest/Group';
   return request.get(groupRequest);

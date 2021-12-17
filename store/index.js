@@ -6,7 +6,7 @@ export const state = () => ({
   hideFooter: false,
   popupState: false,
   isLoading: false,
-  popupType: { type: 'editAccount', title: '請設定查詢作業標題', editId: {} },
+  popupType: { type: '', title: '請設定查詢作業標題', editId: {} },
   mouseEventMin: 0,
   userInfo: {},
   editAccount: '',
@@ -34,6 +34,8 @@ export const mutations = {
     state.popupType.type = payload.type;
     if (payload.editId) {
       state.popupType.editId = payload.editId;
+    } else {
+      state.popupType.editId = undefined;
     }
   },
   SET_LOUOUT_COUNTDOWN (state, payload) {

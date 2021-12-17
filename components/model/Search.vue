@@ -7,15 +7,17 @@
       icon="slider"
       :title="searchTitle"
     />
-    <component
-      :is="componentInstance"
-      ref="searchComp"
-      :is-clear="isClearAll"
-      @tabCurrent="current"
-      @onsearch="onsearch"
-      @useAmountSearch="(payload, nowIa) => { $emit('useAmountSearch', payload, nowIa) }"
-      @clearUseAmount="() => { $emit('clearUseAmount') }"
-    />
+    <slot :isClear="isClearAll">
+      <component
+        :is="componentInstance"
+        ref="searchComp"
+        :is-clear="isClearAll"
+        @tabCurrent="current"
+        @onsearch="onsearch"
+        @useAmountSearch="(payload, nowIa) => { $emit('useAmountSearch', payload, nowIa) }"
+        @clearUseAmount="() => { $emit('clearUseAmount') }"
+      />
+    </slot>
     <div class="buttonBox">
       <Button
         :name="'button-default'"
@@ -30,7 +32,7 @@
     </div>
     <div
       class="toggleBtn"
-      @click="toggleSearthBox"
+      @click="toggleSearchBox"
     >
       收合查詢列
       <span :class="arrow" />
@@ -48,6 +50,7 @@ import userAcctSearch from '~/components/model/searchBox/userAcctSearch';
 import groupUserAcctSearch from '~/components/model/searchBox/groupUserAcctSearch';
 import systemSearch from '~/components/model/searchBox/systemSearch';
 import usageAmountSearch from '~/components/model/searchBox/usageAmountSearch';
+
 export default {
   components: {
     PageHeader,
@@ -88,10 +91,10 @@ export default {
   },
   name: 'SearchBox',
   mounted () {
-    this.toggleSearthBox();
+    this.toggleSearchBox();
   },
   methods: {
-    toggleSearthBox () {
+    toggleSearchBox () {
       const isOpen = this.toggleState;
       if (isOpen) {
         this.toggleBox = 'hideBox';
@@ -111,6 +114,8 @@ export default {
       if (this.$refs.searchComp && this.$refs.searchComp.search) {
         this.$refs.searchComp.search();
       }
+
+      this.$emit('search');
     },
     onsearch (e) {
       this.$emit('onsearch', e);
@@ -118,6 +123,8 @@ export default {
     clearAll (e) {
       if (e) {
         this.isClearAll = !this.isClearAll;
+
+        this.$emit('clearSearch');
       }
     }
   },

@@ -16,7 +16,6 @@
         btn-sec-text="新增群組"
         :btn-sec-add="true"
         btn-sec-name="button-add"
-        @PHBtnStatus="addAccount"
         @PHSecBtnStatus="addGroup"
       />
       <div
@@ -27,7 +26,6 @@
           :is-paginate="false"
           :is-edit="true"
           :is-del="true"
-          @checkList="getTableCheck"
           @tableEvent="changeGroup"
         />
       </div>
@@ -35,24 +33,70 @@
     <Search
       type="groupUserAcctSearch"
       @toggleStatus="getToggleStatus"
+      @search="search"
+      @clearSearch="onClear"
+    >
+      <GroupUserAcctSearch
+        :search-obj-prop="searchObj"
+        :groups="groups"
+      />
+    </Search>
+
+    <AlertBox
+      v-if="showCannotRemoveAlert"
+      box-icon="error"
+      title="此群組不可刪除"
+      text="注意：群組刪除後不可復原"
+      @close="showCannotRemoveAlert = false"
+      @confirm="showCannotRemoveAlert = false"
+    />
+
+    <AlertBox
+      v-if="singleRemoveId != null"
+      box-icon="error"
+      title="確定要刪除該群組?"
+      text="注意：群組刪除後不可復原"
+      cancel-button
+      @close="singleRemoveId = null"
+      @confirm="remove"
+    />
+
+    <AlertBox
+      v-if="showSuccess"
+      box-icon="success"
+      title="刪除成功"
+      @confirm="showSuccess = false"
     />
   </div>
 </template>
 
 <script>
-import TableTool from '~/components/model/Table.vue';
+// @ts-check
+import TableTool from '~/components/model/TableJJ.vue';
 import PageHeader from '~/components/tools/PageHeader.vue';
 import BreadCrumbTool from '~/components/tools/BreadCrumbTool.vue';
 import Search from '~/components/model/Search.vue';
-import { getGroup } from '~/api/group';
+import { delGroup, getGroup } from '~/api/group';
 import { groupData } from '~/publish/groupData';
+import GroupUserAcctSearch from '~/components/model/searchBox/groupUserAcctSearch.vue';
+import dayjs from 'dayjs';
+import { getAccount } from '~/api/account';
+import AlertBox from '~/components/tools/AlertBox.vue';
+
+const getDefaultSearchObj = () => ({
+  group: null,
+  startTime: '',
+  endTime: ''
+});
 
 export default {
   components: {
     PageHeader,
     TableTool,
     BreadCrumbTool,
-    Search: Search
+    Search,
+    GroupUserAcctSearch,
+    AlertBox
   },
   data () {
     return {
@@ -74,22 +118,29 @@ export default {
       },
       BreadCrumb: ['系統管理', '群組權限管理'],
       toggleStatus: false,
-      delBtn: ''
+      delBtn: '',
+      /** @type {Array<import('types/Group').Group>} */
+      groups: [],
+      searchObj: getDefaultSearchObj(),
+      showCannotRemoveAlert: false,
+      singleRemoveId: null,
+      showSuccess: false
     };
   },
   name: 'Authority',
   async asyncData () {
-    return getGroup().then((r) => ({
+    const group = await getGroup();
+
+    return {
       tableList: {
         head: [
           { title: '群組名稱' },
           { title: '最後變更日期' }
         ],
-        body: groupData(r.data)
-      }
-    })).catch(e => {
-      console.log(e);
-    });
+        body: groupData(group.data)
+      },
+      groups: group.data
+    };
   },
   mounted: () => {
     getGroup().then(r => {
@@ -108,28 +159,81 @@ export default {
       }
     },
     changeGroup (e) {
-      if (e === 'isEdit') {
+      if (e.event === 'isEdit') {
+        console.log(e.item);
         this.$store.commit('TOGGLE_POPUP_STATUS');
-        this.$store.commit('TOGGLE_POPUP_TYPE', { type: 'group', title: '編輯群組' });
-      } else if (e === 'isDel') {
-        console.log('isDel');
+        this.$store.commit('TOGGLE_POPUP_TYPE', { type: 'group', title: '編輯群組', editId: e.item.groupsno });
+      } else if (e.event === 'isDel') {
+        console.log(e);
+        this.checkAndShowRemove(e.item.val);
       }
     },
-    getTableCheck (e) {
-      if (e) {
-        if (e.length > 1) {
-          this.delBtn = '多筆刪除';
-        } else {
-          this.delBtn = '';
-        };
+    // getTableCheck (e) {
+    //   if (e) {
+    //     if (e.length > 1) {
+    //       this.delBtn = '多筆刪除';
+    //     } else {
+    //       this.delBtn = '';
+    //     };
+    //   }
+    // },
+    search () {
+      let filtered = this.groups;
+
+      if (this.searchObj.group) {
+        filtered = filtered.filter(g => g.groupsno === this.searchObj.group);
+      }
+
+      if (this.searchObj.startTime) {
+        const startTime = dayjs(this.searchObj.startTime);
+
+        filtered = filtered.filter(g => dayjs(g.updatetime) >= startTime);
+      }
+
+      if (this.searchObj.startTime) {
+        const endTime = dayjs(this.searchObj.endTime);
+
+        filtered = filtered.filter(g => dayjs(g.updatetime) >= endTime);
+      }
+
+      this.tableList.body = groupData(filtered);
+    },
+    onClear () {
+      this.searchObj = getDefaultSearchObj();
+      this.tableList.body = groupData(this.groups);
+    },
+    /**
+     * @param {number} id
+     */
+    async checkAndShowRemove (id) {
+      const { data: accounts } = await getAccount();
+
+      if (accounts.find(a => a.groupsno === id)) {
+        this.showCannotRemoveAlert = true;
+        return;
+      }
+
+      this.singleRemoveId = id;
+    },
+    async remove () {
+      if (this.singleRemoveId == null) {
+        return;
+      }
+
+      const { status } = await delGroup(this.singleRemoveId);
+
+      if (status < 300) {
+        this.showSuccess = true;
       }
     }
   },
   computed: {
+    /** @returns {string} */
     boxWidth () {
       const setWidth = this.toggleStatus ? 'tg-75' : 'w-90';
       return setWidth;
     },
+    /** @returns {string} */
     growDiv () {
       const setWidth = this.toggleStatus ? '' : 'grow';
       return setWidth;

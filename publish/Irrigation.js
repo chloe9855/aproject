@@ -85,8 +85,7 @@ export function getIrrigationLand (PageCnt, PageRows, query, county, town, secti
   return request.get('/aerc/rest/IrrigationLand' + (q ? `?${q.join('&')}` : ''));
 }
 
-export function getIas (t) {
-  const data = {};
+export function getIas (data) {
   const user = sessionStorage.getItem('loginUser');
   return request.post(`/aerc/rest/Ia/${user}`, data);
 }
@@ -96,12 +95,26 @@ export function getMngs (Ia) {
   return request.post('/aerc/rest/mng', data);
 }
 
+/**
+ *
+ * @param {string} Ia
+ * @returns {Promise<import('axios').AxiosResponse<import('types/Stn').Stn[]>}
+ */
 export function getStns (Ia, Mng) {
   // const data = { Ia: Ia, Mng: Mng || '' };
   const data = Mng !== '' ? { Ia: Ia, Mng: Mng } : { Ia: Ia };
   return request.post('/aerc/rest/Stn', data);
 }
 
+/**
+ * @typedef {import('types/Grp').Grp} Grp
+ */
+
+/**
+ *
+ * @param {string} Ia
+ * @returns {Promise<import('axios').AxiosResponse<Grp[]>}
+ */
 export function getGrps (Ia, Mng, Stn) {
   const data = Mng !== '' ? { Ia: Ia, Mng: Mng, Stn: Stn } : { Ia: Ia, Stn: Stn };
   // const data = {

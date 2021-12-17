@@ -1,7 +1,11 @@
 <template>
   <div>
     <label class="switch">
-      <input type="checkbox">
+      <input
+        type="checkbox"
+        :checked="checked"
+        @input="$emit('input', $event)"
+      >
       <span class="slider">
         <p class="off">OFF</p>
         <p class="on">ON</p>
@@ -12,7 +16,11 @@
 
 <script>
 export default {
-
+  props: {
+    checked: {
+      type: Boolean
+    }
+  }
 };
 </script>
 

@@ -1,71 +1,74 @@
 <template>
   <div class="inputBox">
-    <DropdownVertical
+    <DropdownVertical2
+      v-model="searchObj.group"
       title="群組"
-      :options="member"
-      @DropdownVal="getGroup"
+      :options="groupList"
     />
     <DatePicker
-      title="上次登入起始時間"
+      :time="searchObj.startTime"
+      title="上次更新起始時間"
       @DateValue="startTime"
     />
     <DatePicker
-      title="上次登入結束時間"
+      :time="searchObj.endTime"
+      title="上次更新結束時間"
       @DateValue="endTime"
     />
   </div>
 </template>
 
 <script>
-import DropdownVertical from '~/components/tools/DropdownVertical.vue';
+// @ts-check
+import DropdownVertical2 from '~/components/tools/DropdownVertical2.vue';
 import DatePicker from '~/components/tools/DatePicker.vue';
-import { getGroup } from '~/api/group';
 import { groupListData } from '~/publish/groupListData';
-import { getAccount } from '~/api/account';
+
 export default {
   components: {
-    DropdownVertical: DropdownVertical,
+    DropdownVertical2,
     DatePicker: DatePicker
   },
-  props: {},
-  data: () => {
+  props: {
+    searchObjProp: {
+      type: /** @type {import('vue').PropType<{group: number, startTime: string, endTime: string}>} */(
+        Object
+      )
+    },
+    groups: {
+      type: /** @type {import('vue').PropType<import('types/Group').Group[]>} */(
+        Array
+      )
+    }
+  },
+  data () {
     return {
-      member: [{ title: '預設選項', value: '0' }, { title: '工作站人員', value: '1' }, { title: '管理人員', value: '2' }, { title: '民眾', value: '3' }],
-      searchObj: {
-        group: '',
-        startTime: '',
-        endTime: ''
-      }
+      member: [],
+      searchObj: this.searchObjProp
     };
   },
   name: 'GroupUserAcctSearch',
-  mounted () {
-    getAccount(this.$store.state.userInfo.id).then(r => {
-      this.account = r.data[0];
-      getGroup(r.data[0].ia).then(g => {
-        this.member = groupListData(g);
-      }).catch(e => {
-        console.log(e);
-      });
-    }).catch(e => {
-      console.log(e);
-    });
-  },
   methods: {
-    getGroup (e) {
-      if (e) {
-        this.searchObj.group = e;
-      }
-    },
     startTime (e) {
       if (e) {
-        this.searchObj.startTime = e;
+        this.searchObj.startTime = e.val;
       }
     },
     endTime (e) {
       if (e) {
-        this.searchObj.endTime = e;
+        this.searchObj.endTime = e.val;
       }
+    }
+  },
+  computed: {
+    /** @returns {any[]} */
+    groupList () {
+      return groupListData({ data: this.groups });
+    }
+  },
+  watch: {
+    searchObjProp (v) {
+      this.searchObj = v;
     }
   }
 };
