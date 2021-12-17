@@ -24,11 +24,16 @@
           :is-scroll-table="true"
           :is-toggle="toggleStatus"
           :column-min-width="80"
+          @tableEvent="tableEvent"
         />
         <div
-          class="calNoteBox w-90"
+          class="calNoteBox w-100"
         >
-          <CalNote />
+          <CalNote
+            :date-note="true"
+            :date1="dateName"
+            :date2="dateOpen"
+          />
         </div>
       </div>
     </div>
@@ -46,7 +51,8 @@ import PageHeader from '~/components/tools/PageHeader.vue';
 import BreadCrumbTool from '~/components/tools/BreadCrumbTool.vue';
 import Search from '~/components/model/Search.vue';
 import CalNote from '~/components/tools/CalNote.vue';
-import { getApplyEvent } from '~/api/apply';
+import axios from 'axios';
+import { getApplySetting, getApplyEvent, getApplyList } from '~/api/apply';
 
 export default {
   components: {
@@ -64,7 +70,7 @@ export default {
           { title: '農田水利資料', col: 2 },
           { title: '土地所有權人', col: 3 },
           { title: '農民類別', col: 1 },
-          { title: '申請項目', col: 2 }
+          { title: '申請項目', col: 4 }
         ],
         head: [
           { title: '縣市' },
@@ -78,28 +84,24 @@ export default {
           { title: '權利類別' },
           { title: '申請人類別' },
           { title: '申請類別' },
-          { title: '申請面積㎡' }
+          { title: '申請面積㎡' },
+          { title: '作物備註' },
+          { title: '檢附資料', setW: 'setWidth720' }
         ],
-        body: [
-          { val: 1, title: ['XX縣', 'XX鄉', 'XX段', '2,503,882', 'xx工作站', '2,506,555', '陳XX', '1/3', '公同共有', '小大', 'XX', '2,506'] },
-          { val: 2, title: ['XX縣', 'XX鄉', 'XX段', '2,503,882', 'xx工作站', '2,506,555', '陳XX', '1/3', '公同共有', '小大', 'XX', '2,506'] },
-          { val: 3, title: ['XX縣', 'XX鄉', 'XX段', '2,503,882', 'xx工作站', '2,506,555', '陳XX', '1/3', '公同共有', '小大', 'XX', '2,506'] },
-          { val: 4, title: ['XX縣', 'XX鄉', 'XX段', '2,503,882', 'xx工作站', '2,506,555', '陳XX', '1/3', '公同共有', '小大', 'XX', '2,506'] },
-          { val: 5, title: ['XX縣', 'XX鄉', 'XX段', '2,503,882', 'xx工作站', '2,506,555', '陳XX', '1/3', '公同共有', '小大', 'XX', '2,506'] },
-          { val: 6, title: ['XX縣', 'XX鄉', 'XX段', '2,503,882', 'xx工作站', '2,506,555', '陳XX', '1/3', '公同共有', '小大', 'XX', '2,506'] },
-          { val: 7, title: ['XX縣', 'XX鄉', 'XX段', '2,503,882', 'xx工作站', '2,506,555', '陳XX', '1/3', '公同共有', '小大', 'XX', '2,506'] },
-          { val: 8, title: ['XX縣', 'XX鄉', 'XX段', '2,503,882', 'xx工作站', '2,506,555', '陳XX', '1/3', '公同共有', '小大', 'XX', '2,506'] },
-          { val: 9, title: ['XX縣', 'XX鄉', 'XX段', '2,503,882', 'xx工作站', '2,506,555', '陳XX', '1/3', '公同共有', '小大', 'XX', '2,506'] },
-          { val: 10, title: ['XX縣', 'XX鄉', 'XX段', '2,503,882', 'xx工作站', '2,506,555', '陳XX', '1/3', '公同共有', '小大', 'XX', '2,506'] },
-          { val: 11, title: ['XX縣', 'XX鄉', 'XX段', '2,503,882', 'xx工作站', '2,506,555', '陳XX', '1/3', '公同共有', '小大', 'XX', '2,506'] },
-          { val: 12, title: ['XX縣', 'XX鄉', 'XX段', '2,503,882', 'xx工作站', '2,506,555', '陳XX', '1/3', '公同共有', '小大', 'XX', '2,506'] }
-        ]
+        body: [],
+        main: {}
       },
       BreadCrumb: ['灌溉地管理', '停灌補償案件'],
-      toggleStatus: false
+      toggleStatus: false,
+      dateName: '',
+      dateOpen: '',
+      Apply_sno: ''
     };
   },
   name: 'Compensate',
+  mounted () {
+    this.getDateNote();
+  },
   methods: {
     getToggleStatus (e) {
       this.toggleStatus = e;
@@ -109,19 +111,110 @@ export default {
         this.$router.push({ path: '/irrigatedLand/compensate/editcompensate' });
       }
     },
+    getDateNote () {
+      getApplySetting(new Date()).then(r => {
+        console.log(r);
+        this.Apply_sno = r.data[0].Apply_sno;
+        this.dateName = r.data[0].name;
+        this.dateOpen = r.data[0].start.split('T')[0] + '~' + r.data[0].end.split('T')[0];
+      });
+    },
     onsearch (e) {
       if (e) {
-        this.columnList = [];
-        console.log(e.obj);
+        this.tableList.body = [];
+        const arr = [];
         getApplyEvent(e.obj).then(r => {
-          console.log(r);
+          r.data.forEach(item => {
+            console.log(item);
+            const attachmentContent = this.switchAttachment(1, item.attachment1) + this.switchAttachment(2, item.attachment2) + this.switchAttachment(3, item.attachment3) + this.switchAttachment(4, item.attachment4) + this.switchAttachment(5, item.attachment5);
+            const data = {
+              county: item.county_id,
+              town: item.town_id,
+              section: item.section,
+              land_no: item.landno
+            };
+            axios.post('/AERC/rest/IrrigationLand?pageCnt=1&pageRows=1', data).then(d => {
+              const result = {};
+              // result.val = item.applyer_id;
+              result.main = r;
+              result.title = [item.county_name, item.town_name, item.section_name, d.data[0].tolarea, item.stn_name, d.data[0].irgarea, item.owner_name, item.percent1 + '/' + item.percent2, item.own_scro, item.farmername, item.category, item.area, item.note, attachmentContent];
+              arr.push(result);
+            });
+          });
+          this.tableList.body = arr;
         }).catch(err => {
           console.log(err);
         });
       }
     },
+    getLandArea (countyID, townID, section, landNO) {
+      const data = {
+        county: countyID,
+        town: townID,
+        section: section,
+        land_no: landNO
+      };
+      const result = {
+        irgarea: '',
+        tolarea: ''
+      };
+      axios.post('/AERC/rest/IrrigationLand?pageCnt=1&pageRows=1', data).then(r => {
+        result.irgarea = r.data[0].irgarea;
+        result.tolarea = r.data[0].tolarea;
+      });
+      return result;
+    },
+    switchAttachment (item, status) {
+      let result = '';
+      let attachment = '';
+      if (status) {
+        switch (item) {
+          case 1:
+            attachment = '身分證(正反)影本,';
+            break;
+          case 2:
+            attachment = '金融帳戶影本,';
+            break;
+          case 3:
+            attachment = '附件一:切結書,';
+            break;
+          case 4:
+            attachment = '附件二:實耕者證明文件,';
+            break;
+          case 5:
+            attachment = '代理委任書:(授權書或同意書)';
+            break;
+        }
+      }
+      // result = status === 1 ? attachment : '';
+      result = attachment;
+      return result;
+    },
     clearSearchIrrigatedInfo () {
-      this.columnList = [];
+      this.tableList.body = [];
+    },
+    tableEvent (e) {
+      if (e.event === 'isEdit') {
+        console.log(e);
+        this.$router.push('/irrigatedLand/compensate/editcompensate');
+        this.$store.commit('SET_COMPENSATE_DATA', { item: e.item.main, event: e.event });
+      } else if (e.event === 'isPrint') {
+        const item = e.item.data.main.data[e.item.num];
+        const data1 = {
+          apply_sno: this.Apply_sno,
+          id: item.applyer_id,
+          county_id: item.county_id,
+          town_id: item.town_id,
+          section: item.section,
+          landno: item.landno
+        };
+
+        getApplyList(data1).then(r => {
+          if (r.data !== '') {
+            window.location = r.data;
+          }
+        });
+      }
     }
   },
   computed: {
@@ -145,7 +238,7 @@ export default {
     justify-content:flex-end;
     margin: 0 auto;
     div{
-        margin: 0 2.5px;
+      margin: 0.5em 0;
     }
 }
 .tableTool{

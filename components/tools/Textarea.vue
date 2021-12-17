@@ -43,6 +43,10 @@ export default {
       type: Boolean,
       default: false
     },
+    defaultText: {
+      type: String,
+      default: ''
+    },
     addText: {
       type: String,
       default: ''
@@ -75,6 +79,11 @@ export default {
     }
   },
   watch: {
+    defaultText (n) {
+      if (n) {
+        this.textContent = n;
+      }
+    },
     addText (value) {
       if (value !== '') {
         this.textContent = value;

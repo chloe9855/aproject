@@ -91,10 +91,14 @@ export default {
 
 <style lang="scss" scoped>
 @import '~/assets/scss/input.scss';
+.input-title-box{
+  align-items: center !important;
+}
 .input-title {
     color: $header-black;
     flex: 1;
-    margin-right: 2px;
+    margin: 0 10px;
+    min-width: 110px;
     @include noto-sans-tc-16-medium;
 }
 .datepicker {
@@ -103,6 +107,8 @@ export default {
   align-items: center;
   justify-content: center;
   margin-top: 5px;
+  flex-direction:row;
+  display: flex;
   .datepickerTool{
     flex:1
   }

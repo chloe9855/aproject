@@ -30,7 +30,7 @@
             :key="index"
           >
             <td
-              v-show="isCheck"
+              v-if="isCheck"
               class="checkBoxOption"
             >
               <input
@@ -46,6 +46,7 @@
       </table>
     </div>
     <div
+      v-show="!isShowBg"
       ref="tableContent"
       class="tableBox w-100 tableContent"
       :class="'minWidth'+columnMinWidth"
@@ -60,7 +61,7 @@
             class="topHeadBox"
           >
             <th
-              v-show="isCheck"
+              v-if="isCheck"
               class="checkColumn"
             />
             <th
@@ -78,7 +79,7 @@
           </tr>
           <tr>
             <th
-              v-show="isCheck"
+              v-if="isCheck"
               class="checkColumn checkBoxOption"
             >
               <input
@@ -107,7 +108,7 @@
             :key="index"
           >
             <td
-              v-show="isCheck"
+              v-if="isCheck"
               :style="{'width':'35px'}"
               class="checkBoxOption"
             >
@@ -136,8 +137,10 @@
               />
               <Input
                 v-else-if="tableType(text)&&typeof text === 'object' && text.type === 'input'"
-                :input-id="text.key"
+                :input-id="item.val"
+                :input-num="textIndex"
                 :input-text="text.title"
+                :alter-coor="text.title"
                 @inputValue="inputVal"
               />
               <Dropdown
@@ -152,6 +155,7 @@
                 :input-id="textIndex"
                 :type="text.dateType"
                 :value-type="text.valueType"
+                :date-time="text.val"
                 @DateValue="dateVal"
               />
               <TableLink
@@ -159,7 +163,10 @@
                 :key="textIndex"
                 :link="text"
               />
-              <DropdownTreeList v-else-if="tableType(text)&&typeof text === 'object' && text.type === 'dropdownTreeList'" />
+              <DropdownTreeList
+                v-else-if="tableType(text)&&typeof text === 'object' && text.type === 'dropdownTreeList'"
+                :option="text.option"
+              />
               <span v-else>{{ text }}</span>
               <span v-if="tableType(text)&&isAttachText(text)">{{ text.attachText }}</span>
             </td>
@@ -172,7 +179,7 @@
               v-show="isEdit && !isScrollTable"
               class="editOption"
             >
-              <div @click="sendEvent('isEdit', item.info)">
+              <div @click="sendEvent('isEdit', item)">
                 <img
                   alt=""
                   class="vector"
@@ -184,7 +191,7 @@
               v-show="isDel && !isScrollTable"
               class="delOption"
             >
-              <div @click="sendEvent('isDel')">
+              <div @click="sendEvent('isDel',item,index)">
                 <img
                   alt=""
                   class="vector"
@@ -233,7 +240,7 @@
       </table>
     </div>
     <div
-      v-if="optionLength > 0 && isScrollTable"
+      v-if="optionLength > 0 && isScrollTable && !isShowBg"
       class="tableBox tableBtn"
       :class="[!!tableColumn.topHead?'tableTopL':'tableTopS']"
     >
@@ -266,7 +273,7 @@
               v-show="isDel"
               class="delOption"
             >
-              <div @click="sendEvent('isDel',item)">
+              <div @click="sendEvent('isDel',item,index)">
                 <img
                   alt=""
                   class="vector"
@@ -278,7 +285,7 @@
               v-show="isPrint"
               class="printOption"
             >
-              <div @click="sendEvent('isPrint',item)">
+              <div @click="sendEvent('isPrint',{data:item,num:index})">
                 <img
                   alt=""
                   class="vector"
@@ -315,7 +322,7 @@
       </table>
     </div>
     <Paginate
-      v-show="isPaginate"
+      v-show="isPaginate && !isShowBg"
       :total="dataNum"
       :per-page="10"
       @nowPage="getPageNum"
@@ -428,27 +435,29 @@ export default {
   },
   name: 'TableTool',
   mounted: function () {
-    // this.getPageNum(1);
     if (this.isPaginate) {
       this.getPageNum(1);
     } else {
       this.tableColumnBody = this.tableColumn.body;
     }
-    console.log('table');
-    console.log(this.tableColumn);
+  },
+  updated () {
+    this.tableColumnBody = this.tableColumn.body;
   },
   methods: {
     inputVal (e) { // 取得INPUT內容
       const arr = this.inputList;
       const arrId = this.inputListId;
       this.setDataArr(e, arr, arrId);
+      this.$emit('inputObj', e);
     },
     dateVal (e) { // 取得DATE內容
       const arr = this.dateList;
       const arrId = this.dateListId;
-      this.setDataArr(e, arr, arrId);
+      const type = 'datePicker';
+      this.setDateArr(e, arr, arrId, type);
     },
-    setDataArr (e, arr, arrId) {
+    setDateArr (e, arr, arrId, type) {
       if (arr.length < 1) {
         arr.push(e);
         arrId.push(e.id);
@@ -462,6 +471,30 @@ export default {
           }
         });
       }
+      if (type) {
+        arr.type = type;
+      }
+      console.log(arr);
+      this.$emit('dateData', arr);
+    },
+    setDataArr (e, arr, arrId, type) {
+      if (arr.length < 1) {
+        arr.push(e);
+        arrId.push(e.id);
+      } else {
+        arr.forEach(function (v, i) {
+          if (e.id === v.id) {
+            arr[i].val = e.val;
+          } else if (arrId.indexOf(e.id) < 0) {
+            arr.push(e);
+            arrId.push(e.id);
+          }
+        });
+      }
+      if (type) {
+        arr.type = type;
+      }
+      console.log(arr);
       this.$emit('inputData', arr);
     },
     getPageNum (e) { // 換頁取得DATA
@@ -507,15 +540,11 @@ export default {
       });
       return num;
     },
-    dataLength: function () {
-      const data = this.tableColumn.body;
-      return data.length;
-    },
     isCheck: function () {
       const data = this.tableColumn.body;
       let result = false;
       data.forEach(function (v) {
-        if (v.val) {
+        if (v.val || v.val === 0) {
           result = true;
         } else {
           result = false;
@@ -603,6 +632,12 @@ export default {
         allArr = [];
       }
       this.checkScrollList = allArr;
+    },
+    tableColumnBody: function (n, o) {
+      if (n.length < o.length) {
+        this.checkList = [];
+        this.isCheckedAll = false;
+      };
     }
   }
 };
@@ -793,6 +828,18 @@ export default {
 }
 .setWidth200{
   min-width: 200px !important;
+}
+.setWidth360{
+  min-width: 360px !important;
+}
+.setWidth480{
+  min-width: 480px !important;
+}
+.setWidth600{
+  min-width: 600px !important;
+}
+.setWidth720{
+  min-width: 720px !important;
 }
 .isRightBorder{
   border-right:1px solid $light-green;

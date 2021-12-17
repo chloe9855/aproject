@@ -1,13 +1,13 @@
 <template>
   <div class="tree_wrap">
     <div class="title_wrap">
-      <img
+      <!-- <img
         class="arrow"
         :src="picSrc"
         @click="picToggler(myItem.id)"
-      >
+      > -->
 
-      <div class="theme_checkbox">
+      <!-- <div class="theme_checkbox">
         <input
           :id="myItem.id"
           type="checkbox"
@@ -20,22 +20,25 @@
           {{ myItem.ia }}
         </label>
       </div>
-    </div>
+    </div> -->
 
-    <div
-      :class="`block-${myItem.id}`"
-      class="block11"
-    >
       <div
-        v-for="sItem in myItem.stn"
-        :key="sItem.no"
-        class="block1"
+        :class="`block-${myItem.id}`"
+        class="block11"
       >
-        <TreeSelect2
-          :s-item="sItem"
-          @changeStn="($event, name) => { $emit('changeStn', $event, name) }"
-          @changeGrp="($event, name) => { $emit('changeGrp', $event, name) }"
-        />
+        <div
+          v-for="sItem in myItem.mng"
+          :key="sItem.no"
+          class="block1"
+        >
+          <TreeSelect2
+            :s-item="sItem"
+            :index-no="indexNo"
+            :is-all-check="isAllCheck"
+            @changeMng="getMng"
+            @changeStn="getStn"
+          />
+        </div>
       </div>
     </div>
   </div>
@@ -51,12 +54,15 @@ export default {
   props: {
     myItem: {
       type: Object
+    },
+    indexNo: {
+      type: String,
+      default: ''
     }
   },
   data () {
     return {
       picSrc: require('~/assets/img/up-arrow.svg')
-
     };
   },
   methods: {
@@ -68,6 +74,14 @@ export default {
         this.picSrc = require('~/assets/img/up-arrow.svg');
         document.querySelector(`.block-${id}`).style.display = 'none';
       }
+    },
+    getMng (e) {
+      this.$emit('getMng', e);
+    },
+    getStn (e) {
+      console.log('stn');
+      console.log(e);
+      this.$emit('getQuery', e);
     }
   }
 };
@@ -76,7 +90,7 @@ export default {
 <style lang="scss" scoped>
 
   .block11 {
-    display: none;
+    //display: none;
   }
 
   .tree_wrap {

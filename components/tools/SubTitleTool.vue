@@ -3,6 +3,21 @@
     <h3 :class="{small:isSmall}">
       {{ title }}
     </h3>
+    <div
+      v-show="isReport"
+      class="flexBox w-50 reportBox"
+    >
+      <Dropdown
+        :options="dataChange"
+        @DropdownVal="getList"
+      />
+      <DatePicker
+        class="datePickerBox"
+        value-type="date"
+        type="date"
+        @DateValue="getTime"
+      />
+    </div>
     <div>
       <Buttons
         v-show="isBtn"
@@ -24,9 +39,14 @@
 
 <script>
 import Buttons from '~/components/tools/Buttons.vue';
+import DatePicker from '~/components/tools/DatePicker';
+import Dropdown from '~/components/tools/Dropdown';
+import { getApplySetting } from '~/api/apply';
 export default {
   components: {
-    Buttons
+    Buttons,
+    DatePicker,
+    Dropdown
   },
   props: {
     title: {
@@ -34,6 +54,10 @@ export default {
       default: ''
     },
     isSmall: {
+      type: Boolean,
+      default: false
+    },
+    isReport: {
       type: Boolean,
       default: false
     },
@@ -65,10 +89,22 @@ export default {
   data () {
     return {
       btnStatus: false,
-      btnSecStatus: false
+      btnSecStatus: false,
+      dataChange: []
     };
   },
   name: 'SubTitleTool',
+  mounted () {
+    if (this.isReport) {
+      getApplySetting().then(r => {
+        console.log('apply');
+        console.log(r);
+        r.data.forEach(element => {
+          this.dataChange.push({ title: element.name, value: element.Apply_sno });
+        });
+      });
+    }
+  },
   methods: {
     getBtnStatus (e) {
       this.btnStatus = e;
@@ -77,6 +113,14 @@ export default {
     getSecBtnStatus (e) {
       this.btnSecStatus = e;
       this.$emit('STbtnSecStatus', e);
+    },
+    getTime (e) {
+      console.log(e);
+      this.$emit('STDate', e);
+    },
+    getList (e) {
+      console.log(e);
+      this.$emit('STApplySno', e);
     }
   },
   computed: {
@@ -128,6 +172,14 @@ export default {
       @include pcxs-width{
         height: 60px;
       }
+    }
+  }
+  .reportBox{
+    div{
+      //margin: 0 0.25em;
+    }
+    .datePickerBox{
+      padding: 0 5px;
     }
   }
 }

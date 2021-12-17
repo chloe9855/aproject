@@ -21,7 +21,6 @@
         <TableTool
           :table-column="tableList"
           :is-paginate="true"
-          :column-min-width="150"
           :data-count="dataCount"
           :is-no-data-bg="isNoDataBg"
           @nowPage="getPageNum"
@@ -257,7 +256,6 @@ export default {
       this.columnList = [];
     },
     onsearch (o) {
-      // console.log(o);
       const e = o.obj;
       if (this.toggleCurrent === 0) {
         this.clearSearchIrrigatedLand();
@@ -292,7 +290,6 @@ export default {
         this.search2Obj = e;
         const _this = this;
         if (e && e.county) {
-          console.log(e);
           this.$store.commit('TOGGLE_LOADING_STATUS');
           const x = {
             county: e.county,
@@ -363,7 +360,6 @@ export default {
     goMapPage () {
       const countyId = this.countyId;
       const fid = this.countyFID;
-      this.$store.commit('TOGGLE_LOADING_STATUS');
       fetch(`/AERC/rest/Sec5ByFID?CountyID=${countyId}&FID=${fid}`, {
         method: 'GET',
         headers: new Headers({
@@ -373,12 +369,11 @@ export default {
         return response.json();
       }).then((jsonData) => {
         console.log(jsonData);
-        this.$store.commit('TOGGLE_LOADING_STATUS');
-        const nowUrl = window.location.origin;
-        const front = this.$router.options.base;
+        this.loadModal = false;
+        const nowUrl = window.location.href;
+        const front = nowUrl.substring(0, nowUrl.length - 37);
         const end = 'map/';
-        const myUrl = `${nowUrl}${front}${end}`;
-
+        const myUrl = `${front}${end}`;
         window.open(myUrl);
         localStorage.setItem('oriData', JSON.stringify(jsonData[0].geometry));
       }).catch((err) => {
@@ -396,7 +391,6 @@ export default {
       }
     },
     closeAlert (e) {
-      console.log(e);
       if (e) {
         this.alertError = false;
       };

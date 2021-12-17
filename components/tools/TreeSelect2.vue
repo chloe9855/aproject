@@ -2,19 +2,20 @@
   <div class="container">
     <div class="title_wrap">
       <img
+        v-show="indexNo!=='D'&&indexNo!=='E'"
         class="arrow"
         :src="picSrc2"
-        @click="picToggler2(sItem.no)"
+        @click="picToggler2(indexNo+'-'+sItem.no)"
       >
       <div class="theme_checkbox">
         <input
-          :id="sItem.no"
+          :id="indexNo+'_'+sItem.no"
           type="checkbox"
-          @change="$emit('changeStn', $event.target.checked, sItem.title)"
+          @change="$emit('changeMng', {isCheck:$event.target.checked,no:sItem.no,type:indexNo})"
         >
         <label
           class="title"
-          :for="sItem.no"
+          :for="indexNo+'_'+sItem.no"
         >
           {{ sItem.title }}
         </label>
@@ -22,23 +23,23 @@
     </div>
 
     <div
-      :class="`block22-${sItem.no}`"
+      :class="`block22-${indexNo}-${sItem.no}`"
       class="block2"
     >
       <div
-        v-for="gItem in sItem.grp"
+        v-for="gItem in sItem.stn"
         :key="gItem.no"
         class="title_wrap"
       >
         <div class="theme_checkbox">
           <input
-            :id="gItem.no"
+            :id="indexNo+'_'+sItem.no+gItem.no"
             type="checkbox"
-            @change="$emit('changeGrp', $event.target.checked, gItem.name)"
+            @change="$emit('changeStn', {isCheck:$event.target.checked,no:sItem.no+'_'+gItem.no,arr:[sItem.no,gItem.no],type:indexNo})"
           >
           <label
             class="title"
-            :for="gItem.no"
+            :for="indexNo+'_'+sItem.no+gItem.no"
           >
             {{ gItem.name }}
           </label>
@@ -55,6 +56,14 @@ export default {
   props: {
     sItem: {
       type: Object
+    },
+    indexNo: {
+      type: String,
+      default: ''
+    },
+    checkObj: {
+      type: String,
+      default: ''
     }
   },
   data () {
@@ -73,8 +82,9 @@ export default {
         document.querySelector(`.block22-${id}`).style.display = 'none';
       }
     }
+  },
+  computed: {
   }
-
 };
 </script>
 

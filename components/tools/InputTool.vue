@@ -36,6 +36,8 @@
     <div
       v-show="filterBox"
       class="filterBox"
+      :class="setFilterPos"
+      :style="{width:setFilterW,height:setFilterH}"
     >
       <ul>
         <li
@@ -63,13 +65,17 @@ export default {
     },
     errorTip: {
       type: String,
-      default: '輸入文字格式錯誤'
+      default: ''
     },
     isWarn: {
       type: String,
       default: ''
     },
     isDisable: {
+      type: Boolean,
+      default: false
+    },
+    setError: {
       type: Boolean,
       default: false
     },
@@ -89,6 +95,10 @@ export default {
       type: Number,
       default: 0
     },
+    inputNum: {
+      type: Number,
+      default: 0
+    },
     searchInput: {
       type: Array,
       default: () => {
@@ -100,6 +110,18 @@ export default {
       default: false
     },
     alterCoor: {
+      type: String,
+      default: ''
+    },
+    filterPos: {
+      type: String,
+      default: ''
+    },
+    filterW: {
+      type: String,
+      default: ''
+    },
+    filterH: {
       type: String,
       default: ''
     },
@@ -141,10 +163,14 @@ export default {
       const defaultStatus = this.isWarn;
       const regtype = this.RegExpType[defaultStatus];
       const rules = new RegExp(regtype);
-      if (defaultStatus === '' || this.message === '' || !regtype) {
-        return false;
+      if (this.errorTip !== '' && this.setError) {
+        return true;
       } else {
-        return !rules.test(this.message);
+        if (defaultStatus === '' || this.message === '' || !regtype) {
+          return false;
+        } else {
+          return !rules.test(this.message);
+        }
       }
     },
     iconImg () {
@@ -162,11 +188,36 @@ export default {
       } else {
         return false;
       }
+    },
+    setFilterW () {
+      let result = '';
+      if (this.filterW !== '') {
+        result = this.filterW + 'px';
+      }
+      return result;
+    },
+    setFilterH () {
+      let result = '';
+      if (this.filterH !== '') {
+        result = this.filterH + 'px';
+      }
+      return result;
+    },
+    setFilterPos () {
+      let result = '';
+      if (this.filterPos !== '') {
+        if (this.filterPos === 'right') {
+          result = 'filterRight';
+        } else if (this.filterPos === 'left') {
+          result = 'filterLeft';
+        }
+      }
+      return result;
     }
   },
   watch: {
     message (n) {
-      const data = { val: n, id: this.inputId };
+      const data = { val: n, id: this.inputId, num: this.inputNum };
       this.$emit('inputValue', data);
       const events = this.searchInput;
       const fileList = events.filter(function (event) {
@@ -199,5 +250,17 @@ export default {
   display: flex;
   align-items: center;
   justify-content: flex-end;
+}
+.filterBox{
+  ul{
+    li{
+      padding-bottom: 2px;
+    }
+    li:hover{
+      cursor: pointer;
+      background-color: #007bff;
+      color:white;
+    }
+  }
 }
 </style>

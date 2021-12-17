@@ -7,17 +7,15 @@
       icon="slider"
       :title="searchTitle"
     />
-    <slot :isClear="isClearAll">
-      <component
-        :is="componentInstance"
-        ref="searchComp"
-        :is-clear="isClearAll"
-        @tabCurrent="current"
-        @onsearch="onsearch"
-        @useAmountSearch="(payload, nowIa) => { $emit('useAmountSearch', payload, nowIa) }"
-        @clearUseAmount="() => { $emit('clearUseAmount') }"
-      />
-    </slot>
+    <component
+      :is="componentInstance"
+      :is-clear-first="isClearFirst"
+      :is-clear-second="isClearSecond"
+      @tabCurrent="current"
+      @onsearch="onsearch"
+      @useAmountSearch="(payload, nowIa) => { $emit('useAmountSearch', payload, nowIa) }"
+      @clearUseAmount="() => { $emit('clearUseAmount') }"
+    />
     <div class="buttonBox">
       <Button
         :name="'button-default'"
@@ -32,7 +30,7 @@
     </div>
     <div
       class="toggleBtn"
-      @click="toggleSearchBox"
+      @click="toggleSearthBox"
     >
       收合查詢列
       <span :class="arrow" />
@@ -50,7 +48,6 @@ import userAcctSearch from '~/components/model/searchBox/userAcctSearch';
 import groupUserAcctSearch from '~/components/model/searchBox/groupUserAcctSearch';
 import systemSearch from '~/components/model/searchBox/systemSearch';
 import usageAmountSearch from '~/components/model/searchBox/usageAmountSearch';
-
 export default {
   components: {
     PageHeader,
@@ -86,15 +83,18 @@ export default {
       toggleState: false,
       toggleBox: '',
       arrow: 'arrowLeft',
-      isClearAll: false
+      isClearFirst: false,
+      isClearSecond: false,
+      submitObj: null,
+      currentStatus: 0
     };
   },
   name: 'SearchBox',
   mounted () {
-    this.toggleSearchBox();
+    this.toggleSearthBox();
   },
   methods: {
-    toggleSearchBox () {
+    toggleSearthBox () {
       const isOpen = this.toggleState;
       if (isOpen) {
         this.toggleBox = 'hideBox';
@@ -108,23 +108,27 @@ export default {
       this.$emit('toggleStatus', this.toggleState);
     },
     current (e) {
+      this.currentStatus = e;
       this.$emit('toggleCurrent', e);
     },
-    search () {
-      if (this.$refs.searchComp && this.$refs.searchComp.search) {
-        this.$refs.searchComp.search();
-      }
-
-      this.$emit('search');
-    },
     onsearch (e) {
-      this.$emit('onsearch', e);
+      if (e.select === 0) {
+        this.isClearFirst = false;
+      } else if (e.select === 1) {
+        this.isClearSecond = false;
+      }
+      this.submitObj = e;
+    },
+    search () {
+      this.$emit('onsearch', this.submitObj);
     },
     clearAll (e) {
       if (e) {
-        this.isClearAll = !this.isClearAll;
-
-        this.$emit('clearSearch');
+        if (this.currentStatus === 0) {
+          this.isClearFirst = true;
+        } else if (this.currentStatus === 1) {
+          this.isClearSecond = true;
+        }
       }
     }
   },

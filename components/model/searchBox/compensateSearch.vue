@@ -8,25 +8,26 @@
     <DropdownVertical
       title="縣市"
       :options="member.county"
-      :change-text="isClear"
+      :change-text="isClearFirst"
       @DropdownVal="countyDrop"
     />
     <DropdownVertical
       title="鄉鎮"
       :options="member.town"
-      :change-text="isClear"
+      :change-text="isClearFirst"
       @DropdownVal="townDrop"
     />
     <DropdownVertical
       title="段名"
       :options="member.section"
-      :change-text="isClear"
+      :change-text="isClearFirst"
       @DropdownVal="sectionDrop"
     />
     <InputVertical
       title="地號"
       :green-hint="`地號範圍: ${minNo}-${maxNo}`"
       :search-input="Sec5covList"
+      :change-text="isClearFirst"
       star-sign="*"
       @inputValue="getLandValue"
     />
@@ -42,16 +43,21 @@ export default {
     DropdownVertical,
     InputVertical
   },
-  props: {},
+  props: {
+    isClearFirst: {
+      type: Boolean,
+      default: false
+    }
+  },
   data: () => {
     return {
       // member: [{ title: '預設選項', value: '0' }, { title: '工作站人員', value: '1' }, { title: '管理人員', value: '2' }, { title: '民眾', value: '3' }],
       searchObj: {
-        userId: '',
-        county: '',
-        town: '',
+        id: '',
+        county_id: '',
+        town_id: '',
         section: '',
-        land: ''
+        landno: ''
       },
       member: {
         county: [],
@@ -65,8 +71,12 @@ export default {
       Sec5covList: [],
       minNo: '',
       maxNo: '',
-      myLandnoList: []
+      myLandnoList: [],
       //
+      isClear1: false,
+      isClear2: false,
+      isClear3: false,
+      isClear4: false
     };
   },
   name: 'CompensateSearch',
@@ -84,53 +94,54 @@ export default {
       }
     },
     countyDrop (payload) {
-      this.searchObj.county = payload.value;
-      this.searchObj.town = '';
+      this.searchObj.county_id = payload.value;
+      this.searchObj.town_id = '';
       this.searchObj.section = '';
-      this.searchObj.land = '';
+      this.searchObj.landno = '';
       this.member.town = [];
       this.member.section = [];
       this.member.land = { option: [{ title: '', value: '0' }] };
-      getTowns(this.searchObj.county).then(r => {
+      this.$emit('onsearch', { obj: this.searchObj });
+      getTowns(this.searchObj.county_id).then(r => {
         this.member.town = r.data.map(x => ({ title: x.TOWNNAME, value: x.TOWNID }));
       });
     },
     townDrop (payload) {
-      this.searchObj.town = payload.value;
+      this.searchObj.town_id = payload.value;
       this.searchObj.section = '';
-      this.searchObj.land = '';
+      this.searchObj.landno = '';
       this.member.section = [];
       this.member.land = { option: [{ title: '', value: '0' }] };
-      getSections(this.searchObj.county, this.searchObj.town).then(r => {
+      this.$emit('onsearch', { obj: this.searchObj });
+      getSections(this.searchObj.county_id, this.searchObj.town_id).then(r => {
         this.member.section = r.data.map(x => ({ title: x.Sec_cns, value: x.Section }));
       });
     },
     sectionDrop (payload) {
       this.searchObj.section = payload.value;
-      this.searchObj.land = '';
+      this.searchObj.landno = '';
       this.member.land = { option: [{ title: '', value: '0' }] };
-      getSecNo(this.searchObj.county, this.searchObj.section).then(r => {
+      this.$emit('onsearch', { obj: this.searchObj });
+      getSecNo(this.searchObj.county_id, this.searchObj.section).then(r => {
         this.maxNo = r.data[0].Max;
         this.minNo = r.data[0].Min;
       });
-      getSecNoList(this.searchObj.county, this.searchObj.section).then(r => {
+      getSecNoList(this.searchObj.county_id, this.searchObj.section).then(r => {
         this.Sec5covList = r.data.map(item => item.Land_no);
       });
     },
     landDrop (payload) {
-      this.searchObj.land = payload.value;
+      this.searchObj.landno = payload.value;
     },
     getLandValue (e) {
-      console.log(e);
       if (e) {
         this.landValue = e;
+        // this.searchObj.id = '7eYXGw66I2tilK8qDRnzWg==';
+        // this.searchObj.id = this.userId;
+        this.searchObj.id = this.userId;
+        this.searchObj.landno = this.landValue;
+        this.$emit('onsearch', { obj: this.searchObj });
       }
-    },
-    search () {
-      this.searchObj.userId = this.userId;
-      this.searchObj.land = this.landValue;
-      console.log(this.searchObj);
-      this.$emit('onsearch', { obj: this.searchObj });
     }
   }
 };

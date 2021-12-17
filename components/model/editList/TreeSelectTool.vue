@@ -4,13 +4,20 @@
       alt=""
       class="icon"
       :src="require('~/assets/img/print.svg')"
+      @click="getFile"
     >
     <SubTitleTool
       :title="title"
       class="w-100"
       :is-small="true"
     />
-    <TreeSelect class="treeSelect" />
+    <TreeSelect
+      class="treeSelect"
+      :all-options="options"
+      :index-no="indexNo"
+      @getQuery="getQuery"
+      @getMng="getMng"
+    />
   </div>
 </template>
 
@@ -26,9 +33,85 @@ export default {
     title: {
       type: String,
       default: ''
+    },
+    link: {
+      type: String,
+      default: ''
+    },
+    indexNo: {
+      type: String,
+      default: ''
+    },
+    options: {
+      type: Array,
+      default: () => {
+        return [];
+      }
     }
   },
-  name: 'TreeSelectBox'
+  data () {
+    return {
+      query: [],
+      query1: [],
+      queryA: [],
+      queryB: [],
+      queryD: [],
+      queryE: [],
+      mngArr: []
+    };
+  },
+  name: 'TreeSelectBox',
+  methods: {
+    select (e) {
+      console.log(e);
+    },
+    getQuery (e) {
+      console.log(e.no);
+      if (e.isCheck) {
+        this.query.push(e.no);
+      } else {
+        const a = this.query.indexOf(e.no);
+        if (a > -1) {
+          this.query.splice(a, 1);
+        }
+      }
+      if (e.type === 'A') {
+        this.queryA = this.query.map(x => x.split('_'));
+        this.$emit('query', { data: this.queryA, type: 'A' });
+      } else if (e.type === 'B') {
+        this.queryB = this.query.map(x => x.split('_'));
+        this.$emit('query', { data: this.queryB, type: 'B' });
+      }
+      console.log(this.query);
+      console.log(this.queryA);
+      console.log(this.queryB);
+    },
+    getMng (e) {
+      console.log(e);
+      if (e.isCheck) {
+        this.query1.push(e.no);
+      } else {
+        const a = this.query1.indexOf(e.no);
+        if (a > -1) {
+          this.query1.splice(a, 1);
+        }
+      }
+      this.mngArr = this.query1;
+      if (e.type === 'D') {
+        this.queryD = this.query1;
+        this.$emit('query1', { type: 'D', no: e.no, data: this.queryD });
+      } else if (e.type === 'E') {
+        this.queryE = this.query1;
+        this.$emit('query1', { type: 'E', no: e.no, data: this.queryE });
+      }
+    },
+    getFile () {
+      console.log(this.link);
+      if (this.link !== '') {
+        window.location = this.link;
+      }
+    }
+  }
 };
 </script>
 

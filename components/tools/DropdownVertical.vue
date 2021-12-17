@@ -111,7 +111,9 @@ export default {
   },
   watch: {
     selected (n, o) {
-      this.$emit('DropdownVal', n);
+      if (n !== '') {
+        this.$emit('DropdownVal', n);
+      }
     },
     defaultData (n, o) {
       this.selected = n;
@@ -119,9 +121,8 @@ export default {
     defaultValue (n, o) {
       this.selectVal = n;
     },
-    changeText (value) {
-      console.log(value);
-      if (value === true) {
+    changeText (n, o) {
+      if (n) {
         this.selected = '';
       }
     },
