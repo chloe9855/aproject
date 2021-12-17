@@ -6,7 +6,7 @@ export const state = () => ({
   hideFooter: false,
   popupState: false,
   isLoading: false,
-  popupType: { type: 'editAccount', title: '請設定查詢作業標題', editId: {} },
+  popupType: { type: '', title: '請設定查詢作業標題', editId: {} },
   editCompensateEventID: '',
   compensateData: {},
   mouseEventMin: 0,
