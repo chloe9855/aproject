@@ -14,12 +14,15 @@ export default {
   components: {
     DropdownVertical: DropdownVertical
   },
-  props: {},
+  props: {
+    isClear: Boolean
+  },
   data: () => {
     return {
       userId: '',
       myIaList: '',
-      useAmountData: ''
+      useAmountData: '',
+      nowIa: ''
     };
   },
   name: 'UsageAmountSearch',
@@ -54,7 +57,9 @@ export default {
     },
     // * 查各管理處統計量
     searchAmount (payload) {
-      fetch(`/AERC/rest/UsageAmount/?Ia=${payload.Ia}`, {
+      this.nowIa = payload.Ia;
+
+      fetch(`/AERC/rest/UsageAmount?Ia=${payload.Ia}`, {
         method: 'GET',
         headers: new Headers({
           'Content-Type': 'application/json'
@@ -69,9 +74,14 @@ export default {
         console.log(err);
       });
     },
-    // * 查詢
+    // * 按下查詢
     search () {
-
+      this.$emit('useAmountSearch', this.useAmountData, this.nowIa);
+    }
+  },
+  watch: {
+    isClear (value) {
+      this.$emit('clearUseAmount');
     }
   }
 };

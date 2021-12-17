@@ -12,7 +12,8 @@ export const state = () => ({
   mouseEventMin: 0,
   userInfo: {},
   editAccount: '',
-  canvasUrl: ''
+  canvasUrl: '',
+  oriFormData: { slogan: '', content: '', link: '', rows: '' }
 });
 
 // * ==========================================================================
@@ -59,6 +60,9 @@ export const mutations = {
   // * 截圖dataUrl
   GET_DATA_URL (state, payload) {
     state.canvasUrl = payload;
+  },
+  SET_FORM_DATA (state, payload) {
+    state.oriFormData = payload;
   }
 
 };

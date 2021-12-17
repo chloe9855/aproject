@@ -181,6 +181,7 @@
                     ref="upfile"
                     type="file"
                     style="display: none;"
+                    @click="$refs.upfile.value = null"
                     @change="fileUploader(shpOptions.current)"
                   >
                 </div>
@@ -785,6 +786,7 @@ export default {
   // },
   mounted () {
     this.getBaseLayer();
+
     this.userId = sessionStorage.getItem('loginUser');
 
     setTimeout(() => {
@@ -1041,7 +1043,7 @@ export default {
         // MBT.Style[layerName].visible = $event;
         // MBT.updateStyle(MBT.Style);
         layerName.forEach((item, index) => {
-          allMBT[index].updateStyle({
+          allMBTX[index].updateStyle({
             [item]: { visible: $event }
           });
         });
@@ -1051,22 +1053,29 @@ export default {
         this.layerOptions.lineList[index].visible = $event;
 
         layerName.forEach((item, index) => {
-          allMBT[index].updateStyle({
-            [item]: { visible: $event }
+          allMBTX[index].updateStyle({
+            [item]: { visible: $event },
+            [`${item}_Label`]: { visible: $event }
           });
         });
-        // ARO.updateStyle({
-        //   '01_Arrow': { visible: $event }
-        // });
       }
       if (category === 'surfaceList') {
         const index = this.layerOptions.surfaceList.findIndex(item => item.id === id);
         this.layerOptions.surfaceList[index].visible = $event;
 
         layerName.forEach((item, index) => {
-          allMBT[index].updateStyle({
-            [item]: { visible: $event }
-          });
+          const realName = item.substring(3);
+          if (realName === 'Grp' || realName === 'Rot') {
+            allMBTX[index].updateStyle({
+              [item]: { visible: $event },
+              [`${item}_Label`]: { visible: $event }
+            });
+          } else {
+            allMBT[index].updateStyle({
+              [item]: { visible: $event },
+              [`${item}_Label`]: { visible: $event }
+            });
+          }
         });
       }
       // 底圖切換
@@ -1109,7 +1118,7 @@ export default {
         this.layerOptions.pointList[index].type[indexB].visible = $event;
 
         layerName.forEach((item, index) => {
-          allMBT[index].updateStyle({
+          allMBTX[index].updateStyle({
             [item]: { subid: subId, subs: { [branchName]: { visible: $event } } }
           });
         });
@@ -1123,7 +1132,7 @@ export default {
         //   [layerName]: { subid: subId, subs: { [branchName]: { visible: $event } } }
         // });
         layerName.forEach((item, index) => {
-          allMBT[index].updateStyle({
+          allMBTX[index].updateStyle({
             [item]: { subid: subId, subs: { [branchName]: { visible: $event } } }
           });
         });
@@ -1134,9 +1143,17 @@ export default {
         this.layerOptions.surfaceList[index].type[indexB].visible = $event;
 
         layerName.forEach((item, index) => {
-          allMBT[index].updateStyle({
-            [item]: { subid: subId, subs: { [branchName]: { visible: $event } } }
-          });
+          const realName = item.substring(3);
+
+          if (realName === 'Grp' || realName === 'Rot') {
+            allMBTX[index].updateStyle({
+              [item]: { subid: subId, subs: { [branchName]: { visible: $event } } }
+            });
+          } else {
+            allMBT[index].updateStyle({
+              [item]: { subid: subId, subs: { [branchName]: { visible: $event } } }
+            });
+          }
         });
       }
     },
@@ -1158,7 +1175,7 @@ export default {
       //   [layerName]: { subid: subId, subs: newObj }
       // });
       layerName.forEach((item2, index2) => {
-        allMBT[index2].updateStyle({
+        allMBTX[index2].updateStyle({
           [item2]: { subid: subId, subs: newObj }
         });
       });
@@ -1179,7 +1196,7 @@ export default {
       });
 
       layerName.forEach((item2, index2) => {
-        allMBT[index2].updateStyle({
+        allMBTX[index2].updateStyle({
           [item2]: { subid: subId, subs: newObj }
         });
       });
@@ -1200,9 +1217,17 @@ export default {
       });
 
       layerName.forEach((item2, index2) => {
-        allMBT[index2].updateStyle({
-          [item2]: { subid: subId, subs: newObj }
-        });
+        const realName = item2.substring(3);
+
+        if (realName === 'Grp' || realName === 'Rot') {
+          allMBTX[index2].updateStyle({
+            [item2]: { subid: subId, subs: newObj }
+          });
+        } else {
+          allMBT[index2].updateStyle({
+            [item2]: { subid: subId, subs: newObj }
+          });
+        }
       });
 
       this.layerOptions.surfaceList[index].allShow = $event;
@@ -1217,7 +1242,7 @@ export default {
         this.layerOptions.pointList[index].opacity = value;
 
         layerName.forEach((item, index) => {
-          allMBT[index].updateStyle({ [item]: { style: { opacity: value / 100 } } });
+          allMBTX[index].updateStyle({ [item]: { style: { opacity: value / 100 } } });
         });
       }
       if (category === 'lineList') {
@@ -1228,9 +1253,11 @@ export default {
         this.layerOptions.lineList[index].opacity = value;
 
         layerName.forEach((item, index) => {
-          allMBT[index].updateStyle({ [item]: { style: { opacity: value / 100 } } });
+          allMBTX[index].updateStyle({
+            [item]: { style: { opacity: value / 100 } },
+            [`${item}_Label`]: { style: { opacity: value / 100 } }
+          });
         });
-        // ARO.updateStyle({ '01_Arrow': { style: { opacity: value / 100 } } });
       }
       if (category === 'surfaceList') {
         const index = this.layerOptions.surfaceList.findIndex(item => item.id === id);
@@ -1242,7 +1269,18 @@ export default {
         // MBT.Style[layerName].style = { opacity: value / 100 };
         // MBT.updateStyle(MBT.Style);
         layerName.forEach((item, index) => {
-          allMBT[index].updateStyle({ [item]: { style: { opacity: value / 100 } } });
+          const realName = item.substring(3);
+          if (realName === 'Grp' || realName === 'Rot') {
+            allMBTX[index].updateStyle({
+              [item]: { style: { opacity: value / 100 } },
+              [`${item}_Label`]: { style: { opacity: value / 100 } }
+            });
+          } else {
+            allMBT[index].updateStyle({
+              [item]: { style: { opacity: value / 100 } },
+              [`${item}_Label`]: { style: { opacity: value / 100 } }
+            });
+          }
         });
       }
       // 底圖切換
@@ -1290,6 +1328,7 @@ export default {
     fileUploader (current) {
       this.loadModal = true;
       const newFile = document.getElementById('upfile').files[0];
+
       if (newFile === undefined) { return; }
       const type = newFile.name.substring(newFile.name.length - 3, newFile.name.length);
       const fileName = newFile.name.substring(0, newFile.name.length - 4);
@@ -1298,7 +1337,7 @@ export default {
       console.log(newFile);
       console.log(`${current},${type}`);
 
-      if (type !== 'kml' && type !== 'kmz') {
+      if (type !== 'kml' && type !== 'kmz' && type !== 'KML' && type !== 'KMZ') {
         this.formatBox = true;
         return;
       }
@@ -1307,7 +1346,7 @@ export default {
         return;
       }
 
-      if (type === 'kmz') {
+      if (type === 'kmz' || type === 'KMZ') {
         this.getKmzHandler(newFile);
         return;
       }
@@ -1328,20 +1367,20 @@ export default {
       //     });
       //   });
 
-      SuperGIS.LoadModules(['scripts/MVTData.js', 'vector_tile.js', 'pbf.js', 'scripts/KML.js', 'scripts/Collada.js'], () => {
-        this.shpOptions.kmlLayer = new sg.layers.KMLLayer(null, { data: newFile });
-        pMapBase.AddLayer(this.shpOptions.kmlLayer);
-        const result = {
-          id: Math.random(),
-          name: fileName,
-          visible: true,
-          opacity: 100
-        };
-        this.shpOptions.layerList.push(result);
-        this.zoomToLayer(this.shpOptions.kmlLayer);
+      // SuperGIS.LoadModules(['scripts/MVTData.js', 'vector_tile.js', 'pbf.js', 'scripts/KML.js', 'scripts/Collada.js'], () => {
+      this.shpOptions.kmlLayer = new sg.layers.KMLLayer(null, { data: newFile });
+      pMapBase.AddLayer(this.shpOptions.kmlLayer);
+      const result = {
+        id: Math.random(),
+        name: fileName,
+        visible: true,
+        opacity: 100
+      };
+      this.shpOptions.layerList.push(result);
+      this.zoomToLayer(this.shpOptions.kmlLayer);
 
-        // this.shpOptions.kmlLayer = new sg.layers.KMLLayer(null, { data: newFile });
-      });
+      // this.shpOptions.kmlLayer = new sg.layers.KMLLayer(null, { data: newFile });
+      // });
 
       pMapBase.RefreshMap(true);
       this.loadModal = false;
@@ -1388,32 +1427,44 @@ export default {
         console.log(data);
         const newArr = data[0].File.filter(item => item.substring(item.length - 3, item.length) === 'kml');
         const newUrl = `${data[0].Folder}/${newArr[0]}`;
-        const newFile = new File([''], newUrl);
-        console.log(newFile);
-
-        // 先移除舊的檔案
-        pMapBase.RemoveLayer(this.shpOptions.kmlLayer);
-        pMapBase.RefreshMap(true);
-        this.shpOptions.layerList = [];
-        //
-        SuperGIS.LoadModules(['scripts/MVTData.js', 'vector_tile.js', 'pbf.js', 'scripts/KML.js', 'scripts/Collada.js'], () => {
-          this.shpOptions.kmlLayer = new sg.layers.KMLLayer(null, { data: newFile });
-          pMapBase.AddLayer(this.shpOptions.kmlLayer);
-          const result = {
-            id: Math.random(),
-            name: fileName,
-            visible: true,
-            opacity: 100
-          };
-          this.shpOptions.layerList.push(result);
-          this.zoomToLayer(this.shpOptions.kmlLayer);
-        });
-
-        pMapBase.RefreshMap(true);
-        this.loadModal = false;
+        // const newFile = new File([''], newUrl);
+        const xhr = new XMLHttpRequest();
+        xhr.open('GET', newUrl);
+        xhr.responseType = 'blob';
+        xhr.onload = () => {
+          // blob = xhr.response;
+          // LoadAndDisplayFile(blob);
+          console.log(xhr.response);
+          const oFile = new File([xhr.response], fileName, { type: xhr.response.type });
+          this.loadMyKmz(oFile, fileName);
+          console.log(oFile);
+        };
+        xhr.send();
       }).catch((err) => {
         console.log(err);
       });
+    },
+    loadMyKmz (myFile, fileName) {
+      // 先移除舊的檔案
+      pMapBase.RemoveLayer(this.shpOptions.kmlLayer);
+      pMapBase.RefreshMap(true);
+      this.shpOptions.layerList = [];
+      //
+      // SuperGIS.LoadModules(['scripts/MVTData.js', 'vector_tile.js', 'pbf.js', 'scripts/KML.js', 'scripts/Collada.js'], () => {
+      this.shpOptions.kmlLayer = new sg.layers.KMLLayer(null, { data: myFile });
+      pMapBase.AddLayer(this.shpOptions.kmlLayer);
+      const result = {
+        id: Math.random(),
+        name: fileName,
+        visible: true,
+        opacity: 100
+      };
+      this.shpOptions.layerList.push(result);
+      this.zoomToLayer(this.shpOptions.kmlLayer);
+      // });
+
+      pMapBase.RefreshMap(true);
+      this.loadModal = false;
     },
 
     // * @ 圖層工具：臨時展繪 上傳shp檔
@@ -1446,7 +1497,7 @@ export default {
         this.allShpGraphic = [];
         // 畫圖
         data.forEach((item) => {
-          const geometry = sg.geometry.Geometry.fromGeoJson(item.geometry);
+          const geometry = sg.geometry.Geometry.fromGeoJson(item.GEOMETRY);
           this.allShpGraphic.push(sg.Graphic.createFromGeometry(geometry, { borderwidth: 1, fillcolor: new sg.Color(220, 105, 105, 0.5) }));
           this.allGeotry.push(geometry);
         });
@@ -1896,7 +1947,7 @@ export default {
         // 只會載入一次 new MeasureTool
         if (value === 'geoMeasureWindow' && this.openOnce === true) {
           this.openOnce = false;
-          this.drawTool = new MeasureTool('', pMapBase);
+          this.drawTool = new MeasureToolXX('', pMapBase);
         }
         // 打開測量視窗預設啟動長度測量
         if (value === 'geoMeasureWindow' && this.openLine === true) {
@@ -1926,13 +1977,168 @@ export default {
         }
         // 點線面圖資載入
         if (value === 'switchLayersWindow' && this.openOnceLa === true) {
+          // 圖磚1
           allMBT.forEach((itemBT) => {
             Object.keys(itemBT.Style).forEach((key) => {
               // console.log(key);
               // console.log(itemBT.Style[key]);
               const mName = key.substring(3);
 
-              const newList = iaList.map(item => `${item}_${mName}`);
+              let newList = [];
+              const long = key.split('_');
+              if (long.length === 2) {
+                newList = iaList.map(item => `${item}_${mName}`);
+              }
+
+              const result = {
+                id: Math.random(),
+                LayerName: newList,
+                visible: false,
+                opacity: 100,
+                LayerTitle: '',
+                type: [],
+                allShow: true
+              };
+
+              if (mName === 'Ia' && this.getIa === false) {
+                if (itemBT.Style[key].paint === undefined) { return; }
+
+                this.getIa = true;
+                result.LayerTitle = '管理處';
+                result.visible = true;
+                result.opacity = 50;
+                result.id = 71;
+                this.layerOptions.surfaceList.push(result);
+
+                const newArr = [];
+                const res = {
+                  id: Math.random(),
+                  name: '',
+                  visible: true,
+                  subId: 'Ia_cns',
+                  bgColor: itemBT.Style[key].paint['fill-color'],
+                  border: itemBT.Style[key].paint['fill-outline-color']
+                };
+                newArr.push(res);
+
+                result.type = newArr;
+              }
+              if (mName === 'Mng' && this.getMng === false) {
+                if (itemBT.Style[key].paint === undefined) { return; }
+
+                this.getMng = true;
+                result.LayerTitle = '管理分處';
+                result.opacity = 50;
+                result.id = 72;
+                this.layerOptions.surfaceList.push(result);
+
+                const newArr = [];
+                const res = {
+                  id: Math.random(),
+                  name: '',
+                  visible: true,
+                  subId: 'Mng_cns',
+                  bgColor: itemBT.Style[key].paint['fill-color'],
+                  border: itemBT.Style[key].paint['fill-outline-color']
+                };
+                newArr.push(res);
+
+                result.type = newArr;
+              }
+              if (mName === 'Stn' && this.getStn === false) {
+                if (itemBT.Style[key].paint['fill-color'] === undefined) { return; }
+
+                this.getStn = true;
+                result.LayerTitle = '工作站';
+                result.opacity = 50;
+                result.id = 73;
+                this.layerOptions.surfaceList.push(result);
+
+                const newArr = [];
+                itemBT.Style[key].paint['fill-color'].forEach((item, index, array) => {
+                  if (index % 2 === 1 && index !== array.length - 1) {
+                    const res = {
+                      id: Math.random(),
+                      name: item[2],
+                      visible: true,
+                      subId: 'Stn',
+                      picStn: ''
+                    };
+                    res.picStn = array[index + 1];
+
+                    newArr.push(res);
+                  }
+                });
+
+                result.type = newArr;
+              }
+
+              if (mName === 'Period' && this.getPeriod === false) {
+                if (itemBT.Style[key].paint['fill-color'] === undefined) { return; }
+
+                this.getPeriod = true;
+                result.LayerTitle = '期作別';
+                result.opacity = 50;
+                result.id = 76;
+                this.layerOptions.surfaceList.push(result);
+
+                const newArr = [];
+                itemBT.Style[key].paint['fill-color'].forEach((item, index, array) => {
+                  if (index % 2 === 1 && index !== array.length - 1) {
+                    const res = {
+                      id: Math.random(),
+                      name: item[2],
+                      visible: true,
+                      subId: 'Period_cns',
+                      picPeriod: ''
+                    };
+                    res.picPeriod = array[index + 1];
+
+                    newArr.push(res);
+                  }
+                });
+
+                result.type = newArr;
+              }
+              if (mName === 'Pool' && this.getPool === false) {
+                if (itemBT.Style[key].paint === undefined) { return; }
+
+                this.getPool = true;
+                result.LayerTitle = '埤塘';
+                result.opacity = 50;
+                result.id = 80;
+                this.layerOptions.surfaceList.push(result);
+
+                const newArr = [];
+                const res = {
+                  id: Math.random(),
+                  name: '',
+                  visible: true,
+                  subId: 'Pool_cns',
+                  bgColor: itemBT.Style[key].paint['fill-color'],
+                  border: itemBT.Style[key].paint['fill-outline-color']
+                };
+                newArr.push(res);
+
+                result.type = newArr;
+              }
+            });
+          });
+
+          // 圖磚2
+          allMBTX.forEach((itemBT) => {
+            Object.keys(itemBT.Style).forEach((key) => {
+              const mName = key.substring(3);
+
+              let newList = [];
+              const long = key.split('_');
+              if (long.length === 2) {
+                newList = iaList.map(item => `${item}_${mName}`);
+              }
+
+              console.log('newList');
+              console.log(newList);
+
               const result = {
                 id: Math.random(),
                 LayerName: newList,
@@ -1957,7 +2163,7 @@ export default {
                       id: Math.random(),
                       name: item[2],
                       visible: true,
-                      subId: item[1][1],
+                      subId: 'Name',
                       picCons: item[2]
                     };
 
@@ -1967,7 +2173,9 @@ export default {
 
                 result.type = newArr;
               }
+
               if (mName === 'Canal' && this.getCanal === false) {
+                if (itemBT.Style[key].paint === undefined) { return; }
                 if (itemBT.Style[key].paint['line-color'] === undefined) { return; }
 
                 this.getCanal = true;
@@ -1981,7 +2189,7 @@ export default {
                       id: Math.random(),
                       name: item[2],
                       visible: true,
-                      subId: item[1][1],
+                      subId: 'Sys_cls',
                       picCanal: ''
                     };
                     res.picCanal = array[index + 1];
@@ -1992,80 +2200,9 @@ export default {
 
                 result.type = newArr;
               }
-              if (mName === 'Ia' && this.getIa === false) {
-                if (itemBT.Style[key].paint === undefined || itemBT.Style[key].layout === undefined) { return; }
 
-                this.getIa = true;
-                result.LayerTitle = '管理處';
-                result.visible = true;
-                result.opacity = 50;
-                result.id = 71;
-                this.layerOptions.surfaceList.push(result);
-
-                const newArr = [];
-                const res = {
-                  id: Math.random(),
-                  name: '',
-                  visible: true,
-                  subId: itemBT.Style[key].layout['text-field'][1],
-                  bgColor: itemBT.Style[key].paint['fill-color'],
-                  border: itemBT.Style[key].paint['fill-outline-color']
-                };
-                newArr.push(res);
-
-                result.type = newArr;
-              }
-              if (mName === 'Mng' && this.getMng === false) {
-                if (itemBT.Style[key].paint === undefined || itemBT.Style[key].layout === undefined) { return; }
-
-                this.getMng = true;
-                result.LayerTitle = '管理分處';
-                result.opacity = 50;
-                result.id = 72;
-                this.layerOptions.surfaceList.push(result);
-
-                const newArr = [];
-                const res = {
-                  id: Math.random(),
-                  name: '',
-                  visible: true,
-                  subId: itemBT.Style[key].layout['text-field'][1],
-                  bgColor: itemBT.Style[key].paint['fill-color'],
-                  border: itemBT.Style[key].paint['fill-outline-color']
-                };
-                newArr.push(res);
-
-                result.type = newArr;
-              }
-              if (mName === 'Stn' && this.getStn === false) {
-                if (itemBT.Style[key].paint['fill-color'] === undefined) { return; }
-
-                this.getStn = true;
-                result.LayerTitle = '工作站';
-                result.opacity = 50;
-                result.id = 73;
-                this.layerOptions.surfaceList.push(result);
-
-                const newArr = [];
-                itemBT.Style[key].paint['fill-color'].forEach((item, index, array) => {
-                  if (index % 2 === 1 && index !== array.length - 1) {
-                    const res = {
-                      id: Math.random(),
-                      name: item[2],
-                      visible: true,
-                      subId: item[1][1],
-                      picStn: ''
-                    };
-                    res.picStn = array[index + 1];
-
-                    newArr.push(res);
-                  }
-                });
-
-                result.type = newArr;
-              }
               if (mName === 'Grp' && this.getGrp === false) {
-                if (itemBT.Style[key].paint === undefined || itemBT.Style[key].layout === undefined) { return; }
+                if (itemBT.Style[key].paint === undefined) { return; }
 
                 this.getGrp = true;
                 result.LayerTitle = '小組';
@@ -2078,7 +2215,7 @@ export default {
                   id: Math.random(),
                   name: '',
                   visible: true,
-                  subId: itemBT.Style[key].layout['text-field'][1],
+                  subId: 'Grp_cns',
                   bgColor: itemBT.Style[key].paint['fill-color'],
                   border: itemBT.Style[key].paint['fill-outline-color']
                 };
@@ -2087,7 +2224,7 @@ export default {
                 result.type = newArr;
               }
               if (mName === 'Rot' && this.getRot === false) {
-                if (itemBT.Style[key].paint === undefined || itemBT.Style[key].layout === undefined) { return; }
+                if (itemBT.Style[key].paint === undefined) { return; }
 
                 this.getRot = true;
                 result.LayerTitle = '輪區';
@@ -2100,56 +2237,7 @@ export default {
                   id: Math.random(),
                   name: '',
                   visible: true,
-                  subId: itemBT.Style[key].layout['text-field'][1],
-                  bgColor: itemBT.Style[key].paint['fill-color'],
-                  border: itemBT.Style[key].paint['fill-outline-color']
-                };
-                newArr.push(res);
-
-                result.type = newArr;
-              }
-              if (mName === 'Period' && this.getPeriod === false) {
-                if (itemBT.Style[key].paint['fill-color'] === undefined) { return; }
-
-                this.getPeriod = true;
-                result.LayerTitle = '期作別';
-                result.opacity = 50;
-                result.id = 76;
-                this.layerOptions.surfaceList.push(result);
-
-                const newArr = [];
-                itemBT.Style[key].paint['fill-color'].forEach((item, index, array) => {
-                  if (index % 2 === 1 && index !== array.length - 1) {
-                    const res = {
-                      id: Math.random(),
-                      name: item[2],
-                      visible: true,
-                      subId: item[1][1],
-                      picPeriod: ''
-                    };
-                    res.picPeriod = array[index + 1];
-
-                    newArr.push(res);
-                  }
-                });
-
-                result.type = newArr;
-              }
-              if (mName === 'Pool' && this.getPool === false) {
-                if (itemBT.Style[key].paint === undefined || itemBT.Style[key].layout === undefined) { return; }
-
-                this.getPool = true;
-                result.LayerTitle = '埤塘';
-                result.opacity = 50;
-                result.id = 80;
-                this.layerOptions.surfaceList.push(result);
-
-                const newArr = [];
-                const res = {
-                  id: Math.random(),
-                  name: '',
-                  visible: true,
-                  subId: itemBT.Style[key].layout['text-field'][1],
+                  subId: 'Rot_cns',
                   bgColor: itemBT.Style[key].paint['fill-color'],
                   border: itemBT.Style[key].paint['fill-outline-color']
                 };

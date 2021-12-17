@@ -1,6 +1,7 @@
 <template>
   <li
     v-if="tree.show === true"
+    class="nodeLi"
     @click.stop="toggle"
   >
     <div class="listItem">
@@ -9,7 +10,7 @@
           class="dropDownList"
           :class="{ onDropDownArrow: isdropDownList }"
         />
-        {{ tree.id }}
+        <!-- {{ tree.id }} -->
       </div>
       <div class="item">
         {{ tree.name }}
@@ -29,7 +30,7 @@
       v-show="open"
       v-if="tree.node && tree.node.length > 0"
     >
-      <BarListNode
+      <BarList
         v-for="(node, index) in tree.node"
         :key="index"
         :tree="node"
@@ -39,14 +40,12 @@
 </template>
 
 <script>
-// import BarList from '~/components/model/BarList';
-import BarListNode from '~/components/model/BarListNode';
+import BarList from '~/components/model/BarList';
 import BarChart from '~/components/tools/BarChart';
 export default {
   components: {
-    // BarList,
-    BarChart,
-    BarListNode
+    BarList,
+    BarChart
   },
   props: {
     tree: {
@@ -95,13 +94,12 @@ export default {
 
 ul{
     li{
-      &:nth-child(odd){
-        background: #F5F5F5;
-      }
-      &:nth-child(even){
-        background: #FFF;
-      }
+      background: #EFF4F3;
     }
+}
+
+.nodeLi {
+  background: #EFF4F3 !important;
 }
 
 .listItem{

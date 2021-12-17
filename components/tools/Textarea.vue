@@ -46,6 +46,10 @@ export default {
     defaultText: {
       type: String,
       default: ''
+    },
+    addText: {
+      type: String,
+      default: ''
     }
   },
   data () {
@@ -54,6 +58,11 @@ export default {
     };
   },
   name: 'Datepicker',
+  mounted () {
+    if (this.addText !== '') {
+      this.textContent = this.addText;
+    }
+  },
   methods: {
     sendTextContent () {
       this.$emit('textContent', this.textContent);
@@ -73,6 +82,11 @@ export default {
     defaultText (n) {
       if (n) {
         this.textContent = n;
+      }
+    },
+    addText (value) {
+      if (value !== '') {
+        this.textContent = value;
       }
     }
   }

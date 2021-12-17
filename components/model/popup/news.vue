@@ -2,10 +2,12 @@
   <div class="inputBox">
     <InputVertical
       title="公告名稱"
+      :add-text="originData.slogan"
       @inputValue="getBulletinName"
     />
     <Textarea
       title="公告內容"
+      :add-text="originData.content"
       @textContent="getBulletinContent"
     />
     <div class="buttonBox">
@@ -26,6 +28,7 @@
       :table-column="tableList"
       :is-paginate="false"
       :is-del="true"
+      :origin-input="originData.link"
       @inputData="getInputData"
       @checkList="getTableCheck"
     />
@@ -35,7 +38,7 @@
 <script>
 import InputVertical from '~/components/tools/InputVertical.vue';
 import Button from '~/components/tools/Buttons.vue';
-import Table from '~/components/model/Table.vue';
+import Table from '~/components/model/TableForBulletin.vue';
 import Textarea from '~/components/tools/Textarea.vue';
 import { bulletinInputDataName, bulletinInputData } from '~/publish/bulletinData';
 import { addBulletin } from '~/api/bulletin';
@@ -51,7 +54,8 @@ export default {
     isSubmit: {
       type: Boolean,
       default: false
-    }
+    },
+    originData: Object
   },
   data: () => {
     return {
@@ -73,6 +77,14 @@ export default {
       delBtn: false,
       num: 0
     };
+  },
+  mounted () {
+    setTimeout(() => {
+      this.originData.rows.forEach((item) => {
+        this.num += 1;
+        this.tableList.body.push({ val: `news${this.num}`, title: [{ type: 'input', key: `a${this.num}` }, { type: 'input', key: `b${this.num}` }] });
+      });
+    }, 1100);
   },
   methods: {
     getInputData (e) {

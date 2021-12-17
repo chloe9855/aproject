@@ -64,7 +64,6 @@
         <InputTool-component
           :input-text="'請輸入欲查詢圖資'"
           :search-input="infoList"
-          :add-text="'地籍'"
           :change-text="clearText5"
           sizing="w-70"
           @inputValue="(payload) => { payload.val !== '' ? nowLayer = payload.val : nowLayer = '', clearText5 = false }"
@@ -182,7 +181,7 @@ export default {
   mounted () {
     this.userId = sessionStorage.getItem('loginUser');
 
-    allMBT.forEach((item) => {
+    allMBTX.forEach((item) => {
       sg.events.on(item, 'click', (e) => {
         if (e.graphic.id[0].substring(3) === 'Canal' && e.graphic.attributes.Ia === this.nowIa) {
           console.log(e);

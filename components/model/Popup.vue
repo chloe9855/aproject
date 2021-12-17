@@ -19,6 +19,7 @@
       <component
         :is="componentInstance"
         :is-submit="sumbitData"
+        :origin-data="getOriginData"
         @submitSuccess="getSubmit"
       />
       <div class="buttonBox">
@@ -118,6 +119,9 @@ export default {
     popTitle () {
       const popupTitle = this.$store.state.popupType.title;
       return popupTitle;
+    },
+    getOriginData () {
+      return this.$store.state.oriFormData;
     }
   }
 };
@@ -125,8 +129,12 @@ export default {
 
 <style lang="scss" scoped>
 .popupBox{
-  position: absolute;
-  top:5vh;
+  // position: absolute;
+  // top:5vh;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   display: flex;
   justify-content: center;
   z-index:1000;

@@ -25,7 +25,7 @@ export default {
   activated () {
     //
 
-    allMBT.forEach((item) => {
+    allMBTX.forEach((item) => {
       this.fnList.push(sg.events.on(item, 'click', (e) => {
         if (e.graphic.id[0].substring(3) === 'Canal') {
           this.title = e.graphic.id[0];
