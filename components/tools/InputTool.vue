@@ -120,6 +120,11 @@ export default {
     };
   },
   name: 'InputTool',
+  mounted () {
+    if (this.addText !== '') {
+      this.message = this.addText;
+    }
+  },
   methods: {
     filterData () {
       this.filterBox = true;

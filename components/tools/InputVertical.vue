@@ -146,6 +146,10 @@ export default {
     unfillError: {
       type: Boolean,
       default: false
+    },
+    addText: {
+      type: String,
+      default: ''
     }
   },
   data: () => {
@@ -161,6 +165,11 @@ export default {
     };
   },
   name: 'InputVertical',
+  mounted () {
+    if (this.addText !== '') {
+      this.message = this.addText;
+    }
+  },
   methods: {
     selectFilter (item) {
       this.message = item;
@@ -220,6 +229,11 @@ export default {
         }
       },
       deep: true
+    },
+    addText (value) {
+      if (value !== '') {
+        this.message = value;
+      }
     }
 
   }

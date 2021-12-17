@@ -184,8 +184,7 @@ export default {
     },
     changeGroup (e) {
       if (e.event === 'isEdit') {
-        this.$store.commit('TOGGLE_POPUP_STATUS');
-        this.$store.commit('TOGGLE_POPUP_TYPE', { type: 'news', title: '編輯公告' });
+        this.editAnounce(e.item);
       } else if (e.event === 'isDel') {
         console.log('isDel');
       }
@@ -207,6 +206,39 @@ export default {
       }).catch(e => {
         console.log(e);
       });
+    },
+    // * 按下編輯公告
+    editAnounce (myId) {
+      this.$store.commit('TOGGLE_POPUP_STATUS');
+      this.$store.commit('TOGGLE_POPUP_TYPE', { type: 'news', title: '編輯公告' });
+      setTimeout(() => {
+        fetch(`/AERC/rest/Bulletin?ID=${myId}`, {
+          method: 'GET',
+          headers: new Headers({
+            'Content-Type': 'application/json'
+          })
+        }).then((response) => {
+          return response.json();
+        }).then((data) => {
+          console.log(data);
+          const result = {
+            slogan: data[0].name,
+            content: data[0].content,
+            link: {},
+            rows: []
+          };
+          result.rows = data[0].dataname;
+          data[0].dataname.forEach((item, inedx) => {
+            result.link[`a${inedx}`] = item;
+          });
+          data[0].data.forEach((item, inedx) => {
+            result.link[`b${inedx}`] = item;
+          });
+          this.$store.commit('SET_FORM_DATA', result);
+        }).catch((err) => {
+          console.log('錯誤:', err);
+        });
+      }, 1000);
     }
   }
 

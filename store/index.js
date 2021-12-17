@@ -11,7 +11,7 @@ export const state = () => ({
   userInfo: {},
   editAccount: '',
   canvasUrl: '',
-  oriFormData: ''
+  oriFormData: { slogan: '', content: '', link: '', rows: '' }
 });
 
 // * ==========================================================================

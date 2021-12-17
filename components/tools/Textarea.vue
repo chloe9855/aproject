@@ -42,6 +42,10 @@ export default {
     isRequire: {
       type: Boolean,
       default: false
+    },
+    addText: {
+      type: String,
+      default: ''
     }
   },
   data () {
@@ -50,6 +54,11 @@ export default {
     };
   },
   name: 'Datepicker',
+  mounted () {
+    if (this.addText !== '') {
+      this.textContent = this.addText;
+    }
+  },
   methods: {
     sendTextContent () {
       this.$emit('textContent', this.textContent);
@@ -62,6 +71,13 @@ export default {
         return false;
       } else {
         return true;
+      }
+    }
+  },
+  watch: {
+    addText (value) {
+      if (value !== '') {
+        this.textContent = value;
       }
     }
   }
