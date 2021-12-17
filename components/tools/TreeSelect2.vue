@@ -2,15 +2,18 @@
   <div class="container">
     <div class="title_wrap">
       <img
+        v-show="indexNo!=='D'&&indexNo!=='E'"
         class="arrow"
         :src="picSrc2"
         @click="picToggler2(indexNo+'-'+sItem.no)"
       >
       <div class="theme_checkbox">
         <input
+          v-show="indexNo==='D'&&indexNo==='E'"
           :id="indexNo+'_'+sItem.no"
+          v-model="setCheckObj"
           type="checkbox"
-          @change="$emit('changeMng', {isCheck:$event.target.checked,no:sItem.no})"
+          @change="$emit('changeMng', {isCheck:$event.target.checked,no:sItem.no,type:indexNo})"
         >
         <label
           class="title"
@@ -59,6 +62,10 @@ export default {
     indexNo: {
       type: String,
       default: ''
+    },
+    checkObj: {
+      type: String,
+      default: ''
     }
   },
   data () {
@@ -76,6 +83,14 @@ export default {
         this.picSrc2 = require('~/assets/img/up-arrow.svg');
         document.querySelector(`.block22-${id}`).style.display = 'none';
       }
+    },
+    changeData () {
+      $emit('changeMng', { isCheck: $event.target.checked, no: this.sItem.no, type: indexNo });
+    }
+  },
+  computed: {
+    setCheckObj () {
+      return this.checkObj === this.sItem.no;
     }
   }
 

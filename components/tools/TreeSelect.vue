@@ -11,6 +11,7 @@
         @changeMng="mngHandler"
         @changeStn="stnHandler"
         @getQuery="getQuery"
+        @getMng="getMng"
       />
     </div>
   </div>
@@ -79,6 +80,9 @@ export default {
     },
     getQuery (e) {
       this.$emit('getQuery', e);
+    },
+    getMng (e) {
+      this.$emit('getMng', e);
     }
   }
 };

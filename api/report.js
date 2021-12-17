@@ -11,3 +11,11 @@ export function getIaApplyReport (data) {
 export function getIaApply (data) {
   return request.post('/AERC/rest/IaApply', data);
 }
+
+export function getIRCheckReport (data) {
+  return request.post('/AERC/rest/IRCheckReport', data);
+}
+
+export function getIRApplyReport (data) {
+  return request.post('/AERC/rest/IRApplyReport', data);
+}

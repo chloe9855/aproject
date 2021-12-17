@@ -34,6 +34,7 @@
           <TreeSelect2
             :s-item="sItem"
             :index-no="indexNo"
+            :check-obj="checkObj"
             @changeMng="getMng"
             @changeStn="getStn"
           />
@@ -61,7 +62,8 @@ export default {
   },
   data () {
     return {
-      picSrc: require('~/assets/img/up-arrow.svg')
+      picSrc: require('~/assets/img/up-arrow.svg'),
+      checkObj: ''
     };
   },
   methods: {
@@ -75,8 +77,10 @@ export default {
       }
     },
     getMng (e) {
-      console.log('mng');
-      console.log(e);
+      if (e.isCheck) {
+        this.checkObj = e.no;
+      }
+      this.$emit('getMng', e);
     },
     getStn (e) {
       console.log('stn');

@@ -176,7 +176,7 @@ export default {
   }
   .reportBox{
     div{
-      margin: 0 0.25em;
+      //margin: 0 0.25em;
     }
     .datePickerBox{
       padding: 0 5px;

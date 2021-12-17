@@ -16,6 +16,7 @@
       :all-options="options"
       :index-no="indexNo"
       @getQuery="getQuery"
+      @getMng="getMng"
     />
   </div>
 </template>
@@ -52,7 +53,9 @@ export default {
     return {
       query: [],
       queryA: [],
-      queryB: []
+      queryB: [],
+      queryD: [],
+      queryE: []
     };
   },
   name: 'TreeSelectBox',
@@ -82,9 +85,21 @@ export default {
       console.log(this.queryA);
       console.log(this.queryB);
     },
+    getMng (e) {
+      console.log(e);
+      if (e.type === 'D') {
+        this.queryD = this.query.map(x => x.split('_'));
+        this.$emit('query', { type: 'D', no: e.no });
+      } else if (e.type === 'E') {
+        this.queryE = this.query.map(x => x.split('_'));
+        this.$emit('query', { type: 'E', no: e.no });
+      }
+    },
     getFile () {
       console.log(this.link);
-      window.location = this.link;
+      if (this.link !== '') {
+        window.location = this.link;
+      }
     }
   }
 };
