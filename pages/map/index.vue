@@ -2055,7 +2055,7 @@ export default {
                   id: Math.random(),
                   name: '',
                   visible: true,
-                  subId: 'Ia_cns',
+                  subId: 'Mng_cns',
                   bgColor: itemBT.Style[key].paint['fill-color'],
                   border: itemBT.Style[key].paint['fill-outline-color']
                 };
@@ -2079,7 +2079,7 @@ export default {
                       id: Math.random(),
                       name: item[2],
                       visible: true,
-                      subId: item[1][1],
+                      subId: 'Stn_cns',
                       picStn: ''
                     };
                     res.picStn = array[index + 1];
@@ -2150,7 +2150,7 @@ export default {
                       id: Math.random(),
                       name: item[2],
                       visible: true,
-                      subId: item[1][1],
+                      subId: 'Period_cns',
                       picPeriod: ''
                     };
                     res.picPeriod = array[index + 1];
@@ -2175,7 +2175,7 @@ export default {
                   id: Math.random(),
                   name: '',
                   visible: true,
-                  subId: itemBT.Style[key].layout['text-field'][1],
+                  subId: 'Pool_cns',
                   bgColor: itemBT.Style[key].paint['fill-color'],
                   border: itemBT.Style[key].paint['fill-outline-color']
                 };
