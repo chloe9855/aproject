@@ -427,6 +427,14 @@
       >
         <div class="modal888888" />
       </div>
+
+      <!-- loading載入中視窗xxx -->
+      <div
+        id="modal88"
+        class="modal_wrapper666666"
+      >
+        <div class="modal666666" />
+      </div>
     </div>
   </div>
 </template>
@@ -892,6 +900,8 @@ export default {
           this.allBaseLayer[index].hide();
         }
         pMapBase.RefreshMap(true);
+
+        document.getElementById('modal88').style.display = 'none';
       }, 3000);
     },
     //* 載入底圖 wms
@@ -960,6 +970,7 @@ export default {
     // * @ 左側搜尋 渠道查詢 表格結果
     searchHandler (payload) {
       // const data = require('~/static/channel.json');
+      this.searchResult.channel = '';
       this.searchResult.channel = payload;
     },
     // * @ 左側搜尋：渠道查詢 清除搜尋結果
@@ -1979,7 +1990,8 @@ export default {
         if (value === 'switchLayersWindow' && this.openOnceLa === true) {
           // 圖磚1
           allMBT.forEach((itemBT) => {
-            Object.keys(itemBT.Style).forEach((key) => {
+            if (itemBT.Style === undefined) { return; }
+            Object.keys(itemBT.Style.subs).forEach((key) => {
               // console.log(key);
               // console.log(itemBT.Style[key]);
               const mName = key.substring(3);
@@ -2001,7 +2013,7 @@ export default {
               };
 
               if (mName === 'Ia' && this.getIa === false) {
-                if (itemBT.Style[key].paint === undefined) { return; }
+                if (itemBT.Style.subs[key].paint === undefined) { return; }
 
                 this.getIa = true;
                 result.LayerTitle = '管理處';
@@ -2016,15 +2028,15 @@ export default {
                   name: '',
                   visible: true,
                   subId: 'Ia_cns',
-                  bgColor: itemBT.Style[key].paint['fill-color'],
-                  border: itemBT.Style[key].paint['fill-outline-color']
+                  bgColor: itemBT.Style.subs[key].paint['fill-color'],
+                  border: itemBT.Style.subs[key].paint['fill-outline-color']
                 };
                 newArr.push(res);
 
                 result.type = newArr;
               }
               if (mName === 'Mng' && this.getMng === false) {
-                if (itemBT.Style[key].paint === undefined) { return; }
+                if (itemBT.Style.subs[key].paint === undefined) { return; }
 
                 this.getMng = true;
                 result.LayerTitle = '管理分處';
@@ -2038,15 +2050,15 @@ export default {
                   name: '',
                   visible: true,
                   subId: 'Mng_cns',
-                  bgColor: itemBT.Style[key].paint['fill-color'],
-                  border: itemBT.Style[key].paint['fill-outline-color']
+                  bgColor: itemBT.Style.subs[key].paint['fill-color'],
+                  border: itemBT.Style.subs[key].paint['fill-outline-color']
                 };
                 newArr.push(res);
 
                 result.type = newArr;
               }
               if (mName === 'Stn' && this.getStn === false) {
-                if (itemBT.Style[key].paint['fill-color'] === undefined) { return; }
+                if (itemBT.Style.subs[key].paint['fill-color'] === undefined) { return; }
 
                 this.getStn = true;
                 result.LayerTitle = '工作站';
@@ -2055,7 +2067,7 @@ export default {
                 this.layerOptions.surfaceList.push(result);
 
                 const newArr = [];
-                itemBT.Style[key].paint['fill-color'].forEach((item, index, array) => {
+                itemBT.Style.subs[key].paint['fill-color'].forEach((item, index, array) => {
                   if (index % 2 === 1 && index !== array.length - 1) {
                     const res = {
                       id: Math.random(),
@@ -2074,7 +2086,7 @@ export default {
               }
 
               if (mName === 'Period' && this.getPeriod === false) {
-                if (itemBT.Style[key].paint['fill-color'] === undefined) { return; }
+                if (itemBT.Style.subs[key].paint['fill-color'] === undefined) { return; }
 
                 this.getPeriod = true;
                 result.LayerTitle = '期作別';
@@ -2083,7 +2095,7 @@ export default {
                 this.layerOptions.surfaceList.push(result);
 
                 const newArr = [];
-                itemBT.Style[key].paint['fill-color'].forEach((item, index, array) => {
+                itemBT.Style.subs[key].paint['fill-color'].forEach((item, index, array) => {
                   if (index % 2 === 1 && index !== array.length - 1) {
                     const res = {
                       id: Math.random(),
@@ -2101,7 +2113,7 @@ export default {
                 result.type = newArr;
               }
               if (mName === 'Pool' && this.getPool === false) {
-                if (itemBT.Style[key].paint === undefined) { return; }
+                if (itemBT.Style.subs[key].paint === undefined) { return; }
 
                 this.getPool = true;
                 result.LayerTitle = '埤塘';
@@ -2115,8 +2127,8 @@ export default {
                   name: '',
                   visible: true,
                   subId: 'Pool_cns',
-                  bgColor: itemBT.Style[key].paint['fill-color'],
-                  border: itemBT.Style[key].paint['fill-outline-color']
+                  bgColor: itemBT.Style.subs[key].paint['fill-color'],
+                  border: itemBT.Style.subs[key].paint['fill-outline-color']
                 };
                 newArr.push(res);
 
@@ -2127,7 +2139,8 @@ export default {
 
           // 圖磚2
           allMBTX.forEach((itemBT) => {
-            Object.keys(itemBT.Style).forEach((key) => {
+            if (itemBT.Style === undefined) { return; }
+            Object.keys(itemBT.Style.subs).forEach((key) => {
               const mName = key.substring(3);
 
               let newList = [];
@@ -2135,9 +2148,6 @@ export default {
               if (long.length === 2) {
                 newList = iaList.map(item => `${item}_${mName}`);
               }
-
-              console.log('newList');
-              console.log(newList);
 
               const result = {
                 id: Math.random(),
@@ -2150,14 +2160,14 @@ export default {
               };
 
               if (mName === 'Cons' && this.getCons === false) {
-                if (itemBT.Style[key].layout['icon-image'] === undefined) { return; }
+                if (itemBT.Style.subs[key].layout['icon-image'] === undefined) { return; }
 
                 this.getCons = true;
                 result.LayerTitle = '水工構造物';
                 this.layerOptions.pointList.push(result);
 
                 const newArr = [];
-                itemBT.Style[key].layout['icon-image'].forEach((item, index, array) => {
+                itemBT.Style.subs[key].layout['icon-image'].forEach((item, index, array) => {
                   if (index % 2 === 1 && index !== array.length - 1) {
                     const res = {
                       id: Math.random(),
@@ -2175,15 +2185,15 @@ export default {
               }
 
               if (mName === 'Canal' && this.getCanal === false) {
-                if (itemBT.Style[key].paint === undefined) { return; }
-                if (itemBT.Style[key].paint['line-color'] === undefined) { return; }
+                if (itemBT.Style.subs[key].paint === undefined) { return; }
+                if (itemBT.Style.subs[key].paint['line-color'] === undefined) { return; }
 
                 this.getCanal = true;
                 result.LayerTitle = '渠道';
                 this.layerOptions.lineList.push(result);
 
                 const newArr = [];
-                itemBT.Style[key].paint['line-color'].forEach((item, index, array) => {
+                itemBT.Style.subs[key].paint['line-color'].forEach((item, index, array) => {
                   if (index % 2 === 1 && index !== array.length - 1) {
                     const res = {
                       id: Math.random(),
@@ -2202,7 +2212,7 @@ export default {
               }
 
               if (mName === 'Grp' && this.getGrp === false) {
-                if (itemBT.Style[key].paint === undefined) { return; }
+                if (itemBT.Style.subs[key].paint === undefined) { return; }
 
                 this.getGrp = true;
                 result.LayerTitle = '小組';
@@ -2216,15 +2226,15 @@ export default {
                   name: '',
                   visible: true,
                   subId: 'Grp_cns',
-                  bgColor: itemBT.Style[key].paint['fill-color'],
-                  border: itemBT.Style[key].paint['fill-outline-color']
+                  bgColor: itemBT.Style.subs[key].paint['fill-color'],
+                  border: itemBT.Style.subs[key].paint['fill-outline-color']
                 };
                 newArr.push(res);
 
                 result.type = newArr;
               }
               if (mName === 'Rot' && this.getRot === false) {
-                if (itemBT.Style[key].paint === undefined) { return; }
+                if (itemBT.Style.subs[key].paint === undefined) { return; }
 
                 this.getRot = true;
                 result.LayerTitle = '輪區';
@@ -2238,8 +2248,8 @@ export default {
                   name: '',
                   visible: true,
                   subId: 'Rot_cns',
-                  bgColor: itemBT.Style[key].paint['fill-color'],
-                  border: itemBT.Style[key].paint['fill-outline-color']
+                  bgColor: itemBT.Style.subs[key].paint['fill-color'],
+                  border: itemBT.Style.subs[key].paint['fill-outline-color']
                 };
                 newArr.push(res);
 
@@ -2273,6 +2283,33 @@ export default {
     100% {
       stroke-dashoffset: 0;
     }
+  }
+
+  .modal_wrapper666666 {
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 10000000000;
+    cursor: default;
+    display: none;
+  }
+
+  .modal666666 {
+    width: 100px;
+    height: 100px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    z-index: 9999;
+    transform: translate(-50%, -50%);
+    flex-direction: column;
+    background: url('~/assets/img/loading_icon.svg') no-repeat center/contain;
   }
 
   .modal_wrapper888888 {

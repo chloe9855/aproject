@@ -36,6 +36,8 @@ export const mutations = {
     state.popupType.type = payload.type;
     if (payload.editId) {
       state.popupType.editId = payload.editId;
+    } else {
+      state.popupType.editId = undefined;
     }
   },
   SET_COMPENSATE_DATA (state, payload) {

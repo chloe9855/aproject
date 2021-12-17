@@ -1,24 +1,39 @@
+// @ts-check
+
+/**
+ * @typedef {import('types/DropdownVerticalOption').DropdownVerticalOption} DropdownVerticalOption
+ * @typedef {import('types/Group').Group} Group
+ */
+
+/**
+ *
+ * @param {{ data: Group[] }} item
+ * @returns {import('types/DropdownVerticalOption').DropdownVerticalOption<number>[]}
+ */
 export function groupListData (item) {
-  const body = [];
-  item.data.forEach((element) => {
-    body.push({ val: element.groupno, title: element.groupname });
-  });
-  return body;
+  return item.data.map(element => ({ value: element.groupsno, title: element.groupname }));
 }
 
+/**
+ *
+ * @param {{data: Group[] }} item
+ * @returns {DropdownVerticalOption[]}
+ */
 export function iaListData (item) {
-  const body = [];
-  console.log(item);
+  /** @type {Map<string, { value: string, title: string }>} */
+  const body = new Map();
   item.data.forEach((element) => {
-    body.push({ val: element.ia, title: element.ianame });
+    body.set(element.ia, { value: element.ia, title: element.ianame });
   });
-  return body;
+
+  return Array.from(body.values());
 }
 
+/**
+ *
+ * @param {{data: Array<import('types/Stn').Stn> }} item
+ * @returns {DropdownVerticalOption[]}
+ */
 export function stnListData (item) {
-  const body = [];
-  item.data.forEach((element) => {
-    body.push({ val: element.stn, title: element.stnname });
-  });
-  return body;
+  return item.data.map(element => ({ value: element.Stn, title: element.Stn_cns }));
 }

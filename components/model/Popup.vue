@@ -98,6 +98,10 @@ export default {
     },
     sumbit () {
       this.sumbitData = true;
+
+      this.$nextTick(() => {
+        this.sumbitData = false;
+      });
     },
     getSubmit () {
       this.toggleStatus();
@@ -122,6 +126,11 @@ export default {
     },
     getOriginData () {
       return this.$store.state.oriFormData;
+    }
+  },
+  watch: {
+    isActive () {
+      this.sumbitData = false;
     }
   }
 };

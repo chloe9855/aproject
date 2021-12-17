@@ -1,3 +1,5 @@
+const dev = process.env.NODE_ENV === 'development';
+
 export default {
   // Target: https://go.nuxtjs.dev/config-target
   mode: 'spa',
@@ -9,7 +11,7 @@ export default {
   },
   target: 'static',
   router: {
-    base: '/test008/'
+    base: '/IRCloud/'
   },
 
   // Global page headers: https://go.nuxtjs.dev/config-head
@@ -26,209 +28,209 @@ export default {
     ],
     script: [
       {
-        src: '/test008/scripts/Map.js',
+        src: '/IRCloud/scripts/Map.js',
         async: true
       },
       // {
-      //   src: '/test008/scripts/Framework.js',
+      //   src: '/IRCloud/scripts/Framework.js',
       //   async: true
       // },
       // {
-      //   src: '/test008/scripts/Tasks.js',
+      //   src: '/IRCloud/scripts/Tasks.js',
       //   async: true
       // },
       // {
-      //   src: '/test008/scripts/GFX.js',
+      //   src: '/IRCloud/scripts/GFX.js',
       //   async: true
       // },
       // {
-      //   src: '/test008/scripts/FX.js',
+      //   src: '/IRCloud/scripts/FX.js',
       //   async: true
       // },
       // {
-      //   src: '/test008/scripts/MapBase.js',
+      //   src: '/IRCloud/scripts/MapBase.js',
       //   async: true
       // },
       // {
-      //   src: '/test008/scripts/Controls.js',
+      //   src: '/IRCloud/scripts/Controls.js',
       //   async: true
       // },
 
       // {
-      //   src: '/test008/scripts/MapLayer.js',
+      //   src: '/IRCloud/scripts/MapLayer.js',
       //   async: true
       // },
       // {
-      //   src: '/test008/scripts/Compass.js',
+      //   src: '/IRCloud/scripts/Compass.js',
       //   async: true
       // },
       // {
-      //   src: '/test008/scripts/Navigate.js',
+      //   src: '/IRCloud/scripts/Navigate.js',
       //   async: true
       // },
       // {
-      //   src: '/test008/scripts/Tracker.js',
+      //   src: '/IRCloud/scripts/Tracker.js',
       //   async: true
       // },
       // {
-      //   src: '/test008/scripts/CachedLayer.js',
+      //   src: '/IRCloud/scripts/CachedLayer.js',
       //   async: true
       // },
       // {
-      //   src: '/test008/scripts/Geometry.js',
+      //   src: '/IRCloud/scripts/Geometry.js',
       //   async: true
       // },
       // {
-      //   src: '/test008/scripts/Symbol.js',
+      //   src: '/IRCloud/scripts/Symbol.js',
       //   async: true
       // },
       // {
-      //   src: '/test008/scripts/Draw.js',
+      //   src: '/IRCloud/scripts/Draw.js',
       //   async: true
       // },
       // {
-      //   src: '/test008/scripts/Overview.js',
+      //   src: '/IRCloud/scripts/Overview.js',
       //   async: true
       // },
       // {
-      //   src: '/test008/scripts/Bookmark.js',
+      //   src: '/IRCloud/scripts/Bookmark.js',
       //   async: true
       // },
       // {
-      //   src: '/test008/scripts/TemplatePicker.js',
+      //   src: '/IRCloud/scripts/TemplatePicker.js',
       //   async: true
       // },
       // {
-      //   src: '/test008/scripts/Layer.js',
+      //   src: '/IRCloud/scripts/Layer.js',
       //   async: true
       // },
       // {
-      //   src: '/test008/scripts/DynamicLayer.js',
+      //   src: '/IRCloud/scripts/DynamicLayer.js',
       //   async: true
       // },
       // {
-      //   src: '/test008/scripts/Symbol.js',
+      //   src: '/IRCloud/scripts/Symbol.js',
       //   async: true
       // },
       // {
-      //   src: '/test008/scripts/Graphic.js',
+      //   src: '/IRCloud/scripts/Graphic.js',
       //   async: true
       // },
       // {
-      //   src: '/test008/scripts/GraphicsLayer.js',
+      //   src: '/IRCloud/scripts/GraphicsLayer.js',
       //   async: true
       // },
       // {
-      //   src: '/test008/scripts/TileLayer.js',
+      //   src: '/IRCloud/scripts/TileLayer.js',
       //   async: true
       // },
       // {
-      //   src: '/test008/scripts/OSMLayer.js',
+      //   src: '/IRCloud/scripts/OSMLayer.js',
       //   async: true
       // },
       // {
-      //   src: '/test008/scripts/BingTiledLayer.js',
+      //   src: '/IRCloud/scripts/BingTiledLayer.js',
       //   async: true
       // },
       // {
-      //   src: '/test008/scripts/Infowindow.js',
+      //   src: '/IRCloud/scripts/Infowindow.js',
       //   async: true
       // },
       // {
-      //   src: '/test008/scripts/Mercator.js',
+      //   src: '/IRCloud/scripts/Mercator.js',
       //   async: true
       // },
       // {
-      //   src: '/test008/scripts/CoordSys.js',
+      //   src: '/IRCloud/scripts/CoordSys.js',
       //   async: true
       // },
       // {
-      //   src: '/test008/scripts/Bookmark.js',
+      //   src: '/IRCloud/scripts/Bookmark.js',
       //   async: true
       // },
       // {
-      //   src: '/test008/scripts/PrintTool.js',
+      //   src: '/IRCloud/scripts/PrintTool.js',
       //   async: true
       // },
       // {
-      //   src: '/test008/scripts/Process.js',
+      //   src: '/IRCloud/scripts/Process.js',
       //   async: true
       // },
       // {
-      //   src: '/test008/scripts/Query.js',
+      //   src: '/IRCloud/scripts/Query.js',
       //   async: true
       // },
       // {
-      //   src: '/test008/scripts/Edit.js',
+      //   src: '/IRCloud/scripts/Edit.js',
       //   async: true
       // },
       // {
-      //   src: '/test008/scripts/UndoManager.js',
+      //   src: '/IRCloud/scripts/UndoManager.js',
       //   async: true
       // },
       // {
-      //   src: '/test008/scripts/Request.js',
+      //   src: '/IRCloud/scripts/Request.js',
       //   async: true
       // },
       // {
-      //   src: '/test008/scripts/WMSLayer.js',
+      //   src: '/IRCloud/scripts/WMSLayer.js',
       //   async: true
       // },
       // {
-      //   src: '/test008/scripts/WMTSLayer.js',
+      //   src: '/IRCloud/scripts/WMTSLayer.js',
       //   async: true
       // },
       // {
-      //   src: '/test008/scripts/GroupLayer.js',
+      //   src: '/IRCloud/scripts/GroupLayer.js',
       //   async: true
       // },
       // {
-      //   src: '/test008/scripts/MapImageLayer.js',
+      //   src: '/IRCloud/scripts/MapImageLayer.js',
       //   async: true
       // },
       // {
-      //   src: '/test008/scripts/KMLLayer.js',
+      //   src: '/IRCloud/scripts/KMLLayer.js',
       //   async: true
       // },
       // {
-      //   src: '/test008/scripts/Google.js',
+      //   src: '/IRCloud/scripts/Google.js',
       //   async: true
       // },
       // {
-      //   src: '/test008/scripts/Base64.js',
+      //   src: '/IRCloud/scripts/Base64.js',
       //   async: true
       // },
       {
-        src: '/test008/scripts/ToolControls.js',
+        src: '/IRCloud/scripts/ToolControls.js',
         async: true
       },
       // {
-      //   src: '/test008/scripts/SuperGeoUtility.js',
+      //   src: '/IRCloud/scripts/SuperGeoUtility.js',
       //   async: true
       // },
       // {
-      //   src: '/test008/scripts/jquery-3.4.0.min.js',
+      //   src: '/IRCloud/scripts/jquery-3.4.0.min.js',
       //   async: true
       // },
       // {
-      //   src: '/test008/scripts/CoordSys.js',
+      //   src: '/IRCloud/scripts/CoordSys.js',
       //   async: true
       // },
       // {
-      //   src: '/test008/scripts/Mercator.js',
+      //   src: '/IRCloud/scripts/Mercator.js',
       //   async: true
       // },
       // {
-      //   src: '/test008/scripts/Projection.js',
+      //   src: '/IRCloud/scripts/Projection.js',
       //   async: true
       // },
       // {
-      //   src: '/test008/scripts/VectorTiledLayer.js',
+      //   src: '/IRCloud/scripts/VectorTiledLayer.js',
       //   async: true
       // },
 
       {
-        src: '/test008/scripts/setMap.js',
+        src: '/IRCloud/scripts/setMap.js',
         async: true
       }
     ],
@@ -285,6 +287,13 @@ export default {
     // https://go.nuxtjs.dev/axios
     '@nuxtjs/axios'
   ],
+
+  proxy: dev
+    ? {
+        '/aerc': 'http://192.168.3.112/',
+        '/AERC': 'http://192.168.3.112/'
+      }
+    : undefined,
 
   styleResources: {
     scss: ['./assets/scss/utils/*.scss']

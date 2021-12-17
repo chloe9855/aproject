@@ -13,7 +13,7 @@
         </span>
       </p>
       <div
-        v-show="isError"
+        v-show="!!externalError || isError"
         class="error-hinit"
       >
         <div class="error-circle">
@@ -24,7 +24,7 @@
           >
         </div>
         <p class="error-hint-text">
-          {{ errorTip }}
+          {{ externalError || errorTip }}
         </p>
       </div>
       <div
@@ -150,6 +150,9 @@ export default {
     addText: {
       type: String,
       default: ''
+    },
+    externalError: {
+      type: String
     }
   },
   data: () => {

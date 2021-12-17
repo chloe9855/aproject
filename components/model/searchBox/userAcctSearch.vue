@@ -3,27 +3,34 @@
     <DropdownVertical
       title="群組"
       :options="groupList"
+      :change-text="isClear"
       @DropdownVal="getGroup"
     />
     <DropdownVertical
       title="管理處"
       :options="iaList"
-      @DropdownVal="getManagement"
+      :change-text="isClear"
+      @DropdownVal="getIa"
     />
     <DropdownVertical
       title="工作站"
       :options="member"
+      :change-text="isClear"
       @DropdownVal="getSite"
     />
-    <InputVertical
+    <DropdownVertical
       title="姓名"
-      @inputValue="getName"
+      :options="accountList"
+      :change-text="isClear"
+      @DropdownVal="getName"
     />
     <DatePicker
+      :time="searchObj.startTime"
       title="上次登入起始時間"
       @DateValue="startTime"
     />
     <DatePicker
+      :time="searchObj.endTime"
       title="上次登入結束時間"
       @DateValue="endTime"
     />
@@ -31,79 +38,124 @@
 </template>
 
 <script>
-import InputVertical from '~/components/tools/InputVertical.vue';
+// @ts-check
+
+/**
+ * @typedef {import('types/DropdownVerticalOption').DropdownVerticalOption} DropdownVerticalOption
+ */
+
 import DropdownVertical from '~/components/tools/DropdownVertical.vue';
 import DatePicker from '~/components/tools/DatePicker.vue';
-import { groupListData, iaListData } from '~/publish/groupListData';
+import { groupListData, iaListData, stnListData } from '~/publish/groupListData';
 import { getAccount } from '~/api/account';
 import { getGroup } from '~/api/group';
+import { getStns } from '~/publish/Irrigation';
+
 export default {
   components: {
-    DropdownVertical: DropdownVertical,
-    InputVertical: InputVertical,
-    DatePicker: DatePicker
+    DropdownVertical,
+    DatePicker
   },
-  props: {},
-  data: () => {
+  props: {
+    searchObjProp: {
+      /** @type {import('vue').PropType<{
+       * group: string,
+       * ia: string,
+       * site: string,
+       * name: string,
+       * startTime: string,
+       * endTime: string
+       * }>} */
+      type: Object,
+      required: true
+    },
+    isClear: {
+      type: Boolean,
+      default: false
+    }
+  },
+  data () {
     return {
-      searchObj: {
-        group: '',
-        management: '',
-        site: '',
-        name: '',
-        startTime: '',
-        endTime: ''
-      },
-      member: [{ title: '預設選項', value: '0' }, { title: '工作站人員', value: '1' }, { title: '管理人員', value: '2' }, { title: '民眾', value: '3' }],
+      searchObj: this.searchObjProp,
+      member: [],
       iaList: [],
       group: [],
-      groupList: []
+      groupList: [],
+      accountList: []
     };
   },
   name: 'UserAcctSearch',
   mounted () {
-    getAccount(this.$store.state.userInfo.id).then(r => {
-      this.account = r.data[0];
-      getGroup(r.data[0].ia).then(g => {
-        this.iaList = iaListData(g);
-        this.groupList = groupListData(g);
-      }).catch(e => {
-        console.log(e);
-      });
-    }).catch(e => {
-      console.log(e);
-    });
+    this.fetchOptions();
   },
   methods: {
+    /** @param {DropdownVerticalOption} e */
     getGroup (e) {
       if (e) {
-        this.searchObj.group = e;
+        this.searchObj.group = e.value;
       }
     },
-    getManagement (e) {
+    /** @param {DropdownVerticalOption} e */
+    getIa (e) {
       if (e) {
-        this.searchObj.management = e;
+        this.searchObj.ia = e.value;
       }
+
+      this.fetchSite();
     },
+    /** @param {DropdownVerticalOption} e */
     getSite (e) {
       if (e) {
-        this.searchObj.site = e;
+        this.searchObj.site = e.value;
       }
     },
+    /** @param {DropdownVerticalOption} e */
     getName (e) {
       if (e) {
-        this.searchObj.name = e;
+        this.searchObj.name = e.value;
       }
     },
     startTime (e) {
       if (e) {
-        this.searchObj.startTime = e;
+        this.searchObj.startTime = e.val;
       }
     },
     endTime (e) {
       if (e) {
-        this.searchObj.endTime = e;
+        this.searchObj.endTime = e.val;
       }
+    },
+    async fetchOptions () {
+      // const r = await getAccount(this.$store.state.userInfo.id);
+      const g = await getGroup(/* r.data[0].ia */);
+      this.iaList = iaListData(g);
+      this.groupList = groupListData(g);
+
+      this.fetchAccount();
+    },
+    async fetchSite () {
+      console.log(this.searchObj.ia);
+      if (!this.searchObj.ia) {
+        this.member = [];
+        return;
+      }
+
+      const res = await getStns(this.searchObj.ia);
+      this.member = stnListData(res);
+    },
+    async fetchAccount () {
+      /** @type {{ data: Array<{ account: string, name: string }> }} */
+      const { data } = await getAccount();
+
+      this.accountList = data.map(account => ({
+        val: account.account,
+        title: account.name
+      }));
+    }
+  },
+  watch: {
+    searchObjProp () {
+      this.searchObj = this.searchObjProp;
     }
   }
 };

@@ -15,19 +15,22 @@
       v-model="time"
       :default-value="dateTime"
       :placeholder="time"
+      :value="timeInner"
       class="datepickerTool w-100"
       :value-type="valueType"
       :type="type"
       :range="isRange"
       :editable="false"
+      @input="onInput"
     />
   </div>
 </template>
 
 <script>
+import Vue from 'vue';
 import DatePicker from 'vue2-datepicker';
 import 'vue2-datepicker/index.css';
-export default {
+export default Vue.extend({
   components: { DatePicker },
   props: {
     isRange: {
@@ -57,27 +60,35 @@ export default {
     inputId: {
       type: Number,
       default: 0
+    },
+    time: {
+      type: String,
+      default: null
     }
   },
   data () {
     return {
-      time: null
+      timeInner: this.time
     };
   },
   name: 'Datepicker',
+  methods: {
+    onInput (v) {
+      const data = { val: v, id: this.inputId };
+      this.timeInner = v;
+      this.$emit('DateValue', data);
+    }
+  },
   computed: {
+    /** @returns {boolean} */
     isTitle: function () {
-      const title = this.title;
-      if (title === '') {
-        return false;
-      } else {
-        return true;
-      }
+      return this.title !== '';
     }
   },
   watch: {
     time (n, o) {
       const data = { val: n, id: this.inputId };
+      this.timeInner = this.time;
       this.$emit('DateValue', data);
     },
     dateTime (n) {
@@ -86,7 +97,7 @@ export default {
       }
     }
   }
-};
+});
 </script>
 
 <style lang="scss" scoped>

@@ -252,7 +252,11 @@ export default {
     },
     openSettingAccount () {
       this.$store.commit('TOGGLE_POPUP_STATUS');
-      this.$store.commit('TOGGLE_POPUP_TYPE', { type: 'editAccount', title: '編輯帳號' });
+      this.$store.commit('TOGGLE_POPUP_TYPE', {
+        type: 'editAccount',
+        title: '編輯帳號',
+        editId: this.$store.state.userInfo.id
+      });
       this.showBox = !this.showBox;
     },
     logoutAccount () {
