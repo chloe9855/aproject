@@ -1043,7 +1043,7 @@ export default {
         // MBT.Style[layerName].visible = $event;
         // MBT.updateStyle(MBT.Style);
         layerName.forEach((item, index) => {
-          allMBT[index].updateStyle({
+          allMBTX[index].updateStyle({
             [item]: { visible: $event }
           });
         });
@@ -1053,22 +1053,29 @@ export default {
         this.layerOptions.lineList[index].visible = $event;
 
         layerName.forEach((item, index) => {
-          allMBT[index].updateStyle({
-            [item]: { visible: $event }
+          allMBTX[index].updateStyle({
+            [item]: { visible: $event },
+            [`${item}_Label`]: { visible: $event }
           });
         });
-        // ARO.updateStyle({
-        //   '01_Arrow': { visible: $event }
-        // });
       }
       if (category === 'surfaceList') {
         const index = this.layerOptions.surfaceList.findIndex(item => item.id === id);
         this.layerOptions.surfaceList[index].visible = $event;
 
         layerName.forEach((item, index) => {
-          allMBT[index].updateStyle({
-            [item]: { visible: $event }
-          });
+          const realName = item.substring(3);
+          if (realName === 'Grp' || realName === 'Rot') {
+            allMBTX[index].updateStyle({
+              [item]: { visible: $event },
+              [`${item}_Label`]: { visible: $event }
+            });
+          } else {
+            allMBT[index].updateStyle({
+              [item]: { visible: $event },
+              [`${item}_Label`]: { visible: $event }
+            });
+          }
         });
       }
       // 底圖切換
@@ -1111,7 +1118,7 @@ export default {
         this.layerOptions.pointList[index].type[indexB].visible = $event;
 
         layerName.forEach((item, index) => {
-          allMBT[index].updateStyle({
+          allMBTX[index].updateStyle({
             [item]: { subid: subId, subs: { [branchName]: { visible: $event } } }
           });
         });
@@ -1125,7 +1132,7 @@ export default {
         //   [layerName]: { subid: subId, subs: { [branchName]: { visible: $event } } }
         // });
         layerName.forEach((item, index) => {
-          allMBT[index].updateStyle({
+          allMBTX[index].updateStyle({
             [item]: { subid: subId, subs: { [branchName]: { visible: $event } } }
           });
         });
@@ -1136,9 +1143,17 @@ export default {
         this.layerOptions.surfaceList[index].type[indexB].visible = $event;
 
         layerName.forEach((item, index) => {
-          allMBT[index].updateStyle({
-            [item]: { subid: subId, subs: { [branchName]: { visible: $event } } }
-          });
+          const realName = item.substring(3);
+
+          if (realName === 'Grp' || realName === 'Rot') {
+            allMBTX[index].updateStyle({
+              [item]: { subid: subId, subs: { [branchName]: { visible: $event } } }
+            });
+          } else {
+            allMBT[index].updateStyle({
+              [item]: { subid: subId, subs: { [branchName]: { visible: $event } } }
+            });
+          }
         });
       }
     },
@@ -1160,7 +1175,7 @@ export default {
       //   [layerName]: { subid: subId, subs: newObj }
       // });
       layerName.forEach((item2, index2) => {
-        allMBT[index2].updateStyle({
+        allMBTX[index2].updateStyle({
           [item2]: { subid: subId, subs: newObj }
         });
       });
@@ -1181,7 +1196,7 @@ export default {
       });
 
       layerName.forEach((item2, index2) => {
-        allMBT[index2].updateStyle({
+        allMBTX[index2].updateStyle({
           [item2]: { subid: subId, subs: newObj }
         });
       });
@@ -1202,9 +1217,17 @@ export default {
       });
 
       layerName.forEach((item2, index2) => {
-        allMBT[index2].updateStyle({
-          [item2]: { subid: subId, subs: newObj }
-        });
+        const realName = item2.substring(3);
+
+        if (realName === 'Grp' || realName === 'Rot') {
+          allMBTX[index2].updateStyle({
+            [item2]: { subid: subId, subs: newObj }
+          });
+        } else {
+          allMBT[index2].updateStyle({
+            [item2]: { subid: subId, subs: newObj }
+          });
+        }
       });
 
       this.layerOptions.surfaceList[index].allShow = $event;
@@ -1219,7 +1242,7 @@ export default {
         this.layerOptions.pointList[index].opacity = value;
 
         layerName.forEach((item, index) => {
-          allMBT[index].updateStyle({ [item]: { style: { opacity: value / 100 } } });
+          allMBTX[index].updateStyle({ [item]: { style: { opacity: value / 100 } } });
         });
       }
       if (category === 'lineList') {
@@ -1230,9 +1253,11 @@ export default {
         this.layerOptions.lineList[index].opacity = value;
 
         layerName.forEach((item, index) => {
-          allMBT[index].updateStyle({ [item]: { style: { opacity: value / 100 } } });
+          allMBTX[index].updateStyle({
+            [item]: { style: { opacity: value / 100 } },
+            [`${item}_Label`]: { style: { opacity: value / 100 } }
+          });
         });
-        // ARO.updateStyle({ '01_Arrow': { style: { opacity: value / 100 } } });
       }
       if (category === 'surfaceList') {
         const index = this.layerOptions.surfaceList.findIndex(item => item.id === id);
@@ -1244,7 +1269,18 @@ export default {
         // MBT.Style[layerName].style = { opacity: value / 100 };
         // MBT.updateStyle(MBT.Style);
         layerName.forEach((item, index) => {
-          allMBT[index].updateStyle({ [item]: { style: { opacity: value / 100 } } });
+          const realName = item.substring(3);
+          if (realName === 'Grp' || realName === 'Rot') {
+            allMBTX[index].updateStyle({
+              [item]: { style: { opacity: value / 100 } },
+              [`${item}_Label`]: { style: { opacity: value / 100 } }
+            });
+          } else {
+            allMBT[index].updateStyle({
+              [item]: { style: { opacity: value / 100 } },
+              [`${item}_Label`]: { style: { opacity: value / 100 } }
+            });
+          }
         });
       }
       // 底圖切換
@@ -1941,7 +1977,7 @@ export default {
         }
         // 點線面圖資載入
         if (value === 'switchLayersWindow' && this.openOnceLa === true) {
-          console.log(allMBT);
+          // 圖磚1
           allMBT.forEach((itemBT) => {
             Object.keys(itemBT.Style).forEach((key) => {
               // console.log(key);
@@ -1954,9 +1990,6 @@ export default {
                 newList = iaList.map(item => `${item}_${mName}`);
               }
 
-              console.log('newList');
-              console.log(newList);
-
               const result = {
                 id: Math.random(),
                 LayerName: newList,
@@ -1967,57 +2000,6 @@ export default {
                 allShow: true
               };
 
-              // if (mName === 'Cons' && this.getCons === false) {
-              //   if (itemBT.Style[key].layout['icon-image'] === undefined) { return; }
-
-              //   this.getCons = true;
-              //   result.LayerTitle = '水工構造物';
-              //   this.layerOptions.pointList.push(result);
-
-              //   const newArr = [];
-              //   itemBT.Style[key].layout['icon-image'].forEach((item, index, array) => {
-              //     if (index % 2 === 1 && index !== array.length - 1) {
-              //       const res = {
-              //         id: Math.random(),
-              //         name: item[2],
-              //         visible: true,
-              //         subId: item[1][1],
-              //         picCons: item[2]
-              //       };
-
-              //       newArr.push(res);
-              //     }
-              //   });
-
-              //   result.type = newArr;
-              // }
-
-              // if (mName === 'Canal' && this.getCanal === false) {
-              //   if (itemBT.Style[key].paint === undefined) { return; }
-              //   if (itemBT.Style[key].paint['line-color'] === undefined) { return; }
-
-              //   this.getCanal = true;
-              //   result.LayerTitle = '渠道';
-              //   this.layerOptions.lineList.push(result);
-
-              //   const newArr = [];
-              //   itemBT.Style[key].paint['line-color'].forEach((item, index, array) => {
-              //     if (index % 2 === 1 && index !== array.length - 1) {
-              //       const res = {
-              //         id: Math.random(),
-              //         name: item[2],
-              //         visible: true,
-              //         subId: item[1][1],
-              //         picCanal: ''
-              //       };
-              //       res.picCanal = array[index + 1];
-
-              //       newArr.push(res);
-              //     }
-              //   });
-
-              //   result.type = newArr;
-              // }
               if (mName === 'Ia' && this.getIa === false) {
                 if (itemBT.Style[key].paint === undefined) { return; }
 
@@ -2079,7 +2061,7 @@ export default {
                       id: Math.random(),
                       name: item[2],
                       visible: true,
-                      subId: 'Stn_cns',
+                      subId: 'Stn',
                       picStn: ''
                     };
                     res.picStn = array[index + 1];
@@ -2090,50 +2072,7 @@ export default {
 
                 result.type = newArr;
               }
-              // if (mName === 'Grp' && this.getGrp === false) {
-              //   if (itemBT.Style[key].paint === undefined || itemBT.Style[key].layout === undefined) { return; }
 
-              //   this.getGrp = true;
-              //   result.LayerTitle = '小組';
-              //   result.opacity = 50;
-              //   result.id = 74;
-              //   this.layerOptions.surfaceList.push(result);
-
-              //   const newArr = [];
-              //   const res = {
-              //     id: Math.random(),
-              //     name: '',
-              //     visible: true,
-              //     subId: itemBT.Style[key].layout['text-field'][1],
-              //     bgColor: itemBT.Style[key].paint['fill-color'],
-              //     border: itemBT.Style[key].paint['fill-outline-color']
-              //   };
-              //   newArr.push(res);
-
-              //   result.type = newArr;
-              // }
-              // if (mName === 'Rot' && this.getRot === false) {
-              //   if (itemBT.Style[key].paint === undefined || itemBT.Style[key].layout === undefined) { return; }
-
-              //   this.getRot = true;
-              //   result.LayerTitle = '輪區';
-              //   result.opacity = 50;
-              //   result.id = 75;
-              //   this.layerOptions.surfaceList.push(result);
-
-              //   const newArr = [];
-              //   const res = {
-              //     id: Math.random(),
-              //     name: '',
-              //     visible: true,
-              //     subId: itemBT.Style[key].layout['text-field'][1],
-              //     bgColor: itemBT.Style[key].paint['fill-color'],
-              //     border: itemBT.Style[key].paint['fill-outline-color']
-              //   };
-              //   newArr.push(res);
-
-              //   result.type = newArr;
-              // }
               if (mName === 'Period' && this.getPeriod === false) {
                 if (itemBT.Style[key].paint['fill-color'] === undefined) { return; }
 
@@ -2162,7 +2101,7 @@ export default {
                 result.type = newArr;
               }
               if (mName === 'Pool' && this.getPool === false) {
-                if (itemBT.Style[key].paint === undefined || itemBT.Style[key].layout === undefined) { return; }
+                if (itemBT.Style[key].paint === undefined) { return; }
 
                 this.getPool = true;
                 result.LayerTitle = '埤塘';
@@ -2176,6 +2115,129 @@ export default {
                   name: '',
                   visible: true,
                   subId: 'Pool_cns',
+                  bgColor: itemBT.Style[key].paint['fill-color'],
+                  border: itemBT.Style[key].paint['fill-outline-color']
+                };
+                newArr.push(res);
+
+                result.type = newArr;
+              }
+            });
+          });
+
+          // 圖磚2
+          allMBTX.forEach((itemBT) => {
+            Object.keys(itemBT.Style).forEach((key) => {
+              const mName = key.substring(3);
+
+              let newList = [];
+              const long = key.split('_');
+              if (long.length === 2) {
+                newList = iaList.map(item => `${item}_${mName}`);
+              }
+
+              console.log('newList');
+              console.log(newList);
+
+              const result = {
+                id: Math.random(),
+                LayerName: newList,
+                visible: false,
+                opacity: 100,
+                LayerTitle: '',
+                type: [],
+                allShow: true
+              };
+
+              if (mName === 'Cons' && this.getCons === false) {
+                if (itemBT.Style[key].layout['icon-image'] === undefined) { return; }
+
+                this.getCons = true;
+                result.LayerTitle = '水工構造物';
+                this.layerOptions.pointList.push(result);
+
+                const newArr = [];
+                itemBT.Style[key].layout['icon-image'].forEach((item, index, array) => {
+                  if (index % 2 === 1 && index !== array.length - 1) {
+                    const res = {
+                      id: Math.random(),
+                      name: item[2],
+                      visible: true,
+                      subId: 'Name',
+                      picCons: item[2]
+                    };
+
+                    newArr.push(res);
+                  }
+                });
+
+                result.type = newArr;
+              }
+
+              if (mName === 'Canal' && this.getCanal === false) {
+                if (itemBT.Style[key].paint === undefined) { return; }
+                if (itemBT.Style[key].paint['line-color'] === undefined) { return; }
+
+                this.getCanal = true;
+                result.LayerTitle = '渠道';
+                this.layerOptions.lineList.push(result);
+
+                const newArr = [];
+                itemBT.Style[key].paint['line-color'].forEach((item, index, array) => {
+                  if (index % 2 === 1 && index !== array.length - 1) {
+                    const res = {
+                      id: Math.random(),
+                      name: item[2],
+                      visible: true,
+                      subId: 'Sys_cls',
+                      picCanal: ''
+                    };
+                    res.picCanal = array[index + 1];
+
+                    newArr.push(res);
+                  }
+                });
+
+                result.type = newArr;
+              }
+
+              if (mName === 'Grp' && this.getGrp === false) {
+                if (itemBT.Style[key].paint === undefined) { return; }
+
+                this.getGrp = true;
+                result.LayerTitle = '小組';
+                result.opacity = 50;
+                result.id = 74;
+                this.layerOptions.surfaceList.push(result);
+
+                const newArr = [];
+                const res = {
+                  id: Math.random(),
+                  name: '',
+                  visible: true,
+                  subId: 'Grp_cns',
+                  bgColor: itemBT.Style[key].paint['fill-color'],
+                  border: itemBT.Style[key].paint['fill-outline-color']
+                };
+                newArr.push(res);
+
+                result.type = newArr;
+              }
+              if (mName === 'Rot' && this.getRot === false) {
+                if (itemBT.Style[key].paint === undefined) { return; }
+
+                this.getRot = true;
+                result.LayerTitle = '輪區';
+                result.opacity = 50;
+                result.id = 75;
+                this.layerOptions.surfaceList.push(result);
+
+                const newArr = [];
+                const res = {
+                  id: Math.random(),
+                  name: '',
+                  visible: true,
+                  subId: 'Rot_cns',
                   bgColor: itemBT.Style[key].paint['fill-color'],
                   border: itemBT.Style[key].paint['fill-outline-color']
                 };

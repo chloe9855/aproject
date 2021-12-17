@@ -42,7 +42,7 @@ export default {
   },
   middleware: 'routerAuth',
   mounted () {
-    this.countDownLogout();
+    // this.countDownLogout();
   },
   methods: {
     listenEventLogout (e) {
