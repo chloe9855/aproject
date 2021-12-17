@@ -557,11 +557,37 @@ export default {
       // const irgarea = this.irgarea;
     },
     // * 跳轉地圖
+    // goMapPage () {
+    //   const countyId = this.countyId;
+    //   const fid = this.countyFID;
+    //   console.log(countyId);
+    //   console.log(fid);
+    //   this.$store.commit('TOGGLE_LOADING_STATUS');
+    //   fetch(`http://192.168.3.112/AERC/rest/Sec5ByFID?CountyID=${countyId}&FID=${fid}`, {
+    //     method: 'GET',
+    //     headers: new Headers({
+    //       'Content-Type': 'application/json'
+    //     })
+    //   }).then((response) => {
+    //     return response.json();
+    //   }).then((jsonData) => {
+    //     console.log(jsonData);
+    //     this.$store.commit('TOGGLE_LOADING_STATUS');
+    //     const nowUrl = window.location.origin;
+    //     const front = this.$router.options.base;
+    //     const end = 'map/';
+    //     const myUrl = `${nowUrl}${front}${end}`;
+
+    //     window.open(myUrl);
+    //     localStorage.setItem('oriData', JSON.stringify(jsonData[0].geometry));
+    //   }).catch((err) => {
+    //     console.log(err);
+    //   });
+    // }
     goMapPage () {
       const countyId = this.countyId;
       const fid = this.countyFID;
-      this.$store.commit('TOGGLE_LOADING_STATUS');
-      fetch(`http://192.168.3.112/AERC/rest/Sec5ByFID?CountyID=${countyId}&FID=${fid}`, {
+      fetch(`/AERC/rest/Sec5ByFID?CountyID=${countyId}&FID=${fid}`, {
         method: 'GET',
         headers: new Headers({
           'Content-Type': 'application/json'
@@ -570,12 +596,11 @@ export default {
         return response.json();
       }).then((jsonData) => {
         console.log(jsonData);
-        this.$store.commit('TOGGLE_LOADING_STATUS');
-        const nowUrl = window.location.origin;
-        const front = this.$router.options.base;
-        const end = 'map/';
-        const myUrl = `${nowUrl}${front}${end}`;
-
+        this.loadModal = false;
+        const nowUrl = window.location.href;
+        const front = nowUrl.substring(0, nowUrl.length - 40);
+        const end = '/map/';
+        const myUrl = `${front}${end}`;
         window.open(myUrl);
         localStorage.setItem('oriData', JSON.stringify(jsonData[0].geometry));
       }).catch((err) => {

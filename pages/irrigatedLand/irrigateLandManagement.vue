@@ -360,7 +360,6 @@ export default {
     goMapPage () {
       const countyId = this.countyId;
       const fid = this.countyFID;
-      this.$store.commit('TOGGLE_LOADING_STATUS');
       fetch(`/AERC/rest/Sec5ByFID?CountyID=${countyId}&FID=${fid}`, {
         method: 'GET',
         headers: new Headers({
@@ -369,12 +368,12 @@ export default {
       }).then((response) => {
         return response.json();
       }).then((jsonData) => {
-        this.$store.commit('TOGGLE_LOADING_STATUS');
-        const nowUrl = window.location.origin;
-        const front = this.$router.options.base;
+        console.log(jsonData);
+        this.loadModal = false;
+        const nowUrl = window.location.href;
+        const front = nowUrl.substring(0, nowUrl.length - 37);
         const end = 'map/';
-        const myUrl = `${nowUrl}${front}${end}`;
-
+        const myUrl = `${front}${end}`;
         window.open(myUrl);
         localStorage.setItem('oriData', JSON.stringify(jsonData[0].geometry));
       }).catch((err) => {
