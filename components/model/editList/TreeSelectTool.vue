@@ -55,7 +55,8 @@ export default {
       queryA: [],
       queryB: [],
       queryD: [],
-      queryE: []
+      queryE: [],
+      mngArr: []
     };
   },
   name: 'TreeSelectBox',
@@ -80,19 +81,27 @@ export default {
         this.queryB = this.query.map(x => x.split('_'));
         this.$emit('query', { data: this.queryB, type: 'B' });
       }
-
       console.log(this.query);
       console.log(this.queryA);
       console.log(this.queryB);
     },
     getMng (e) {
       console.log(e);
+      if (e.isCheck) {
+        this.query.push(e.no);
+      } else {
+        const a = this.query.indexOf(e.no);
+        if (a > -1) {
+          this.query.splice(a, 1);
+        }
+      }
+      this.mngArr = this.query;
       if (e.type === 'D') {
-        this.queryD = this.query.map(x => x.split('_'));
-        this.$emit('query', { type: 'D', no: e.no });
+        this.queryD = this.query;
+        this.$emit('query', { type: 'D', no: e.no, data: this.queryD });
       } else if (e.type === 'E') {
-        this.queryE = this.query.map(x => x.split('_'));
-        this.$emit('query', { type: 'E', no: e.no });
+        this.queryE = this.query;
+        this.$emit('query', { type: 'E', no: e.no, data: this.queryE });
       }
     },
     getFile () {

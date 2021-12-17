@@ -211,8 +211,6 @@ export default {
       }
     },
     getQuery (e) {
-      console.log('query_test');
-      console.log(e);
       if (e.type === 'A' && this.Apply_sno !== '') {
         this.queryA = e.data;
         const data = {
@@ -223,8 +221,6 @@ export default {
         getIaCheckReport(data).then(r => {
           console.log(r);
           this.areaA_File = r.data;
-          console.log('areaA_File');
-          console.log(this.areaA_File);
         }).catch(e => {
           console.log(e);
         });
@@ -248,8 +244,9 @@ export default {
       console.log('query_mng');
       console.log(e);
       if (e.type === 'D' && this.Apply_sno !== '') {
+        this.queryD = e.data;
         const data = {
-          query: [e.no],
+          query: this.queryD,
           Apply_sno: this.apply_sno
         };
         getIRCheckReport(data).then(r => {
@@ -260,8 +257,9 @@ export default {
         });
         console.log(e);
       } else if (e.type === 'E' && this.Apply_sno !== '' && this.date !== '') {
+        this.queryE = e.data;
         const data = {
-          query: [e.no],
+          query: this.queryE,
           Apply_sno: this.apply_sno,
           date: this.date
         };
