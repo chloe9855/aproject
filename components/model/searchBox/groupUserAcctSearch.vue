@@ -21,7 +21,8 @@
 <script>
 // @ts-check
 import DropdownVertical2 from '~/components/tools/DropdownVertical2.vue';
-import DatePicker from '~/components/tools/DatePicker.vue';
+// @ts-ignore
+import DatePicker from '~/components/tools/DatePickerJJ.vue';
 import { groupListData } from '~/publish/groupListData';
 
 export default {
