@@ -51,7 +51,6 @@
       title="行政院農業委員會農田水利署停灌補償金申請書(二聯單)附款"
       class="w-90"
       :class="boxWidth"
-      btn-text="存檔"
       :btn-add="false"
       btn-name="button-primary"
     />
@@ -171,7 +170,7 @@ export default {
       compensateEventText: '',
       isCancelButton: false,
       isSend: true,
-      categoryBtnText: '存檔',
+      categoryBtnText: '',
       categoryBtnName: 'button-primary',
       compensateEventIIcon: 'warning',
       areaOpen: [],
@@ -307,7 +306,7 @@ export default {
       if (e.obj.Grp.length > 0) {
         this.tableAreaList.body = [];
         this.areaOpen = [];
-        e.obj.Grp.forEach(item => {
+        e.obj.Grp.forEach((item, i) => {
           let result = {};
           let result1 = {};
           result = {
@@ -349,7 +348,8 @@ export default {
       // console.log(e);
     },
     areaDel (e) {
-      console.log(e);
+      this.tableAreaList.body.splice(e.myIndex, 1);
+      console.log(e.myIndex);
     },
     getTextContent (e) {
       this.note = e;
@@ -361,7 +361,7 @@ export default {
         this.categoryBtnText = '刪除';
         this.categoryBtnName = 'button-red';
       } else {
-        this.categoryBtnText = '存檔';
+        this.categoryBtnText = '';
         this.categoryBtnName = 'button-primary';
       }
     },
