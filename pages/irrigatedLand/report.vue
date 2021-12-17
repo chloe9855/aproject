@@ -17,21 +17,32 @@
         <SubTitleTool
           :title="'單位:'+IaName1"
           class="w-100"
+          :is-report="true"
+          @STApplySno="getApplySno"
+          @STDate="getDate"
         />
         <div class="flexBox treeList">
           <TreeSelectBox
             class="flex-1"
             title="停灌補償核定統計表"
             :options="treeData"
+            index-no="A"
+            :link="areaA_File"
+            @query="getQuery"
           />
           <TreeSelectBox
             class="flex-1"
             title="停灌補償申報統計表(日報)"
             :options="treeData"
+            index-no="B"
+            :link="areaB_File"
+            @query="getQuery"
           />
+          {{ areaC_File }}
           <TreeSelectBox
             class="flex-1"
             title="補償(撥款)清冊"
+            :link="areaC_File"
           />
         </div>
       </div>
@@ -61,6 +72,7 @@ import BreadCrumbTool from '~/components/tools/BreadCrumbTool.vue';
 import SubTitleTool from '~/components/tools/SubTitleTool.vue';
 import TreeSelectBox from '~/components/model/editList/TreeSelectTool.vue';
 import { getAccount } from '~/api/account';
+import { getIaCheckReport, getIaApplyReport, getIaApply } from '~/api/report';
 import { getMngs, getStns } from '~/publish/Irrigation.js';
 // import { getMngs } from '~/publish/Irrigation.js';
 
@@ -84,7 +96,14 @@ export default {
           ia: '',
           mng: []
         }
-      ]
+      ],
+      apply_sno: 0,
+      date: '',
+      queryA: [],
+      queryB: [],
+      areaA_File: '',
+      areaB_File: '',
+      areaC_File: ''
     };
   },
   name: 'Report',
@@ -119,6 +138,78 @@ export default {
     }).catch(e => {
       console.log(e);
     });
+  },
+  methods: {
+    getApplySno (e) {
+      console.log(e);
+      this.apply_sno = e.value;
+      if (this.date !== '') {
+        const data = {
+          Ia: this.thisIa,
+          date: this.date,
+          Apply_sno: this.apply_sno
+        };
+        getIaApply(data).then(r => {
+          console.log(r);
+          this.areaC_File = r.data;
+        }).catch(e => {
+          console.log(e);
+        });
+      }
+    },
+    getDate (e) {
+      console.log(e);
+      this.date = e.val;
+      if (this.apply_sno !== '') {
+        const data = {
+          Ia: this.thisIa,
+          date: this.date,
+          Apply_sno: this.apply_sno
+        };
+        getIaApply(data).then(r => {
+          console.log(r);
+          this.areaC_File = r.data;
+        }).catch(e => {
+          console.log(e);
+        });
+      }
+    },
+    getQuery (e) {
+      console.log('query_test');
+      console.log(e);
+      if (e.type === 'A' && this.Apply_sno !== '') {
+        this.queryA = e.data;
+        const data = {
+          Ia: this.thisIa,
+          query: this.queryA,
+          Apply_sno: this.apply_sno
+        };
+        getIaCheckReport(data).then(r => {
+          console.log(r);
+          this.areaA_File = r.data;
+          console.log('areaA_File');
+          console.log(this.areaA_File);
+        }).catch(e => {
+          console.log(e);
+        });
+      } else if (e.type === 'B' && this.Apply_sno !== '' && this.date !== '') {
+        this.queryB = e.data;
+        const data = {
+          ia: this.thisIa,
+          query: this.queryB,
+          Apply_sno: this.apply_sno,
+          date: this.date
+        };
+        getIaApplyReport(data).then(r => {
+          this.areaB_File = r.data;
+          console.log(r);
+        }).catch(e => {
+          console.log(e);
+        });
+      }
+      console.log(this.queryA);
+      console.log(this.queryB);
+    }
   },
   watch: {
     treeData (n) {

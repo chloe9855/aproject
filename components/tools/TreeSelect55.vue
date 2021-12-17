@@ -33,6 +33,7 @@
         >
           <TreeSelect2
             :s-item="sItem"
+            :index-no="indexNo"
             @changeMng="getMng"
             @changeStn="getStn"
           />
@@ -52,6 +53,10 @@ export default {
   props: {
     myItem: {
       type: Object
+    },
+    indexNo: {
+      type: String,
+      default: ''
     }
   },
   data () {

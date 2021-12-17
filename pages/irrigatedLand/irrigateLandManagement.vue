@@ -300,7 +300,7 @@ export default {
           this.searchObj = x;
           axios.post('/AERC/rest/IrrigationLand?pageCnt=1&pageRows=1', this.searchObj).then(r => {
             const x = r.data[0];
-            this.countyId = x.county;
+            this.countyId = x.county_id;
             this.countyFID = x.FID;
             if (r.data.length < 1) {
               _this.isNoDataBg = true;

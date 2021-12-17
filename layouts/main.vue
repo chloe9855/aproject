@@ -38,7 +38,7 @@ export default {
   middleware: 'routerAuth',
   mounted () {
     console.log(this.$store.state.userInfo);
-    this.countDownLogout();
+    // this.countDownLogout();
   },
   methods: {
     listenEventLogout (e) {

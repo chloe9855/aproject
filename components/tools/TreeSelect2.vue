@@ -4,17 +4,17 @@
       <img
         class="arrow"
         :src="picSrc2"
-        @click="picToggler2(sItem.no)"
+        @click="picToggler2(indexNo+'-'+sItem.no)"
       >
       <div class="theme_checkbox">
         <input
-          :id="sItem.no"
+          :id="indexNo+'_'+sItem.no"
           type="checkbox"
           @change="$emit('changeMng', {isCheck:$event.target.checked,no:sItem.no})"
         >
         <label
           class="title"
-          :for="sItem.no"
+          :for="indexNo+'_'+sItem.no"
         >
           {{ sItem.title }}
         </label>
@@ -22,7 +22,7 @@
     </div>
 
     <div
-      :class="`block22-${sItem.no}`"
+      :class="`block22-${indexNo}-${sItem.no}`"
       class="block2"
     >
       <div
@@ -32,13 +32,13 @@
       >
         <div class="theme_checkbox">
           <input
-            :id="sItem.no+gItem.no"
+            :id="indexNo+'_'+sItem.no+gItem.no"
             type="checkbox"
-            @change="$emit('changeStn', {isCheck:$event.target.checked,no:sItem.no+'_'+gItem.no})"
+            @change="$emit('changeStn', {isCheck:$event.target.checked,no:sItem.no+'_'+gItem.no,arr:[sItem.no,gItem.no],type:indexNo})"
           >
           <label
             class="title"
-            :for="sItem.no+gItem.no"
+            :for="indexNo+'_'+sItem.no+gItem.no"
           >
             {{ gItem.name }}
           </label>
@@ -55,6 +55,10 @@ export default {
   props: {
     sItem: {
       type: Object
+    },
+    indexNo: {
+      type: String,
+      default: ''
     }
   },
   data () {

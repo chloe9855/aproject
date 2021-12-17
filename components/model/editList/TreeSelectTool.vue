@@ -4,6 +4,7 @@
       alt=""
       class="icon"
       :src="require('~/assets/img/print.svg')"
+      @click="getFile"
     >
     <SubTitleTool
       :title="title"
@@ -13,6 +14,7 @@
     <TreeSelect
       class="treeSelect"
       :all-options="options"
+      :index-no="indexNo"
       @getQuery="getQuery"
     />
   </div>
@@ -31,6 +33,14 @@ export default {
       type: String,
       default: ''
     },
+    link: {
+      type: String,
+      default: ''
+    },
+    indexNo: {
+      type: String,
+      default: ''
+    },
     options: {
       type: Array,
       default: () => {
@@ -40,13 +50,14 @@ export default {
   },
   data () {
     return {
-      query: []
+      query: [],
+      queryA: [],
+      queryB: []
     };
   },
   name: 'TreeSelectBox',
   methods: {
     select (e) {
-      console.log('test2222');
       console.log(e);
     },
     getQuery (e) {
@@ -59,8 +70,21 @@ export default {
           this.query.splice(a, 1);
         }
       }
+      if (e.type === 'A') {
+        this.queryA = this.query.map(x => x.split('_'));
+        this.$emit('query', { data: this.queryA, type: 'A' });
+      } else if (e.type === 'B') {
+        this.queryB = this.query.map(x => x.split('_'));
+        this.$emit('query', { data: this.queryB, type: 'B' });
+      }
 
       console.log(this.query);
+      console.log(this.queryA);
+      console.log(this.queryB);
+    },
+    getFile () {
+      console.log(this.link);
+      window.location = this.link;
     }
   }
 };

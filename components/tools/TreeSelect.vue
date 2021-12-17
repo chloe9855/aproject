@@ -6,6 +6,7 @@
     >
       <TreeSelect55
         :my-item="mItem"
+        :index-no="indexNo"
         @changeIa="iaHandler"
         @changeMng="mngHandler"
         @changeStn="stnHandler"
@@ -49,6 +50,10 @@ export default {
           }
         ];
       }
+    },
+    indexNo: {
+      type: String,
+      default: ''
     }
   },
   data () {
