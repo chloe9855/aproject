@@ -102,7 +102,7 @@ import Tag from '~/components/tools/Tag.vue';
 import { addAccount, editAccount, getAccount } from '~/api/account';
 import { getGroup } from '~/api/group';
 import { groupListData, iaListData, stnListData } from '~/publish/groupListData';
-import { getGrps, getStns } from '~/publish/Irrigation';
+import { getGrps, getStns } from '~/publish/Irrigation1';
 import AlertBox from '~/components/tools/AlertBox.vue';
 import { AccountStatus } from '~/publish/accountStatusTag';
 import SwitchOn from '~/components/tools/SwitchOn.vue';

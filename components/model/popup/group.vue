@@ -19,7 +19,7 @@ import { addGroup, editGroup, getGroup } from '~/api/group';
 import DropdownVertical2 from '~/components/tools/DropdownVertical2.vue';
 import InputVertical from '~/components/tools/InputVertical.vue';
 import TreeSelect from '~/components/tools/TreeSelect.vue';
-import { getGrps, getIas, getStns } from '~/publish/Irrigation';
+import { getGrps, getIas, getStns } from '~/publish/Irrigation1';
 
 export default {
   components: {
