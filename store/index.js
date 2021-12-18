@@ -7,25 +7,29 @@ export const state = () => ({
   popupState: false,
   isLoading: false,
   popupType: { type: '', title: '請設定查詢作業標題', editId: {} },
-  editCompensateEventID: '',
-  compensateData: {},
   mouseEventMin: 0,
   userInfo: {},
   editAccount: '',
   canvasUrl: '',
-  oriFormData: { slogan: '', content: '', link: '', rows: '' }
+  oriFormData: { slogan: '', content: '', link: '', rows: '' },
+
+  // 這看起來很糟糕，但現在的popup架構也沒辦法直接 emit 事件
+  refetchCounter: 0
 });
 
 // * ==========================================================================
 // * Mutations
 // * ==========================================================================
 
+export const SET_RE_FETCH_DATA = 'SET_RE_FETCH_DATA';
+export const TOGGLE_POPUP_STATUS = 'TOGGLE_POPUP_STATUS';
+
 export const mutations = {
   // * 隱藏FOOTER
   HIDE_FOOTER_CTRL (state, payload) {
     state.hideFooter = payload;
   },
-  TOGGLE_POPUP_STATUS (state) {
+  [TOGGLE_POPUP_STATUS] (state) {
     state.popupState = !state.popupState;
   },
   TOGGLE_LOADING_STATUS (state) {
@@ -39,12 +43,9 @@ export const mutations = {
     } else {
       state.popupType.editId = undefined;
     }
-  },
-  SET_COMPENSATE_DATA (state, payload) {
-    state.compensateData = payload;
-  },
-  SET_COMPENSATE_EVENT_ID (state, payload) {
-    state.editCompensateEventID = payload;
+    state.popupType.integrateSubmit = payload.integrateSubmit == null
+      ? true
+      : payload.integrateSubmit;
   },
   SET_LOUOUT_COUNTDOWN (state, payload) {
     state.mouseEventMin = payload.min;
@@ -65,6 +66,8 @@ export const mutations = {
   },
   SET_FORM_DATA (state, payload) {
     state.oriFormData = payload;
+  },
+  [SET_RE_FETCH_DATA] (state) {
+    state.refetchCounter++;
   }
-
 };

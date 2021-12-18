@@ -65,17 +65,28 @@
       v-if="showSuccess"
       box-icon="success"
       title="刪除成功"
-      @confirm="showSuccess = false"
+      text=""
+      @close="removeConfirmed"
+      @confirm="removeConfirmed"
+    />
+
+    <AlertBox
+      v-if="showError"
+      box-icon="error"
+      title="刪除失敗"
+      text=""
+      @close="showError = false"
+      @confirm="showError = false"
     />
   </div>
 </template>
 
 <script>
 // @ts-check
-import TableTool from '~/components/model/TableJJ.vue';
+import TableTool from '~/components/model/Table.vue';
 import PageHeader from '~/components/tools/PageHeader.vue';
 import BreadCrumbTool from '~/components/tools/BreadCrumbTool.vue';
-import Search from '~/components/model/Search1.vue';
+import Search from '~/components/model/Search.vue';
 import { delGroup, getGroup } from '~/api/group';
 import { groupData } from '~/publish/groupData';
 import GroupUserAcctSearch from '~/components/model/searchBox/groupUserAcctSearch.vue';
@@ -124,7 +135,8 @@ export default {
       searchObj: getDefaultSearchObj(),
       showCannotRemoveAlert: false,
       singleRemoveId: null,
-      showSuccess: false
+      showSuccess: false,
+      showError: false
     };
   },
   name: 'Authority',
@@ -155,14 +167,23 @@ export default {
     addGroup (e) {
       if (e) {
         this.$store.commit('TOGGLE_POPUP_STATUS');
-        this.$store.commit('TOGGLE_POPUP_TYPE', { type: 'group', title: '新增群組' });
+        this.$store.commit('TOGGLE_POPUP_TYPE', {
+          type: 'group',
+          title: '新增群組',
+          integrateSubmit: false
+        });
       }
     },
     changeGroup (e) {
       if (e.event === 'isEdit') {
         console.log(e.item);
         this.$store.commit('TOGGLE_POPUP_STATUS');
-        this.$store.commit('TOGGLE_POPUP_TYPE', { type: 'group', title: '編輯群組', editId: e.item.groupsno });
+        this.$store.commit('TOGGLE_POPUP_TYPE', {
+          type: 'group',
+          title: '編輯群組',
+          editId: e.item.groupsno,
+          integrateSubmit: false
+        });
       } else if (e.event === 'isDel') {
         console.log(e);
         this.checkAndShowRemove(e.item.val);
@@ -177,7 +198,9 @@ export default {
     //     };
     //   }
     // },
-    search () {
+    async search () {
+      const { data } = await getGroup();
+      this.groups = data;
       let filtered = this.groups;
 
       if (this.searchObj.group) {
@@ -222,9 +245,13 @@ export default {
 
       const { status } = await delGroup(this.singleRemoveId);
 
-      if (status < 300) {
-        this.showSuccess = true;
-      }
+      this.singleRemoveId = null;
+      this.showSuccess = status < 300;
+      this.showError = !this.showSuccess;
+    },
+    removeConfirmed () {
+      this.showSuccess = false;
+      this.search();
     }
   },
   computed: {
@@ -237,6 +264,15 @@ export default {
     growDiv () {
       const setWidth = this.toggleStatus ? '' : 'grow';
       return setWidth;
+    },
+    /** @returns {number} */
+    refetchCounter () {
+      return this.$store.state.refetchCounter;
+    }
+  },
+  watch: {
+    refetchCounter () {
+      this.search();
     }
   }
 };

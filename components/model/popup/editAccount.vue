@@ -40,12 +40,13 @@
       v-model="account.ia"
       title="單位"
       :options="iaList"
+      @input="fetchStn"
     />
     <DropdownVertical2
       v-model="account.stn"
       title="工作站"
       :options="stnList"
-      @input="onIaInput"
+      @input="fetchGrp"
     />
     <DropdownVertical2
       v-model="account.grp"
@@ -53,8 +54,10 @@
       :options="grpList"
     />
     <InputVertical
+      :external-error="mailMessage"
       title="信箱"
       :default-data="account.mail"
+      @inputValue="account.mail = $event"
     />
     <InputVertical
       title="備註"
@@ -85,11 +88,25 @@
 
     <AlertBox
       v-if="showSuccess"
-      :title="isAdd ? '新增' : '修改'"
+      :title="isAdd ? '新增成功' : '修改成功'"
       :cancel-button="false"
       box-icon="success"
-      @confirm="showSuccess = false"
+      text=""
+      @close="successConfirm"
+      @confirm="successConfirm"
     />
+
+    <AlertBox
+      v-if="showError"
+      :title="isAdd ? '新增失敗' : '修改失敗'"
+      :cancel-button="false"
+      box-icon="error"
+      text=""
+      @close="showError = false"
+      @confirm="showError = false"
+    />
+
+    <PopupSubmit @submit="submit" />
   </div>
 </template>
 
@@ -102,12 +119,17 @@ import Tag from '~/components/tools/Tag.vue';
 import { addAccount, editAccount, getAccount } from '~/api/account';
 import { getGroup } from '~/api/group';
 import { groupListData, iaListData, stnListData } from '~/publish/groupListData';
-import { getGrps, getStns } from '~/publish/Irrigation1';
+import { getGrps, getStns } from '~/publish/Irrigation';
 import AlertBox from '~/components/tools/AlertBox.vue';
 import { AccountStatus } from '~/publish/accountStatusTag';
 import SwitchOn from '~/components/tools/SwitchOn.vue';
+import PopupSubmit from '~/components/model/popup/PopupSubmit.vue';
+import { SET_RE_FETCH_DATA, TOGGLE_POPUP_STATUS } from '~/store';
 
 // https://stackoverflow.com/questions/46155/whats-the-best-way-to-validate-an-email-address-in-javascript
+/**
+ * @param {string} email
+ */
 const validateEmail = (email) => {
   return String(email)
     .toLowerCase()
@@ -123,14 +145,12 @@ export default {
     Button,
     Tag,
     AlertBox,
-    SwitchOn
+    SwitchOn,
+    PopupSubmit
   },
   props: {
     id: {
       type: String
-    },
-    isSubmit: {
-      type: Boolean
     },
     isAdd: {
       type: Boolean
@@ -149,7 +169,8 @@ export default {
       accountMessage: '',
       mailMessage: '',
       showSuccess: false,
-      AccountStatus
+      AccountStatus,
+      showError: false
     };
   },
   name: 'EditAccount',
@@ -175,7 +196,8 @@ export default {
       this.groupList = groupListData(g);
       this.test = this.account.groupname;
 
-      await this.onIaInput();
+      await this.fetchStn();
+      await this.fetchGrp();
     },
     async fetchStn () {
       if (!this.account.ia) {
@@ -186,16 +208,25 @@ export default {
       this.stnList = stnListData(await getStns(this.account.ia));
     },
     async fetchGrp () {
-      if (!this.account.ia) {
+      if (!this.account.ia || !this.account.stn) {
         this.grpList = [];
         return;
       }
 
-      const res = await getGrps(this.account.ia);
+      const res = await getGrps(this.account.ia, '', this.account.stn);
       this.grpList = res.data.map(item => ({ value: item.Grp, title: item.Grp_cns }));
     },
-    onIaInput () {
-      return Promise.all([this.fetchStn(), this.fetchGrp()]);
+    submit () {
+      if (this.isAdd) {
+        this.addSubmit();
+        return;
+      }
+
+      this.editSubmit();
+    },
+    successConfirm () {
+      this.$store.commit(SET_RE_FETCH_DATA);
+      this.$store.commit(TOGGLE_POPUP_STATUS);
     },
     async editSubmit () {
       const editId = this.getEditId();
@@ -205,9 +236,11 @@ export default {
       });
 
       this.showSuccess = status < 300;
+      this.showError = !this.showSuccess;
     },
     async addSubmit () {
       this.accountMessage = '';
+      this.mailMessage = '';
 
       if (!this.account.account) {
         this.accountMessage = '此欄必填';
@@ -221,7 +254,7 @@ export default {
         return;
       }
 
-      if (!validateEmail()) {
+      if (!this.validateEmail()) {
         return;
       };
 
@@ -230,32 +263,21 @@ export default {
       });
 
       this.showSuccess = status < 300;
+      this.showError = !this.showSuccess;
     },
     validateEmail () {
       this.mailMessage = '';
       if (!this.account.mail) {
         this.mailMessage = '此欄必填';
+        return;
       }
 
       if (!validateEmail(this.account.mail)) {
         this.mailMessage = '信箱格式錯誤';
-      }
-
-      return !!this.mailMessage;
-    }
-  },
-  watch: {
-    /** @returns {void} */
-    isSubmit (value) {
-      if (!value) {
-        return;
-      }
-      if (this.isAdd) {
-        this.addSubmit();
         return;
       }
 
-      this.editSubmit();
+      return !this.mailMessage;
     }
   }
 };

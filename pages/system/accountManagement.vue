@@ -70,6 +70,14 @@
       :cancel-button="false"
       @confirm="showSuccess = false"
     />
+
+    <AlertBox
+      v-if="showError"
+      box-icon="error"
+      title="刪除失敗"
+      :cancel-button="false"
+      @confirm="showError = false"
+    />
   </div>
 </template>
 
@@ -82,11 +90,10 @@
 
 import Vue from 'vue';
 import dayjs from 'dayjs';
-// @ts-ignore
-import TableTool from '~/components/model/TableJJ.vue';
+import TableTool from '~/components/model/Table.vue';
 import PageHeader from '~/components/tools/PageHeader.vue';
 import BreadCrumbTool from '~/components/tools/BreadCrumbTool.vue';
-import Search from '~/components/model/Search1.vue';
+import Search from '~/components/model/Search.vue';
 import { editAccount, getAccount } from '~/api/account';
 import { accountData } from '~/publish/accountData';
 import UserAcctSearch from '~/components/model/searchBox/userAcctSearch.vue';
@@ -146,7 +153,8 @@ export default Vue.extend({
       checkedAccount: [],
       showRemoveConfirm: false,
       singleRemoveAccountId: null,
-      showSuccess: false
+      showSuccess: false,
+      showError: false
     };
   },
   name: 'Account',
@@ -176,7 +184,11 @@ export default Vue.extend({
       console.log(e);
       if (e) {
         this.$store.commit('TOGGLE_POPUP_STATUS');
-        this.$store.commit('TOGGLE_POPUP_TYPE', { type: 'addAccount', title: '新增帳號' });
+        this.$store.commit('TOGGLE_POPUP_TYPE', {
+          type: 'addAccount',
+          title: '新增帳號',
+          integrateSubmit: false
+        });
       }
     },
     getTableEvent (e) {
@@ -184,7 +196,12 @@ export default Vue.extend({
         switch (e.event) {
           case 'isEdit':
             this.$store.commit('TOGGLE_POPUP_STATUS');
-            this.$store.commit('TOGGLE_POPUP_TYPE', { type: 'editAccount', title: '編輯帳號', editId: e.item.title[0] });
+            this.$store.commit('TOGGLE_POPUP_TYPE', {
+              type: 'editAccount',
+              title: '編輯帳號',
+              editId: e.item.title[0],
+              integrateSubmit: false
+            });
             break;
           case 'isDel':
             this.singleRemoveAccountId = e.item.val;
@@ -205,6 +222,8 @@ export default Vue.extend({
     },
     async searchAccount () {
       const { searchObj } = this;
+      const { data } = await getAccount();
+      this.accountList = data;
 
       let filtered = this.accountList;
 
@@ -244,6 +263,7 @@ export default Vue.extend({
     },
     clear () {
       this.searchObj = getDefaultSearchObj();
+      this.searchAccount();
     },
     onBatchRemove () {
       if (this.checkedAccount.length) {
@@ -262,6 +282,7 @@ export default Vue.extend({
 
       this.checkedAccount = [];
       this.checkAndShowSuccess(status);
+      this.searchAccount();
     },
     async singleRemove () {
       if (this.singleRemoveAccountId == null) {
@@ -275,12 +296,14 @@ export default Vue.extend({
 
       this.singleRemoveAccountId = null;
       this.checkAndShowSuccess(status);
+      this.searchAccount();
     },
     /**
      * @param {number} status
      */
     checkAndShowSuccess (status) {
       this.showSuccess = status < 300;
+      this.showError = !this.showSuccess;
     }
   },
   computed: {
@@ -293,6 +316,15 @@ export default Vue.extend({
     growDiv () {
       const setWidth = this.toggleStatus ? '' : 'grow';
       return setWidth;
+    },
+    /** @returns {number} */
+    refetchCounter () {
+      return this.$store.state.refetchCounter;
+    }
+  },
+  watch: {
+    refetchCounter () {
+      this.searchAccount();
     }
   }
 });

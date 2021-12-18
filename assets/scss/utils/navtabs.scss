@@ -102,6 +102,14 @@
       border: none;
     }
 
+    &:indeterminate + label::before {
+      content: '';
+      background: url('~/assets/img/checkbox-Indeterminate.png') no-repeat right/contain;
+      width: 15px;
+      height: 15px;
+      border: none;
+    }
+
     &:disabled + label {
       color: #b8b8b8;
       cursor: auto;
