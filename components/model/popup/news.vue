@@ -41,7 +41,8 @@ import Button from '~/components/tools/Buttons.vue';
 import Table from '~/components/model/TableForBulletin.vue';
 import Textarea from '~/components/tools/Textarea.vue';
 import { bulletinInputDataName, bulletinInputData } from '~/publish/bulletinData';
-import { addBulletin } from '~/api/bulletin';
+import { addBulletin, editBulletin } from '~/api/bulletin';
+// import { addBulletin } from '~/api/bulletin';
 
 export default {
   components: {
@@ -75,11 +76,15 @@ export default {
       dataname: [],
       data: [],
       delBtn: false,
-      num: 0
+      num: 0,
+      isEdit: false
     };
   },
   mounted () {
     setTimeout(() => {
+      if (this.originData.rows.length > 0) {
+        this.isEdit = true;
+      }
       this.originData.rows.forEach((item) => {
         this.num += 1;
         this.tableList.body.push({ val: `news${this.num}`, title: [{ type: 'input', key: `a${this.num}` }, { type: 'input', key: `b${this.num}` }] });
@@ -123,13 +128,40 @@ export default {
   watch: {
     isSubmit (n) {
       if (n) {
-        const data = `name=${this.bulletinName}&content=${this.bulletinContent}&data=${this.data}&dataname=${this.dataname}`;
-        addBulletin(data).then(r => {
-          console.log(r);
-          this.$emit('submitSuccess', true);
-        }).catch(e => {
-          console.log(e);
-        });
+        if (this.isEdit) {
+          console.log('isEdit');
+          console.log(this.originData);
+          console.log(this.bulletinName);
+          console.log(this.bulletinContent);
+          console.log(this.data);
+          console.log(this.dataname);
+          const datasno = [1];
+
+          const data = {
+            bulletinsno: this.originData.ID,
+            name: this.bulletinName,
+            content: this.bulletinContent,
+            dataname: this.dataname,
+            data: this.data,
+            datasno: datasno
+          };
+          console.log('EDITDATA');
+          console.log(data);
+          editBulletin(data).then(r => {
+            console.log(r);
+            // this.$emit('submitSuccess', true);
+          }).catch(e => {
+            console.log(e);
+          });
+        } else {
+          const data = `name=${this.bulletinName}&content=${this.bulletinContent}&data=${this.data}&dataname=${this.dataname}`;
+          addBulletin(data).then(r => {
+            console.log(r);
+            this.$emit('submitSuccess', true);
+          }).catch(e => {
+            console.log(e);
+          });
+        }
       }
     }
   }
