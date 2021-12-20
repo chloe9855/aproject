@@ -91,6 +91,8 @@ export default {
     getUserID (e) {
       if (e) {
         this.userId = e;
+        this.searchObj.id = this.userId;
+        this.$emit('onsearch', { obj: this.searchObj });
       }
     },
     countyDrop (payload) {
@@ -136,8 +138,6 @@ export default {
     getLandValue (e) {
       if (e) {
         this.landValue = e;
-        // this.searchObj.id = '7eYXGw66I2tilK8qDRnzWg==';
-        // this.searchObj.id = this.userId;
         this.searchObj.id = this.userId;
         this.searchObj.landno = this.landValue;
         this.$emit('onsearch', { obj: this.searchObj });

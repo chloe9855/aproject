@@ -165,6 +165,13 @@ export default {
   methods: {
     addNews (e) {
       console.log(e);
+      this.$store.commit('SET_FORM_DATA', {
+        ID: '',
+        slogan: '',
+        content: '',
+        link: {},
+        rows: []
+      });
       if (e) {
         this.$store.commit('TOGGLE_POPUP_STATUS');
         this.$store.commit('TOGGLE_POPUP_TYPE', { type: 'news', title: '新增公告' });
@@ -209,6 +216,7 @@ export default {
     },
     // * 按下編輯公告
     editAnounce (myId) {
+      const num = myId.info - 1;
       this.$store.commit('TOGGLE_POPUP_STATUS');
       this.$store.commit('TOGGLE_POPUP_TYPE', { type: 'news', title: '編輯公告' });
       setTimeout(() => {
@@ -222,17 +230,18 @@ export default {
         }).then((data) => {
           console.log(data);
           const result = {
-            slogan: data[0].name,
-            content: data[0].content,
+            ID: num,
+            slogan: data[num].name,
+            content: data[num].content,
             link: {},
             rows: []
           };
-          result.rows = data[0].dataname;
-          data[0].dataname.forEach((item, inedx) => {
-            result.link[`a${inedx}`] = item;
+          result.rows = data[num].dataname;
+          data[num].dataname.forEach((item, index) => {
+            result.link[`a${index}`] = item;
           });
-          data[0].data.forEach((item, inedx) => {
-            result.link[`b${inedx}`] = item;
+          data[num].data.forEach((item, index) => {
+            result.link[`b${index}`] = item;
           });
           this.$store.commit('SET_FORM_DATA', result);
         }).catch((err) => {
