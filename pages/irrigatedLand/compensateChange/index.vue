@@ -79,14 +79,14 @@ export default {
     toAddCompensateEvent (e) {
       console.log(e);
       if (e) {
-        this.$router.push({ path: '/irrigatedLand/compensate/editcompensateEvent' });
+        this.$router.push({ path: '/irrigatedLand/compensateChange/editcompensateEvent' });
       }
     },
     tableEvent (e) {
       if (e.event === 'isEdit') {
         // console.log(e);
         this.$store.commit('SET_COMPENSATE_EVENT_ID', e.item.id);
-        this.$router.push('/irrigatedLand/compensate/editcompensateEvent');
+        this.$router.push('/irrigatedLand/compensateChange/editcompensateEvent');
       }
     }
   },
