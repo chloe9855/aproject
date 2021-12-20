@@ -11,7 +11,7 @@ export default {
   },
   target: 'static',
   router: {
-    base: '/IRCloud/'
+    base: '/test008/'
   },
 
   // Global page headers: https://go.nuxtjs.dev/config-head
@@ -28,209 +28,209 @@ export default {
     ],
     script: [
       {
-        src: '/IRCloud/scripts/Map.js',
+        src: '/test008/scripts/Map.js',
         async: true
       },
       // {
-      //   src: '/IRCloud/scripts/Framework.js',
+      //   src: '/test008/scripts/Framework.js',
       //   async: true
       // },
       // {
-      //   src: '/IRCloud/scripts/Tasks.js',
+      //   src: '/test008/scripts/Tasks.js',
       //   async: true
       // },
       // {
-      //   src: '/IRCloud/scripts/GFX.js',
+      //   src: '/test008/scripts/GFX.js',
       //   async: true
       // },
       // {
-      //   src: '/IRCloud/scripts/FX.js',
+      //   src: '/test008/scripts/FX.js',
       //   async: true
       // },
       // {
-      //   src: '/IRCloud/scripts/MapBase.js',
+      //   src: '/test008/scripts/MapBase.js',
       //   async: true
       // },
       // {
-      //   src: '/IRCloud/scripts/Controls.js',
+      //   src: '/test008/scripts/Controls.js',
       //   async: true
       // },
 
       // {
-      //   src: '/IRCloud/scripts/MapLayer.js',
+      //   src: '/test008/scripts/MapLayer.js',
       //   async: true
       // },
       // {
-      //   src: '/IRCloud/scripts/Compass.js',
+      //   src: '/test008/scripts/Compass.js',
       //   async: true
       // },
       // {
-      //   src: '/IRCloud/scripts/Navigate.js',
+      //   src: '/test008/scripts/Navigate.js',
       //   async: true
       // },
       // {
-      //   src: '/IRCloud/scripts/Tracker.js',
+      //   src: '/test008/scripts/Tracker.js',
       //   async: true
       // },
       // {
-      //   src: '/IRCloud/scripts/CachedLayer.js',
+      //   src: '/test008/scripts/CachedLayer.js',
       //   async: true
       // },
       // {
-      //   src: '/IRCloud/scripts/Geometry.js',
+      //   src: '/test008/scripts/Geometry.js',
       //   async: true
       // },
       // {
-      //   src: '/IRCloud/scripts/Symbol.js',
+      //   src: '/test008/scripts/Symbol.js',
       //   async: true
       // },
       // {
-      //   src: '/IRCloud/scripts/Draw.js',
+      //   src: '/test008/scripts/Draw.js',
       //   async: true
       // },
       // {
-      //   src: '/IRCloud/scripts/Overview.js',
+      //   src: '/test008/scripts/Overview.js',
       //   async: true
       // },
       // {
-      //   src: '/IRCloud/scripts/Bookmark.js',
+      //   src: '/test008/scripts/Bookmark.js',
       //   async: true
       // },
       // {
-      //   src: '/IRCloud/scripts/TemplatePicker.js',
+      //   src: '/test008/scripts/TemplatePicker.js',
       //   async: true
       // },
       // {
-      //   src: '/IRCloud/scripts/Layer.js',
+      //   src: '/test008/scripts/Layer.js',
       //   async: true
       // },
       // {
-      //   src: '/IRCloud/scripts/DynamicLayer.js',
+      //   src: '/test008/scripts/DynamicLayer.js',
       //   async: true
       // },
       // {
-      //   src: '/IRCloud/scripts/Symbol.js',
+      //   src: '/test008/scripts/Symbol.js',
       //   async: true
       // },
       // {
-      //   src: '/IRCloud/scripts/Graphic.js',
+      //   src: '/test008/scripts/Graphic.js',
       //   async: true
       // },
       // {
-      //   src: '/IRCloud/scripts/GraphicsLayer.js',
+      //   src: '/test008/scripts/GraphicsLayer.js',
       //   async: true
       // },
       // {
-      //   src: '/IRCloud/scripts/TileLayer.js',
+      //   src: '/test008/scripts/TileLayer.js',
       //   async: true
       // },
       // {
-      //   src: '/IRCloud/scripts/OSMLayer.js',
+      //   src: '/test008/scripts/OSMLayer.js',
       //   async: true
       // },
       // {
-      //   src: '/IRCloud/scripts/BingTiledLayer.js',
+      //   src: '/test008/scripts/BingTiledLayer.js',
       //   async: true
       // },
       // {
-      //   src: '/IRCloud/scripts/Infowindow.js',
+      //   src: '/test008/scripts/Infowindow.js',
       //   async: true
       // },
       // {
-      //   src: '/IRCloud/scripts/Mercator.js',
+      //   src: '/test008/scripts/Mercator.js',
       //   async: true
       // },
       // {
-      //   src: '/IRCloud/scripts/CoordSys.js',
+      //   src: '/test008/scripts/CoordSys.js',
       //   async: true
       // },
       // {
-      //   src: '/IRCloud/scripts/Bookmark.js',
+      //   src: '/test008/scripts/Bookmark.js',
       //   async: true
       // },
       // {
-      //   src: '/IRCloud/scripts/PrintTool.js',
+      //   src: '/test008/scripts/PrintTool.js',
       //   async: true
       // },
       // {
-      //   src: '/IRCloud/scripts/Process.js',
+      //   src: '/test008/scripts/Process.js',
       //   async: true
       // },
       // {
-      //   src: '/IRCloud/scripts/Query.js',
+      //   src: '/test008/scripts/Query.js',
       //   async: true
       // },
       // {
-      //   src: '/IRCloud/scripts/Edit.js',
+      //   src: '/test008/scripts/Edit.js',
       //   async: true
       // },
       // {
-      //   src: '/IRCloud/scripts/UndoManager.js',
+      //   src: '/test008/scripts/UndoManager.js',
       //   async: true
       // },
       // {
-      //   src: '/IRCloud/scripts/Request.js',
+      //   src: '/test008/scripts/Request.js',
       //   async: true
       // },
       // {
-      //   src: '/IRCloud/scripts/WMSLayer.js',
+      //   src: '/test008/scripts/WMSLayer.js',
       //   async: true
       // },
       // {
-      //   src: '/IRCloud/scripts/WMTSLayer.js',
+      //   src: '/test008/scripts/WMTSLayer.js',
       //   async: true
       // },
       // {
-      //   src: '/IRCloud/scripts/GroupLayer.js',
+      //   src: '/test008/scripts/GroupLayer.js',
       //   async: true
       // },
       // {
-      //   src: '/IRCloud/scripts/MapImageLayer.js',
+      //   src: '/test008/scripts/MapImageLayer.js',
       //   async: true
       // },
       // {
-      //   src: '/IRCloud/scripts/KMLLayer.js',
+      //   src: '/test008/scripts/KMLLayer.js',
       //   async: true
       // },
       // {
-      //   src: '/IRCloud/scripts/Google.js',
+      //   src: '/test008/scripts/Google.js',
       //   async: true
       // },
       // {
-      //   src: '/IRCloud/scripts/Base64.js',
+      //   src: '/test008/scripts/Base64.js',
       //   async: true
       // },
       {
-        src: '/IRCloud/scripts/ToolControls.js',
+        src: '/test008/scripts/ToolControls.js',
         async: true
       },
       // {
-      //   src: '/IRCloud/scripts/SuperGeoUtility.js',
+      //   src: '/test008/scripts/SuperGeoUtility.js',
       //   async: true
       // },
       // {
-      //   src: '/IRCloud/scripts/jquery-3.4.0.min.js',
+      //   src: '/test008/scripts/jquery-3.4.0.min.js',
       //   async: true
       // },
       // {
-      //   src: '/IRCloud/scripts/CoordSys.js',
+      //   src: '/test008/scripts/CoordSys.js',
       //   async: true
       // },
       // {
-      //   src: '/IRCloud/scripts/Mercator.js',
+      //   src: '/test008/scripts/Mercator.js',
       //   async: true
       // },
       // {
-      //   src: '/IRCloud/scripts/Projection.js',
+      //   src: '/test008/scripts/Projection.js',
       //   async: true
       // },
       // {
-      //   src: '/IRCloud/scripts/VectorTiledLayer.js',
+      //   src: '/test008/scripts/VectorTiledLayer.js',
       //   async: true
       // },
 
       {
-        src: '/IRCloud/scripts/setMap.js',
+        src: '/test008/scripts/setMap.js',
         async: true
       }
     ],

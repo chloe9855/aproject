@@ -12,6 +12,7 @@ export default ({ route, store, app, redirect }) => {
     signOnStatus().then(r => {
       store.commit('SET_USER_INFO', { userInfo: r.data[0] });
       sessionStorage.setItem('loginUser', r.data[0].id);
+      sessionStorage.setItem('userAuthority', r.data[0].permit);
       if (isLogin || isPwdSetting) {
         return redirect('/');
       }

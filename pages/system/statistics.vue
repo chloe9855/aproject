@@ -175,7 +175,7 @@ export default {
         },
         {
           id: 4,
-          name: '作業基金地管理',
+          name: '作業基金土地管理',
           num: 1000,
           bar: { barLength: 20, barColor: 'blue', barWidth: 'bold' },
           show: false
@@ -264,21 +264,23 @@ export default {
 
       this.allData.forEach((itemB) => {
         const index = cloneArr.findIndex(item => item.id === itemB.main_funtion);
-        cloneArr[index].num = itemB.value_main;
-        cloneArr[index].bar.barLength = (itemB.value_main / mainTotal).toFixed(1) * 100;
-        cloneArr[index].show = true;
-        const mainBarLth = (itemB.value_main / mainTotal).toFixed(1) * 100;
+        if (index !== -1) {
+          cloneArr[index].num = itemB.value_main;
+          cloneArr[index].bar.barLength = (itemB.value_main / mainTotal).toFixed(1) * 100;
+          cloneArr[index].show = true;
+          const mainBarLth = (itemB.value_main / mainTotal).toFixed(1) * 100;
 
-        if (itemB.sub.length >= 1) {
-          const row2 = itemB.sub.map(item => item.value);
-          const subTotal = row2.reduce(reducer);
+          if (itemB.sub.length >= 1) {
+            const row2 = itemB.sub.map(item => item.value);
+            const subTotal = row2.reduce(reducer);
 
-          itemB.sub.forEach((itemC) => {
-            const index2 = cloneArr[index].node.findIndex(itemD => itemD.id === itemC.funtion);
-            cloneArr[index].node[index2].num = itemC.value;
-            cloneArr[index].node[index2].bar.barLength = (itemC.value / subTotal).toFixed(1) * mainBarLth;
-            cloneArr[index].node[index2].show = true;
-          });
+            itemB.sub.forEach((itemC) => {
+              const index2 = cloneArr[index].node.findIndex(itemD => itemD.id === itemC.funtion);
+              cloneArr[index].node[index2].num = itemC.value;
+              cloneArr[index].node[index2].bar.barLength = (itemC.value / subTotal).toFixed(1) * mainBarLth;
+              cloneArr[index].node[index2].show = true;
+            });
+          }
         }
       });
 

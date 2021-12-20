@@ -157,6 +157,10 @@ export default {
       //* 依單筆地號 查詢結果
       searchData1: {
         head: [
+          { title: '管理處' },
+          { title: '管理分處' },
+          { title: '工作站' },
+          { title: '小組' },
           { title: '縣市' },
           { title: '鄉鎮市區' },
           { title: '段名' },
@@ -167,9 +171,14 @@ export default {
       //* 依管理單位 查詢結果
       searchData2: {
         head: [
+          { title: '管理處' },
+          { title: '管理分處' },
+          { title: '工作站' },
+          { title: '小組' },
           { title: '縣市' },
           { title: '鄉鎮市區' },
-          { title: '管理處' }
+          { title: '段名' },
+          { title: '地號' }
         ],
         body: []
       },
@@ -337,7 +346,7 @@ export default {
         // });
 
         this.searchData1.body = data.map(item => {
-          return { title: [item.CountyName, item.TownName, item.LandLot, item.LandNo], info: item };
+          return { title: [item.Ia_cns, item.Mng_cns, item.Stn_cns, item.Grp_cns, item.CountyName, item.TownName, item.LandLot, item.LandNo], info: item };
         });
 
         this.searchResult.authority = this.searchData1;
@@ -350,7 +359,7 @@ export default {
         this.searchWord = choice;
 
         this.searchData2.body = data.map(item => {
-          return { title: [item.CountyName, item.TownName, item.Ia_cns], info: item };
+          return { title: [item.Ia_cns, item.Mng_cns, item.Stn_cns, item.Grp_cns, item.CountyName, item.TownName, item.LandLot, item.LandNo], info: item };
         });
 
         this.searchResult.authority = this.searchData2;
@@ -372,7 +381,7 @@ export default {
         const myData = data[0].data;
 
         this.searchData2.body = myData.map(item => {
-          return { title: [item.CountyName, item.TownName, item.Ia_cns], info: item };
+          return { title: [item.Ia_cns, item.Mng_cns, item.Stn_cns, item.Grp_cns, item.CountyName, item.TownName, item.LandLot, item.LandNo], info: item };
         });
         this.searchResult.authority = this.searchData2;
       }).catch((err) => {

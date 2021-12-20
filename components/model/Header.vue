@@ -71,9 +71,11 @@
             @mouseleave="mouseLeave(item.name)"
           >
             <a
+              v-if="item.show === true"
               class="myLink"
               :href="item.path"
               :title="item.name"
+              @click="postUsageAmount(item.name)"
             >
               <p
                 class="title-two seticon"
@@ -100,6 +102,7 @@
                 :key="side.name"
               >
                 <a
+                  v-if="side.show === true"
                   :href="side.path"
                   :title="side.name"
                 >
@@ -127,6 +130,7 @@
                 :key="side.name"
               >
                 <a
+                  v-if="side.show === true"
                   :href="side.path"
                   :title="side.name"
                 >
@@ -162,59 +166,72 @@ export default {
       menuList: [
         {
           name: '首頁',
-          path: ''
+          path: '',
+          show: true
         },
         {
           name: '灌溉地管理',
-          path: 'irrigatedLand/irrigateLandManagement'
+          path: 'irrigatedLand/irrigateLandManagement',
+          show: false
         },
         {
           name: '地理資訊圖台',
-          path: 'map'
+          path: 'map',
+          show: false
         },
         {
           name: '作業基金土地管理',
-          path: 'fundLand'
+          path: 'fundLand',
+          show: false
         },
         {
           name: '系統管理',
-          path: 'system/accountManagement'
+          path: 'system/accountManagement',
+          show: false
         }
       ],
       sideList1: [
         {
           name: '灌溉地籍查詢',
-          path: 'irrigatedLand/irrigateLandManagement'
+          path: 'irrigatedLand/irrigateLandManagement',
+          show: false
         },
         {
           name: '停灌補償申報',
-          path: 'irrigatedLand/compensate'
+          path: 'irrigatedLand/compensate',
+          show: false
         },
         {
           name: '停灌資料異動',
-          path: 'irrigatedLand/dataChange'
+          path: 'irrigatedLand/dataChange',
+          show: false
         },
         {
           name: '統計報表',
-          path: 'irrigatedLand/report'
+          path: 'irrigatedLand/report',
+          show: false
         }
       ],
       sideList2: [
         {
           name: '帳號管理',
-          path: 'system/accountManagement'
+          path: 'system/accountManagement',
+          show: false
         },
         {
           name: '群組權限管理',
-          path: 'system/authority'
+          path: 'system/authority',
+          show: false
         },
         {
           name: '首頁資料管理',
-          path: 'system/editNews'
+          path: 'system/editNews',
+          show: false
         },
         {
           name: '系統使用量統計',
-          path: 'system/statistics'
+          path: 'system/statistics',
+          show: false
         }
       ],
       listOne: false,
@@ -222,7 +239,8 @@ export default {
       listTwo: false,
       showBox: false,
       userInfo: {},
-      showTag: false
+      showTag: false,
+      permitRows: []
     };
   },
   // middleware: 'routerAuth',
@@ -231,7 +249,11 @@ export default {
   // },
   created () {
     // console.log(this.userInfo);
-    this.loginStatus();
+    // this.loginStatus();
+  },
+  mounted () {
+    this.permitRows = sessionStorage.getItem('userAuthority');
+    this.setNavAuthority();
   },
   methods: {
     mouseOver (payload) {
@@ -276,10 +298,81 @@ export default {
         // console.log(this.userInfo.data[0]);
         return headerLimit(r, item);
       };
+    },
+    // * 紀錄圖台系統使用量
+    postUsageAmount (name) {
+      let newObj = {};
+      if (name === '地理資訊圖台') {
+        newObj = {
+          main_funtion: 3,
+          funtion: 6
+        };
+      } else if (name === '作業基金土地管理') {
+        newObj = {
+          main_funtion: 4
+        };
+      } else {
+        return;
+      }
+      fetch('/AERC/rest/UsageAmount', {
+        method: 'POST',
+        headers: new Headers({
+          'Content-Type': 'application/json'
+        }),
+        body: JSON.stringify(newObj)
+      }).then((response) => {
+        return response;
+      }).then((jsonData) => {
+        // console.log(jsonData);
+      }).catch((err) => {
+        console.log(err);
+      });
+    },
+    // * 設定navbar權限
+    setNavAuthority () {
+      // 灌溉地管理
+      if (this.permitRows.includes('C')) {
+        this.menuList[1].show = true;
+      }
+      // 地理資訊圖台
+      if (this.permitRows.includes('B')) {
+        this.menuList[2].show = true;
+      }
+      // 作業基金土地管理
+      if (this.permitRows.includes('A')) {
+        this.menuList[3].show = true;
+      }
+      // 系統管理
+      if (this.permitRows.includes('D')) {
+        this.menuList[4].show = true;
+      }
+
+      if (this.permitRows.includes('C_01')) {
+        this.sideList1[0].show = true;
+      }
+      if (this.permitRows.includes('C_02')) {
+        this.sideList1[1].show = true;
+      }
+      if (this.permitRows.includes('C_03')) {
+        this.sideList1[2].show = true;
+      }
+      if (this.permitRows.includes('C_04')) {
+        this.sideList1[3].show = true;
+      }
+      if (this.permitRows.includes('D_01')) {
+        this.sideList2[0].show = true;
+      }
+      if (this.permitRows.includes('D_02')) {
+        this.sideList2[1].show = true;
+      }
+      if (this.permitRows.includes('D_03')) {
+        this.sideList2[2].show = true;
+      }
+      if (this.permitRows.includes('D_04')) {
+        this.sideList2[3].show = true;
+      }
     }
-    // ...mapState([
-    //   'userInfo'
-    // ])
+
   },
   computed: {
     togglePopup () {
