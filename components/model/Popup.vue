@@ -18,7 +18,7 @@
       </div>
       <component
         :is="componentInstance"
-        :is-submit="sumbitData"
+        :is-submit="submitData"
         :origin-data="getOriginData"
         @submitSuccess="getSubmit"
       />
@@ -82,7 +82,7 @@ export default {
   },
   data: () => {
     return {
-      sumbitData: false
+      submitData: false
     };
   },
   name: 'Popup',
@@ -91,8 +91,8 @@ export default {
       this.$store.commit('TOGGLE_POPUP_STATUS');
       this.$store.commit('TOGGLE_POPUP_TYPE', { type: 'addTableData', title: '編輯內容' });
     },
-    sumbit () {
-      this.sumbitData = true;
+    submit () {
+      this.submitData = true;
     },
     getSubmit () {
       this.toggleStatus();
@@ -121,7 +121,7 @@ export default {
   },
   watch: {
     isActive () {
-      this.sumbitData = false;
+      this.submitData = false;
     }
   }
 };

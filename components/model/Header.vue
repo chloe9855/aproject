@@ -203,7 +203,7 @@ export default {
         },
         {
           name: '停灌資料異動',
-          path: 'irrigatedLand/dataChange',
+          path: 'irrigatedLand/compensateChange',
           show: false
         },
         {

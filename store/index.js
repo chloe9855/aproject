@@ -9,6 +9,8 @@ export const state = () => ({
   popupType: { type: '', title: '請設定查詢作業標題', editId: {} },
   mouseEventMin: 0,
   userInfo: {},
+  editCompensateEventID: '',
+  compensateData: {},
   editAccount: '',
   canvasUrl: '',
   oriFormData: { slogan: '', content: '', link: '', rows: '' },
@@ -55,6 +57,12 @@ export const mutations = {
   },
   SET_EDIT_ACCOUNT (state, payload) {
     state.editAccount = payload.userId;
+  },
+  SET_COMPENSATE_DATA (state, payload) {
+    state.compensateData = payload;
+  },
+  SET_COMPENSATE_EVENT_ID (state, payload) {
+    state.editCompensateEventID = payload;
   },
   // SET_LOGOUT_MIN (state, payload) {
   //   state.setMin = payload.setMin;

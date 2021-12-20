@@ -117,7 +117,6 @@
         <Dropdown
           :options="farmerList"
           class="flex-1"
-          :placeholders="compensateData.farmername"
           :change-text="isClearFarmer"
           @DropdownVal="getFarmerCategory"
         />

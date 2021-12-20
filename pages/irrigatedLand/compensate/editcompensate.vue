@@ -211,7 +211,8 @@ export default {
       isSend: true,
       event_sno: '',
       eventTitle: '新增',
-      thisIa: ''
+      thisIa: '',
+      isCancelStatus: false
     };
   },
   name: 'EditCompensate',
@@ -403,9 +404,6 @@ export default {
     },
     sendCompensateData (e) {
       if (e) {
-        console.log(this.attachmentList);
-        console.log(this.userInfo);
-        console.log(this.sendData);
         const data = {
           applyer: {
             applyer_id: this.userInfo.id,
@@ -471,7 +469,6 @@ export default {
           editApplyEvent(data).then(r => {
             console.log(r);
             // alert('發送成功');
-            this.$store.commit('SET_COMPENSATE_DATA', {});
             // this.$router.push('/irrigatedLand/compensate/');
             this.isSend = false;
             this.compensateEventIIcon = 'success';
@@ -512,13 +509,14 @@ export default {
     },
     cancelEvent (e) {
       if (e) {
+        this.isCancelStatus = true;
         this.toggleAlertBox({ title: '取消編輯', text: '該筆編輯將不會儲存', isCancel: true });
       }
     },
     sendEvent (e) {
       console.log(e);
       if (e) {
-        if (this.isSend) {
+        if (this.isSend && !this.isCancelStatus) {
           if (this.userConfirm) {
             this.sendCompensateData(e);
           } else {
@@ -533,18 +531,21 @@ export default {
     },
     closeAlert (e) {
       if (e) {
+        this.$store.commit('SET_COMPENSATE_DATA', {});
         this.$router.push('/irrigatedLand/compensate/');
       }
     },
     continueEdit (e) {
-      this.alertStatus = !this.alertStatus;
+      this.alertStatus = false;
       this.compensateEventTitle = '';
       this.compensateEventText = '';
       this.isCancelButton = !e.isCancel;
 
-      this.alertErrorStatus = !this.alertErrorStatus;
+      this.alertErrorStatus = false;
       this.errorEventTitle = '';
       this.errorEventText = '';
+
+      this.isCancelStatus = false;
     },
     toggleAlertBox (e) {
       this.alertStatus = true;
