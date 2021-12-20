@@ -278,6 +278,8 @@ export default Vue.extend({
       const { status } = await editAccount({
         id: this.checkedAccount,
         status: 2
+      }, {
+        validateStatus: status => status < 500
       });
 
       this.checkedAccount = [];
@@ -292,6 +294,8 @@ export default Vue.extend({
       const { status } = await editAccount({
         id: this.singleRemoveAccountId,
         status: 2
+      }, {
+        validateStatus: status => status < 500
       });
 
       this.singleRemoveAccountId = null;

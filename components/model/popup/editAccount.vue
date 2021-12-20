@@ -27,13 +27,23 @@
       </div>
       <InputVertical
         v-show="onPassword"
+        input-type="password"
         is-icon="lock"
         title="請輸入密碼"
+        :input-text="passwordPlaceholder"
+        :external-error="passwordErrorMessage"
+        @inputValue="password = $event"
       />
       <InputVertical
         v-show="onPassword"
+        input-type="password"
         is-icon="lock"
         title="請再次輸入密碼"
+        :input-text="passwordPlaceholder"
+        :external-error="
+          !passwordConfirm || passwordConfirmIsTheSame ? '' : '確認密碼不符'
+        "
+        @inputValue="passwordConfirm = $event"
       />
     </template>
     <DropdownVertical2
@@ -82,7 +92,9 @@
       <SwitchOn
         class="inline-block"
         :checked="account.status != AccountStatus.Disable"
-        @input="account.status = $event ? AccountStatus.Enable : AccountStatus.Disable"
+        @input="
+          account.status = $event ? AccountStatus.Enable : AccountStatus.Disable
+        "
       />
     </div>
 
@@ -101,7 +113,7 @@
       :title="isAdd ? '新增失敗' : '修改失敗'"
       :cancel-button="false"
       box-icon="error"
-      text=""
+      :text="errorMessage"
       @close="showError = false"
       @confirm="showError = false"
     />
@@ -119,7 +131,7 @@ import Tag from '~/components/tools/Tag.vue';
 import { addAccount, editAccount, getAccount } from '~/api/account';
 import { getGroup } from '~/api/group';
 import { groupListData, iaListData, stnListData } from '~/publish/groupListData';
-import { getGrps, getStns } from '~/publish/Irrigation';
+import { getGrps, getStns } from '~/publish/Irrigation1';
 import AlertBox from '~/components/tools/AlertBox.vue';
 import { AccountStatus } from '~/publish/accountStatusTag';
 import SwitchOn from '~/components/tools/SwitchOn.vue';
@@ -159,7 +171,7 @@ export default {
   data: () => {
     return {
       onPassword: false,
-      account: /** @type import('types/Account').Account */({}),
+      account: /** @type import('types/Account').Account */ ({}),
       group: {},
       iaList: [],
       groupList: [],
@@ -170,7 +182,12 @@ export default {
       mailMessage: '',
       showSuccess: false,
       AccountStatus,
-      showError: false
+      showError: false,
+      password: '',
+      passwordConfirm: '',
+      passwordPlaceholder: '請輸入8-30碼英數組合，注意大小寫',
+      passwordErrorMessage: '',
+      errorMessage: ''
     };
   },
   name: 'EditAccount',
@@ -187,7 +204,9 @@ export default {
     async getOptions () {
       if (!this.isAdd) {
         const editId = this.getEditId();
-        const { data: [account] } = await getAccount(editId);
+        const {
+          data: [account]
+        } = await getAccount(editId);
         this.account = account;
       }
 
@@ -214,9 +233,13 @@ export default {
       }
 
       const res = await getGrps(this.account.ia, '', this.account.stn);
-      this.grpList = res.data.map(item => ({ value: item.Grp, title: item.Grp_cns }));
+      this.grpList = res.data.map((item) => ({
+        value: item.Grp,
+        title: item.Grp_cns
+      }));
     },
     submit () {
+      this.errorMessage = '';
       if (this.isAdd) {
         this.addSubmit();
         return;
@@ -227,16 +250,32 @@ export default {
     successConfirm () {
       this.$store.commit(SET_RE_FETCH_DATA);
       this.$store.commit(TOGGLE_POPUP_STATUS);
+
+      this.showSuccess = false;
+      this.account = /** @type {import('types/Account').Account} */({});
     },
     async editSubmit () {
       const editId = this.getEditId();
-      const { status } = await editAccount({
+
+      if (!this.validateEmail() || !this.validatePassword()) {
+        return;
+      }
+
+      /** @type {Parameters<typeof editAccount>[0]} */
+      const data = {
         ...this.account,
         id: editId
+      };
+
+      if (this.onPassword && this.password) {
+        data.password = this.password;
+      }
+
+      const { status } = await editAccount(data, {
+        validateStatus: status => status < 500
       });
 
-      this.showSuccess = status < 300;
-      this.showError = !this.showSuccess;
+      this.checkIfRequestIsSuccess(status, data);
     },
     async addSubmit () {
       this.accountMessage = '';
@@ -247,7 +286,12 @@ export default {
         return;
       }
 
-      const { data: account } = await getAccount(this.account.account);
+      let account;
+      try {
+        ({ data: account } = await getAccount(this.account.account));
+      } catch (error) {
+        account = [];
+      }
 
       if (account.length) {
         this.accountMessage = '此帳號已被使用';
@@ -256,14 +300,15 @@ export default {
 
       if (!this.validateEmail()) {
         return;
-      };
+      }
 
-      const { status } = await addAccount({
+      const { status, data } = await addAccount({
         ...this.account
+      }, {
+        validateStatus: status => status < 500
       });
 
-      this.showSuccess = status < 300;
-      this.showError = !this.showSuccess;
+      this.checkIfRequestIsSuccess(status, data);
     },
     validateEmail () {
       this.mailMessage = '';
@@ -278,23 +323,63 @@ export default {
       }
 
       return !this.mailMessage;
+    },
+    validatePassword () {
+      this.passwordErrorMessage = '';
+      if (!this.onPassword) {
+        return true;
+      }
+
+      if (!this.passwordConfirmIsTheSame) {
+        return false;
+      }
+
+      if (
+        !/[A-Za-z]/.test(this.password) ||
+        !/[0-9]/.test(this.password) ||
+        this.password.length < 8 ||
+        this.password.length > 30
+      ) {
+        this.passwordErrorMessage = '密碼格式不符';
+        return false;
+      }
+
+      return true;
+    },
+    /**
+     * @param {number} status
+     * @param {any} data
+     */
+    checkIfRequestIsSuccess (status, data) {
+      this.showSuccess = status < 300;
+      this.showError = !this.showSuccess;
+
+      if (status === 400) {
+        this.errorMessage = data;
+      }
+    }
+  },
+  computed: {
+    /** @returns {boolean} */
+    passwordConfirmIsTheSame () {
+      return this.password === this.passwordConfirm;
     }
   }
 };
 </script>
 
 <style lang="scss" scoped>
-.inputBox{
+.inputBox {
   padding: 1em;
 }
-.buttonBox{
+.buttonBox {
   display: flex;
   justify-content: flex-end;
   margin-top: 20px;
 }
-.box{
-    margin: 0.5em auto;
-    @include noto-sans-tc-16-medium;
+.box {
+  margin: 0.5em auto;
+  @include noto-sans-tc-16-medium;
 }
 .inline-block {
   display: inline-block;

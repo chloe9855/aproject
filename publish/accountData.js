@@ -1,6 +1,7 @@
 // @ts-check
 
 import { accountTagList } from './accountStatusTag';
+import { formatUntilMinute } from './formatDate';
 
 /**
  *
@@ -17,7 +18,7 @@ export function accountData (data) {
     titleObj.push(element.ianame);
     titleObj.push(element.stnname);
     titleObj.push(element.groupname);
-    titleObj.push(element.logintime);
+    titleObj.push(formatUntilMinute(element.logintime));
     titleObj.push(accountTagList[element.status]);
     body.push({ val: element.account, title: titleObj });
   });

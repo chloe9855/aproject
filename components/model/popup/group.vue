@@ -62,7 +62,7 @@
         :title="group.groupsno ? '新增失敗' : '修改失敗'"
         :cancel-button="false"
         box-icon="error"
-        text=""
+        :text="errorMessage"
         @close="showError = false"
         @confirm="showError = false"
       />
@@ -79,7 +79,7 @@ import DropdownVertical2 from '~/components/tools/DropdownVertical2.vue';
 import InputVertical from '~/components/tools/InputVertical.vue';
 import TreeSelectCheckbox from '~/components/tools/TreeSelectCheckbox.vue';
 import TreeSelectGroup from '~/components/tools/TreeSelectGroup.vue';
-import { getIas } from '~/publish/Irrigation';
+import { getIas } from '~/publish/Irrigation1';
 import { SET_RE_FETCH_DATA, TOGGLE_POPUP_STATUS } from '~/store';
 import PopupSubmit from './PopupSubmit.vue';
 
@@ -135,7 +135,8 @@ export default {
         }
       ],
       showSuccess: false,
-      showError: false
+      showError: false,
+      errorMessage: ''
     };
   },
   mounted () {
@@ -172,6 +173,7 @@ export default {
       this.ia = ias;
     },
     async submit () {
+      this.errorMessage = '';
       /** @type {import('axios').AxiosResponse} */
       let res;
       if (this.group.groupsno) {
@@ -179,17 +181,22 @@ export default {
           name: this.group.groupname,
           permit: this.group.permit,
           groupsno: this.group.groupsno
+        }, {
+          validateStatus: status => status < 500
         });
       } else {
         res = await addGroup({
           name: this.group.groupname,
           permit: this.group.permit,
           ia: this.group.ia
+        }, {
+          validateStatus: status => status < 500
         });
       }
 
       this.showSuccess = res.status < 300;
       this.showError = !this.showSuccess;
+      this.errorMessage = res.data;
     },
     successConfirm () {
       this.showSuccess = false;

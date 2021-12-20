@@ -1,3 +1,4 @@
+// @ts-check
 import request from '~/service';
 
 /**
@@ -9,7 +10,7 @@ import request from '~/service';
 /**
  *
  * @param {string=} Ia
- * @returns {Promise<import('axios').AxiosResponse<Group[]>}
+ * @returns {Promise<import('axios').AxiosResponse<Group[]>>}
  */
 export function getGroup (Ia) {
   const groupRequest = Ia ? `/aerc/rest/Group?ID=${Ia}` : '/aerc/rest/Group';
@@ -19,19 +20,21 @@ export function getGroup (Ia) {
 /**
  *
  * @param {GroupEditModel} data
+ * @param {import('axios').AxiosRequestConfig} config
  * @returns {Promise<import('axios').AxiosResponse>}
  */
-export function editGroup (data) {
-  return request.patch('/AERC/rest/Group', data);
+export function editGroup (data, config) {
+  return request.patch('/AERC/rest/Group', data, config);
 }
 
 /**
  *
  * @param {GroupAddModel} data
+ * @param {import('axios').AxiosRequestConfig} config
  * @returns {Promise<import('axios').AxiosResponse>}
  */
-export function addGroup (data) {
-  return request.post('/AERC/rest/Group', data);
+export function addGroup (data, config) {
+  return request.post('/AERC/rest/Group', data, config);
 }
 
 export function delGroup (id) {

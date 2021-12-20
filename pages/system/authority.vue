@@ -114,7 +114,9 @@ export default {
       tableList: {
         head: [
           { title: '群組名稱' },
-          { title: '最後變更日期' }
+          { title: '管理處' },
+          { title: '建立時間' },
+          { title: '更新時間' }
         ],
         body: [
           { val: 0, title: ['XX工作站', '2012/12/17'] },
@@ -147,7 +149,9 @@ export default {
       tableList: {
         head: [
           { title: '群組名稱' },
-          { title: '最後變更日期' }
+          { title: '管理處' },
+          { title: '建立時間' },
+          { title: '更新時間' }
         ],
         body: groupData(group.data)
       },
