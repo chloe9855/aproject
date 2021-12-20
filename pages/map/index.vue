@@ -1932,6 +1932,7 @@ export default {
         localStorage.clear();
       }
     }
+
   },
   computed: {
     // sortSurfaceList () {

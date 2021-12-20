@@ -86,7 +86,7 @@
 import TableTool from '~/components/model/Table.vue';
 import PageHeader from '~/components/tools/PageHeader.vue';
 import BreadCrumbTool from '~/components/tools/BreadCrumbTool.vue';
-import Search from '~/components/model/Search.vue';
+import Search from '~/components/model/Search1.vue';
 import { delGroup, getGroup } from '~/api/group';
 import { groupData } from '~/publish/groupData';
 import GroupUserAcctSearch from '~/components/model/searchBox/groupUserAcctSearch.vue';
@@ -114,7 +114,9 @@ export default {
       tableList: {
         head: [
           { title: '群組名稱' },
-          { title: '最後變更日期' }
+          { title: '管理處' },
+          { title: '建立時間' },
+          { title: '更新時間' }
         ],
         body: [
           { val: 0, title: ['XX工作站', '2012/12/17'] },
@@ -147,7 +149,9 @@ export default {
       tableList: {
         head: [
           { title: '群組名稱' },
-          { title: '最後變更日期' }
+          { title: '管理處' },
+          { title: '建立時間' },
+          { title: '更新時間' }
         ],
         body: groupData(group.data)
       },

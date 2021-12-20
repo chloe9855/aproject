@@ -7,15 +7,6 @@
       icon="slider"
       :title="searchTitle"
     />
-    <component
-      :is="componentInstance"
-      :is-clear-first="isClearFirst"
-      :is-clear-second="isClearSecond"
-      @tabCurrent="current"
-      @onsearch="onsearch"
-      @useAmountSearch="(payload, nowIa) => { $emit('useAmountSearch', payload, nowIa) }"
-      @clearUseAmount="() => { $emit('clearUseAmount') }"
-    />
     <slot :isClear="isClearAll">
       <component
         :is="componentInstance"

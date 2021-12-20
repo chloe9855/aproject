@@ -7,7 +7,7 @@
       <div
         class="feature__btn"
         :class="currentClassHandler('switchLayersWindow')"
-        @click.stop="setDragboxHandler('switchLayersWindow')"
+        @click.stop="setDragboxHandler('switchLayersWindow'), postUsageAmount(3, 1)"
       >
         <div class="icon_layer" />
         <span>圖層</span>
@@ -15,7 +15,7 @@
       <div
         class="feature__btn"
         :class="currentClassHandler('streetMapWindow')"
-        @click.stop="setDragboxHandler('streetMapWindow')"
+        @click.stop="setDragboxHandler('streetMapWindow'), postUsageAmount(3, 2)"
       >
         <div class="icon_streetview" />
         <span>街景</span>
@@ -23,7 +23,7 @@
       <div
         class="feature__btn"
         :class="currentClassHandler('setPositionWindow')"
-        @click.stop="setDragboxHandler('setPositionWindow')"
+        @click.stop="setDragboxHandler('setPositionWindow'), postUsageAmount(3, 5)"
       >
         <div class="icon_location" />
         <span>定位</span>
@@ -31,7 +31,7 @@
       <div
         class="feature__btn"
         :class="currentClassHandler('geoMeasureWindow')"
-        @click.stop="setDragboxHandler('geoMeasureWindow')"
+        @click.stop="setDragboxHandler('geoMeasureWindow'), postUsageAmount(3, 3)"
       >
         <div class="icon_measure" />
         <span>測量</span>
@@ -39,7 +39,7 @@
       <div
         class="feature__btn"
         :class="currentClassHandler('screenShotWindow')"
-        @click.stop="setDragboxHandler('screenShotWindow')"
+        @click.stop="setDragboxHandler('screenShotWindow'), postUsageAmount(3, 4)"
       >
         <div class="icon_print" />
         <span>截圖</span>
@@ -88,6 +88,26 @@ export default {
     // * 設定 current 的 class
     currentClassHandler (payload) {
       return { current: this.current === payload };
+    },
+    // * 系統使用量
+    postUsageAmount (first, sec) {
+      const newObj = {
+        main_funtion: first,
+        funtion: sec
+      };
+      fetch('/AERC/rest/UsageAmount', {
+        method: 'POST',
+        headers: new Headers({
+          'Content-Type': 'application/json'
+        }),
+        body: JSON.stringify(newObj)
+      }).then((response) => {
+        return response;
+      }).then((jsonData) => {
+        // console.log(jsonData);
+      }).catch((err) => {
+        console.log(err);
+      });
     }
   }
 };

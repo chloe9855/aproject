@@ -18,17 +18,19 @@ export function getAccount (id) {
  *
  * @param {Partial<Pick<Account, 'name' | 'ia' | 'mng' | 'stn' | 'grp' | 'mail' | 'note' | 'groupsno' | 'status'>> &
  *  { id: string | string[], resend?: boolean, password?: string }} data
+ * @param {import('axios').AxiosRequestConfig} config
  * @returns {Promise<import('axios').AxiosResponse>}
  */
-export function editAccount (data) {
-  return request.patch('/AERC/rest/Account', data);
+export function editAccount (data, config) {
+  return request.patch('/AERC/rest/Account', data, config);
 }
 
 /**
  *
  * @param {Pick<Account, 'name' | 'ia' | 'mng' | 'stn' | 'grp' | 'mail' | 'note' | 'groupsno'> } data
+ * @param {import('axios').AxiosRequestConfig} config
  * @returns {Promise<import('axios').AxiosResponse>}
  */
-export function addAccount (data) {
-  return request.post('/AERC/rest/Account', data);
+export function addAccount (data, config) {
+  return request.post('/AERC/rest/Account', data, config);
 }
