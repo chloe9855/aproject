@@ -86,7 +86,7 @@
 import TableTool from '~/components/model/Table.vue';
 import PageHeader from '~/components/tools/PageHeader.vue';
 import BreadCrumbTool from '~/components/tools/BreadCrumbTool.vue';
-import Search from '~/components/model/Search.vue';
+import Search from '~/components/model/Search1.vue';
 import { delGroup, getGroup } from '~/api/group';
 import { groupData } from '~/publish/groupData';
 import GroupUserAcctSearch from '~/components/model/searchBox/groupUserAcctSearch.vue';

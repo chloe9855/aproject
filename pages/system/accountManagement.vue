@@ -93,7 +93,7 @@ import dayjs from 'dayjs';
 import TableTool from '~/components/model/Table.vue';
 import PageHeader from '~/components/tools/PageHeader.vue';
 import BreadCrumbTool from '~/components/tools/BreadCrumbTool.vue';
-import Search from '~/components/model/Search.vue';
+import Search from '~/components/model/Search1.vue';
 import { editAccount, getAccount } from '~/api/account';
 import { accountData } from '~/publish/accountData';
 import UserAcctSearch from '~/components/model/searchBox/userAcctSearch.vue';
