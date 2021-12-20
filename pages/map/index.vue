@@ -35,6 +35,7 @@
         @zoomIn="zoomInCtrl"
         @zoomOut="zoomOutCtrl"
         @backFullPic="fullMapCtrl"
+        @iaList="(payload) => { totalIaList = payload }"
       />
 
       <!--     圖層工具     -->
@@ -1989,6 +1990,7 @@ export default {
         }
         // 點線面圖資載入
         if (value === 'switchLayersWindow' && this.openOnceLa === true) {
+          if (allMBT.length < 1) { return; }
           // 圖磚1
           allMBT.forEach((itemBT) => {
             if (itemBT.Style === undefined) { return; }

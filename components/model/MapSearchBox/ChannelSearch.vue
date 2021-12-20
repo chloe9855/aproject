@@ -609,6 +609,8 @@ export default {
         return response.json();
       }).then((jsonData) => {
         console.log(jsonData);
+        this.loadModal = false;
+
         jsonData.forEach((item) => {
           item.myCountyID = countyId;
         });
