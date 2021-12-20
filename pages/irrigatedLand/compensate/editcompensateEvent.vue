@@ -174,7 +174,8 @@ export default {
       categoryBtnName: 'button-primary',
       compensateEventIIcon: 'warning',
       areaOpen: [],
-      isChangeDate: false
+      isChangeDate: false,
+      isCancelStatus: false
     };
   },
   name: 'EditCompensateEvent',
@@ -406,13 +407,14 @@ export default {
     },
     cancelEvent (e) {
       if (e) {
+        this.isCancelStatus = true;
         this.toggleAlertBox({ title: '取消編輯', text: '該筆編輯將不會儲存', isCancel: true });
       }
     },
     sendEvent (e) {
       if (e) {
         console.log(this.isSend);
-        if (this.isSend) {
+        if (this.isSend && !this.isCancelStatus) {
           this.applyEvent();
         } else {
           this.closeAlert(true);
@@ -425,12 +427,12 @@ export default {
       }
     },
     continueEdit (e) {
-      this.alertStatus = !this.alertStatus;
+      this.alertStatus = false;
       this.compensateEventTitle = '';
       this.compensateEventText = '';
       this.isCancelButton = !e.isCancel;
 
-      this.alertErrorStatus = !this.alertErrorStatus;
+      this.alertErrorStatus = false;
       this.errorEventTitle = '';
       this.errorEventText = '';
     },

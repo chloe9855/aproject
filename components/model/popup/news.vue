@@ -74,6 +74,7 @@ export default {
       bulletinContent: '',
       InputData: [],
       dataname: [],
+      delList: [],
       data: [],
       delBtn: false,
       num: 0,
@@ -110,8 +111,9 @@ export default {
       }
     },
     getTableCheck (e) {
+      this.delList = e;
       if (e) {
-        if (e.length > 1) {
+        if (e.length > 0) {
           this.delBtn = true;
         } else {
           this.delBtn = false;
@@ -122,6 +124,13 @@ export default {
       this.num += 1;
       this.tableList.body.push({ val: `news${this.num}`, title: [{ type: 'input', key: `a${this.num}` }, { type: 'input', key: `b${this.num}` }] });
       console.log(this.tableList);
+    },
+    delLink () {
+      // this.delList;
+      // console.log(e);
+      // this.tableList.body.filter;
+      const c = this.tableList.body.filter(function (v) { return this.delList.indexOf(v.val) > -1; });
+      console.log(c);
     }
   },
   computed: {},

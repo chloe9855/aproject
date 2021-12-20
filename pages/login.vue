@@ -103,7 +103,6 @@ export default {
   },
   name: 'Login',
   layout: 'login',
-  middleware: 'routerAuth',
   mounted () {
     this.Verify();
   },

@@ -152,7 +152,7 @@
 </template>
 
 <script>
-import { signOnStatus } from '~/api/login';
+// import { signOnStatus } from '~/api/login';
 // import { mapState } from 'vuex';
 import { headerLimit } from '~/publish/headerLimit';
 import { getLogout } from '~/publish/getLogout';
@@ -231,7 +231,7 @@ export default {
   // },
   created () {
     // console.log(this.userInfo);
-    this.loginStatus();
+    // this.loginStatus();
   },
   methods: {
     mouseOver (payload) {
@@ -261,14 +261,6 @@ export default {
     },
     logoutAccount () {
       getLogout(this);
-    },
-    loginStatus () {
-      signOnStatus().then((r) => {
-        this.userInfo = r;
-        // headerLimit(this.userInfo);
-      }).catch((e) => {
-        console.log(e);
-      });
     },
     isLimit (item) {
       const r = this.userInfo;
