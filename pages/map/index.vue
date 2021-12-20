@@ -901,7 +901,7 @@ export default {
         }
         pMapBase.RefreshMap(true);
 
-        document.getElementById('modal88').style.display = 'none';
+        // document.getElementById('modal88').style.display = 'none';
       }, 3000);
     },
     //* 載入底圖 wms

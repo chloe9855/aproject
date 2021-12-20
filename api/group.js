@@ -2,6 +2,8 @@ import request from '~/service';
 
 /**
  * @typedef {import('types/Group').Group} Group
+ * @typedef {{ groupsno: number, name: string, permit: string[] }} GroupEditModel
+ * @typedef {{ name: string, permit: string[], ia: string }} GroupAddModel
  */
 
 /**
@@ -14,10 +16,20 @@ export function getGroup (Ia) {
   return request.get(groupRequest);
 }
 
-export function editGroup (id, data) {
-  return request.patch(`/AERC/rest/Group/${id}`, data);
+/**
+ *
+ * @param {GroupEditModel} data
+ * @returns {Promise<import('axios').AxiosResponse>}
+ */
+export function editGroup (data) {
+  return request.patch('/AERC/rest/Group', data);
 }
 
+/**
+ *
+ * @param {GroupAddModel} data
+ * @returns {Promise<import('axios').AxiosResponse>}
+ */
 export function addGroup (data) {
   return request.post('/AERC/rest/Group', data);
 }

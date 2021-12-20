@@ -22,18 +22,10 @@
         :origin-data="getOriginData"
         @submitSuccess="getSubmit"
       />
-      <div class="buttonBox">
-        <Button
-          :name="'button-default'"
-          :text="'取消'"
-          @click="toggleStatus"
-        />
-        <Button
-          :name="'button-primary'"
-          :text="'確認'"
-          @click="sumbit"
-        />
-      </div>
+      <PopupSubmit
+        v-if="$store.state.popupType.integrateSubmit"
+        @submit="submit"
+      />
     </div>
   </div>
 </template>
@@ -54,6 +46,8 @@ import file from '~/components/model/popup/file';
 import group from '~/components/model/popup/group';
 import news from '~/components/model/popup/news';
 import tableData from '~/components/model/popup/tableData';
+import PopupSubmit from '~/components/model/popup/PopupSubmit.vue';
+
 export default {
   components: {
     InputVertical,
@@ -69,7 +63,8 @@ export default {
     file,
     group,
     news,
-    tableData
+    tableData,
+    PopupSubmit
   },
   props: {
     icon: {
@@ -98,10 +93,6 @@ export default {
     },
     sumbit () {
       this.sumbitData = true;
-
-      this.$nextTick(() => {
-        this.sumbitData = false;
-      });
     },
     getSubmit () {
       this.toggleStatus();
@@ -181,14 +172,5 @@ export default {
 .inputBox{
   overflow: auto;
   max-height: $vh-70;
-}
-
-.buttonBox{
-  display: flex;
-  justify-content: flex-end;
-  margin: 10px 5px;
-  .button_wrap{
-    margin-left: 5px;
-  }
 }
 </style>

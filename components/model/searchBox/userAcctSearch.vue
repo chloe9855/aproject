@@ -45,11 +45,12 @@
  */
 
 import DropdownVertical from '~/components/tools/DropdownVertical.vue';
-import DatePicker from '~/components/tools/DatePicker.vue';
+// @ts-ignore
+import DatePicker from '~/components/tools/DatePickerJJ.vue';
 import { groupListData, iaListData, stnListData } from '~/publish/groupListData';
 import { getAccount } from '~/api/account';
 import { getGroup } from '~/api/group';
-import { getStns } from '~/publish/Irrigation';
+import { getStns } from '~/publish/Irrigation1';
 
 export default {
   components: {

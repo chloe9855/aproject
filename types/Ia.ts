@@ -1,5 +1,5 @@
 export interface Ia {
-    ia: string,
+    Ia: string,
     FID: number,
     Ia_cns: string,
     Area: number,

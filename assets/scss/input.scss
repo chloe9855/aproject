@@ -10,12 +10,12 @@
         left: 10px;
         width: 14px;
         height: 14px;
+        z-index: 560;
     }
     .filterBox{
         position: absolute;
         background: #FFF;
         width: $w-90;
-        min-width: 180px;
         top: 36px;
         z-index: 1000;
         padding: 10px 5%;
@@ -36,12 +36,6 @@
                 line-height: 20px;
                 @include noto-sans-tc-16-regular;
             }
-        }
-        &.filterRight{
-            right: 0;
-        }
-        &.filterLeft{
-            left: 0;
         }
         &::-webkit-scrollbar{
             width: 6px;
