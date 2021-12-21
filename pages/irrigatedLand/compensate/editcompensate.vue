@@ -361,6 +361,7 @@ export default {
     },
     getuserInfo (e) {
       this.userInfo.name = e.name;
+      // this.userInfo.id = this.$CryptoJS.AES.encrypt(e.id, '農田水利灌溉管理整合雲系統').toString();
       this.userInfo.id = e.id;
       this.userInfo.birth = e.birth;
       this.userInfo.address = e.address;
@@ -369,6 +370,8 @@ export default {
       if (e.bank.val) {
         this.userInfo.bank = e.bank.val.split(' ')[0];
       }
+      // const encryptedText = this.$CryptoJS.AES.encrypt(e.id, '農田水利灌溉管理整合雲系統').toString();
+      // const decryptedText = this.$CryptoJS.AES.decrypt(this.userInfo.id, '農田水利灌溉管理整合雲系統').toString(this.CryptoJS.enc.Utf8);
     },
     getagentInfo (e) {
       this.agentInfo.name = e.name;

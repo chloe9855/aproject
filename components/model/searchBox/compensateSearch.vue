@@ -90,8 +90,10 @@ export default {
   methods: {
     getUserID (e) {
       if (e) {
-        this.userId = e;
+        // this.userId = e;
+        this.userId = this.$CryptoJS.AES.decrypt(e, '農田水利灌溉管理整合雲系統').toString(this.CryptoJS.enc.Utf8);
         this.searchObj.id = this.userId;
+        console.log(this.searchObj.id);
         this.$emit('onsearch', { obj: this.searchObj });
       }
     },

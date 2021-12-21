@@ -12,6 +12,7 @@
         class="flex-3"
         title="身份證字號"
         input-text="請輸入身分證字號"
+        is-warn="userId"
         :change-text="dataList.id"
         @inputValue="getID"
       />

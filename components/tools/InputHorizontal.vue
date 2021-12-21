@@ -132,7 +132,8 @@ export default {
       secondMessage: '',
       titleLength: '80px',
       RegExpType: {
-        code8: '^.{8}$'
+        code8: '^.{8}$',
+        userId: '^[A-Z]{1}.[0-9]{8}'
       },
       filterBox: false,
       filterList: [],
@@ -201,8 +202,11 @@ export default {
 .error-hinit {
   margin-bottom: 2px;
   display: flex;
-  align-items: center;
-  justify-content: flex-end;
+  // align-items: center;
+  // justify-content: flex-end;
+  position: absolute;
+  right: 0;
+  top: -20px;
 }
 .inputtitle-horizontal-error {
   display: flex;
