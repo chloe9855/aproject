@@ -197,7 +197,9 @@ export default {
       },
       // * 預設半徑 = 10
       setRadius: '10',
-      fnList: []
+      fnList: [],
+      // * Buffer圖形
+      bufferGraph: ''
     };
   },
   name: 'ChannelSearch',
@@ -244,6 +246,7 @@ export default {
       pMapBase.drawingGraphicsLayer.remove(this.icon1);
       pMapBase.drawingGraphicsLayer.remove(this.icon2);
       pMapBase.drawingGraphicsLayer.remove(this.iconEnd);
+      pMapBase.drawingGraphicsLayer.remove(this.bufferGraph);
 
       this.$emit('clear');
     },
@@ -477,6 +480,20 @@ export default {
       }).then((jsonData) => {
         console.log(jsonData);
         this.getBufferTable(jsonData[0].geometry);
+
+        // 畫出Buffer環域圖形 (只有一個)
+        // 先清除之前的
+        pMapBase.drawingGraphicsLayer.remove(this.bufferGraph);
+        // 畫圖
+        const geometry = sg.geometry.Geometry.fromGeoJson(jsonData[0].geometry);
+        this.bufferGraph = sg.Graphic.createFromGeometry(geometry, { borderwidth: 0, fillcolor: new sg.Color(62, 159, 136, 1) });
+        pMapBase.drawingGraphicsLayer.add(this.bufferGraph);
+        // 定位
+        const extent = geometry.extent;
+        pMapBase.ZoomMapTo(extent);
+        ZoomOut();
+        pMapBase.getTransformation().FitLevel();
+        pMapBase.RefreshMap(true);
       }).catch((err) => {
         console.log(err);
       });
@@ -495,6 +512,7 @@ export default {
       } else {
         url = `/AERC/rest/${this.engName}`;
         result = {
+          Ia: this.nowIa,
           geom: geoGraphic
         };
       }

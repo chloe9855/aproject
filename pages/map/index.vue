@@ -984,7 +984,8 @@ export default {
     getChannelMap (info, type) {
       let url;
       if (type === 'Sec5cov') {
-        url = '/AERC/rest/Sec5ByFID';
+        this.getMapSec5(info.geometry);
+        return;
       } else if (type === 'Ia') {
         url = `/AERC/rest/Ia/${this.userId}`;
       } else {
@@ -1016,9 +1017,9 @@ export default {
       if (type === 'Section') {
         newObj = { Section: info.Section, FID: info.FID };
       }
-      if (type === 'Sec5cov') {
-        newObj = { CountyID: info.myCountyID, FID: info.FID };
-      }
+      // if (type === 'Sec5cov') {
+      //   newObj = { CountyID: info.myCountyID, FID: info.FID };
+      // }
 
       fetch(url, {
         method: 'POST',
@@ -1045,6 +1046,21 @@ export default {
       }).catch((err) => {
         console.log(err);
       });
+    },
+    // * @ 左側搜尋 渠道查詢結果 單筆定位 (地籍)
+    getMapSec5 (geometryData) {
+      // 先清除之前的
+      pMapBase.drawingGraphicsLayer.remove(this.channelGraphic);
+      // 畫圖
+      const geometry = sg.geometry.Geometry.fromGeoJson(geometryData);
+      this.channelGraphic = sg.Graphic.createFromGeometry(geometry, { borderwidth: 1, fillcolor: new sg.Color(220, 105, 105, 0.5) });
+      pMapBase.drawingGraphicsLayer.add(this.channelGraphic);
+      // 定位
+      const extent = geometry.extent;
+      pMapBase.ZoomMapTo(extent);
+      ZoomOut();
+      pMapBase.getTransformation().FitLevel();
+      pMapBase.RefreshMap(true);
     },
     // * @ 圖層工具：切換圖層 顯示/隱藏
     layerVisibleCtrl ($event, id, category, layerName) {

@@ -86,10 +86,7 @@ export default {
       toggleState: false,
       toggleBox: '',
       arrow: 'arrowLeft',
-      isClearFirst: false,
-      isClearSecond: false,
-      submitObj: null,
-      currentStatus: 0
+      isClearAll: false
     };
   },
   name: 'SearchBox',
@@ -111,29 +108,22 @@ export default {
       this.$emit('toggleStatus', this.toggleState);
     },
     current (e) {
-      this.currentStatus = e;
       this.$emit('toggleCurrent', e);
     },
-    onsearch (e) {
-      if (e.select === 0) {
-        this.isClearFirst = false;
-      } else if (e.select === 1) {
-        this.isClearSecond = false;
+    search () {
+      if (this.$refs.searchComp && this.$refs.searchComp.search) {
+        this.$refs.searchComp.search();
       }
-      this.submitObj = e;
+
       this.$emit('search');
     },
-    search () {
-      this.$emit('onsearch', this.submitObj);
+    onsearch (e) {
+      this.$emit('onsearch', e);
     },
     clearAll (e) {
       if (e) {
-        // if (this.currentStatus === 0) {
-        //   this.isClearFirst = true;
-        // } else if (this.currentStatus === 1) {
-        //   this.isClearSecond = true;
-        // }
         this.isClearAll = !this.isClearAll;
+
         this.$emit('clearSearch');
       }
     }
@@ -154,7 +144,7 @@ export default {
           title = '使用者帳號查詢';
           break;
         case 'groupUserAcctSearch':
-          title = '使用者帳號查詢';
+          title = '群組權限查詢';
           break;
         case 'systemSearch':
           title = '系統使用量查詢';
