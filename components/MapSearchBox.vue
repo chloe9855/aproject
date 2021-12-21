@@ -1,5 +1,8 @@
 <template>
-  <div class="search_container">
+  <div
+    class="search_container"
+    @mouseover="getMyIaList"
+  >
     <div
       class="search_box"
       :class="{'no_radius': (columnList.length >= 1 || allClickData.length >= 1) && (barOptions.current === 0 || barOptions.current === 3) }"
@@ -188,7 +191,7 @@ export default {
   name: 'MapSearchBox',
   mounted () {
     this.userId = sessionStorage.getItem('loginUser');
-    this.getIaList();
+    // this.getIaList();
 
     const data = require('~/static/channel.json');
     this.searchResult.channel = data;
@@ -256,30 +259,43 @@ export default {
   },
   methods: {
     // * @ 取得管理處資料
-    getIaList () {
-      fetch(`/AERC/rest/Ia/${this.userId}`, {
-        method: 'POST',
-        headers: new Headers({
-          'Content-Type': 'application/json'
-        }),
-        body: JSON.stringify({
-
-        })
-      }).then((response) => {
-        return response.json();
-      }).then((data) => {
-        console.log(data);
-
-        data.forEach((item) => {
+    getMyIaList () {
+      if (vueIa !== null) {
+        const arr = vueIa;
+        arr.forEach((item) => {
           item.value = item.FID;
           item.title = item.Ia_cns;
         });
-        this.myIaList = data;
+
+        this.myIaList = arr;
         this.$emit('iaList', this.myIaList);
-      }).catch((err) => {
-        console.log(err);
-      });
+      }
     },
+    // // * @ 取得管理處資料
+    // getIaList () {
+    //   fetch(`/AERC/rest/Ia/${this.userId}`, {
+    //     method: 'POST',
+    //     headers: new Headers({
+    //       'Content-Type': 'application/json'
+    //     }),
+    //     body: JSON.stringify({
+
+    //     })
+    //   }).then((response) => {
+    //     return response.json();
+    //   }).then((data) => {
+    //     console.log(data);
+
+    //     data.forEach((item) => {
+    //       item.value = item.FID;
+    //       item.title = item.Ia_cns;
+    //     });
+    //     this.myIaList = data;
+    //     this.$emit('iaList', this.myIaList);
+    //   }).catch((err) => {
+    //     console.log(err);
+    //   });
+    // },
     // * @ 點擊查詢 : 取得屬性資料表格
     getClickData (id, info, title) {
       this.blockTitle = title;

@@ -38,14 +38,14 @@
           :add-text="sContent1"
           :change-text="clearText3"
           sizing="w-30"
-          @inputValue="(payload) => { payload.val !== '' ? range1 = parseInt(payload.val, 10) : range1 = '', clearText3 = false }"
+          @inputValue="(payload) => { payload.val !== '' ? range1 = parseFloat(payload.val) : range1 = '', clearText3 = false }"
         />
         ~
         <InputTool-component
           :add-text="canalLength.toString()"
           :change-text="clearText4"
           sizing="w-30"
-          @inputValue="(payload) => { payload.val !== '' ? range2 = parseInt(payload.val, 10) : range2 = '', clearText4 = false }"
+          @inputValue="(payload) => { payload.val !== '' ? range2 = parseFloat(payload.val) : range2 = '', clearText4 = false }"
         />
       </div>
       <div class="theme_checkbox box_margin">
@@ -197,7 +197,11 @@ export default {
       },
       // * 預設半徑 = 10
       setRadius: '10',
-      fnList: []
+      fnList: [],
+      // * Buffer圖形
+      bufferGraph: '',
+      // * 地籍列表所有圖形
+      sec5Graph: []
     };
   },
   name: 'ChannelSearch',
@@ -244,6 +248,12 @@ export default {
       pMapBase.drawingGraphicsLayer.remove(this.icon1);
       pMapBase.drawingGraphicsLayer.remove(this.icon2);
       pMapBase.drawingGraphicsLayer.remove(this.iconEnd);
+      pMapBase.drawingGraphicsLayer.remove(this.bufferGraph);
+      if (this.sec5Graph.length >= 1) {
+        this.sec5Graph.forEach((item) => {
+          pMapBase.drawingGraphicsLayer.remove(item);
+        });
+      }
 
       this.$emit('clear');
     },
@@ -383,11 +393,22 @@ export default {
         const start = geometry.getPoint(0);
         const end = geometry.getPoint(this.canalLength);
 
-        if (this.range1 !== 0 && this.range2 !== this.canalLength) {
+        if (this.range1 !== 0 && this.range2 !== parseFloat(this.canalLength)) {
           this.iconStart = sg.Graphic.createFromGeometry(new sg.geometry.Point(start.x, start.y), { markerurl: require('~/assets/img/marker-big.svg'), markersize: 25, markercolor: new sg.Color(25, 112, 93, 1), text: '起始點', textsize: 14, textoffset: [0, -10] });
           this.iconEnd = sg.Graphic.createFromGeometry(new sg.geometry.Point(end.x, end.y), { markerurl: require('~/assets/img/marker-big.svg'), markersize: 25, markercolor: new sg.Color(25, 112, 93, 1), text: '結束點', textsize: 14, textoffset: [0, -10] });
 
           pMapBase.drawingGraphicsLayer.add(this.iconStart);
+          pMapBase.drawingGraphicsLayer.add(this.iconEnd);
+        }
+
+        if (this.range1 !== 0 && this.range2 === parseFloat(this.canalLength)) {
+          this.iconStart = sg.Graphic.createFromGeometry(new sg.geometry.Point(start.x, start.y), { markerurl: require('~/assets/img/marker-big.svg'), markersize: 25, markercolor: new sg.Color(25, 112, 93, 1), text: '起始點', textsize: 14, textoffset: [0, -10] });
+
+          pMapBase.drawingGraphicsLayer.add(this.iconStart);
+        }
+        if (this.range1 === 0 && this.range2 !== parseFloat(this.canalLength)) {
+          this.iconEnd = sg.Graphic.createFromGeometry(new sg.geometry.Point(end.x, end.y), { markerurl: require('~/assets/img/marker-big.svg'), markersize: 25, markercolor: new sg.Color(25, 112, 93, 1), text: '結束點', textsize: 14, textoffset: [0, -10] });
+
           pMapBase.drawingGraphicsLayer.add(this.iconEnd);
         }
 
@@ -477,6 +498,20 @@ export default {
       }).then((jsonData) => {
         console.log(jsonData);
         this.getBufferTable(jsonData[0].geometry);
+
+        // 畫出Buffer環域圖形 (只有一個)
+        // 先清除之前的
+        pMapBase.drawingGraphicsLayer.remove(this.bufferGraph);
+        // 畫圖
+        const geometry = sg.geometry.Geometry.fromGeoJson(jsonData[0].geometry);
+        this.bufferGraph = sg.Graphic.createFromGeometry(geometry, { borderwidth: 0, fillcolor: new sg.Color(62, 159, 136, 0.5) });
+        pMapBase.drawingGraphicsLayer.add(this.bufferGraph);
+        // 定位
+        const extent = geometry.extent;
+        pMapBase.ZoomMapTo(extent);
+        ZoomOut();
+        pMapBase.getTransformation().FitLevel();
+        pMapBase.RefreshMap(true);
       }).catch((err) => {
         console.log(err);
       });
@@ -495,6 +530,7 @@ export default {
       } else {
         url = `/AERC/rest/${this.engName}`;
         result = {
+          Ia: this.nowIa,
           geom: geoGraphic
         };
       }
@@ -519,6 +555,12 @@ export default {
         return response.json();
       }).then((jsonData) => {
         console.log(jsonData);
+        if (jsonData.length < 1) {
+          this.loadModal = false;
+          this.$emit('channelSearch', '', 'none');
+          return;
+        }
+
         this.myTableData.body = [];
 
         this.loadModal = false;
@@ -609,6 +651,8 @@ export default {
         return response.json();
       }).then((jsonData) => {
         console.log(jsonData);
+        this.loadModal = false;
+
         jsonData.forEach((item) => {
           item.myCountyID = countyId;
         });
@@ -618,6 +662,32 @@ export default {
         });
 
         this.$emit('channelSearch', this.myTableData, this.engName);
+
+        // 畫出地籍的所有圖形
+        // 先清除之前的
+        if (this.sec5Graph.length >= 1) {
+          this.sec5Graph.forEach((item) => {
+            pMapBase.drawingGraphicsLayer.remove(item);
+          });
+        }
+        this.sec5Graph = [];
+        const allBound = [];
+        // 畫圖
+        jsonData.forEach((item, index) => {
+          const geometry = sg.geometry.Geometry.fromGeoJson(item.geometry);
+          this.sec5Graph[index] = sg.Graphic.createFromGeometry(geometry, { borderwidth: 1, fillcolor: new sg.Color(220, 105, 105, 0.5) });
+          pMapBase.drawingGraphicsLayer.add(this.sec5Graph[index]);
+
+          allBound.push(geometry);
+        });
+        // 定位至最大範圍
+        const extent = sg.geometry.Extent.unionall(this.allBound.map(function (geom) { return geom.extent; }));
+        pMapBase.ZoomMapTo(extent);
+        ZoomOut();
+        pMapBase.getTransformation().FitLevel();
+        pMapBase.RefreshMap(true);
+
+        //
       }).catch((err) => {
         console.log(err);
       });

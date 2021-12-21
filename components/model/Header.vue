@@ -359,6 +359,9 @@ export default {
       if (this.permitRows.includes('C_04')) {
         this.sideList1[3].show = true;
       }
+      if (this.permitRows.includes('C_05')) {
+        this.sideList1[3].show = true;
+      }
       if (this.permitRows.includes('D_01')) {
         this.sideList2[0].show = true;
       }

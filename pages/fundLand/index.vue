@@ -100,6 +100,15 @@
     >
       <div class="modal" />
     </div>
+
+    <!-- 彈窗lightbox -->
+    <AlertBox-component
+      v-if="warnBox === true"
+      title="無此地號資料"
+      box-icon="warning"
+      @close="warnBox = false"
+      @confirm="warnBox = false"
+    />
   </div>
 </template>
 
@@ -111,6 +120,7 @@ import Table from '~/components/model/TableForJoy.vue';
 import NormalTable2 from '~/components/model/NormalTable2.vue';
 // import NavTabs from '~/components/tools/NavTabs.vue';
 import Buttons from '~/components/tools/Buttons.vue';
+import AlertBox from '~/components/tools/AlertBox.vue';
 
 export default {
   components: {
@@ -120,10 +130,12 @@ export default {
     Table: Table,
     NormalTable2: NormalTable2,
     // NavTabs: NavTabs,
-    Buttons: Buttons
+    Buttons: Buttons,
+    'AlertBox-component': AlertBox
   },
   data () {
     return {
+      warnBox: false,
       allData: '',
       growUp: true,
       showDetail: false,
@@ -264,6 +276,12 @@ export default {
           console.log(jsonData);
 
           const myArr = jsonData.filter(item => item.Land_no === payload.myInfo.LandNo);
+          // 如果無資料
+          if (myArr.length < 1) {
+            this.warnBox = true;
+            return;
+          }
+
           this.goMapPage(payload.myInfo.CountyID, myArr[0].FID);
         }).catch((err) => {
           console.log(err);
@@ -283,6 +301,13 @@ export default {
         console.log(jsonData);
 
         const myArr = jsonData.filter(item => item.Land_no === landNo);
+
+        // 如果無資料
+        if (myArr.length < 1) {
+          this.landnoFid = 'none';
+          return;
+        }
+
         this.landnoFid = myArr[0].FID;
       }).catch((err) => {
         console.log(err);
@@ -399,6 +424,10 @@ export default {
     },
     // * 在地圖上顯示
     showOnMap () {
+      if (this.landnoFid === 'none') {
+        this.warnBox = true;
+        return;
+      }
       this.loadModal = true;
 
       fetch(`/AERC/rest/Sec5ByFID?CountyID=${this.myCountyId}&FID=${this.landnoFid}`, {

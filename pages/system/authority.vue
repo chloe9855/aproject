@@ -83,7 +83,7 @@
 
 <script>
 // @ts-check
-import TableTool from '~/components/model/Table.vue';
+import TableTool from '~/components/model/TableJJ.vue';
 import PageHeader from '~/components/tools/PageHeader.vue';
 import BreadCrumbTool from '~/components/tools/BreadCrumbTool.vue';
 import Search from '~/components/model/Search1.vue';

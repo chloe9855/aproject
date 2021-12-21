@@ -13,6 +13,7 @@
     </div>
     <client-only>
       <v-select
+        ref="select"
         :value="selectedOpt"
         label="title"
         code="value"
@@ -22,7 +23,14 @@
         :class="{'add_bg': bgColor}"
         class="w-100 inputSelect getMargin"
         @input="onInput"
-      />
+      >
+        <span
+          slot="no-options"
+          @click="$refs.select.open = false"
+        >
+          資料載入中
+        </span>
+      </v-select>
     </client-only>
 
     <div

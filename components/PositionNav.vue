@@ -300,7 +300,8 @@ export default {
       // * 地籍定位 : graphic圖形陣列
       allLandGraphic: [],
       allMetry: [],
-      userId: ''
+      userId: '',
+      cData: ''
 
     };
   },
@@ -337,18 +338,20 @@ export default {
       this.transCoor.twdY = '';
       pMapBase.drawingGraphicsLayer.remove(this.drawPoint);
 
-      const EPSG3857 = new proj4.Proj('EPSG:3857'); // 預設坐標
+      // const EPSG3857 = new proj4.Proj('EPSG:3857'); // 預設坐標
       const EPSG3826 = new proj4.Proj('EPSG:3826'); // TWD97
       const EPSG4326 = new proj4.Proj('EPSG:4326'); // WGS84
       // TWD97轉3857
-      const cData = proj4(EPSG3826, EPSG3857, [this.locate.twdX, this.locate.twdY]);
+      // const cData = proj4(EPSG3826, EPSG3857, [this.locate.twdX, this.locate.twdY]);
+      const cData = SpatialReference.CoordinateTransform(EPSG.CreateSpatialReference(3826), EPSG.CreateSpatialReference(3857), null, { X: this.locate.twdX, Y: this.locate.twdY });
+
       // 定位
-      pMapBase.ZoomMapTo(new sg.geometry.Point(cData[0], cData[1]));
+      pMapBase.ZoomMapTo(new sg.geometry.Point(cData.X, cData.Y));
       ZoomOut();
       pMapBase.getTransformation().FitLevel();
       pMapBase.RefreshMap(true);
       // 畫點
-      this.drawPoint = sg.Graphic.createFromGeometry(new sg.geometry.Point(cData[0], cData[1]), { markerstyle: sg.symbols.SimpleMarkerSymbol.STYLE_CIRCLE, markersize: 30, markercolor: new sg.Color(25, 112, 93, 1), borderwidth: 0 });
+      this.drawPoint = sg.Graphic.createFromGeometry(new sg.geometry.Point(cData.X, cData.Y), { markerstyle: sg.symbols.SimpleMarkerSymbol.STYLE_CIRCLE, markersize: 30, markercolor: new sg.Color(25, 112, 93, 1), borderwidth: 0 });
       pMapBase.drawingGraphicsLayer.add(this.drawPoint);
 
       // 轉WGS84
@@ -364,18 +367,19 @@ export default {
       this.transCoor.wgsY = '';
       pMapBase.drawingGraphicsLayer.remove(this.drawPoint);
 
-      const EPSG3857 = new proj4.Proj('EPSG:3857'); // 預設坐標
+      // const EPSG3857 = new proj4.Proj('EPSG:3857'); // 預設坐標
       const EPSG4326 = new proj4.Proj('EPSG:4326'); // WGS84
       const EPSG3826 = new proj4.Proj('EPSG:3826'); // TWD97
       // WGS84轉3857
-      const cData = proj4(EPSG4326, EPSG3857, [this.locate.wgsX, this.locate.wgsY]);
+      // const cData = proj4(EPSG4326, EPSG3857, [this.locate.wgsX, this.locate.wgsY]);
+      const cData = SpatialReference.CoordinateTransform(EPSG.CreateSpatialReference(4326), EPSG.CreateSpatialReference(3857), null, { X: this.locate.wgsX, Y: this.locate.wgsY });
       // 定位
-      pMapBase.ZoomMapTo(new sg.geometry.Point(cData[0], cData[1]));
+      pMapBase.ZoomMapTo(new sg.geometry.Point(cData.X, cData.Y));
       ZoomOut();
       pMapBase.getTransformation().FitLevel();
       pMapBase.RefreshMap(true);
       // 畫點
-      this.drawPoint = sg.Graphic.createFromGeometry(new sg.geometry.Point(cData[0], cData[1]), { markerstyle: sg.symbols.SimpleMarkerSymbol.STYLE_CIRCLE, markersize: 30, markercolor: new sg.Color(25, 112, 93, 1), borderwidth: 0 });
+      this.drawPoint = sg.Graphic.createFromGeometry(new sg.geometry.Point(cData.X, cData.Y), { markerstyle: sg.symbols.SimpleMarkerSymbol.STYLE_CIRCLE, markersize: 30, markercolor: new sg.Color(25, 112, 93, 1), borderwidth: 0 });
       pMapBase.drawingGraphicsLayer.add(this.drawPoint);
 
       // 轉TWD97

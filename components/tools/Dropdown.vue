@@ -5,6 +5,7 @@
   >
     <client-only>
       <v-select
+        ref="select"
         v-model="selected"
         label="title"
         code="value"
@@ -13,7 +14,14 @@
         :placeholder="placeholders"
         :class="{'add_bg': bgColor}"
         class="w-100 inputSelect getMargin"
-      />
+      >
+        <span
+          slot="no-options"
+          @click="$refs.select.open = false"
+        >
+          資料載入中
+        </span>
+      </v-select>
     </client-only>
   </div>
 </template>

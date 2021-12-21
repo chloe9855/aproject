@@ -23,7 +23,7 @@
       <div
         class="feature__btn"
         :class="currentClassHandler('setPositionWindow')"
-        @click.stop="setDragboxHandler('setPositionWindow'), postUsageAmount(3, 5)"
+        @click.stop="setDragboxHandler('setPositionWindow'), postUsageAmount(3, 5), getMyIaList()"
       >
         <div class="icon_location" />
         <span>定位</span>
@@ -76,7 +76,7 @@ export default {
   },
   data () {
     return {
-
+      myIaList: ''
     };
   },
   methods: {
@@ -108,6 +108,18 @@ export default {
       }).catch((err) => {
         console.log(err);
       });
+    },
+    getMyIaList () {
+      if (vueIa !== null) {
+        const arr = vueIa;
+        arr.forEach((item) => {
+          item.value = item.FID;
+          item.title = item.Ia_cns;
+        });
+
+        this.myIaList = arr;
+        this.$emit('iaList', this.myIaList);
+      }
     }
   }
 };
