@@ -194,7 +194,6 @@ export default {
         this.editType = 'edit';
         this.textAreaText = r.data[0].note;
         this.tableList1.body[0].title = [{ type: 'input', title: r.data[0].name }, { type: 'date', val: r.data[0].start }, { type: 'date', val: r.data[0].end }];
-        console.log(r);
         if (r.data[0].category.length > 0) {
           this.tableList2.body = [];
           r.data[0].category.forEach((t, i) => {
@@ -308,12 +307,11 @@ export default {
       }
     },
     getAreaData (e) {
+      console.log(e.obj.Grp);
       if (e.obj.Grp.length > 0) {
-        this.tableAreaList.body = [];
-        this.areaOpen = [];
         e.obj.Grp.forEach((item, i) => {
           let result = {};
-          let result1 = {};
+          let result1 = { title: '' };
           result = {
             Ia: e.obj.Ia,
             Ia_cns: e.obj.Ia_cns,
@@ -327,16 +325,15 @@ export default {
           result1 = { title: [e.obj.Ia_cns, e.obj.Mng_cns, e.obj.Stn_cns, item.title] };
           this.tableAreaList.body.push(result1);
           this.areaOpen.push(result);
-          console.log(this.tableAreaList.body);
-          console.log(this.areaOpen);
         });
+        const set1 = new Set();
+        const result = [...new Set(this.areaOpen.map(item => JSON.stringify(item)))].map(item => JSON.parse(item));
+        const result1 = this.tableAreaList.body.filter(item => {
+          return !set1.has(item.title[3]) ? set1.add(item.title[3]) : false;
+        });
+        this.areaOpen = result;
+        this.tableAreaList.body = result1;
       }
-
-      // e.Grp.forEach(item => {
-      //   let result = {};
-      //   result = { title: [e.Ia_cns, e.Mng_cns, e.Stn_cns, item.title] };
-      //   this.tableAreaList.body.push(result);
-      // });
     },
     getEvent (e) {
       this.eventName = e[0].val;

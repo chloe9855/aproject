@@ -15,6 +15,7 @@
         v-show="delBtn"
         :name="'button-red'"
         :text="'刪除所選'"
+        @click="delLink"
       />
       <Button
         :name="'button-add'"
@@ -122,15 +123,16 @@ export default {
     },
     addLink () {
       this.num += 1;
+      console.log(this.tableList.body);
       this.tableList.body.push({ val: `news${this.num}`, title: [{ type: 'input', key: `a${this.num}` }, { type: 'input', key: `b${this.num}` }] });
-      console.log(this.tableList);
+      console.log(this.tableList.body);
     },
     delLink () {
-      // this.delList;
-      // console.log(e);
-      // this.tableList.body.filter;
-      const c = this.tableList.body.filter(function (v) { return this.delList.indexOf(v.val) > -1; });
-      console.log(c);
+      const delList = this.delList;
+      console.log(this.tableList.body);
+      console.log(delList);
+      this.tableList.body = this.tableList.body.filter(function (v) { return delList.indexOf(v.val) === -1; });
+      console.log(this.tableList.body);
     }
   },
   computed: {},
