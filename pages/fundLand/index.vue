@@ -120,6 +120,7 @@ import Table from '~/components/model/TableForJoy.vue';
 import NormalTable2 from '~/components/model/NormalTable2.vue';
 // import NavTabs from '~/components/tools/NavTabs.vue';
 import Buttons from '~/components/tools/Buttons.vue';
+import AlertBox from '~/components/tools/AlertBox.vue';
 
 export default {
   components: {
@@ -129,7 +130,8 @@ export default {
     Table: Table,
     NormalTable2: NormalTable2,
     // NavTabs: NavTabs,
-    Buttons: Buttons
+    Buttons: Buttons,
+    'AlertBox-component': AlertBox
   },
   data () {
     return {
