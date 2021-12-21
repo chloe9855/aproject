@@ -123,6 +123,8 @@ export default {
       if (e) {
         this.tableList.body = [];
         const arr = [];
+        let n = 0;
+        const _this = this;
         getApplyEvent(e.obj).then(r => {
           r.data.forEach(item => {
             console.log(item);
@@ -135,13 +137,15 @@ export default {
             };
             axios.post('/AERC/rest/IrrigationLand?pageCnt=1&pageRows=1', data).then(d => {
               const result = {};
-              // result.val = item.applyer_id;
               result.main = r;
               result.title = [item.county_name, item.town_name, item.section_name, d.data[0].tolarea, item.stn_name, d.data[0].irgarea, item.owner_name, item.percent1 + '/' + item.percent2, item.own_scro, item.farmername, item.category, item.area, item.note, attachmentContent];
               arr.push(result);
+              n += 1;
+              if (r.data.length === n) {
+                _this.tableList.body = arr;
+              }
             });
           });
-          this.tableList.body = arr;
         }).catch(err => {
           console.log(err);
         });
