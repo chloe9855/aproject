@@ -38,7 +38,10 @@
       class="w-90"
       :class="boxWidth"
     />
-    <SelectAreaTool @onsearch="getAreaData" />
+    <SelectAreaTool
+      :is-clear="isClear"
+      @onsearch="getAreaData"
+    />
     <TableTool
       :table-column="tableAreaList"
       :is-paginate="false"
@@ -175,7 +178,8 @@ export default {
       compensateEventIIcon: 'warning',
       areaOpen: [],
       isChangeDate: false,
-      isCancelStatus: false
+      isCancelStatus: false,
+      isClear: false
     };
   },
   name: 'EditCompensateEvent',
@@ -308,6 +312,7 @@ export default {
     },
     getAreaData (e) {
       console.log(e.obj.Grp);
+      this.isClear = false;
       if (e.obj.Grp.length > 0) {
         e.obj.Grp.forEach((item, i) => {
           let result = {};
@@ -352,7 +357,8 @@ export default {
     areaDel (e) {
       this.tableAreaList.body.splice(e.myIndex, 1);
       this.areaOpen.splice(e.myIndex, 1);
-      console.log(e.myIndex);
+      this.isClear = true;
+      // console.log(e.myIndex);
     },
     getTextContent (e) {
       this.note = e;

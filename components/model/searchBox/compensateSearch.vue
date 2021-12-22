@@ -38,6 +38,9 @@
 import InputVertical from '~/components/tools/InputVertical.vue';
 import DropdownVertical from '~/components/tools/DropdownVertical.vue';
 import { getCounties, getTowns, getSections, getSecNo, getSecNoList } from '~/publish/Irrigation.js';
+import Vue from 'vue';
+import VueCryptojs from 'vue-cryptojs';
+Vue.use(VueCryptojs);
 export default {
   components: {
     DropdownVertical,
