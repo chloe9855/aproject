@@ -2,12 +2,12 @@
   <div class="inputBox">
     <InputVertical
       title="公告名稱"
-      :add-text="originData.slogan"
+      :add-text="originDataSlogan"
       @inputValue="getBulletinName"
     />
     <Textarea
       title="公告內容"
-      :add-text="originData.content"
+      :add-text="originDataContent"
       @textContent="getBulletinContent"
     />
     <div class="buttonBox">
@@ -29,9 +29,11 @@
       :table-column="tableList"
       :is-paginate="false"
       :is-del="true"
-      :origin-input="originData.link"
+      :is-no-data-bg="true"
+      :origin-input="originDataLinkList"
       @inputData="getInputData"
       @checkList="getTableCheck"
+      @tableEvent="delLinkList"
     />
   </div>
 </template>
@@ -57,7 +59,12 @@ export default {
       type: Boolean,
       default: false
     },
-    originData: Object
+    originData: {
+      type: Object,
+      default: () => {
+        return {};
+      }
+    }
   },
   data: () => {
     return {
@@ -79,20 +86,13 @@ export default {
       data: [],
       delBtn: false,
       num: 0,
-      isEdit: false
+      isEdit: false,
+      originDataLinkList: {},
+      originDataSlogan: '',
+      originDataContent: ''
     };
   },
-  mounted () {
-    setTimeout(() => {
-      if (this.originData.rows.length > 0) {
-        this.isEdit = true;
-      }
-      this.originData.rows.forEach((item) => {
-        this.num += 1;
-        this.tableList.body.push({ val: `news${this.num}`, title: [{ type: 'input', key: `a${this.num}` }, { type: 'input', key: `b${this.num}` }] });
-      });
-    }, 1100);
-  },
+  mounted () {},
   methods: {
     getInputData (e) {
       if (e) {
@@ -133,6 +133,11 @@ export default {
       console.log(delList);
       this.tableList.body = this.tableList.body.filter(function (v) { return delList.indexOf(v.val) === -1; });
       console.log(this.tableList.body);
+    },
+    delLinkList (e) {
+      if (e) {
+        this.tableList.body.splice(e.myIndex, 1);
+      }
     }
   },
   computed: {},
@@ -174,6 +179,18 @@ export default {
           });
         }
       }
+    },
+    originData (e) {
+      this.originDataLinkList = e.link;
+      this.originDataSlogan = e.slogan;
+      this.originDataContent = e.content;
+      if (e.rows.length > 0) {
+        this.isEdit = true;
+      }
+      e.rows.forEach((item) => {
+        this.num += 1;
+        this.tableList.body.push({ val: `news${this.num}`, title: [{ type: 'input', key: `a${this.num}` }, { type: 'input', key: `b${this.num}` }] });
+      });
     }
   }
 };

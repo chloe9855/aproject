@@ -185,7 +185,7 @@
               v-show="isDel && !isScrollTable"
               class="delOption"
             >
-              <div @click="sendEvent('isDel')">
+              <div @click="sendEvent('isDel',item,index)">
                 <img
                   alt=""
                   class="vector"
@@ -267,7 +267,7 @@
               v-show="isDel"
               class="delOption"
             >
-              <div @click="sendEvent('isDel',item)">
+              <div @click="sendEvent('isDel',item,index)">
                 <img
                   alt=""
                   class="vector"
