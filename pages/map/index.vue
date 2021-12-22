@@ -823,6 +823,14 @@ export default {
     canvas.width = canvas.width * ratio;
     canvas.height = canvas.height * ratio;
     ctx.scale(ratio, ratio);
+
+    //
+    setTimeout(() => {
+      sg.events.on(pMapBase.drawingGraphicsLayer, 'click', (e) => {
+        console.log('graphiclayer');
+        console.log(e);
+      });
+    }, 10000);
   },
   methods: {
 
@@ -1730,7 +1738,8 @@ export default {
         ctx.font = '28px sans-serif';
         ctx.textAlign = 'center';
         ctx.fillStyle = '#000000';
-        ctx.fillText(this.screenTitle, (canvas.width / 2) - (textWidth / 2) - 80, 30);
+        // ctx.fillText(this.screenTitle, (canvas.width / 2) - (textWidth / 2) - 80, 30);
+        ctx.fillText(this.screenTitle, (1500 / 2) - (textWidth / 2), 30);
 
         // 加比例尺
         ctx.globalCompositeOperation = 'source-over';
@@ -1750,7 +1759,7 @@ export default {
             console.log('印出來');
 
             this.loadModal = false;
-            this.openPicPage();
+            // this.openPicPage();
           });
         };
 
@@ -1809,10 +1818,12 @@ export default {
 
         // 加標題
         const textWidth = ctx.measureText(this.screenTitle).width;
+        console.log(textWidth);
         ctx.font = '28px sans-serif';
         ctx.textAlign = 'center';
         ctx.fillStyle = '#000000';
-        ctx.fillText(this.screenTitle, (canvas.width / 2) - (textWidth / 2) - 80, 30);
+        // ctx.fillText(this.screenTitle, (canvas.width / 2) - (textWidth / 2) - 80, 30);
+        ctx.fillText(this.screenTitle, (1500 / 2) - (textWidth / 2), 30);
 
         // 加比例尺
         ctx.globalCompositeOperation = 'source-over';

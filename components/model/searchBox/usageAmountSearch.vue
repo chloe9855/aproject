@@ -75,14 +75,18 @@ export default {
       });
     },
     // * 按下查詢
-    search () {
+    searchX () {
       this.$emit('useAmountSearch', this.useAmountData, this.nowIa);
+    },
+    // * 清除全部
+    clearAllX () {
+      this.$emit('clearUseAmount');
     }
   },
   watch: {
-    isClear (value) {
-      this.$emit('clearUseAmount');
-    }
+    // isClear (value) {
+    //   this.$emit('clearUseAmount');
+    // }
   }
 };
 </script>

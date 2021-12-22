@@ -167,8 +167,8 @@ export default {
       // * 渠道圖形
       canalGraphic: '',
       // * 樁號範圍
-      range1: 0,
-      range2: 0,
+      range1: '',
+      range2: '',
       // * icon
       iconStart: '',
       icon1: '',
@@ -187,7 +187,7 @@ export default {
         { title: '埤塘', value: 'Pool' }
       ],
       isCircle: false,
-      radius: 0,
+      radius: '',
       // * 所選圖資
       nowLayer: '',
       engName: '',
@@ -311,7 +311,7 @@ export default {
       }).then((response) => {
         return response.json();
       }).then((data) => {
-        const geoMetry = sg.geometry.Geometry.fromGeoJson(data[0].geometry);
+        const geoMetry = sg.geometry.Geometry.fromGeoJson(data[0].GEOMETRY);
         // 取得渠道總長
         this.canalLength = geoMetry.length.toFixed(2);
       }).catch((err) => {
@@ -340,6 +340,11 @@ export default {
       }).then((jsonData) => {
         console.log(jsonData);
 
+        // 預設值
+        if (this.range1 === '') { this.range1 = 0; }
+        if (this.range2 === '') { this.range2 = parseFloat(this.canalLength); }
+        if (this.radius === '') { this.radius = 10; }
+
         // 先清除之前的
         pMapBase.drawingGraphicsLayer.remove(this.canalGraphic);
         pMapBase.drawingGraphicsLayer.remove(this.iconStart);
@@ -348,7 +353,7 @@ export default {
         pMapBase.drawingGraphicsLayer.remove(this.iconEnd);
 
         // 畫渠道圖
-        const geometry = sg.geometry.Geometry.fromGeoJson(jsonData[0].geometry);
+        const geometry = sg.geometry.Geometry.fromGeoJson(jsonData[0].GEOMETRY);
         this.canalGraphic = sg.Graphic.createFromGeometry(geometry, { linewidth: 5, linecolor: new sg.Color(126, 255, 178, 1) });
         pMapBase.drawingGraphicsLayer.add(this.canalGraphic);
 
@@ -681,7 +686,7 @@ export default {
           allBound.push(geometry);
         });
         // 定位至最大範圍
-        const extent = sg.geometry.Extent.unionall(this.allBound.map(function (geom) { return geom.extent; }));
+        const extent = sg.geometry.Extent.unionall(allBound.map(function (geom) { return geom.extent; }));
         pMapBase.ZoomMapTo(extent);
         ZoomOut();
         pMapBase.getTransformation().FitLevel();

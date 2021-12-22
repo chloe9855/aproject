@@ -117,7 +117,7 @@ export default {
         // 先清除之前的
         pMapBase.drawingGraphicsLayer.remove(this.canalGraphic);
         // 畫圖
-        const geometry = sg.geometry.Geometry.fromGeoJson(jsonData[0].geometry);
+        const geometry = sg.geometry.Geometry.fromGeoJson(jsonData[0].GEOMETRY);
         // this.canalGraphic = sg.Graphic.createFromGeometry(geometry, { borderwidth: 5, fillcolor: new sg.Color(126, 255, 178, 1) });
         this.canalGraphic = sg.Graphic.createFromGeometry(geometry, { linewidth: 5, linecolor: new sg.Color(126, 255, 178, 1) });
         pMapBase.drawingGraphicsLayer.add(this.canalGraphic);

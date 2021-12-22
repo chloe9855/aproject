@@ -105,6 +105,7 @@
     <AlertBox-component
       v-if="warnBox === true"
       title="無此地號資料"
+      text=""
       box-icon="warning"
       @close="warnBox = false"
       @confirm="warnBox = false"
@@ -279,6 +280,7 @@ export default {
           // 如果無資料
           if (myArr.length < 1) {
             this.warnBox = true;
+            this.loadModal = false;
             return;
           }
 
@@ -426,6 +428,7 @@ export default {
     showOnMap () {
       if (this.landnoFid === 'none') {
         this.warnBox = true;
+        this.loadModal = false;
         return;
       }
       this.loadModal = true;
