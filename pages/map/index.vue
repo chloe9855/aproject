@@ -823,14 +823,6 @@ export default {
     canvas.width = canvas.width * ratio;
     canvas.height = canvas.height * ratio;
     ctx.scale(ratio, ratio);
-
-    //
-    setTimeout(() => {
-      sg.events.on(pMapBase.drawingGraphicsLayer, 'click', (e) => {
-        console.log('graphiclayer');
-        console.log(e);
-      });
-    }, 10000);
   },
   methods: {
 
@@ -980,70 +972,80 @@ export default {
     },
     // * @ 左側搜尋 渠道查詢結果 單筆定位
     getChannelMap (info, type) {
-      let url;
       if (type === 'Sec5cov') {
         this.getMapSec5(info.geometry);
         return;
-      } else if (type === 'Ia') {
-        url = `/AERC/rest/Ia/${this.userId}`;
-      } else {
-        url = `/AERC/rest/${type}`;
       }
+      // 畫圖
+      const geometry = sg.geometry.Geometry.fromGeoJson(info.GEOMETRY);
+      // 定位
+      const extent = geometry.extent;
+      pMapBase.ZoomMapTo(extent);
+      ZoomOut();
+      pMapBase.getTransformation().FitLevel();
+      pMapBase.RefreshMap(true);
 
-      let newObj = {};
-      if (type === 'Ia') {
-        newObj = { Ia: info.Ia, FID: info.FID };
-      }
-      if (type === 'Mng') {
-        newObj = { Ia: info.Ia, FID: info.FID };
-      }
-      if (type === 'Stn') {
-        newObj = { Ia: info.Ia, Mng: info.Mng, FID: info.FID };
-      }
-      if (type === 'Grp') {
-        newObj = { Ia: info.Ia, Mng: info.Mng, Stn: info.Stn, FID: info.FID };
-      }
-      if (type === 'Rot') {
-        newObj = { Ia: info.Ia, FID: info.FID };
-      }
-      if (type === 'Period') {
-        newObj = { Ia: info.Ia, FID: info.FID };
-      }
-      if (type === 'Pool') {
-        newObj = { Ia: info.Ia, FID: info.FID };
-      }
-      if (type === 'Section') {
-        newObj = { Section: info.Section, FID: info.FID };
-      }
+      // let url;
       // if (type === 'Sec5cov') {
-      //   newObj = { CountyID: info.myCountyID, FID: info.FID };
+      //   this.getMapSec5(info.geometry);
+      //   return;
+      // } else if (type === 'Ia') {
+      //   url = `/AERC/rest/Ia/${this.userId}`;
+      // } else {
+      //   url = `/AERC/rest/${type}`;
       // }
 
-      fetch(url, {
-        method: 'POST',
-        headers: new Headers({
-          'Content-Type': 'application/json'
-        }),
-        body: JSON.stringify(newObj)
-      }).then((response) => {
-        return response.json();
-      }).then((jsonData) => {
-        console.log(jsonData);
-        // 先清除之前的
-        pMapBase.drawingGraphicsLayer.remove(this.channelGraphic);
-        // 畫圖
-        const geometry = sg.geometry.Geometry.fromGeoJson(jsonData[0].geometry);
-        this.channelGraphic = sg.Graphic.createFromGeometry(geometry, { borderwidth: 1, fillcolor: new sg.Color(220, 105, 105, 0.5) });
-        pMapBase.drawingGraphicsLayer.add(this.channelGraphic);
-        // 定位
-        const extent = geometry.extent;
-        pMapBase.ZoomMapTo(extent);
-        ZoomOut();
-        pMapBase.getTransformation().FitLevel();
-        pMapBase.RefreshMap(true);
-      }).catch((err) => {
-        console.log(err);
-      });
+      // let newObj = {};
+      // if (type === 'Ia') {
+      //   newObj = { Ia: info.Ia, FID: info.FID };
+      // }
+      // if (type === 'Mng') {
+      //   newObj = { Ia: info.Ia, FID: info.FID };
+      // }
+      // if (type === 'Stn') {
+      //   newObj = { Ia: info.Ia, Mng: info.Mng, FID: info.FID };
+      // }
+      // if (type === 'Grp') {
+      //   newObj = { Ia: info.Ia, Mng: info.Mng, Stn: info.Stn, FID: info.FID };
+      // }
+      // if (type === 'Rot') {
+      //   newObj = { Ia: info.Ia, FID: info.FID };
+      // }
+      // if (type === 'Period') {
+      //   newObj = { Ia: info.Ia, FID: info.FID };
+      // }
+      // if (type === 'Pool') {
+      //   newObj = { Ia: info.Ia, FID: info.FID };
+      // }
+      // if (type === 'Section') {
+      //   newObj = { Section: info.Section, FID: info.FID };
+      // }
+
+      // fetch(url, {
+      //   method: 'POST',
+      //   headers: new Headers({
+      //     'Content-Type': 'application/json'
+      //   }),
+      //   body: JSON.stringify(newObj)
+      // }).then((response) => {
+      //   return response.json();
+      // }).then((jsonData) => {
+      //   console.log(jsonData);
+      //   // 先清除之前的
+      //   pMapBase.drawingGraphicsLayer.remove(this.channelGraphic);
+      //   // 畫圖
+      //   const geometry = sg.geometry.Geometry.fromGeoJson(jsonData[0].GEOMETRY);
+      //   this.channelGraphic = sg.Graphic.createFromGeometry(geometry, { borderwidth: 1, fillcolor: new sg.Color(220, 105, 105, 0.5) });
+      //   pMapBase.drawingGraphicsLayer.add(this.channelGraphic);
+      //   // 定位
+      //   const extent = geometry.extent;
+      //   pMapBase.ZoomMapTo(extent);
+      //   ZoomOut();
+      //   pMapBase.getTransformation().FitLevel();
+      //   pMapBase.RefreshMap(true);
+      // }).catch((err) => {
+      //   console.log(err);
+      // });
     },
     // * @ 左側搜尋 渠道查詢結果 單筆定位 (地籍)
     getMapSec5 (geometryData) {

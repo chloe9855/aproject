@@ -822,7 +822,7 @@ export default {
         // 先清除之前的
         pMapBase.drawingGraphicsLayer.remove(this.geoGraphic);
         // 畫圖
-        const geometry = sg.geometry.Geometry.fromGeoJson(jsonData[0].geometry);
+        const geometry = sg.geometry.Geometry.fromGeoJson(jsonData[0].GEOMETRY);
         this.geoGraphic = sg.Graphic.createFromGeometry(geometry, { borderwidth: 1, fillcolor: new sg.Color(220, 105, 105, 0.5) });
         pMapBase.drawingGraphicsLayer.add(this.geoGraphic);
         // 定位

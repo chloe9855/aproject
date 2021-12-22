@@ -562,6 +562,13 @@ export default {
         console.log(jsonData);
         if (jsonData.length < 1) {
           this.loadModal = false;
+          // 先清除之前的
+          if (this.sec5Graph.length >= 1) {
+            this.sec5Graph.forEach((item) => {
+              pMapBase.drawingGraphicsLayer.remove(item);
+            });
+          }
+          this.sec5Graph = [];
           this.$emit('channelSearch', '', 'none');
           return;
         }
@@ -618,6 +625,32 @@ export default {
         }
 
         this.$emit('channelSearch', this.myTableData, this.engName);
+
+        // 畫出所有圖形
+        // 先清除之前的
+        if (this.sec5Graph.length >= 1) {
+          this.sec5Graph.forEach((item) => {
+            pMapBase.drawingGraphicsLayer.remove(item);
+          });
+        }
+        this.sec5Graph = [];
+        const allBound = [];
+        // 畫圖
+        jsonData.forEach((item, index) => {
+          const geometry = sg.geometry.Geometry.fromGeoJson(item.GEOMETRY);
+          this.sec5Graph[index] = sg.Graphic.createFromGeometry(geometry, { borderwidth: 1, fillcolor: new sg.Color(220, 105, 105, 0.5) });
+          pMapBase.drawingGraphicsLayer.add(this.sec5Graph[index]);
+
+          allBound.push(geometry);
+        });
+        // 定位至最大範圍
+        const extent = sg.geometry.Extent.unionall(allBound.map(function (geom) { return geom.extent; }));
+        pMapBase.ZoomMapTo(extent);
+        ZoomOut();
+        pMapBase.getTransformation().FitLevel();
+        pMapBase.RefreshMap(true);
+
+        //
       }).catch((err) => {
         console.log(err);
       });
