@@ -31,7 +31,7 @@
         :class="[{inputError:isError,isIcon:isAddIcon,verification:isVerification}]"
         :placeholder="inputText"
         :name="name"
-        :type="inputType"
+        :type="setInputType"
         :disabled="isDisable === true"
       >
       <input
@@ -49,6 +49,12 @@
         :src="iconImg"
         class="input-icon"
         :style="{ left : titleLength }"
+      >
+      <img
+        v-show="isAddIcon && inputType === 'password'"
+        :src="iconEye"
+        class="input-icon input-eye"
+        @click="toggleEye"
       >
       <div
         v-show="filterBox"
@@ -137,7 +143,8 @@ export default {
       },
       filterBox: false,
       filterList: [],
-      isCloseFilter: false
+      isCloseFilter: false,
+      eyeStatus: false
     };
   },
   name: 'InputHorizontal',
@@ -149,6 +156,9 @@ export default {
       this.message = item;
       this.filterBox = false;
       this.isCloseFilter = true;
+    },
+    toggleEye () {
+      this.eyeStatus = !this.eyeStatus;
     }
   },
   computed: {
@@ -162,12 +172,26 @@ export default {
         return !rules.test(this.message);
       }
     },
+    setInputType () {
+      if (!this.eyeStatus) {
+        return this.inputType;
+      } else {
+        return 'text';
+      }
+    },
     iconImg () {
       const icon = this.isIcon;
       if (icon !== '') {
         return require(`~/assets/img/${icon}.svg`);
       } else {
         return null;
+      }
+    },
+    iconEye () {
+      if (!this.eyeStatus) {
+        return require('~/assets/img/ant-design_eye-filled.png');
+      } else {
+        return require('~/assets/img/ant-design_eye-invisible-filled.png');
       }
     },
     isAddIcon () {
@@ -228,6 +252,11 @@ export default {
   align-items: center;
   justify-content: center;
   border: 1px solid $caution-red;
+}
+.input-eye{
+  right: 10px !important;
+  left: revert !important;
+  cursor: pointer !important;
 }
 .verification{
   max-width: 105px;
