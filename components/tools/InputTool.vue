@@ -222,7 +222,7 @@ export default {
       this.$emit('inputValue', data);
       const events = this.searchInput;
       const fileList = events.filter(function (event) {
-        return event.indexOf(n) > -1 && n !== '';
+        return event.startsWith(n) && n !== '';
       });
       this.filterList = fileList;
       this.filterBox = fileList.length > 0 && !this.isCloseFilter;
