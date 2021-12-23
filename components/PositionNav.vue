@@ -572,6 +572,9 @@ export default {
         this.allLandGraphic[index] = sg.Graphic.createFromGeometry(geometry, { borderwidth: 1, fillcolor: new sg.Color(220, 105, 105, 0.5), text: this.counData.Sec5cov });
         pMapBase.drawingGraphicsLayer.add(this.allLandGraphic[index]);
 
+        console.log(geometry);
+        console.log(this.allLandGraphic[index]);
+
         this.allMetry.push(geometry);
         // 定位至最大範圍
         const extent = sg.geometry.Extent.unionall(this.allMetry.map(function (geom) { return geom.extent; }));
@@ -818,7 +821,6 @@ export default {
       }).then((response) => {
         return response.json();
       }).then((jsonData) => {
-        console.log(jsonData[0].geometry);
         // 先清除之前的
         pMapBase.drawingGraphicsLayer.remove(this.geoGraphic);
         // 畫圖

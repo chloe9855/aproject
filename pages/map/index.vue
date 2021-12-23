@@ -36,6 +36,7 @@
         @zoomOut="zoomOutCtrl"
         @backFullPic="fullMapCtrl"
         @iaList="(payload) => { totalIaList = payload }"
+        @clearAll="clearAllPage"
       />
 
       <!--     圖層工具     -->
@@ -311,6 +312,7 @@
       >
         <template #content>
           <PositionNav-component
+            ref="posNavComp"
             :ia-list="totalIaList"
           />
         </template>
@@ -795,7 +797,9 @@ export default {
   //   ]
   // },
   mounted () {
-    this.getBaseLayer();
+    setTimeout(() => {
+      this.getBaseLayer();
+    }, 5000);
 
     this.userId = sessionStorage.getItem('loginUser');
 
@@ -887,13 +891,12 @@ export default {
     },
     getMyWMTS (layerName, index) {
       this.allBaseLayer[index].layerInfo.identifier = layerName;
-      setTimeout(() => {
-        pMapBase.AddLayer(this.allBaseLayer[index]);
-        if (layerName !== 'EMAP5') {
-          this.allBaseLayer[index].hide();
-        }
-        pMapBase.RefreshMap(true);
-      }, 6000);
+
+      pMapBase.AddLayer(this.allBaseLayer[index]);
+      if (layerName !== 'EMAP5') {
+        this.allBaseLayer[index].hide();
+      }
+      pMapBase.RefreshMap(true);
     },
     //* 載入底圖 wms
     loadAllBaseLayer (layerName, index) {
@@ -973,7 +976,7 @@ export default {
     // * @ 左側搜尋 渠道查詢結果 單筆定位
     getChannelMap (info, type) {
       if (type === 'Sec5cov') {
-        this.getMapSec5(info.geometry);
+        this.getMapSec5(info.GEOMETRY);
         return;
       }
       // 畫圖
@@ -1952,9 +1955,24 @@ export default {
         localStorage.clear();
       }
     },
+    // * 清除頁面所有結果
+    clearAllPage () {
+      if (this.drawTool !== '') {
+        this.clearMeasureResult();
+      }
+      this.clearSearchResult();
+      this.clearOgcLayer();
+      // 清除定位視窗
+      this.$refs.posNavComp.clearAllHandler();
+      this.$refs.posNavComp.clearLandHandler();
+      this.$refs.posNavComp.clearCanalHandler();
+    },
     loadMbtVector () {
       setTimeout(() => {
+        console.log('c');
         if (allMBT.length < 1) { return; }
+        console.log('d');
+
         // 圖磚1
         allMBT.forEach((itemBT) => {
           if (itemBT.Style === undefined) { return; }
@@ -2228,7 +2246,7 @@ export default {
         this.layerOptions.surfaceList.sort((a, b) => { return a.id > b.id ? 1 : -1; });
 
         this.openOnceLa = false;
-      }, 5000);
+      }, 4000);
     }
 
   },
@@ -2287,13 +2305,15 @@ export default {
         }
         // 點線面圖資載入
         if (value === 'switchLayersWindow' && this.openOnceLa === true) {
+          console.log('a');
           if (allMBT.length < 1) {
             this.loadMbtVector();
             return;
           }
+          console.log('b');
           // 圖磚1
           allMBT.forEach((itemBT) => {
-            if (itemBT.Style === undefined) { return; }
+            // if (itemBT.Style === undefined) { return; }
             Object.keys(itemBT.Style.subs).forEach((key) => {
               // console.log(key);
               // console.log(itemBT.Style[key]);
@@ -2442,7 +2462,7 @@ export default {
 
           // 圖磚2
           allMBTX.forEach((itemBT) => {
-            if (itemBT.Style === undefined) { return; }
+            // if (itemBT.Style === undefined) { return; }
             Object.keys(itemBT.Style.subs).forEach((key) => {
               const mName = key.substring(3);
 

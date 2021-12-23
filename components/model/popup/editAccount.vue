@@ -131,12 +131,13 @@ import Tag from '~/components/tools/Tag.vue';
 import { addAccount, editAccount, getAccount } from '~/api/account';
 import { getGroup } from '~/api/group';
 import { groupListData, iaListData, stnListData } from '~/publish/groupListData';
-import { getGrps, getStns } from '~/publish/Irrigation1';
+import { getGrps, getIas, getStns } from '~/publish/Irrigation1';
 import AlertBox from '~/components/tools/AlertBox.vue';
 import { AccountStatus } from '~/publish/accountStatusTag';
 import SwitchOn from '~/components/tools/SwitchOn.vue';
 import PopupSubmit from '~/components/model/popup/PopupSubmit.vue';
 import { SET_RE_FETCH_DATA, TOGGLE_POPUP_STATUS } from '~/store';
+import { validatePassword } from '~/publish/validatePassword';
 
 // https://stackoverflow.com/questions/46155/whats-the-best-way-to-validate-an-email-address-in-javascript
 /**
@@ -208,10 +209,11 @@ export default {
           data: [account]
         } = await getAccount(editId);
         this.account = account;
+        this.iaList = iaListData(await getIas(undefined, this.editId));
       }
 
       const g = await getGroup();
-      this.iaList = iaListData(g);
+      this.iaList = iaListData(await getIas(undefined, this.$store.state.userInfo.account));
       this.groupList = groupListData(g);
       this.test = this.account.groupname;
 
@@ -264,7 +266,7 @@ export default {
       /** @type {Parameters<typeof editAccount>[0]} */
       const data = {
         ...this.account,
-        id: editId
+        id: [editId]
       };
 
       if (this.onPassword && this.password) {
@@ -334,17 +336,9 @@ export default {
         return false;
       }
 
-      if (
-        !/[A-Za-z]/.test(this.password) ||
-        !/[0-9]/.test(this.password) ||
-        this.password.length < 8 ||
-        this.password.length > 30
-      ) {
-        this.passwordErrorMessage = '密碼格式不符';
-        return false;
-      }
+      this.passwordErrorMessage = validatePassword(this.password);
 
-      return true;
+      return !this.passwordErrorMessage;
     },
     /**
      * @param {number} status
@@ -363,6 +357,15 @@ export default {
     /** @returns {boolean} */
     passwordConfirmIsTheSame () {
       return this.password === this.passwordConfirm;
+    },
+    /** @returns {string} */
+    editId () {
+      return this.$store.state.popupType.editId;
+    }
+  },
+  watch: {
+    editId () {
+      this.getOptions();
     }
   }
 };

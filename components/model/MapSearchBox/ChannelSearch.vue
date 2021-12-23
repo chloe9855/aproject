@@ -532,6 +532,11 @@ export default {
           Ia: this.nowIa,
           geom: geoGraphic
         };
+      } else if (this.engName === 'Section') {
+        url = '/AERC/rest/Section';
+        result = {
+          geom: geoGraphic
+        };
       } else {
         url = `/AERC/rest/${this.engName}`;
         result = {
@@ -554,6 +559,12 @@ export default {
       }).then((response) => {
         if (response.status === 403) {
           this.loadModal = false;
+          if (this.sec5Graph.length >= 1) {
+            this.sec5Graph.forEach((item) => {
+              pMapBase.drawingGraphicsLayer.remove(item);
+            });
+          }
+          this.sec5Graph = [];
           this.$emit('channelSearch', '', 'none');
           return Promise.reject(response);
         }
@@ -712,7 +723,7 @@ export default {
         const allBound = [];
         // 畫圖
         jsonData.forEach((item, index) => {
-          const geometry = sg.geometry.Geometry.fromGeoJson(item.geometry);
+          const geometry = sg.geometry.Geometry.fromGeoJson(item.GEOMETRY);
           this.sec5Graph[index] = sg.Graphic.createFromGeometry(geometry, { borderwidth: 1, fillcolor: new sg.Color(220, 105, 105, 0.5) });
           pMapBase.drawingGraphicsLayer.add(this.sec5Graph[index]);
 

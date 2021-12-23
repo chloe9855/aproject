@@ -65,6 +65,13 @@
         <div class="icon_zoomout" />
         <span>縮小</span>
       </div>
+      <div
+        class="feature__btn"
+        @click.stop="$emit('clearAll')"
+      >
+        <div class="icon_clear" />
+        <span>清除</span>
+      </div>
     </div>
   </div>
 </template>
@@ -151,7 +158,7 @@ export default {
     overflow: hidden;
 
     .feature__btn {
-      padding: 5px 0;
+      padding: 2px 0;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -172,57 +179,64 @@ export default {
 
       .icon_layer {
         background: url('~/assets/img/layer-icon.svg') no-repeat center/contain;
-        height: 22px;
-        width: 26.51px;
+        height: 20px;
+        width: 20px;
         align-items: center;
       }
 
       .icon_streetview {
         background: url('~/assets/img/streetview.svg') no-repeat center/contain;
-        height: 27px;
-        width: 26.51px;
+        height: 20px;
+        width: 20px;
         align-items: center;
       }
 
       .icon_location {
         background: url('~/assets/img/location.svg') no-repeat center/contain;
-        height: 22px;
-        width: 26.51px;
+        height: 20px;
+        width: 20px;
         align-items: center;
       }
 
       .icon_measure {
         background: url('~/assets/img/mea-icon.svg') no-repeat center/contain;
-        height: 22px;
-        width: 26.51px;
+        height: 20px;
+        width: 20px;
         align-items: center;
       }
 
       .icon_print {
         background: url('~/assets/img/print-screen.svg') no-repeat center/contain;
-        height: 22px;
-        width: 26.51px;
+        height: 20px;
+        width: 20px;
         align-items: center;
       }
 
       .icon_zoomin {
         background: url('~/assets/img/zoom-in.svg') no-repeat center/contain;
-        height: 22px;
-        width: 26.51px;
+        height: 20px;
+        width: 20px;
         align-items: center;
       }
 
       .icon_home {
         background: url('~/assets/img/home.svg') no-repeat center/contain;
-        height: 22px;
-        width: 26.51px;
+        height: 20px;
+        width: 20px;
         align-items: center;
       }
 
       .icon_zoomout {
         background: url('~/assets/img/zoom-out.svg') no-repeat center/contain;
-        height: 22px;
-        width: 26.51px;
+        height: 20px;
+        width: 20px;
+        align-items: center;
+      }
+
+      .icon_clear {
+        background: url('~/assets/img/icon_clear.svg') no-repeat center/contain;
+        height: 20px;
+        width: 20px;
         align-items: center;
       }
 
