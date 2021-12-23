@@ -9,6 +9,7 @@
         v-show="delBtn"
         :name="'button-red'"
         :text="'刪除所選'"
+        @click="delLink"
       />
       <Button
         :name="'button-add'"
@@ -16,16 +17,6 @@
         :add="true"
         @click="addFile"
       />
-      <!-- <el-dialog title="上傳">
-        <input
-          class="file"
-          name="file"
-          type="file"
-          style="height: 20px;"
-          multiple
-          @change="update"
-        >
-      </el-dialog> -->
       <input
         v-show="false"
         ref="file"
@@ -33,9 +24,6 @@
         type="file"
         @change="fileChange"
       >
-      <!-- <button @click="upload">
-        upload
-      </button> -->
     </div>
     <Table
       :key="num"
@@ -86,13 +74,15 @@ export default {
       formName: '',
       param: null,
       formData: new FormData(),
-      dataName: []
+      dataName: [],
+      delList: []
     };
   },
   methods: {
     getTableCheck (e) {
+      this.delList = e;
       if (e) {
-        if (e.length > 1) {
+        if (e.length > 0) {
           this.delBtn = true;
           e.forEach((item, i) => {
             this.dataName[i] = item.val;
@@ -145,6 +135,14 @@ export default {
       }).catch(e => {
         console.log(e);
       });
+    },
+    delLink () {
+      const delList = this.delList;
+      console.log(this.tableList.body);
+      console.log(delList);
+      this.tableList.body = this.tableList.body.filter(function (v) { return delList.indexOf(v.val) === -1; });
+      console.log(this.tableList.body);
+      this.delBtn = false;
     }
   },
   computed: {},
@@ -156,6 +154,7 @@ export default {
         dataname: this.dataName,
         category: 1
       };
+      console.log(e);
       addBulletin(data).then(r => {
         uploadBulletinFile(r.data[0].bulletinsno, r.data[0].datasno, this.formData).then(r => {
           this.formData = new FormData();

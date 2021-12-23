@@ -1,22 +1,43 @@
 <template>
   <div class="inputBox theme_scrollbar">
-    <InputVertical title="表單名稱" />
-    {{ isSubmit }}
-    <div
-      class="box"
-    >
+    <InputVertical
+      title="表單名稱"
+      :add-text="originDataSlogan"
+      @inputValue="getBulletinName"
+    />
+    <div class="buttonBox">
       <Button
-        text="新增檔案"
-        name="button-red"
-        :add="true"
+        v-show="delBtn"
+        :name="'button-red'"
+        :text="'刪除所選'"
+        @click="delLink"
       />
+      <Button
+        :name="'button-add'"
+        :text="'新增檔案'"
+        :add="true"
+        @click="addFile"
+      />
+      <input
+        v-show="false"
+        ref="file"
+        multiple
+        type="file"
+
+        @change="fileChange"
+      >
     </div>
     <Table
       :table-column="tableList"
       :is-paginate="false"
       :is-del="true"
+      :origin-input="originDataLinkList"
+      :is-no-data-bg="true"
+      @checkList="getTableCheck"
+      @tableEvent="getTableEvent"
+      @inputData="getInputData"
     />
-    <div class="buttonBox">
+    <!-- <div class="buttonBox">
       <Button
         :name="'button-default-disable'"
         :text="'取消'"
@@ -25,14 +46,14 @@
         :name="'button-primary'"
         :text="'新增'"
       />
-    </div>
+    </div> -->
   </div>
 </template>
 
 <script>
 import InputVertical from '~/components/tools/InputVertical.vue';
 import Button from '~/components/tools/Buttons.vue';
-import Table from '~/components/model/Table.vue';
+import Table from '~/components/model/TableForBulletin.vue';
 // import { bulletinInputDataName, bulletinInputData } from '~/publish/bulletinData';
 // import { addBulletin, editBulletin, uploadBulletinFile } from '~/api/bulletin';
 import { addBulletin } from '~/api/bulletin';
@@ -46,6 +67,12 @@ export default {
     isSubmit: {
       type: Boolean,
       default: false
+    },
+    originData: {
+      type: Object,
+      default: () => {
+        return {};
+      }
     }
   },
   data: () => {
@@ -55,16 +82,67 @@ export default {
           { title: '檔案名稱' },
           { title: '檔案' }
         ],
-        body: [
-          { val: 'tableData0', title: [{ type: 'input' }, { type: 'btn' }] },
-          { val: 'tableData1', title: [{ type: 'input' }, { type: 'btn' }] },
-          { val: 'tableData2', title: [{ type: 'input' }, { type: 'btn' }] },
-          { val: 'tableData3', title: [{ type: 'input' }, { type: 'btn' }] }
-        ]
-      }
+        body: []
+      },
+      originDataLinkList: {},
+      originDataSlogan: '',
+      originDataContent: '',
+      delBtn: false,
+      delList: [],
+      num: 0
     };
   },
   name: 'EditTableData',
+  methods: {
+    getTableCheck (e) {
+      this.delList = e;
+      if (e) {
+        if (e.length > 0) {
+          this.delBtn = true;
+          e.forEach((item, i) => {
+            this.dataName[i] = item.val;
+          });
+        } else {
+          this.delBtn = false;
+        };
+      }
+    },
+    getTableEvent (e) {
+      console.log(e);
+      if (e.event === 'btnEvent') {
+        this.$refs.file.click();
+      }
+    },
+    getInputData (e) {
+      e.forEach((item, i) => {
+        this.dataName[i] = item.val;
+      });
+    },
+    fileChange (e) {
+      console.log(e);
+      for (let i = 0; i < e.target.files.length; i++) {
+        this.formData.append('file', e.target.files[i]); // 用迴圈抓出多少筆再append回來
+      }
+      console.log(this.formData);
+    },
+    getFormName (e) {
+      if (e) {
+        this.formName = e;
+      }
+    },
+    delLink () {
+      const delList = this.delList;
+      console.log(this.tableList.body);
+      console.log(delList);
+      this.tableList.body = this.tableList.body.filter(function (v) { return delList.indexOf(v.val) === -1; });
+      console.log(this.tableList.body);
+      this.delBtn = false;
+    },
+    addFile () {
+      this.num += 1;
+      this.tableList.body.push({ val: `addTable${this.num}`, title: [{ type: 'input', key: `a${this.num}` }, { type: 'btn', key: `b${this.num}` }] });
+    }
+  },
   watch: {
     isSubmit: function (e) {
       console.log(e);
@@ -81,6 +159,22 @@ export default {
       }).catch(n => {
         console.log(e);
       });
+    },
+    originData (e) {
+      this.originDataLinkList = e.link;
+      this.originDataSlogan = e.slogan;
+      this.originDataContent = e.content;
+      console.log(e);
+      if (e.ID !== '') {
+        this.isEdit = true;
+      }
+      console.log(e);
+      e.rows.forEach((item) => {
+        console.log(item);
+        this.tableList.body.push({ val: `tb${this.num}`, title: [{ type: 'input', key: `a${this.num}` }, { type: 'text', key: `b${this.num}` }] });
+        this.num += 1;
+      });
+      console.log(this.tableList.body);
     }
   }
 };

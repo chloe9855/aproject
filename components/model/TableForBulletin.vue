@@ -161,7 +161,7 @@
                 :link="text"
               />
               <DropdownTreeList v-else-if="tableType(text)&&typeof text === 'object' && text.type === 'dropdownTreeList'" />
-              <span v-else>{{ text }}</span>
+              <span v-else>{{ originInput[text.key] !== undefined ? originInput[text.key] : '' }}</span>
               <span v-if="tableType(text)&&isAttachText(text)">{{ text.attachText }}</span>
             </td>
             <!-- <td
@@ -585,6 +585,9 @@ export default {
   watch: {
     'tableColumn.body': function () {
       this.tableColumnBody = this.tableColumn.body;
+    },
+    originInput: function (n) {
+      console.log(n);
     },
     checkList: function (n) {
       this.$emit('checkList', n);

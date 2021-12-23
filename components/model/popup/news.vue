@@ -97,8 +97,8 @@ export default {
     getInputData (e) {
       if (e) {
         this.InputData = e;
-        this.dataname = bulletinInputData(e);
-        this.data = bulletinInputDataName(e);
+        this.dataname = bulletinInputDataName(e);
+        this.data = bulletinInputData(e);
       }
     },
     getBulletinName (e) {
@@ -108,6 +108,7 @@ export default {
     },
     getBulletinContent (e) {
       if (e) {
+        console.log(e);
         this.bulletinContent = e;
       }
     },
@@ -151,15 +152,14 @@ export default {
           console.log(this.bulletinContent);
           console.log(this.data);
           console.log(this.dataname);
-          const datasno = [1];
+          // const datasno = [1];
 
           const data = {
-            bulletinsno: this.originData.ID,
+            bulletinsno: [this.originData.ID],
             name: this.bulletinName,
             content: this.bulletinContent,
             dataname: this.dataname,
-            data: this.data,
-            datasno: datasno
+            data: this.data
           };
           console.log('EDITDATA');
           console.log(data);
@@ -170,7 +170,15 @@ export default {
             console.log(e);
           });
         } else {
-          const data = `name=${this.bulletinName}&content=${this.bulletinContent}&data=${this.data}&dataname=${this.dataname}`;
+          // const data = `name=${this.bulletinName}&content=${this.bulletinContent}&data=${this.data}&dataname=${this.dataname}&category=0`;
+          const data = {
+            name: this.bulletinName,
+            content: this.bulletinContent,
+            dataname: this.dataname,
+            data: this.data,
+            category: 0
+          };
+          console.log(data);
           addBulletin(data).then(r => {
             console.log(r);
             this.$emit('submitSuccess', true);
@@ -184,7 +192,7 @@ export default {
       this.originDataLinkList = e.link;
       this.originDataSlogan = e.slogan;
       this.originDataContent = e.content;
-      if (e.rows.length > 0) {
+      if (e.ID !== '') {
         this.isEdit = true;
       }
       e.rows.forEach((item) => {

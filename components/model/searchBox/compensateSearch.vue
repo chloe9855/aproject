@@ -94,9 +94,13 @@ export default {
     getUserID (e) {
       if (e) {
         // this.userId = e;
-        this.userId = this.$CryptoJS.AES.decrypt(e, '農田水利灌溉管理整合雲系統').toString(this.CryptoJS.enc.Utf8);
+        // console.log(e);
+        this.userId = this.$CryptoJS.AES.encrypt(e, '農田水利灌溉管理整合雲系統').toString();
+        // console.log(this.$CryptoJS.SHA256(this.userId).toString());
+        // console.log(this.$CryptoJS.MD5(this.userId).toString());
+        // console.log(this.userId);
+        // console.log(this.$CryptoJS.AES.decrypt(this.userId, '農田水利灌溉管理整合雲系統').toString(this.CryptoJS.enc.Utf8));
         this.searchObj.id = this.userId;
-        console.log(this.searchObj.id);
         this.$emit('onsearch', { obj: this.searchObj });
       }
     },
