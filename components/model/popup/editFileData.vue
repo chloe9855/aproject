@@ -1,7 +1,7 @@
 <template>
   <div class="inputBox theme_scrollbar">
     <InputVertical
-      title="表單名稱"
+      title="文件名稱"
       :add-text="originDataSlogan"
       @inputValue="getBulletinName"
     />
@@ -79,8 +79,8 @@ export default {
     return {
       tableList: {
         head: [
-          { title: '檔案名稱' },
-          { title: '檔案' }
+          { title: '文件名稱' },
+          { title: '文件' }
         ],
         body: []
       },
@@ -89,20 +89,13 @@ export default {
       originDataContent: '',
       delBtn: false,
       delList: [],
-      num: 0,
-      bulletinName: '',
-      bulletinContent: '',
-      InputData: [],
-      dataname: [],
-      data: [],
-      isEdit: false,
-      formName: '',
-      param: null,
-      formData: new FormData(),
-      dataName: []
+      num: 0
     };
   },
-  name: 'EditTableData',
+  name: 'EditFileData',
+  mounted () {
+    console.log(this.originData);
+  },
   methods: {
     getTableCheck (e) {
       this.delList = e;
@@ -127,17 +120,6 @@ export default {
       e.forEach((item, i) => {
         this.dataName[i] = item.val;
       });
-    },
-    getBulletinName (e) {
-      if (e) {
-        this.bulletinName = e;
-      }
-    },
-    getBulletinContent (e) {
-      if (e) {
-        console.log(e);
-        this.bulletinContent = e;
-      }
     },
     fileChange (e) {
       console.log(e);
@@ -167,30 +149,23 @@ export default {
   watch: {
     isSubmit: function (e) {
       console.log(e);
-      // const data = {
-      //   name: '公告1221',
-      //   content: '',
-      //   dataname: ['檔案A', '檔案B']
-      // };
-      const data = {
-        bulletinsno: [this.originData.ID],
-        name: this.bulletinName,
-        content: this.bulletinContent,
-        dataname: this.dataname
+      data = {
+        name: '公告1221',
+        content: '',
+        dataname: ['檔案A', '檔案B']
       };
       addBulletin(data).then(r => {
-        uploadBulletinFile(r.data[0].bulletinsno, r.data[0].datasno, this.formData).then(r => {
-          this.formData = new FormData();
-          this.$store.commit('TOGGLE_POPUP_STATUS');
-          this.$emit('popupEvent', { icon: 'success', title: '已成功新增文件' });
-        }).catch(e => {
-          console.log(e);
-        });
-      }).catch(e => {
+        console.log(r);
+        // uploadBulletinFile(){
+
+        // }
+      }).catch(n => {
         console.log(e);
       });
     },
     originData (e) {
+      console.log('originData');
+      console.log(this.originData);
       this.originDataLinkList = e.link;
       this.originDataSlogan = e.slogan;
       this.originDataContent = e.content;

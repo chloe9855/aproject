@@ -161,7 +161,16 @@
                 :link="text"
               />
               <DropdownTreeList v-else-if="tableType(text)&&typeof text === 'object' && text.type === 'dropdownTreeList'" />
-              <span v-else>{{ originInput[text.key] !== undefined ? originInput[text.key] : '' }}</span>
+              <span v-else>
+                <a
+                  v-show="originInput[text.key] !== undefined"
+                  :href="originInput[text.key] !== undefined ? originInput[text.key] : ''"
+                  class="temp_bt"
+                >
+                  LINK
+                </a>
+                <!-- {{ originInput[text.key] !== undefined ? originInput[text.key] : '' }} -->
+              </span>
               <span v-if="tableType(text)&&isAttachText(text)">{{ text.attachText }}</span>
             </td>
             <!-- <td

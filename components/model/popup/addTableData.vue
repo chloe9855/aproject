@@ -154,18 +154,19 @@ export default {
         dataname: this.dataName,
         category: 1
       };
-      console.log(e);
-      addBulletin(data).then(r => {
-        uploadBulletinFile(r.data[0].bulletinsno, r.data[0].datasno, this.formData).then(r => {
-          this.formData = new FormData();
-          this.$store.commit('TOGGLE_POPUP_STATUS');
-          this.$emit('popupEvent', { icon: 'success', title: '已成功新增表單' });
+      if (e) {
+        addBulletin(data).then(r => {
+          uploadBulletinFile(r.data[0].bulletinsno, r.data[0].datasno, this.formData).then(r => {
+            this.formData = new FormData();
+            this.$store.commit('TOGGLE_POPUP_STATUS');
+            this.$emit('popupEvent', { icon: 'success', title: '已成功新增表單' });
+          }).catch(e => {
+            console.log(e);
+          });
         }).catch(e => {
           console.log(e);
         });
-      }).catch(e => {
-        console.log(e);
-      });
+      };
     }
   }
 };

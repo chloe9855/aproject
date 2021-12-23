@@ -43,6 +43,7 @@ import addTableData from '~/components/model/popup/addTableData';
 import edit from '~/components/model/popup/edit';
 import editAccount from '~/components/model/popup/editAccount';
 import editTableData from '~/components/model/popup/editTableData';
+import editFileData from '~/components/model/popup/editFileData';
 import file from '~/components/model/popup/file';
 import group from '~/components/model/popup/group';
 import news from '~/components/model/popup/news';
@@ -61,6 +62,7 @@ export default {
     edit,
     editAccount,
     editTableData,
+    editFileData,
     file,
     group,
     news,
