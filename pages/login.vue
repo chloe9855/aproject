@@ -136,9 +136,9 @@ export default {
       };
     },
     closeAlert (e) {
-      console.log(e);
       if (e) {
         this.loginError = false;
+        this.Verify();
       };
     },
     forgetPassWord () {
