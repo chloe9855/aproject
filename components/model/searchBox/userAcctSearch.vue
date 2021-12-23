@@ -2,24 +2,28 @@
   <div class="inputBox">
     <DropdownVertical
       title="群組"
+      placeholders="請選擇群組"
       :options="groupList"
       :change-text="isClear"
       @DropdownVal="getGroup"
     />
     <DropdownVertical
       title="管理處"
+      placeholders="請選擇管理處"
       :options="iaList"
       :change-text="isClear"
       @DropdownVal="getIa"
     />
     <DropdownVertical
       title="工作站"
+      placeholders="請選擇工作站"
       :options="member"
       :change-text="isClear"
       @DropdownVal="getSite"
     />
     <DropdownVertical
       title="姓名"
+      placeholders="請選擇姓名"
       :options="accountList"
       :change-text="isClear"
       @DropdownVal="getName"
@@ -45,12 +49,11 @@
  */
 
 import DropdownVertical from '~/components/tools/DropdownVertical.vue';
-// @ts-ignore
 import DatePicker from '~/components/tools/DatePickerJJ.vue';
 import { groupListData, iaListData, stnListData } from '~/publish/groupListData';
 import { getAccount } from '~/api/account';
 import { getGroup } from '~/api/group';
-import { getStns } from '~/publish/Irrigation1';
+import { getIas, getStns } from '~/publish/Irrigation1';
 
 export default {
   components: {
@@ -129,13 +132,12 @@ export default {
     async fetchOptions () {
       // const r = await getAccount(this.$store.state.userInfo.id);
       const g = await getGroup(/* r.data[0].ia */);
-      this.iaList = iaListData(g);
+      this.iaList = iaListData(await getIas(this.$store.state.userInfo.account));
       this.groupList = groupListData(g);
 
       this.fetchAccount();
     },
     async fetchSite () {
-      console.log(this.searchObj.ia);
       if (!this.searchObj.ia) {
         this.member = [];
         return;

@@ -3,7 +3,7 @@ import request from '~/service';
 
 /**
  * @typedef {import('types/Group').Group} Group
- * @typedef {{ groupsno: number, name: string, permit: string[] }} GroupEditModel
+ * @typedef {{ groupsno: number, name?: string, permit?: string[] }} GroupEditModel
  * @typedef {{ name: string, permit: string[], ia: string }} GroupAddModel
  */
 
@@ -37,6 +37,12 @@ export function addGroup (data, config) {
   return request.post('/AERC/rest/Group', data, config);
 }
 
-export function delGroup (id) {
-  return request.delete(`/AERC/rest/Group/${id}`);
+/**
+ *
+ * @param {number} id
+ * @param {import('axios').AxiosRequestConfig=} config
+ * @returns {Promise<import('axios').AxiosResponse>}
+ */
+export function delGroup (id, config) {
+  return request.delete(`/AERC/rest/Group/${id}`, config);
 }

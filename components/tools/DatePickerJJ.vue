@@ -18,6 +18,7 @@
       :type="type"
       :range="isRange"
       :editable="false"
+      :placeholder="placeholder"
       @input="onInput"
     />
   </div>
@@ -53,6 +54,10 @@ export default Vue.extend({
     inputId: {
       type: Number,
       default: 0
+    },
+    placeholder: {
+      type: String,
+      default: 'yyyy/mm/dd'
     },
     time: {
       type: String,

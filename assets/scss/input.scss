@@ -12,6 +12,13 @@
         height: 14px;
         z-index: 560;
     }
+    .input-icon-rear {
+        background: transparent;
+        border: none;
+        position: absolute;
+        right: 5px;
+        top: 6px
+    }
     .filterBox{
         position: absolute;
         background: #FFF;
@@ -112,6 +119,15 @@
     }
     &.isIcon{
         padding-left: 28px;
+    }
+    &.hasIconRear {
+        padding-right: 2em;
+
+        // disable builtin reveal in edge
+        &::-ms-reveal,
+        &::-ms-clear {
+          display: none;
+        }
     }
 }
 .dropdown {

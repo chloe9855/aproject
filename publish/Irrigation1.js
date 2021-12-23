@@ -85,8 +85,8 @@ export function getIrrigationLand (PageCnt, PageRows, query, county, town, secti
   return request.get('/aerc/rest/IrrigationLand' + (q ? `?${q.join('&')}` : ''));
 }
 
-export function getIas (data) {
-  const user = sessionStorage.getItem('loginUser');
+export function getIas (data, id) {
+  const user = id || sessionStorage.getItem('loginUser');
   return request.post(`/aerc/rest/Ia/${user}`, data);
 }
 
@@ -177,12 +177,4 @@ export function getSecNoList (county, section) {
 export function getDownloadIrrigationLand (data) {
   const secNoListRequest = '/aerc/rest/DownloadIrrigationLand';
   return request.post(secNoListRequest, data);
-}
-
-export function getFarmer (data) {
-  return request.get('/AERC/rest/Farmer');
-}
-
-export function getOwner (data) {
-  return request.post('/AERC/rest/Owner', data);
 }

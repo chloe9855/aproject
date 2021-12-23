@@ -38,10 +38,10 @@
       v-model="message"
       autocomplete="off"
       class="inputType"
-      :class="{inputError:isError,isIcon:isAddIcon, 'add_border':unfillError === true && message === '' }"
+      :class="{inputError:isError || !!externalError,isIcon:isAddIcon, 'add_border':unfillError === true && message === '', hasIconRear: !!iconRear }"
       :placeholder="inputText"
       :name="name"
-      :type="inputType"
+      :type="passwordAsText ? 'text' : inputType"
       :disabled="isDisable === true"
     >
     <img
@@ -49,6 +49,17 @@
       :src="iconImg"
       class="input-icon"
     >
+    <button
+      v-show="!!iconRear"
+      type="button"
+      class="input-icon-rear"
+      @click="passwordAsText = !passwordAsText"
+    >
+      <img
+        :src="iconRear"
+        :alt="passwordAsText ? '不顯示密碼' : '顯示密碼'"
+      >
+    </button>
     <div
       v-show="filterBox"
       class="filterBox vertical"
@@ -83,6 +94,9 @@
 </template>
 
 <script>
+import eyesFilled from '~/assets/img/ant-design_eye-filled.png';
+import eyesInvisibleFilled from '~/assets/img/ant-design_eye-invisible-filled.png';
+
 export default {
   props: {
     name: {
@@ -100,6 +114,9 @@ export default {
     errorTip: {
       type: String,
       default: '輸入文字格式錯誤'
+    },
+    externalError: {
+      type: String
     },
     isWarn: {
       type: String,
@@ -164,15 +181,11 @@ export default {
       },
       filterBox: false,
       filterList: [],
-      isCloseFilter: false
+      isCloseFilter: false,
+      passwordAsText: false
     };
   },
   name: 'InputVertical',
-  mounted () {
-    if (this.addText !== '') {
-      this.message = this.addText;
-    }
-  },
   methods: {
     selectFilter (item) {
       this.message = item;
@@ -207,13 +220,18 @@ export default {
       } else {
         return false;
       }
+    },
+    iconRear () {
+      return this.inputType !== 'password'
+        ? ''
+        : this.passwordAsText
+          ? eyesInvisibleFilled
+          : eyesFilled;
     }
   },
   watch: {
     message (n) {
-      if (n !== '') {
-        this.$emit('inputValue', n);
-      }
+      this.$emit('inputValue', n);
       const events = this.searchInput;
       const fileList = events.filter(function (event) {
         return event.indexOf(n) > -1 && n !== '';
@@ -273,6 +291,10 @@ export default {
 }
 .input-icon{
   top: 35px !important;
+}
+.input-icon-rear {
+  top: 2.4em !important;
+  z-index: 560;
 }
 
 .green_hint_text {

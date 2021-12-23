@@ -44,7 +44,6 @@
 
     <AlertBox
       v-if="showCannotRemoveAlert"
-      box-icon="error"
       title="此群組不可刪除"
       text="注意：群組刪除後不可復原"
       @close="showCannotRemoveAlert = false"
@@ -53,7 +52,6 @@
 
     <AlertBox
       v-if="singleRemoveId != null"
-      box-icon="error"
       title="確定要刪除該群組?"
       text="注意：群組刪除後不可復原"
       cancel-button
@@ -73,8 +71,8 @@
     <AlertBox
       v-if="showError"
       box-icon="error"
-      title="刪除失敗"
-      text=""
+      :title="delErrorTitle || '刪除失敗'"
+      :text="delErrorMessage"
       @close="showError = false"
       @confirm="showError = false"
     />
@@ -138,7 +136,9 @@ export default {
       showCannotRemoveAlert: false,
       singleRemoveId: null,
       showSuccess: false,
-      showError: false
+      showError: false,
+      delErrorMessage: '',
+      delErrorTitle: ''
     };
   },
   name: 'Authority',
@@ -243,15 +243,22 @@ export default {
       this.singleRemoveId = id;
     },
     async remove () {
+      this.delErrorMessage = this.delErrorTitle = '';
       if (this.singleRemoveId == null) {
         return;
       }
 
-      const { status } = await delGroup(this.singleRemoveId);
+      const { status, data } = await delGroup(this.singleRemoveId, {
+        validateStatus: () => true
+      });
 
       this.singleRemoveId = null;
       this.showSuccess = status < 300;
       this.showError = !this.showSuccess;
+      if (status === 400) {
+        this.delErrorMessage = data;
+        this.delErrorTitle = '此群組不可刪除';
+      }
     },
     removeConfirmed () {
       this.showSuccess = false;

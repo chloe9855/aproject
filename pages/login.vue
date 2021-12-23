@@ -1,7 +1,7 @@
 <template>
-  <div
+  <form
     class="loginBox"
-    @keyup.enter="login"
+    @submit.prevent="login"
   >
     <div
       class="mainLogo"
@@ -71,7 +71,7 @@
       @confirm="closeAlert"
       @close="closeAlert"
     />
-  </div>
+  </form>
 </template>
 <script crossorigin="anonymous">
 import InputHorizontal from '~/components/tools/InputHorizontal.vue';

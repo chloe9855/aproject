@@ -28,10 +28,10 @@
       <input
         v-model="message"
         class="inputType"
-        :class="[{inputError:isError,isIcon:isAddIcon,verification:isVerification}]"
+        :class="[{inputError:isError,isIcon:isAddIcon,verification:isVerification, hasIconRear: !!iconRear}]"
         :placeholder="inputText"
         :name="name"
-        :type="inputType"
+        :type="passwordAsText ? 'text' : inputType"
         :disabled="isDisable === true"
       >
       <input
@@ -50,6 +50,17 @@
         class="input-icon"
         :style="{ left : titleLength }"
       >
+      <button
+        v-show="!!iconRear"
+        type="button"
+        class="input-icon-rear"
+        @click="passwordAsText = !passwordAsText"
+      >
+        <img
+          :src="iconRear"
+          :alt="passwordAsText ? '不顯示密碼' : '顯示密碼'"
+        >
+      </button>
       <div
         v-show="filterBox"
         class="filterBox horizontal"
@@ -69,6 +80,9 @@
 </template>
 
 <script>
+import eyesFilled from '~/assets/img/ant-design_eye-filled.png';
+import eyesInvisibleFilled from '~/assets/img/ant-design_eye-invisible-filled.png';
+
 export default {
   props: {
     name: {
@@ -136,7 +150,8 @@ export default {
       },
       filterBox: false,
       filterList: [],
-      isCloseFilter: false
+      isCloseFilter: false,
+      passwordAsText: false
     };
   },
   name: 'InputHorizontal',
@@ -176,6 +191,13 @@ export default {
       } else {
         return false;
       }
+    },
+    iconRear () {
+      return this.inputType !== 'password'
+        ? ''
+        : this.passwordAsText
+          ? eyesInvisibleFilled
+          : eyesFilled;
     }
   },
   watch: {

@@ -6,7 +6,7 @@
       @inputValue="group.groupname = $event"
     />
     <DropdownVertical2
-      title="管處"
+      title="管理處"
       :options="iaOptions"
     />
 
