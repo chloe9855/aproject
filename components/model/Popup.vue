@@ -21,6 +21,7 @@
         :is-submit="submitData"
         :origin-data="getOriginData"
         @submitSuccess="getSubmit"
+        @popupEvent="popupEvent"
       />
       <PopupSubmit
         v-if="$store.state.popupType.integrateSubmit"
@@ -96,6 +97,9 @@ export default {
     },
     getSubmit () {
       this.toggleStatus();
+    },
+    popupEvent (e) {
+      this.$emit('popupEvent', e);
     }
   },
   computed: {

@@ -62,6 +62,15 @@
         :is-del="true"
       />
     </div>
+    <AlertBox
+      v-if="showAlert"
+      :box-icon="boxIcon"
+      :title="alertTitle"
+      text=""
+      :cancel-button="false"
+      @confirm="closeAlert"
+      @close="closeAlert"
+    />
   </div>
 </template>
 
@@ -70,6 +79,7 @@ import TableTool from '~/components/model/Table.vue';
 import SubTitleTool from '~/components/tools/SubTitleTool.vue';
 import PageHeader from '~/components/tools/PageHeader.vue';
 import BreadCrumbTool from '~/components/tools/BreadCrumbTool.vue';
+import AlertBox from '~/components/tools/AlertBox.vue';
 // import { editNewsData } from '~/publish/editNewsData';
 import { getBulletin, editBulletin } from '~/api/bulletin';
 import { tableData } from '~/publish/tableData';
@@ -79,7 +89,8 @@ export default {
     PageHeader,
     TableTool,
     SubTitleTool,
-    BreadCrumbTool
+    BreadCrumbTool,
+    AlertBox
   },
   data () {
     return {
@@ -111,7 +122,10 @@ export default {
       // },
       BreadCrumb: ['系統管理', '首頁資料管理'],
       delBtn: '',
-      delData: []
+      delData: [],
+      showAlert: false,
+      boxIcon: '',
+      alertTitle: ''
     };
   },
   name: 'EditNews',
@@ -193,7 +207,21 @@ export default {
       if (e.event === 'isEdit') {
         this.editAnounce(e.item);
       } else if (e.event === 'isDel') {
-        console.log('isDel');
+        const data = {
+          bulletinsno: [e.item.info],
+          status: 0
+        };
+        editBulletin(data).then(r => {
+          this.showAlert = true;
+          this.boxIcon = 'success';
+          this.alertTitle = '已成功刪除';
+          const result = this.tableList.bulletin.body.filter(item => {
+            return item.info !== e.item.info;
+          });
+          this.tableList.bulletin.body = result;
+        }).catch(e => {
+          console.log(e);
+        });
       }
     },
     getTableCheck (e) {
@@ -205,6 +233,11 @@ export default {
           this.delBtn = '';
         };
       }
+    },
+    closeAlert () {
+      this.showAlert = false;
+      this.boxIcon = '';
+      this.title = '';
     },
     delMNews () {
       const data = 'bulletinsno=[5,6]&status=1';
@@ -234,14 +267,24 @@ export default {
             slogan: data[num].name,
             content: data[num].content,
             link: {},
-            rows: []
+            rows: [],
+            datasno: []
           };
-          result.rows = data[num].dataname;
-          data[num].dataname.forEach((item, index) => {
-            result.link[`a${index}`] = item;
+          // result.rows = data[num].dataname;
+          data[num].datacontent.forEach((item) => {
+            result.rows.push(item.dataname);
           });
-          data[num].data.forEach((item, index) => {
-            result.link[`b${index}`] = item;
+          data[num].datacontent.forEach((item, index) => {
+            result.link[`a${index}`] = item.dataname;
+          });
+          data[num].datacontent.forEach((item, index) => {
+            result.link[`b${index}`] = item.data;
+          });
+          data[num].datacontent.forEach((item, index) => {
+            result.datasno.push(item.datasno);
+          });
+          data[num].datacontent.forEach((item, index) => {
+            result.link[`c${index}`] = item.datasno;
           });
           this.$store.commit('SET_FORM_DATA', result);
         }).catch((err) => {

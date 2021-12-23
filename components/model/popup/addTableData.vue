@@ -44,6 +44,7 @@
       :is-del="true"
       @checkList="getTableCheck"
       @tableEvent="getTableEvent"
+      @inputData="getInputData"
     />
   </div>
 </template>
@@ -54,8 +55,8 @@ import Button from '~/components/tools/Buttons.vue';
 import Table from '~/components/model/Table.vue';
 // import { bulletinInputDataName, bulletinInputData } from '~/publish/bulletinData';
 // import { addBulletin, editBulletin, uploadBulletinFile } from '~/api/bulletin';
-// import { addBulletin, uploadBulletinFile } from '~/api/bulletin';
-import { uploadBulletinFile } from '~/api/bulletin';
+import { addBulletin, uploadBulletinFile } from '~/api/bulletin';
+// import { uploadBulletinFile } from '~/api/bulletin';
 export default {
   components: {
     InputVertical: InputVertical,
@@ -84,7 +85,8 @@ export default {
       num: 0,
       formName: '',
       param: null,
-      formData: new FormData()
+      formData: new FormData(),
+      dataName: []
     };
   },
   methods: {
@@ -92,6 +94,9 @@ export default {
       if (e) {
         if (e.length > 1) {
           this.delBtn = true;
+          e.forEach((item, i) => {
+            this.dataName[i] = item.val;
+          });
         } else {
           this.delBtn = false;
         };
@@ -99,7 +104,14 @@ export default {
     },
     getTableEvent (e) {
       console.log(e);
-      this.$refs.file.click();
+      if (e.event === 'btnEvent') {
+        this.$refs.file.click();
+      }
+    },
+    getInputData (e) {
+      e.forEach((item, i) => {
+        this.dataName[i] = item.val;
+      });
     },
     addFile () {
       this.num += 1;
@@ -138,25 +150,20 @@ export default {
   computed: {},
   watch: {
     isSubmit: function (e) {
-      // console.log(e);
-      // const data = {
-      //   name: '公告1221',
-      //   content: '',
-      //   dataname: ['檔案A', '檔案B']
-      // };
-      // addBulletin(data).then(r => {
-      //   console.log(r);
-      //   console.log(this.param);
-      //   uploadBulletinFile(this.param).then(r => {
-      //     console.log(r);
-      //   }).catch(e => {
-      //     console.log(e);
-      //   });
-      // }).catch(n => {
-      //   console.log(e);
-      // });
-      uploadBulletinFile(this.formData).then(r => {
-        console.log(r);
+      const data = {
+        name: this.formName,
+        content: '',
+        dataname: this.dataName,
+        category: 1
+      };
+      addBulletin(data).then(r => {
+        uploadBulletinFile(r.data[0].bulletinsno, r.data[0].datasno, this.formData).then(r => {
+          this.formData = new FormData();
+          this.$store.commit('TOGGLE_POPUP_STATUS');
+          this.$emit('popupEvent', { icon: 'success', title: '已成功新增表單' });
+        }).catch(e => {
+          console.log(e);
+        });
       }).catch(e => {
         console.log(e);
       });
