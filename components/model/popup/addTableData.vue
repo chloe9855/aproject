@@ -10,13 +10,13 @@
         :name="'button-red'"
         :text="'刪除所選'"
       />
-      <!-- <Button
+      <Button
         :name="'button-add'"
         :text="'新增檔案'"
         :add="true"
         @click="addFile"
-      /> -->
-      <el-dialog title="上傳">
+      />
+      <!-- <el-dialog title="上傳">
         <input
           class="file"
           name="file"
@@ -25,7 +25,17 @@
           multiple
           @change="update"
         >
-      </el-dialog>
+      </el-dialog> -->
+      <input
+        v-show="false"
+        ref="file"
+        multiple
+        type="file"
+        @change="fileChange"
+      >
+      <!-- <button @click="upload">
+        upload
+      </button> -->
     </div>
     <Table
       :key="num"
@@ -33,6 +43,7 @@
       :is-paginate="false"
       :is-del="true"
       @checkList="getTableCheck"
+      @tableEvent="getTableEvent"
     />
   </div>
 </template>
@@ -43,7 +54,8 @@ import Button from '~/components/tools/Buttons.vue';
 import Table from '~/components/model/Table.vue';
 // import { bulletinInputDataName, bulletinInputData } from '~/publish/bulletinData';
 // import { addBulletin, editBulletin, uploadBulletinFile } from '~/api/bulletin';
-import { addBulletin, uploadBulletinFile } from '~/api/bulletin';
+// import { addBulletin, uploadBulletinFile } from '~/api/bulletin';
+import { uploadBulletinFile } from '~/api/bulletin';
 export default {
   components: {
     InputVertical: InputVertical,
@@ -71,7 +83,8 @@ export default {
       delBtn: false,
       num: 0,
       formName: '',
-      param: null
+      param: null,
+      formData: new FormData()
     };
   },
   methods: {
@@ -84,6 +97,10 @@ export default {
         };
       }
     },
+    getTableEvent (e) {
+      console.log(e);
+      this.$refs.file.click();
+    },
     addFile () {
       this.num += 1;
       this.tableList.body.push({ val: `addTable${this.num}`, title: [{ type: 'input', key: `a${this.num}` }, { type: 'btn', key: `b${this.num}` }] });
@@ -95,34 +112,52 @@ export default {
     },
     update (e) {
       console.log(e);
-      // const that = this;
       const file = e.target.files[0];
       const param = new FormData(); // 建立form物件
       param.append('file', file);// 通過append向form物件新增資料
-
       console.log(param);
       this.param = param;
       console.log(this.param);
+    },
+    fileChange (e) {
+      console.log(e);
+      for (let i = 0; i < e.target.files.length; i++) {
+        this.formData.append('file', e.target.files[i]); // 用迴圈抓出多少筆再append回來
+      }
+      console.log(this.formData);
+    },
+    upload () {
+      // axios.post('http://localhost:11084/api/value/', this.formData);
+      uploadBulletinFile(this.formData).then(r => {
+        console.log(r);
+      }).catch(e => {
+        console.log(e);
+      });
     }
   },
   computed: {},
   watch: {
     isSubmit: function (e) {
-      console.log(e);
-      const data = {
-        name: '公告1221',
-        content: '',
-        dataname: ['檔案A', '檔案B']
-      };
-      addBulletin(data).then(r => {
+      // console.log(e);
+      // const data = {
+      //   name: '公告1221',
+      //   content: '',
+      //   dataname: ['檔案A', '檔案B']
+      // };
+      // addBulletin(data).then(r => {
+      //   console.log(r);
+      //   console.log(this.param);
+      //   uploadBulletinFile(this.param).then(r => {
+      //     console.log(r);
+      //   }).catch(e => {
+      //     console.log(e);
+      //   });
+      // }).catch(n => {
+      //   console.log(e);
+      // });
+      uploadBulletinFile(this.formData).then(r => {
         console.log(r);
-        console.log(this.param);
-        uploadBulletinFile(this.param).then(r => {
-          console.log(r);
-        }).catch(e => {
-          console.log(e);
-        });
-      }).catch(n => {
+      }).catch(e => {
         console.log(e);
       });
     }
