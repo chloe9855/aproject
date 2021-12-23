@@ -10,12 +10,22 @@
         :name="'button-red'"
         :text="'刪除所選'"
       />
-      <Button
+      <!-- <Button
         :name="'button-add'"
         :text="'新增檔案'"
         :add="true"
         @click="addFile"
-      />
+      /> -->
+      <el-dialog title="上傳">
+        <input
+          class="file"
+          name="file"
+          type="file"
+          style="height: 20px;"
+          multiple
+          @change="update"
+        >
+      </el-dialog>
     </div>
     <Table
       :key="num"
@@ -31,11 +41,20 @@
 import InputVertical from '~/components/tools/InputVertical.vue';
 import Button from '~/components/tools/Buttons.vue';
 import Table from '~/components/model/Table.vue';
+// import { bulletinInputDataName, bulletinInputData } from '~/publish/bulletinData';
+// import { addBulletin, editBulletin, uploadBulletinFile } from '~/api/bulletin';
+import { addBulletin, uploadBulletinFile } from '~/api/bulletin';
 export default {
   components: {
     InputVertical: InputVertical,
     Button: Button,
     Table: Table
+  },
+  props: {
+    isSubmit: {
+      type: Boolean,
+      default: false
+    }
   },
   data: () => {
     return {
@@ -51,7 +70,8 @@ export default {
       },
       delBtn: false,
       num: 0,
-      formName: ''
+      formName: '',
+      param: null
     };
   },
   methods: {
@@ -72,9 +92,41 @@ export default {
       if (e) {
         this.formName = e;
       }
+    },
+    update (e) {
+      console.log(e);
+      // const that = this;
+      const file = e.target.files[0];
+      const param = new FormData(); // 建立form物件
+      param.append('file', file);// 通過append向form物件新增資料
+
+      console.log(param);
+      this.param = param;
+      console.log(this.param);
     }
   },
-  computed: {}
+  computed: {},
+  watch: {
+    isSubmit: function (e) {
+      console.log(e);
+      const data = {
+        name: '公告1221',
+        content: '',
+        dataname: ['檔案A', '檔案B']
+      };
+      addBulletin(data).then(r => {
+        console.log(r);
+        console.log(this.param);
+        uploadBulletinFile(this.param).then(r => {
+          console.log(r);
+        }).catch(e => {
+          console.log(e);
+        });
+      }).catch(n => {
+        console.log(e);
+      });
+    }
+  }
 };
 </script>
 

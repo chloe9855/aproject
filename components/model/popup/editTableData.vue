@@ -1,6 +1,7 @@
 <template>
   <div class="inputBox theme_scrollbar">
     <InputVertical title="表單名稱" />
+    {{ isSubmit }}
     <div
       class="box"
     >
@@ -32,11 +33,20 @@
 import InputVertical from '~/components/tools/InputVertical.vue';
 import Button from '~/components/tools/Buttons.vue';
 import Table from '~/components/model/Table.vue';
+// import { bulletinInputDataName, bulletinInputData } from '~/publish/bulletinData';
+// import { addBulletin, editBulletin, uploadBulletinFile } from '~/api/bulletin';
+import { addBulletin } from '~/api/bulletin';
 export default {
   components: {
     InputVertical,
     Button,
     Table
+  },
+  props: {
+    isSubmit: {
+      type: Boolean,
+      default: false
+    }
   },
   data: () => {
     return {
@@ -54,7 +64,25 @@ export default {
       }
     };
   },
-  name: 'EditTableData'
+  name: 'EditTableData',
+  watch: {
+    isSubmit: function (e) {
+      console.log(e);
+      data = {
+        name: '公告1221',
+        content: '',
+        dataname: ['檔案A', '檔案B']
+      };
+      addBulletin(data).then(r => {
+        console.log(r);
+        // uploadBulletinFile(){
+
+        // }
+      }).catch(n => {
+        console.log(e);
+      });
+    }
+  }
 };
 </script>
 
