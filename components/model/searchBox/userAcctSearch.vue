@@ -50,10 +50,10 @@
 
 import DropdownVertical from '~/components/tools/DropdownVertical.vue';
 import DatePicker from '~/components/tools/DatePickerJJ.vue';
-import { groupListData, iaListData, stnListData } from '~/publish/groupListData';
-import { getAccount } from '~/api/account';
+import { groupListData, stnListData } from '~/publish/groupListData';
 import { getGroup } from '~/api/group';
-import { getIas, getStns } from '~/publish/Irrigation1';
+import { getStns } from '~/publish/Irrigation1';
+import { getIaOptionFromAccount } from '~/publish/accountData';
 
 export default {
   components: {
@@ -73,6 +73,9 @@ export default {
       type: Object,
       required: true
     },
+    accounts: {
+      type: /** @type {import('vue').PropType<import('types/Account').Account[]>} */(Array)
+    },
     isClear: {
       type: Boolean,
       default: false
@@ -82,10 +85,8 @@ export default {
     return {
       searchObj: this.searchObjProp,
       member: [],
-      iaList: [],
       group: [],
-      groupList: [],
-      accountList: []
+      groupList: []
     };
   },
   name: 'UserAcctSearch',
@@ -132,10 +133,7 @@ export default {
     async fetchOptions () {
       // const r = await getAccount(this.$store.state.userInfo.id);
       const g = await getGroup(/* r.data[0].ia */);
-      this.iaList = iaListData(await getIas(this.$store.state.userInfo.account));
       this.groupList = groupListData(g);
-
-      this.fetchAccount();
     },
     async fetchSite () {
       if (!this.searchObj.ia) {
@@ -145,13 +143,17 @@ export default {
 
       const res = await getStns(this.searchObj.ia);
       this.member = stnListData(res);
+    }
+  },
+  computed: {
+    /** @returns {DropdownVerticalOption[]} */
+    iaList () {
+      return getIaOptionFromAccount(this.accounts);
     },
-    async fetchAccount () {
-      /** @type {{ data: Array<{ account: string, name: string }> }} */
-      const { data } = await getAccount();
-
-      this.accountList = data.map(account => ({
-        val: account.account,
+    /** @returns {DropdownVerticalOption[]} */
+    accountList () {
+      return this.accounts.map(account => ({
+        value: account.account,
         title: account.name
       }));
     }

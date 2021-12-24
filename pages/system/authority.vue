@@ -43,14 +43,6 @@
     </Search>
 
     <AlertBox
-      v-if="showCannotRemoveAlert"
-      title="此群組不可刪除"
-      text="注意：群組刪除後不可復原"
-      @close="showCannotRemoveAlert = false"
-      @confirm="showCannotRemoveAlert = false"
-    />
-
-    <AlertBox
       v-if="singleRemoveId != null"
       title="確定要刪除該群組?"
       text="注意：群組刪除後不可復原"
@@ -89,7 +81,6 @@ import { delGroup, getGroup } from '~/api/group';
 import { groupData } from '~/publish/groupData';
 import GroupUserAcctSearch from '~/components/model/searchBox/groupUserAcctSearch.vue';
 import dayjs from 'dayjs';
-import { getAccount } from '~/api/account';
 import AlertBox from '~/components/tools/AlertBox.vue';
 
 const getDefaultSearchObj = () => ({
@@ -190,7 +181,7 @@ export default {
         });
       } else if (e.event === 'isDel') {
         console.log(e);
-        this.checkAndShowRemove(e.item.val);
+        this.singleRemoveId = e.item.val;
       }
     },
     // getTableCheck (e) {
@@ -217,10 +208,10 @@ export default {
         filtered = filtered.filter(g => dayjs(g.updatetime) >= startTime);
       }
 
-      if (this.searchObj.startTime) {
+      if (this.searchObj.endTime) {
         const endTime = dayjs(this.searchObj.endTime);
 
-        filtered = filtered.filter(g => dayjs(g.updatetime) >= endTime);
+        filtered = filtered.filter(g => dayjs(g.updatetime) < endTime);
       }
 
       this.tableList.body = groupData(filtered);
@@ -228,19 +219,6 @@ export default {
     onClear () {
       this.searchObj = getDefaultSearchObj();
       this.tableList.body = groupData(this.groups);
-    },
-    /**
-     * @param {number} id
-     */
-    async checkAndShowRemove (id) {
-      const { data: accounts } = await getAccount();
-
-      if (accounts.find(a => a.groupsno === id)) {
-        this.showCannotRemoveAlert = true;
-        return;
-      }
-
-      this.singleRemoveId = id;
     },
     async remove () {
       this.delErrorMessage = this.delErrorTitle = '';

@@ -210,10 +210,11 @@ export default {
         } = await getAccount(editId);
         this.account = account;
         this.iaList = iaListData(await getIas(undefined, this.editId));
+      } else {
+        this.iaList = getIaOptionFromAccount((await getAccount()).data);
       }
 
       const g = await getGroup();
-      this.iaList = iaListData(await getIas(undefined, this.$store.state.userInfo.account));
       this.groupList = groupListData(g);
       this.test = this.account.groupname;
 
@@ -254,7 +255,7 @@ export default {
       this.$store.commit(TOGGLE_POPUP_STATUS);
 
       this.showSuccess = false;
-      this.account = /** @type {import('types/Account').Account} */({});
+      this.getOptions();
     },
     async editSubmit () {
       const editId = this.getEditId();

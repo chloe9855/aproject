@@ -3,6 +3,7 @@
     <InputVertical
       title="群組名稱"
       :default-data="group.groupname"
+      :is-disable="!!group.groupsno"
       @inputValue="group.groupname = $event"
     />
     <DropdownVertical2
@@ -178,7 +179,6 @@ export default {
       let res;
       if (this.group.groupsno) {
         res = await editGroup({
-          name: this.group.groupname,
           permit: this.group.permit,
           groupsno: this.group.groupsno
         }, {

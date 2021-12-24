@@ -45,6 +45,7 @@
         <UserAcctSearch
           :is-clear="isClear"
           :search-obj-prop="searchObj"
+          :accounts="accountList"
         />
       </template>
     </Search>

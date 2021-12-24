@@ -181,7 +181,8 @@ export default {
         {
           id: [this.account],
           password: this.password1,
-          token: this.token
+          token: this.token,
+          status: 1
         },
         {
           validateStatus: () => true
