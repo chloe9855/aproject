@@ -420,6 +420,15 @@ export default {
         this.showAlert = true;
         this.boxIcon = 'success';
         this.alertTitle = '已成功';
+        // const _this = this;
+        getBulletin().then(data => {
+          console.log(data);
+          this.tableList.bulletin.body = tableData(data.data, 0);
+          this.tableList.tableData.body = tableData(data.data, 1);
+          this.tableList.FileData.body = tableData(data.data, 2);
+        }).catch(e => {
+          console.log(e);
+        });
       }
       console.log(e);
     }

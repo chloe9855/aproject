@@ -166,6 +166,7 @@ export default {
           editBulletin(data).then(r => {
             console.log(r);
             // this.$emit('submitSuccess', true);
+            this.$store.commit('SET_POPUP_STATUS', { status: true });
           }).catch(e => {
             console.log(e);
           });

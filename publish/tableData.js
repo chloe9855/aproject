@@ -7,7 +7,7 @@ export function tableData (data, category = 0) {
       dataname.push(item.dataname);
     });
     element.datacontent.forEach(item => {
-      dataContent.push(item.dataname);
+      dataContent.push(item.data);
     });
     const titleObj = [];
     const linkObj = { type: 'link', data: dataname, url: dataContent };
