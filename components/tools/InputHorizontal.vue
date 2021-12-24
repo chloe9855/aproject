@@ -50,12 +50,6 @@
         class="input-icon"
         :style="{ left : titleLength }"
       >
-      <img
-        v-show="isAddIcon && inputType === 'password'"
-        :src="iconEye"
-        class="input-icon input-eye"
-        @click="toggleEye"
-      >
       <button
         v-show="!!iconRear"
         type="button"
@@ -152,8 +146,7 @@ export default {
       secondMessage: '',
       titleLength: '80px',
       RegExpType: {
-        code8: '^.{8}$',
-        userId: '^[A-Z]{1}.[0-9]{8}'
+        code8: '^.{8}$'
       },
       filterBox: false,
       filterList: [],
@@ -170,9 +163,6 @@ export default {
       this.message = item;
       this.filterBox = false;
       this.isCloseFilter = true;
-    },
-    toggleEye () {
-      this.eyeStatus = !this.eyeStatus;
     }
   },
   computed: {
@@ -186,26 +176,12 @@ export default {
         return !rules.test(this.message);
       }
     },
-    setInputType () {
-      if (!this.eyeStatus) {
-        return this.inputType;
-      } else {
-        return 'text';
-      }
-    },
     iconImg () {
       const icon = this.isIcon;
       if (icon !== '') {
         return require(`~/assets/img/${icon}.svg`);
       } else {
         return null;
-      }
-    },
-    iconEye () {
-      if (!this.eyeStatus) {
-        return require('~/assets/img/ant-design_eye-filled.png');
-      } else {
-        return require('~/assets/img/ant-design_eye-invisible-filled.png');
       }
     },
     isAddIcon () {
@@ -229,7 +205,7 @@ export default {
       this.$emit('inputValue', n);
       const events = this.searchInput;
       const fileList = events.filter(function (event) {
-        return event.startsWith(n) && n !== '';
+        return event.indexOf(n) > -1 && n !== '';
       });
       this.filterList = fileList;
       this.filterBox = fileList.length > 0 && !this.isCloseFilter;
@@ -247,11 +223,8 @@ export default {
 .error-hinit {
   margin-bottom: 2px;
   display: flex;
-  // align-items: center;
-  // justify-content: flex-end;
-  position: absolute;
-  right: 0;
-  top: -20px;
+  align-items: center;
+  justify-content: flex-end;
 }
 .inputtitle-horizontal-error {
   display: flex;
@@ -273,11 +246,6 @@ export default {
   align-items: center;
   justify-content: center;
   border: 1px solid $caution-red;
-}
-.input-eye{
-  right: 10px !important;
-  left: revert !important;
-  cursor: pointer !important;
 }
 .verification{
   max-width: 105px;
