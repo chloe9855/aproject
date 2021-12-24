@@ -1,8 +1,16 @@
 export function tableData (data, category = 0) {
   const body = [];
   data.forEach((element) => {
+    const dataname = [];
+    const dataContent = [];
+    element.datacontent.forEach(item => {
+      dataname.push(item.dataname);
+    });
+    element.datacontent.forEach(item => {
+      dataContent.push(item.data);
+    });
     const titleObj = [];
-    const linkObj = { type: 'link', data: element.dataname, url: element.data };
+    const linkObj = { type: 'link', data: dataname, url: dataContent };
     const timeArr = element.publishtime.split('T');
     const myTime = `${timeArr[0]} ${timeArr[1]}`;
 

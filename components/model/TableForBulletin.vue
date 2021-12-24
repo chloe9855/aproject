@@ -133,6 +133,7 @@
                 v-else-if="tableType(text)&&typeof text === 'object' && text.type === 'btn'"
                 :name="'button-primary'"
                 :text="text.title"
+                @click="sendEvent('btnEvent', item, index)"
               />
               <Input
                 v-else-if="tableType(text)&&typeof text === 'object' && text.type === 'input'"
@@ -161,7 +162,16 @@
                 :link="text"
               />
               <DropdownTreeList v-else-if="tableType(text)&&typeof text === 'object' && text.type === 'dropdownTreeList'" />
-              <span v-else>{{ text }}</span>
+              <span v-else>
+                <a
+                  v-show="originInput[text.key] !== undefined"
+                  :href="originInput[text.key] !== undefined ? originInput[text.key] : ''"
+                  class="temp_bt"
+                >
+                  檔案連結
+                </a>
+                <!-- {{ originInput[text.key] !== undefined ? originInput[text.key] : '' }} -->
+              </span>
               <span v-if="tableType(text)&&isAttachText(text)">{{ text.attachText }}</span>
             </td>
             <!-- <td
@@ -185,7 +195,7 @@
               v-show="isDel && !isScrollTable"
               class="delOption"
             >
-              <div @click="sendEvent('isDel')">
+              <div @click="sendEvent('isDel',item,index)">
                 <img
                   alt=""
                   class="vector"
@@ -267,7 +277,7 @@
               v-show="isDel"
               class="delOption"
             >
-              <div @click="sendEvent('isDel',item)">
+              <div @click="sendEvent('isDel',item,index)">
                 <img
                   alt=""
                   class="vector"
@@ -440,8 +450,6 @@ export default {
     } else {
       this.tableColumnBody = this.tableColumn.body;
     }
-    console.log('table');
-    console.log(this.tableColumn);
   },
   methods: {
     inputVal (e) { // 取得INPUT內容
@@ -585,6 +593,9 @@ export default {
   watch: {
     'tableColumn.body': function () {
       this.tableColumnBody = this.tableColumn.body;
+    },
+    originInput: function (n) {
+      console.log(n);
     },
     checkList: function (n) {
       this.$emit('checkList', n);

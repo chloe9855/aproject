@@ -134,6 +134,7 @@
                 v-else-if="tableType(text)&&typeof text === 'object' && text.type === 'btn'"
                 :name="'button-primary'"
                 :text="text.title"
+                @click="sendEvent('btnEvent', item, index)"
               />
               <Input
                 v-else-if="tableType(text)&&typeof text === 'object' && text.type === 'input'"

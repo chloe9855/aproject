@@ -11,3 +11,9 @@ export function editBulletin (data) {
 export function addBulletin (data) {
   return request.post('/AERC/rest/Bulletin', data);
 }
+
+export function uploadBulletinFile (bulletInSNo, datasno, data) {
+  const urlData = bulletInSNo;
+  const dataSNo = datasno.toString();
+  return request.post(`/AERC/rest/BulletinUploader/${urlData}/${dataSNo}`, data);
+}

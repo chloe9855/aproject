@@ -64,7 +64,8 @@ export default {
     }
   },
   methods: {
-    sendTextContent () {
+    sendTextContent (e) {
+      console.log(e);
       this.$emit('textContent', this.textContent);
     }
   },

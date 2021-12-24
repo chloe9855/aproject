@@ -44,6 +44,10 @@ export default {
     title: {
       type: String,
       default: ''
+    },
+    isClear: {
+      type: Boolean,
+      default: false
     }
   },
   data: () => {
@@ -130,6 +134,16 @@ export default {
       console.log(payload);
       this.searchObj.Grp = payload;
       this.$emit('onsearch', { obj: this.searchObj });
+    }
+  },
+  watch: {
+    isClear (n) {
+      if (n) {
+        this.member.Ia = [];
+        this.member.Mng = [];
+        this.member.Stn = [];
+        this.member.Grp = [];
+      }
     }
   }
 };

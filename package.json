@@ -27,6 +27,7 @@
     "postcss-scss": "^4.0.0",
     "sass-loader": "^10.1.1",
     "vue-cookies": "^1.7.4",
+    "vue-cryptojs": "^2.2.1",
     "vue-draggable-resizable": "^2.3.0",
     "vue-html2canvas": "0.0.4",
     "vue-plain-pagination": "^0.3.0",

@@ -1,7 +1,7 @@
 <template>
   <div class="inputBox theme_scrollbar">
     <InputVertical
-      title="表單名稱"
+      title="文件名稱"
       :add-text="originDataSlogan"
       @inputValue="getBulletinName"
     />
@@ -56,6 +56,7 @@ import Button from '~/components/tools/Buttons.vue';
 import Table from '~/components/model/TableForBulletin.vue';
 // import { bulletinInputDataName, bulletinInputData } from '~/publish/bulletinData';
 // import { addBulletin, editBulletin, uploadBulletinFile } from '~/api/bulletin';
+// import { addBulletin } from '~/api/bulletin';
 import { editBulletin, uploadBulletinFile } from '~/api/bulletin';
 export default {
   components: {
@@ -79,8 +80,8 @@ export default {
     return {
       tableList: {
         head: [
-          { title: '檔案名稱' },
-          { title: '檔案' }
+          { title: '文件名稱' },
+          { title: '文件' }
         ],
         body: []
       },
@@ -95,7 +96,6 @@ export default {
       bulletinName: '',
       bulletinContent: '',
       InputData: [],
-      // dataname: [],
       data: [],
       isEdit: false,
       formName: '',
@@ -105,7 +105,8 @@ export default {
       fileNum: 0
     };
   },
-  name: 'EditTableData',
+  name: 'EditFileData',
+  mounted () {},
   methods: {
     getTableCheck (e) {
       this.delList = e;
@@ -148,6 +149,7 @@ export default {
     fileChange (e) {
       for (let i = 0; i < e.target.files.length; i++) {
         this.formData.append('file', e.target.files[i]); // 用迴圈抓出多少筆再append回來
+        this.fileNum += i;
       }
       this.fileNum = e.target.files.length;
     },
@@ -189,7 +191,6 @@ export default {
             uploadBulletinFile(r.data[0].bulletinsno, r.data[0].datasno, this.formData).then(r => {
               this.formData = new FormData();
               this.$store.commit('SET_POPUP_STATUS', { status: true });
-              // this.$emit('popupEvent', { icon: 'success', title: '已成功編輯文件' });
             }).catch(e => {
               console.log(e);
             });
@@ -209,9 +210,7 @@ export default {
       this.originDataData = e.data;
       if (e.bulletinsno !== '') {
         this.isEdit = true;
-        // this.tableList.body = [];
       }
-
       e.rows.forEach((item) => {
         // console.log(item);
         // this.tableList.body.push({ val: `tb${this.num}`, title: [{ type: 'input', key: `a${this.num}` }, { type: 'text', key: `b${this.num}` }] });

@@ -11,6 +11,7 @@
       <InputHorizontal
         class="flex-3"
         title="代理人身分證字號"
+        is-warn="userId"
         input-text="請輸入代理人身分證字號"
         :change-text="dataList.id"
         @inputValue="getAgentID"

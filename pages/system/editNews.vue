@@ -54,14 +54,25 @@
         :is-paginate="false"
         :is-edit="true"
         :is-del="true"
+        @tableEvent="changeTable"
       />
       <TableTool
         :table-column="tableList.fileData"
         :is-paginate="false"
         :is-edit="true"
         :is-del="true"
+        @tableEvent="changeFile"
       />
     </div>
+    <AlertBox
+      v-if="showAlert"
+      :box-icon="boxIcon"
+      :title="alertTitle"
+      text=""
+      :cancel-button="false"
+      @confirm="closeAlert"
+      @close="closeAlert"
+    />
   </div>
 </template>
 
@@ -70,6 +81,7 @@ import TableTool from '~/components/model/Table.vue';
 import SubTitleTool from '~/components/tools/SubTitleTool.vue';
 import PageHeader from '~/components/tools/PageHeader.vue';
 import BreadCrumbTool from '~/components/tools/BreadCrumbTool.vue';
+import AlertBox from '~/components/tools/AlertBox.vue';
 // import { editNewsData } from '~/publish/editNewsData';
 import { getBulletin, editBulletin } from '~/api/bulletin';
 import { tableData } from '~/publish/tableData';
@@ -79,7 +91,8 @@ export default {
     PageHeader,
     TableTool,
     SubTitleTool,
-    BreadCrumbTool
+    BreadCrumbTool,
+    AlertBox
   },
   data () {
     return {
@@ -111,7 +124,10 @@ export default {
       // },
       BreadCrumb: ['系統管理', '首頁資料管理'],
       delBtn: '',
-      delData: []
+      delData: [],
+      showAlert: false,
+      boxIcon: '',
+      alertTitle: ''
     };
   },
   name: 'EditNews',
@@ -164,7 +180,6 @@ export default {
   },
   methods: {
     addNews (e) {
-      console.log(e);
       this.$store.commit('SET_FORM_DATA', {
         ID: '',
         slogan: '',
@@ -186,14 +201,138 @@ export default {
     addFile (e) {
       if (e) {
         this.$store.commit('TOGGLE_POPUP_STATUS');
-        this.$store.commit('TOGGLE_POPUP_TYPE', { type: 'file', title: '新增文件資料' });
+        this.$store.commit('TOGGLE_POPUP_TYPE', { type: 'addFileData', title: '新增文件資料' });
       }
     },
     changeGroup (e) {
       if (e.event === 'isEdit') {
         this.editAnounce(e.item);
       } else if (e.event === 'isDel') {
-        console.log('isDel');
+        const data = {
+          bulletinsno: [e.item.info],
+          status: 0
+        };
+        editBulletin(data).then(r => {
+          this.showAlert = true;
+          this.boxIcon = 'success';
+          this.alertTitle = '已成功刪除';
+          const result = this.tableList.bulletin.body.filter(item => {
+            return item.info !== e.item.info;
+          });
+          this.tableList.bulletin.body = result;
+        }).catch(e => {
+          console.log(e);
+        });
+      }
+    },
+    changeTable (e) {
+      if (e.event === 'isEdit') {
+        this.$store.commit('TOGGLE_POPUP_STATUS');
+        this.$store.commit('TOGGLE_POPUP_TYPE', { type: 'editTableData', title: '編輯表單' });
+        fetch(`/AERC/rest/Bulletin?ID=${e.item.info}`, {
+          method: 'GET',
+          headers: new Headers({
+            'Content-Type': 'application/json'
+          })
+        }).then((response) => {
+          return response.json();
+        }).then((data) => {
+          const result = {
+            bulletinsno: data[0].bulletinsno,
+            slogan: data[0].name,
+            content: data[0].content,
+            link: {},
+            name: [],
+            data: [],
+            rows: []
+          };
+          // result.rows = data[num].dataname;
+          data[0].datacontent.forEach((item) => {
+            result.rows.push(item.dataname);
+          });
+          data[0].datacontent.forEach((item, index) => {
+            result.link[`a${index}`] = item.dataname;
+            result.name.push(item.dataname);
+          });
+          data[0].datacontent.forEach((item, index) => {
+            result.link[`b${index}`] = item.data;
+            result.data.push(item.data);
+          });
+          this.$store.commit('SET_FORM_DATA', result);
+        }).catch(e => {
+          console.log(e);
+        });
+      } else if (e.event === 'isDel') {
+        const data = {
+          bulletinsno: [e.item.info],
+          status: 0
+        };
+        editBulletin(data).then(r => {
+          this.showAlert = true;
+          this.boxIcon = 'success';
+          this.alertTitle = '已成功刪除';
+          const result = this.tableList.tableData.body.filter(item => {
+            return item.info !== e.item.info;
+          });
+          this.tableList.tableData.body = result;
+        }).catch(e => {
+          console.log(e);
+        });
+      }
+    },
+    changeFile (e) {
+      if (e.event === 'isEdit') {
+        this.$store.commit('TOGGLE_POPUP_STATUS');
+        this.$store.commit('TOGGLE_POPUP_TYPE', { type: 'editFileData', title: '編輯文件A' });
+        fetch(`/AERC/rest/Bulletin?ID=${e.item.info}`, {
+          method: 'GET',
+          headers: new Headers({
+            'Content-Type': 'application/json'
+          })
+        }).then((response) => {
+          return response.json();
+        }).then((data) => {
+          const result = {
+            bulletinsno: data[0].bulletinsno,
+            slogan: data[0].name,
+            content: data[0].content,
+            name: [],
+            data: [],
+            link: {},
+            rows: []
+          };
+          // result.rows = data[num].dataname;
+          data[0].datacontent.forEach((item) => {
+            result.rows.push(item.dataname);
+          });
+          data[0].datacontent.forEach((item, index) => {
+            result.link[`a${index}`] = item.dataname;
+            result.name.push(item.dataname);
+          });
+          data[0].datacontent.forEach((item, index) => {
+            result.link[`b${index}`] = item.data;
+            result.data.push(item.data);
+          });
+          this.$store.commit('SET_FORM_DATA', result);
+        }).catch(e => {
+          console.log(e);
+        });
+      } else if (e.event === 'isDel') {
+        const data = {
+          bulletinsno: [e.item.info],
+          status: 0
+        };
+        editBulletin(data).then(r => {
+          this.showAlert = true;
+          this.boxIcon = 'success';
+          this.alertTitle = '已成功刪除';
+          const result = this.tableList.fileData.body.filter(item => {
+            return item.info !== e.item.info;
+          });
+          this.tableList.fileData.body = result;
+        }).catch(e => {
+          console.log(e);
+        });
       }
     },
     getTableCheck (e) {
@@ -205,6 +344,11 @@ export default {
           this.delBtn = '';
         };
       }
+    },
+    closeAlert () {
+      this.showAlert = false;
+      this.boxIcon = '';
+      this.title = '';
     },
     delMNews () {
       const data = 'bulletinsno=[5,6]&status=1';
@@ -228,20 +372,29 @@ export default {
         }).then((response) => {
           return response.json();
         }).then((data) => {
-          console.log(data);
           const result = {
-            ID: num,
+            ID: myId.info,
             slogan: data[num].name,
             content: data[num].content,
             link: {},
-            rows: []
+            rows: [],
+            datasno: []
           };
-          result.rows = data[num].dataname;
-          data[num].dataname.forEach((item, index) => {
-            result.link[`a${index}`] = item;
+          // result.rows = data[num].dataname;
+          data[num].datacontent.forEach((item) => {
+            result.rows.push(item.dataname);
           });
-          data[num].data.forEach((item, index) => {
-            result.link[`b${index}`] = item;
+          data[num].datacontent.forEach((item, index) => {
+            result.link[`a${index}`] = item.dataname;
+          });
+          data[num].datacontent.forEach((item, index) => {
+            result.link[`b${index}`] = item.data;
+          });
+          data[num].datacontent.forEach((item, index) => {
+            result.datasno.push(item.datasno);
+          });
+          data[num].datacontent.forEach((item, index) => {
+            result.link[`c${index}`] = item.datasno;
           });
           this.$store.commit('SET_FORM_DATA', result);
         }).catch((err) => {
@@ -249,8 +402,31 @@ export default {
         });
       }, 1000);
     }
+  },
+  computed: {
+    callPopup () {
+      return this.$store.state.popupAlert;
+    }
+  },
+  watch: {
+    callPopup (e) {
+      if (e.status) {
+        this.$store.commit('TOGGLE_POPUP_STATUS');
+        this.showAlert = true;
+        this.boxIcon = 'success';
+        this.alertTitle = '已成功';
+        // const _this = this;
+        getBulletin().then(data => {
+          this.tableList.bulletin.body = tableData(data.data, 0);
+          this.tableList.tableData.body = tableData(data.data, 1);
+          this.tableList.fileData.body = tableData(data.data, 2);
+        }).catch(e => {
+          console.log(e);
+        });
+      }
+      console.log(e);
+    }
   }
-
 };
 </script>
 <style lang="scss">

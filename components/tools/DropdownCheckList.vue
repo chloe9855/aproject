@@ -23,6 +23,16 @@
       class="dropList"
       :class="{up:getType,onTitle:isTitle}"
     >
+      <li v-show="options.length>0">
+        <input
+          id="all"
+          v-model="dataAll"
+          type="checkbox"
+          name="all"
+          value="all"
+          :indeterminate.prop="isIndeterminate"
+        ><label for="all" /><span>全選</span>
+      </li>
       <li
         v-for="(item , index) in options"
         :key="index"
@@ -69,7 +79,9 @@ export default {
     return {
       color: '#f00',
       istoggle: false,
-      dataArr: []
+      dataAll: false,
+      dataArr: [],
+      isIndeterminate: false
     };
   },
   methods: {
@@ -101,6 +113,11 @@ export default {
   },
   watch: {
     dataArr: function (n) {
+      if (this.options.length > n.length && n.length > 0) {
+        this.isIndeterminate = true;
+      } else {
+        this.isIndeterminate = false;
+      };
       const a = this.options.filter(item => n.indexOf(item.value) > -1);
       this.$emit('DropdownObj', a);
       this.$emit('DropdownVal', n);
@@ -112,6 +129,17 @@ export default {
     },
     options: function (n) {
       if (n.length === 0) {
+        this.dataArr = [];
+      }
+    },
+    dataAll: function (n) {
+      if (n) {
+        const arr = [];
+        this.options.forEach(element => {
+          arr.push(element.value);
+        });
+        this.dataArr = arr;
+      } else {
         this.dataArr = [];
       }
     }
@@ -207,6 +235,15 @@ export default {
       input[type="checkbox"]:checked + label
       {
         background: url("~/assets/img/check.svg");
+        height: 14px;
+        width: 14px;
+        display:inline-block;
+        margin: 0 5px;
+        cursor: pointer;
+      }
+      input[type="checkbox"]:indeterminate + label
+      {
+        background: url('~/assets/img/checkbox-Indeterminate.png');
         height: 14px;
         width: 14px;
         display:inline-block;

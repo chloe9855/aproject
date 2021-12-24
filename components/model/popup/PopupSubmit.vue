@@ -8,7 +8,7 @@
     <Button
       name="button-primary"
       text="確認"
-      @click="$emit('submit')"
+      @click="$emit('submit',true)"
     />
   </div>
 </template>
