@@ -43,17 +43,7 @@
     </Search>
 
     <AlertBox
-      v-if="showCannotRemoveAlert"
-      box-icon="error"
-      title="此群組不可刪除"
-      text="注意：群組刪除後不可復原"
-      @close="showCannotRemoveAlert = false"
-      @confirm="showCannotRemoveAlert = false"
-    />
-
-    <AlertBox
       v-if="singleRemoveId != null"
-      box-icon="error"
       title="確定要刪除該群組?"
       text="注意：群組刪除後不可復原"
       cancel-button
@@ -73,8 +63,8 @@
     <AlertBox
       v-if="showError"
       box-icon="error"
-      title="刪除失敗"
-      text=""
+      :title="delErrorTitle || '刪除失敗'"
+      :text="delErrorMessage"
       @close="showError = false"
       @confirm="showError = false"
     />
@@ -91,7 +81,6 @@ import { delGroup, getGroup } from '~/api/group';
 import { groupData } from '~/publish/groupData';
 import GroupUserAcctSearch from '~/components/model/searchBox/groupUserAcctSearch.vue';
 import dayjs from 'dayjs';
-import { getAccount } from '~/api/account';
 import AlertBox from '~/components/tools/AlertBox.vue';
 
 const getDefaultSearchObj = () => ({
@@ -138,7 +127,9 @@ export default {
       showCannotRemoveAlert: false,
       singleRemoveId: null,
       showSuccess: false,
-      showError: false
+      showError: false,
+      delErrorMessage: '',
+      delErrorTitle: ''
     };
   },
   name: 'Authority',
@@ -190,7 +181,7 @@ export default {
         });
       } else if (e.event === 'isDel') {
         console.log(e);
-        this.checkAndShowRemove(e.item.val);
+        this.singleRemoveId = e.item.val;
       }
     },
     // getTableCheck (e) {
@@ -217,10 +208,10 @@ export default {
         filtered = filtered.filter(g => dayjs(g.updatetime) >= startTime);
       }
 
-      if (this.searchObj.startTime) {
+      if (this.searchObj.endTime) {
         const endTime = dayjs(this.searchObj.endTime);
 
-        filtered = filtered.filter(g => dayjs(g.updatetime) >= endTime);
+        filtered = filtered.filter(g => dayjs(g.updatetime) < endTime);
       }
 
       this.tableList.body = groupData(filtered);
@@ -229,29 +220,23 @@ export default {
       this.searchObj = getDefaultSearchObj();
       this.tableList.body = groupData(this.groups);
     },
-    /**
-     * @param {number} id
-     */
-    async checkAndShowRemove (id) {
-      const { data: accounts } = await getAccount();
-
-      if (accounts.find(a => a.groupsno === id)) {
-        this.showCannotRemoveAlert = true;
-        return;
-      }
-
-      this.singleRemoveId = id;
-    },
     async remove () {
+      this.delErrorMessage = this.delErrorTitle = '';
       if (this.singleRemoveId == null) {
         return;
       }
 
-      const { status } = await delGroup(this.singleRemoveId);
+      const { status, data } = await delGroup(this.singleRemoveId, {
+        validateStatus: () => true
+      });
 
       this.singleRemoveId = null;
       this.showSuccess = status < 300;
       this.showError = !this.showSuccess;
+      if (status === 400) {
+        this.delErrorMessage = data;
+        this.delErrorTitle = '此群組不可刪除';
+      }
     },
     removeConfirmed () {
       this.showSuccess = false;

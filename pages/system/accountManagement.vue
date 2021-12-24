@@ -45,6 +45,7 @@
         <UserAcctSearch
           :is-clear="isClear"
           :search-obj-prop="searchObj"
+          :accounts="accountList"
         />
       </template>
     </Search>
@@ -52,6 +53,7 @@
     <AlertBox
       v-if="showRemoveConfirm"
       :title="`確定要刪除所選的${checkedAccount.length}筆資料`"
+      text="注意:帳號刪除後不可復原"
       @close="showRemoveConfirm = false"
       @confirm="batchRemove"
     />
@@ -59,23 +61,28 @@
     <AlertBox
       v-if="singleRemoveAccountId != null"
       title="確定要刪除帳號?"
+      text="注意:帳號刪除後不可復原"
       @close="singleRemoveAccountId = null"
       @confirm="singleRemove"
     />
 
     <AlertBox
       v-if="showSuccess"
+      text=""
       box-icon="success"
       title="刪除成功"
       :cancel-button="false"
-      @confirm="showSuccess = false"
+      @confirm="removeSuccessConfirmed"
+      @close="removeSuccessConfirmed"
     />
 
     <AlertBox
       v-if="showError"
       box-icon="error"
+      text=""
       title="刪除失敗"
       :cancel-button="false"
+      @close="showError = false"
       @confirm="showError = false"
     />
   </div>
@@ -128,19 +135,13 @@ export default Vue.extend({
           { title: '姓名' },
           { title: '管理處' },
           { title: '工作站' },
+          { title: '小組別' },
+          { title: '備註' },
           { title: '權限群組' },
           { title: '上次登入時間', minW: 'minWidth150' },
           { title: '狀態' }
         ],
         body: [
-          { val: 0, title: ['aaaaaa', '陳旺旺', 'XX管理處', 'nn工作站', 'nn工作站', '2021/01/01', '驗證中'] },
-          { val: 1, title: ['bbbbbb', '張旺旺', 'XX管理處', 'mm工作站', 'mm工作站', '2021/02/01', '啟用中'] },
-          { val: 2, title: ['cccccc', '鄧旺旺', 'XX管理處', 'uu工作站', 'uu工作站', '2021/03/01', '啟用中'] },
-          { val: 3, title: ['dddddd', '王旺旺', 'XX管理處', 'zz工作站', 'zz工作站', '2021/04/01', '啟用中'] },
-          { val: 4, title: ['eeeeee', '呂旺旺', 'XX管理處', 'ww工作站', 'ww工作站', '2021/05/01', '啟用中'] },
-          { val: 5, title: ['ffffff', '廖旺旺', 'XX管理處', 'ee工作站', 'ee工作站', '2021/06/01', '停用中'] },
-          { val: 6, title: ['gggggg', '曾旺旺', 'XX管理處', 'rr工作站', 'rr工作站', '2021/07/01', '啟用中'] },
-          { val: 7, title: ['hhhhhh', '林旺旺', 'XX管理處', 'yy工作站', 'yy工作站', '2021/08/01', '停用中'] }
         ]
       },
       BreadCrumb: ['系統管理', '帳號管理'],
@@ -168,6 +169,8 @@ export default Vue.extend({
           { title: '姓名' },
           { title: '管理處' },
           { title: '工作站' },
+          { title: '小組別' },
+          { title: '備註' },
           { title: '權限群組' },
           { title: '上次登入時間', setW: 'setWidth200' },
           { title: '狀態' }
@@ -272,6 +275,7 @@ export default Vue.extend({
       }
     },
     async batchRemove () {
+      this.showRemoveConfirm = false;
       if (!this.checkedAccount) {
         return;
       }
@@ -292,8 +296,10 @@ export default Vue.extend({
         return;
       }
 
+      const { singleRemoveAccountId } = this;
+      this.singleRemoveAccountId = null;
       const { status } = await editAccount({
-        id: this.singleRemoveAccountId,
+        id: [singleRemoveAccountId],
         status: 2
       }, {
         validateStatus: status => status < 500
@@ -309,6 +315,10 @@ export default Vue.extend({
     checkAndShowSuccess (status) {
       this.showSuccess = status < 300;
       this.showError = !this.showSuccess;
+    },
+    removeSuccessConfirmed () {
+      this.showSuccess = false;
+      this.searchAccount();
     }
   },
   computed: {

@@ -46,7 +46,9 @@ export default {
       canalList: [],
       clearText: false,
       clearKeyText: false,
-      canalGraphic: ''
+      canalGraphic: '',
+      canalNameX: '',
+      canalLength: ''
     };
   },
   name: 'KeyWordSearch',
@@ -97,7 +99,8 @@ export default {
       if (myItem.length < 1) {
         return;
       }
-      console.log(myItem);
+
+      this.canalNameX = payload.val;
 
       fetch('/AERC/rest/Canal', {
         method: 'POST',
@@ -117,10 +120,11 @@ export default {
         // 先清除之前的
         pMapBase.drawingGraphicsLayer.remove(this.canalGraphic);
         // 畫圖
-        const geometry = sg.geometry.Geometry.fromGeoJson(jsonData[0].geometry);
-        // this.canalGraphic = sg.Graphic.createFromGeometry(geometry, { borderwidth: 5, fillcolor: new sg.Color(126, 255, 178, 1) });
+        const geometry = sg.geometry.Geometry.fromGeoJson(jsonData[0].GEOMETRY);
         this.canalGraphic = sg.Graphic.createFromGeometry(geometry, { linewidth: 5, linecolor: new sg.Color(126, 255, 178, 1) });
         pMapBase.drawingGraphicsLayer.add(this.canalGraphic);
+
+        this.canalLength = geometry.length.toFixed(2);
         // 定位
         const extent = geometry.extent;
         pMapBase.ZoomMapTo(extent);
@@ -130,6 +134,25 @@ export default {
       }).catch((err) => {
         console.log(err);
       });
+    }
+  },
+  computed: {
+    clearStatus () {
+      return this.$store.state.clearKeywordBox;
+    }
+  },
+  watch: {
+    canalLength (value) {
+      this.$store.commit('SET_CANAL_LENGTH', value);
+    },
+    canalNameX (value) {
+      this.$store.commit('SET_CANAL_INFO', value);
+    },
+    clearStatus (value) {
+      if (value === true) {
+        this.clearAllHandler();
+        this.$store.commit('CLEAR_KEYWORD_BOX', false);
+      }
     }
   }
 };

@@ -3,6 +3,7 @@
     <DropdownVertical2
       v-model="searchObj.group"
       title="群組"
+      placeholders="請選擇群組"
       :options="groupList"
     />
     <DatePicker
@@ -21,7 +22,6 @@
 <script>
 // @ts-check
 import DropdownVertical2 from '~/components/tools/DropdownVertical2.vue';
-// @ts-ignore
 import DatePicker from '~/components/tools/DatePickerJJ.vue';
 import { groupListData } from '~/publish/groupListData';
 

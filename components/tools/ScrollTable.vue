@@ -132,7 +132,7 @@ export default {
           }
         }
         td{
-          line-height: 33px;
+          line-height: 18px;
           height: 33px;
           padding: 2px 10px;
           vertical-align: middle;

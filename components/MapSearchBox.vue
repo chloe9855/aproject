@@ -74,23 +74,36 @@
       class="content_block"
       :class="{'hide_VVblock': hideResult2, 'show_block': !hideResult2}"
     >
-      <p class="title">
-        屬性表格 {{ blockTitle }}
-      </p>
-      <div class="table_block_wrap">
-        <div class="table_block theme_scrollbar">
-          <table>
-            <tbody>
-              <tr
-                v-for="(item, index) in allClickData"
-                :key="index"
-              >
-                <td>{{ item.name }}</td>
-                <td>{{ item.value }}</td>
-              </tr>
-            </tbody>
-          </table>
+      <div
+        v-if="allClickData[0].name !== 'noResult'"
+        style="height: 100%;"
+      >
+        <p class="title">
+          屬性表格 {{ blockTitle }}
+        </p>
+        <div class="table_block_wrap">
+          <div class="table_block theme_scrollbar">
+            <table>
+              <tbody>
+                <tr
+                  v-for="(item, index) in allClickData"
+                  :key="index"
+                >
+                  <td>{{ item.name }}</td>
+                  <td>{{ item.value }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </div>
+      </div>
+
+      <div
+        v-if="allClickData[0].name === 'noResult'"
+        class="nores"
+      >
+        <img :src="require('~/assets/img/no_data.svg')">
+        <p>查無資料</p>
       </div>
       <div
         class="hide_button"
@@ -174,6 +187,8 @@ export default {
       poolData: [],
       rotData: [],
       periodData: [],
+      sectionData: [],
+      sec5Data: [],
       blockTitle: '',
       userId: '',
       //* 渠道查詢
@@ -186,6 +201,7 @@ export default {
       newPeriod: [],
       newPool: [],
       newSec5cov: []
+
     };
   },
   name: 'MapSearchBox',
@@ -248,11 +264,13 @@ export default {
     });
 
     const data11 = require('~/static/AddSection.json');
+    this.sectionData = data11.data;
     this.newSection = data11.data.map(item => {
       return { title: item.name };
     });
 
     const data12 = require('~/static/AddSec5cov.json');
+    this.sec5Data = data12.data;
     this.newSec5cov = data12.data.map(item => {
       return { title: item.name };
     });
@@ -298,6 +316,13 @@ export default {
     // },
     // * @ 點擊查詢 : 取得屬性資料表格
     getClickData (id, info, title) {
+      if (info === undefined || info === '') {
+        this.allClickData = [
+          { name: 'noResult' }
+        ];
+        return;
+      }
+
       this.blockTitle = title;
 
       // 管理處
@@ -668,11 +693,117 @@ export default {
         this.allClickData = [];
         this.allClickData = this.rotData;
       }
+
+      // 地段
+      if (id === 'Section') {
+        this.sectionData.forEach((item) => {
+          if (item.name === '縣市') {
+            item.value = info.City;
+          }
+          if (item.name === '縣市代碼') {
+            item.value = info.City_no;
+          }
+          if (item.name === '面積(m2)') {
+            item.value = info.Area;
+          }
+          if (item.name === '資料日期') {
+            item.value = info.Ymd;
+          }
+          if (item.name === '鄉鎮市區') {
+            item.value = info.Town;
+          }
+          if (item.name === '鄉鎮市區代碼') {
+            item.value = info.Town_no;
+          }
+          if (item.name === '地段代碼') {
+            item.value = info.Section;
+          }
+          if (item.name === '地段名稱') {
+            item.value = info.Sec_cns;
+          }
+        });
+
+        this.allClickData = [];
+        this.allClickData = this.sectionData;
+      }
+
+      // 地籍
+      if (id === 'Sec5cov') {
+        this.sec5Data.forEach((item) => {
+          if (item.name === '段號') {
+            item.value = info.Section_no;
+          }
+          if (item.name === '地號') {
+            item.value = info.Land;
+          }
+          if (item.name === '地目') {
+            item.value = info.Ltype_cns2;
+          }
+          if (item.name === '地段代碼') {
+            item.value = info.Section;
+          }
+          if (item.name === '地段名稱') {
+            item.value = info.Sec_cns;
+          }
+          if (item.name === '地號') {
+            item.value = info.Land_no;
+          }
+          if (item.name === '面積(m2)') {
+            item.value = info.Desc_area;
+          }
+          if (item.name === '圖面面積(m2)') {
+            item.value = info.Maparea;
+          }
+          if (item.name === '地目代碼') {
+            item.value = info.L_type;
+          }
+          if (item.name === '地目') {
+            item.value = info.Ltype_cns;
+          }
+          if (item.name === '鄉鎮市區代碼') {
+            item.value = info.Town;
+          }
+          if (item.name === '使用分區代碼') {
+            item.value = info.Class;
+          }
+          if (item.name === '使用分區') {
+            item.value = info.Class_cns;
+          }
+          if (item.name === '使用地類別代碼') {
+            item.value = info.Use_dir;
+          }
+          if (item.name === '使用地類別') {
+            item.value = info.Use_dircns;
+          }
+          if (item.name === '公告現值') {
+            item.value = info.Cur_price;
+          }
+          if (item.name === '公告地價') {
+            item.value = info.Land_price;
+          }
+          if (item.name === '申報地價') {
+            item.value = info.Dec_price;
+          }
+          if (item.name === '資料日期') {
+            item.value = info.Ymd;
+          }
+        });
+
+        this.allClickData = [];
+        this.allClickData = this.sec5Data;
+      }
     },
     // * @ 點擊查詢 : 清除全部
     clearClickData () {
       this.allClickData = [];
       this.blockTitle = '';
+    },
+    // * @ 按地圖工具列的 清除全部 (後來加的)
+    clearAllDataXX () {
+      this.$store.commit('CLEAR_CANAL_BOX', true);
+      this.$store.commit('CLEAR_KEYWORD_BOX', true);
+      this.clearClickData();
+      this.clearKeywordData();
     },
     // * @ 關鍵字查詢 : 清除全部
     clearKeywordData () {
@@ -859,6 +990,16 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+
+  .nores {
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    color:  #595959;
+    @include noto-sans-tc-16-regular;
+  }
 
   .search_container {
     width: 350px;

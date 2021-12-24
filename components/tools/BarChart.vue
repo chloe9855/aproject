@@ -2,7 +2,7 @@
   <div
     class="barChart"
     :class="[barColor,barWidth]"
-    :style="`width: ${setbarLength}%;`"
+    :style="`width: ${getbarLength};`"
   />
 </template>
 
@@ -32,6 +32,9 @@ export default {
     },
     barWidth () {
       return this.setbarWidth + 'Bar';
+    },
+    getbarLength () {
+      return this.setbarLength >= 1 ? `${this.setbarLength}%` : `${this.setbarLength}px`;
     }
   }
 };

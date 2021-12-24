@@ -56,7 +56,7 @@
 <script>
 import PageHeader from '~/components/tools/PageHeader.vue';
 import BreadCrumbTool from '~/components/tools/BreadCrumbTool.vue';
-import Search from '~/components/model/Search.vue';
+import Search from '~/components/model/SearchForAmount.vue';
 import ToggleList from '~/components/model/ToggleList.vue';
 
 export default {
@@ -266,9 +266,17 @@ export default {
         const index = cloneArr.findIndex(item => item.id === itemB.main_funtion);
         if (index !== -1) {
           cloneArr[index].num = itemB.value_main;
-          cloneArr[index].bar.barLength = (itemB.value_main / mainTotal).toFixed(1) * 100;
+          cloneArr[index].bar.barLength = (itemB.value_main / mainTotal).toFixed(3) * 100;
           cloneArr[index].show = true;
-          const mainBarLth = (itemB.value_main / mainTotal).toFixed(1) * 100;
+          const mainBarLth = (itemB.value_main / mainTotal).toFixed(3) * 100;
+          // let mainBarLth;
+          // if ((itemB.value_main / mainTotal).toFixed(1) >= 1) {
+          //   mainBarLth = (itemB.value_main / mainTotal).toFixed(1) * 100;
+          //   cloneArr[index].bar.barLength = (itemB.value_main / mainTotal).toFixed(1) * 100;
+          // } else {
+          //   mainBarLth = (itemB.value_main / mainTotal).toFixed(3) * 1000;
+          //   cloneArr[index].bar.barLength = (itemB.value_main / mainTotal).toFixed(3) * 1000;
+          // }
 
           if (itemB.sub.length >= 1) {
             const row2 = itemB.sub.map(item => item.value);
@@ -277,7 +285,12 @@ export default {
             itemB.sub.forEach((itemC) => {
               const index2 = cloneArr[index].node.findIndex(itemD => itemD.id === itemC.funtion);
               cloneArr[index].node[index2].num = itemC.value;
-              cloneArr[index].node[index2].bar.barLength = (itemC.value / subTotal).toFixed(1) * mainBarLth;
+              cloneArr[index].node[index2].bar.barLength = (itemC.value / subTotal).toFixed(3) * mainBarLth;
+              // if ((itemC.value / subTotal).toFixed(1) >= 1) {
+              //   cloneArr[index].node[index2].bar.barLength = (itemC.value / subTotal).toFixed(1) * mainBarLth;
+              // } else {
+              //   cloneArr[index].node[index2].bar.barLength = (itemC.value / subTotal).toFixed(3) * mainBarLth;
+              // }
               cloneArr[index].node[index2].show = true;
             });
           }

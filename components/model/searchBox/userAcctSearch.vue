@@ -2,24 +2,28 @@
   <div class="inputBox">
     <DropdownVertical
       title="群組"
+      placeholders="請選擇群組"
       :options="groupList"
       :change-text="isClear"
       @DropdownVal="getGroup"
     />
     <DropdownVertical
       title="管理處"
+      placeholders="請選擇管理處"
       :options="iaList"
       :change-text="isClear"
       @DropdownVal="getIa"
     />
     <DropdownVertical
       title="工作站"
+      placeholders="請選擇工作站"
       :options="member"
       :change-text="isClear"
       @DropdownVal="getSite"
     />
     <DropdownVertical
       title="姓名"
+      placeholders="請選擇姓名"
       :options="accountList"
       :change-text="isClear"
       @DropdownVal="getName"
@@ -45,12 +49,11 @@
  */
 
 import DropdownVertical from '~/components/tools/DropdownVertical.vue';
-// @ts-ignore
 import DatePicker from '~/components/tools/DatePickerJJ.vue';
-import { groupListData, iaListData, stnListData } from '~/publish/groupListData';
-import { getAccount } from '~/api/account';
+import { groupListData, stnListData } from '~/publish/groupListData';
 import { getGroup } from '~/api/group';
 import { getStns } from '~/publish/Irrigation1';
+import { getIaOptionFromAccount } from '~/publish/accountData';
 
 export default {
   components: {
@@ -70,6 +73,9 @@ export default {
       type: Object,
       required: true
     },
+    accounts: {
+      type: /** @type {import('vue').PropType<import('types/Account').Account[]>} */(Array)
+    },
     isClear: {
       type: Boolean,
       default: false
@@ -79,10 +85,8 @@ export default {
     return {
       searchObj: this.searchObjProp,
       member: [],
-      iaList: [],
       group: [],
-      groupList: [],
-      accountList: []
+      groupList: []
     };
   },
   name: 'UserAcctSearch',
@@ -129,13 +133,9 @@ export default {
     async fetchOptions () {
       // const r = await getAccount(this.$store.state.userInfo.id);
       const g = await getGroup(/* r.data[0].ia */);
-      this.iaList = iaListData(g);
       this.groupList = groupListData(g);
-
-      this.fetchAccount();
     },
     async fetchSite () {
-      console.log(this.searchObj.ia);
       if (!this.searchObj.ia) {
         this.member = [];
         return;
@@ -143,13 +143,17 @@ export default {
 
       const res = await getStns(this.searchObj.ia);
       this.member = stnListData(res);
+    }
+  },
+  computed: {
+    /** @returns {DropdownVerticalOption[]} */
+    iaList () {
+      return getIaOptionFromAccount(this.accounts);
     },
-    async fetchAccount () {
-      /** @type {{ data: Array<{ account: string, name: string }> }} */
-      const { data } = await getAccount();
-
-      this.accountList = data.map(account => ({
-        val: account.account,
+    /** @returns {DropdownVerticalOption[]} */
+    accountList () {
+      return this.accounts.map(account => ({
+        value: account.account,
         title: account.name
       }));
     }

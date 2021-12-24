@@ -17,7 +17,7 @@ export function getAccount (id) {
 /**
  *
  * @param {Partial<Pick<Account, 'name' | 'ia' | 'mng' | 'stn' | 'grp' | 'mail' | 'note' | 'groupsno' | 'status'>> &
- *  { id: string | string[], resend?: boolean, password?: string }} data
+ *  { id: string[], resend?: boolean, password?: string, token?: string }} data
  * @param {import('axios').AxiosRequestConfig} config
  * @returns {Promise<import('axios').AxiosResponse>}
  */

@@ -569,8 +569,11 @@ export default {
         pMapBase.drawingGraphicsLayer.remove(this.myLandGraphic);
         // 畫圖
         const geometry = sg.geometry.Geometry.fromGeoJson(jsonData[0].geometry);
-        this.allLandGraphic[index] = sg.Graphic.createFromGeometry(geometry, { borderwidth: 1, fillcolor: new sg.Color(220, 105, 105, 0.5) });
+        this.allLandGraphic[index] = sg.Graphic.createFromGeometry(geometry, { borderwidth: 1, fillcolor: new sg.Color(220, 105, 105, 0.5), text: this.counData.Sec5cov });
         pMapBase.drawingGraphicsLayer.add(this.allLandGraphic[index]);
+
+        console.log(geometry);
+        console.log(this.allLandGraphic[index]);
 
         this.allMetry.push(geometry);
         // 定位至最大範圍
@@ -818,11 +821,10 @@ export default {
       }).then((response) => {
         return response.json();
       }).then((jsonData) => {
-        console.log(jsonData[0].geometry);
         // 先清除之前的
         pMapBase.drawingGraphicsLayer.remove(this.geoGraphic);
         // 畫圖
-        const geometry = sg.geometry.Geometry.fromGeoJson(jsonData[0].geometry);
+        const geometry = sg.geometry.Geometry.fromGeoJson(jsonData[0].GEOMETRY);
         this.geoGraphic = sg.Graphic.createFromGeometry(geometry, { borderwidth: 1, fillcolor: new sg.Color(220, 105, 105, 0.5) });
         pMapBase.drawingGraphicsLayer.add(this.geoGraphic);
         // 定位

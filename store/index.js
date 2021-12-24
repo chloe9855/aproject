@@ -14,6 +14,10 @@ export const state = () => ({
   editAccount: '',
   canvasUrl: '',
   oriFormData: { slogan: '', content: '', link: '', rows: '' },
+  myCanalInfo: '',
+  myCanalLength: '',
+  clearCanalBox: false,
+  clearKeywordBox: false,
 
   // 這看起來很糟糕，但現在的popup架構也沒辦法直接 emit 事件
   refetchCounter: 0,
@@ -75,6 +79,20 @@ export const mutations = {
   // * 截圖dataUrl
   GET_DATA_URL (state, payload) {
     state.canvasUrl = payload;
+  },
+  SET_CANAL_INFO (state, payload) {
+    state.myCanalInfo = payload;
+  },
+  SET_CANAL_LENGTH (state, payload) {
+    state.myCanalLength = payload;
+  },
+  // * 按下地圖上的清除全部 渠道查詢
+  CLEAR_CANAL_BOX (state, payload) {
+    state.clearCanalBox = payload;
+  },
+  // * 按下地圖上的清除全部 關鍵字查詢
+  CLEAR_KEYWORD_BOX (state, payload) {
+    state.clearKeywordBox = payload;
   },
   SET_FORM_DATA (state, payload) {
     state.oriFormData = payload;
