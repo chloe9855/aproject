@@ -165,7 +165,6 @@ export default {
           console.log(data);
           editBulletin(data).then(r => {
             console.log(r);
-            // this.$emit('submitSuccess', true);
             this.$store.commit('SET_POPUP_STATUS', { status: true });
           }).catch(e => {
             console.log(e);
@@ -182,7 +181,6 @@ export default {
           console.log(data);
           addBulletin(data).then(r => {
             console.log(r);
-            // this.$emit('submitSuccess', true);
             this.$store.commit('SET_POPUP_STATUS', { status: true });
           }).catch(e => {
             console.log(e);
@@ -199,7 +197,9 @@ export default {
       }
       e.rows.forEach((item) => {
         this.num += 1;
-        this.tableList.body.push({ val: `news${this.num}`, title: [{ type: 'input', key: `a${this.num}` }, { type: 'input', key: `b${this.num}` }] });
+        if (e.rows.length >= this.num) {
+          this.tableList.body.push({ val: `news${this.num}`, title: [{ type: 'input', key: `a${this.num}` }, { type: 'input', key: `b${this.num}` }] });
+        }
       });
     }
   }

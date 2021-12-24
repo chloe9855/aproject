@@ -166,10 +166,10 @@ export default {
     },
     delLink () {
       const delList = this.delList;
-      console.log(this.tableList.body);
-      console.log(delList);
+      const delListIndex = delList.map(x => x.split('b')[1]);
+      this.originDataName = this.originDataName.filter(function (v, i) { return delListIndex.indexOf(i.toString()) === -1; });
+      this.originDataData = this.originDataData.filter(function (v, i) { return delListIndex.indexOf(i.toString()) === -1; });
       this.tableList.body = this.tableList.body.filter(function (v) { return delList.indexOf(v.val) === -1; });
-      console.log(this.tableList.body);
       this.delBtn = false;
     },
     addFile () {
@@ -225,10 +225,15 @@ export default {
       }
       console.log(e);
       e.rows.forEach((item) => {
-        console.log(item);
-        this.tableList.body.push({ val: `tb${this.num}`, title: [{ type: 'input', key: `a${this.num}` }, { type: 'text', key: `b${this.num}` }] });
-        this.num += 1;
+        // console.log(item);
+        // this.tableList.body.push({ val: `tb${this.num}`, title: [{ type: 'input', key: `a${this.num}` }, { type: 'text', key: `b${this.num}` }] });
+        // this.num += 1;
+        if (e.rows.length >= this.num) {
+          this.tableList.body.push({ val: `tb${this.num}`, title: [{ type: 'input', key: `a${this.num}` }, { type: 'text', key: `b${this.num}` }] });
+          this.num += 1;
+        }
       });
+
       console.log(this.tableList.body);
     }
   }

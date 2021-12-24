@@ -382,7 +382,7 @@ export default {
         }).then((data) => {
           console.log(data);
           const result = {
-            ID: num,
+            ID: myId.info,
             slogan: data[num].name,
             content: data[num].content,
             link: {},
