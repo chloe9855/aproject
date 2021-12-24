@@ -15,7 +15,6 @@
       <keep-alive>
         <component
           :is="componentInstance"
-          :ref="componentInstance"
           :all-ia-list="myIaList"
           :click-map-list="ListCS"
           @channelSearch="getChannelData"
@@ -75,7 +74,10 @@
       class="content_block"
       :class="{'hide_VVblock': hideResult2, 'show_block': !hideResult2}"
     >
-      <div>
+      <div
+        v-if="allClickData[0].name !== 'noResult'"
+        style="height: 100%;"
+      >
         <p class="title">
           屬性表格 {{ blockTitle }}
         </p>
@@ -94,6 +96,14 @@
             </table>
           </div>
         </div>
+      </div>
+
+      <div
+        v-if="allClickData[0].name === 'noResult'"
+        class="nores"
+      >
+        <img :src="require('~/assets/img/no_data.svg')">
+        <p>查無資料</p>
       </div>
       <div
         class="hide_button"
@@ -191,6 +201,7 @@ export default {
       newPeriod: [],
       newPool: [],
       newSec5cov: []
+
     };
   },
   name: 'MapSearchBox',
@@ -306,7 +317,9 @@ export default {
     // * @ 點擊查詢 : 取得屬性資料表格
     getClickData (id, info, title) {
       if (info === undefined || info === '') {
-        this.clearClickData();
+        this.allClickData = [
+          { name: 'noResult' }
+        ];
         return;
       }
 
@@ -785,6 +798,13 @@ export default {
       this.allClickData = [];
       this.blockTitle = '';
     },
+    // * @ 按地圖工具列的 清除全部 (後來加的)
+    clearAllDataXX () {
+      this.$store.commit('CLEAR_CANAL_BOX', true);
+      this.$store.commit('CLEAR_KEYWORD_BOX', true);
+      this.clearClickData();
+      this.clearKeywordData();
+    },
     // * @ 關鍵字查詢 : 清除全部
     clearKeywordData () {
       this.columnList = [];
@@ -970,6 +990,16 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+
+  .nores {
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    color:  #595959;
+    @include noto-sans-tc-16-regular;
+  }
 
   .search_container {
     width: 350px;

@@ -136,6 +136,9 @@ export default {
     // 管理處下拉選單
     allIaList: {
       type: Array
+    },
+    goClear: {
+      type: Boolean
     }
   },
   data () {
@@ -201,7 +204,9 @@ export default {
       // * Buffer圖形
       bufferGraph: '',
       // * 地籍列表所有圖形
-      sec5Graph: []
+      sec5Graph: [],
+      // * 渠道名
+      canalNameX: ''
     };
   },
   name: 'ChannelSearch',
@@ -211,11 +216,9 @@ export default {
 
     allMBTX.forEach((item) => {
       this.fnList.push(sg.events.on(item, 'click', (e) => {
-        console.log(e);
         if (e.graphic.id[0].substring(3) === 'Canal' && e.graphic.attributes.Ia === this.nowIa) {
-          console.log(e);
-
           this.addCanalText = e.graphic.attributes.Sys_cns;
+          this.canalNameX = e.graphic.attributes.Sys_cns;
           this.nowFid = parseInt(e.graphic.id[2], 10);
           // 渠道總長
           this.canalLength = e.graphic.geometry.length;
@@ -296,6 +299,8 @@ export default {
         return;
       }
 
+      this.canalNameX = payload.val;
+
       // this.canalLength = myItem[0].Length;
       this.nowFid = myItem[0].FID;
 
@@ -338,7 +343,7 @@ export default {
       }).then((response) => {
         return response.json();
       }).then((jsonData) => {
-        console.log(jsonData);
+        // console.log(jsonData);
 
         // 預設值
         if (this.range1 === '') { this.range1 = 0; }
@@ -351,14 +356,15 @@ export default {
         pMapBase.drawingGraphicsLayer.remove(this.icon1);
         pMapBase.drawingGraphicsLayer.remove(this.icon2);
         pMapBase.drawingGraphicsLayer.remove(this.iconEnd);
+        this.iconStart = '';
+        this.icon1 = '';
+        this.icon2 = '';
+        this.iconEnd = '';
 
         // 畫渠道圖
         const geometry = sg.geometry.Geometry.fromGeoJson(jsonData[0].GEOMETRY);
         this.canalGraphic = sg.Graphic.createFromGeometry(geometry, { linewidth: 5, linecolor: new sg.Color(126, 255, 178, 1) });
         pMapBase.drawingGraphicsLayer.add(this.canalGraphic);
-
-        console.log(887);
-        console.log(geometry);
 
         // 定位
         let point1;
@@ -475,13 +481,8 @@ export default {
       }
 
       const newArr = [];
-      // newArr = geoData.path.map(item => {
-      //   return [[item.x, item.y]];
-      // });
-      console.log(geoData);
-      console.log(geoArr);
+
       geoArr.path.forEach((item) => {
-        console.log(item);
         newArr.push([item.x, item.y]);
       });
       const result = {
@@ -501,7 +502,7 @@ export default {
       }).then((response) => {
         return response.json();
       }).then((jsonData) => {
-        console.log(jsonData);
+        // console.log(jsonData);
         this.getBufferTable(jsonData[0].geometry);
 
         // 畫出Buffer環域圖形 (只有一個)
@@ -566,11 +567,24 @@ export default {
           }
           this.sec5Graph = [];
           this.$emit('channelSearch', '', 'none');
+
+          // 重新畫圖
+          pMapBase.drawingGraphicsLayer.clear();
+          pMapBase.drawingGraphicsLayer.add(this.bufferGraph);
+          pMapBase.drawingGraphicsLayer.add(this.canalGraphic);
+          pMapBase.drawingGraphicsLayer.add(this.icon1);
+          pMapBase.drawingGraphicsLayer.add(this.icon2);
+          if (this.iconStart !== '') {
+            pMapBase.drawingGraphicsLayer.add(this.iconStart);
+          }
+          if (this.iconEnd !== '') {
+            pMapBase.drawingGraphicsLayer.add(this.iconEnd);
+          }
           return Promise.reject(response);
         }
         return response.json();
       }).then((jsonData) => {
-        console.log(jsonData);
+        // 結果是空值
         if (jsonData.length < 1) {
           this.loadModal = false;
           // 先清除之前的
@@ -581,6 +595,19 @@ export default {
           }
           this.sec5Graph = [];
           this.$emit('channelSearch', '', 'none');
+
+          // 重新畫圖
+          pMapBase.drawingGraphicsLayer.clear();
+          pMapBase.drawingGraphicsLayer.add(this.bufferGraph);
+          pMapBase.drawingGraphicsLayer.add(this.canalGraphic);
+          pMapBase.drawingGraphicsLayer.add(this.icon1);
+          pMapBase.drawingGraphicsLayer.add(this.icon2);
+          if (this.iconStart !== '') {
+            pMapBase.drawingGraphicsLayer.add(this.iconStart);
+          }
+          if (this.iconEnd !== '') {
+            pMapBase.drawingGraphicsLayer.add(this.iconEnd);
+          }
           return;
         }
 
@@ -647,6 +674,8 @@ export default {
         this.sec5Graph = [];
         const allBound = [];
         // 畫圖
+        pMapBase.drawingGraphicsLayer.clear();
+
         jsonData.forEach((item, index) => {
           const geometry = sg.geometry.Geometry.fromGeoJson(item.GEOMETRY);
           this.sec5Graph[index] = sg.Graphic.createFromGeometry(geometry, { borderwidth: 1, fillcolor: new sg.Color(220, 105, 105, 0.5) });
@@ -654,6 +683,17 @@ export default {
 
           allBound.push(geometry);
         });
+
+        pMapBase.drawingGraphicsLayer.add(this.bufferGraph);
+        pMapBase.drawingGraphicsLayer.add(this.canalGraphic);
+        pMapBase.drawingGraphicsLayer.add(this.icon1);
+        pMapBase.drawingGraphicsLayer.add(this.icon2);
+        if (this.iconStart !== '') {
+          pMapBase.drawingGraphicsLayer.add(this.iconStart);
+        }
+        if (this.iconEnd !== '') {
+          pMapBase.drawingGraphicsLayer.add(this.iconEnd);
+        }
         // 定位至最大範圍
         const extent = sg.geometry.Extent.unionall(allBound.map(function (geom) { return geom.extent; }));
         pMapBase.ZoomMapTo(extent);
@@ -679,7 +719,7 @@ export default {
       }).then((response) => {
         return response.json();
       }).then((jsonData) => {
-        console.log(jsonData);
+        // console.log(jsonData);
         this.getSec5ByGeom(jsonData[0].COUNTYID, geometry);
       }).catch((err) => {
         console.log(err);
@@ -699,7 +739,7 @@ export default {
       }).then((response) => {
         return response.json();
       }).then((jsonData) => {
-        console.log(jsonData);
+        // console.log(jsonData);
         this.loadModal = false;
 
         jsonData.forEach((item) => {
@@ -722,6 +762,8 @@ export default {
         this.sec5Graph = [];
         const allBound = [];
         // 畫圖
+        pMapBase.drawingGraphicsLayer.clear();
+
         jsonData.forEach((item, index) => {
           const geometry = sg.geometry.Geometry.fromGeoJson(item.GEOMETRY);
           this.sec5Graph[index] = sg.Graphic.createFromGeometry(geometry, { borderwidth: 1, fillcolor: new sg.Color(220, 105, 105, 0.5) });
@@ -729,6 +771,17 @@ export default {
 
           allBound.push(geometry);
         });
+
+        pMapBase.drawingGraphicsLayer.add(this.bufferGraph);
+        pMapBase.drawingGraphicsLayer.add(this.canalGraphic);
+        pMapBase.drawingGraphicsLayer.add(this.icon1);
+        pMapBase.drawingGraphicsLayer.add(this.icon2);
+        if (this.iconStart !== '') {
+          pMapBase.drawingGraphicsLayer.add(this.iconStart);
+        }
+        if (this.iconEnd !== '') {
+          pMapBase.drawingGraphicsLayer.add(this.iconEnd);
+        }
         // 定位至最大範圍
         const extent = sg.geometry.Extent.unionall(allBound.map(function (geom) { return geom.extent; }));
         pMapBase.ZoomMapTo(extent);
@@ -742,36 +795,24 @@ export default {
       });
     }
   },
+  computed: {
+    clearStatus () {
+      return this.$store.state.clearCanalBox;
+    }
+  },
   watch: {
-    // nowLayer (value) {
-    //   if (value === '地段') {
-    //     this.engName = 'Section';
-    //   }
-    //   if (value === '地籍') {
-    //     this.engName = 'Sec5cov';
-    //   }
-    //   if (value === '管理處') {
-    //     this.engName = 'Ia';
-    //   }
-    //   if (value === '管理分處') {
-    //     this.engName = 'Mng';
-    //   }
-    //   if (value === '工作站') {
-    //     this.engName = 'Stn';
-    //   }
-    //   if (value === '小組') {
-    //     this.engName = 'Grp';
-    //   }
-    //   if (value === '輪區') {
-    //     this.engName = 'Rot';
-    //   }
-    //   if (value === '期作別') {
-    //     this.engName = 'Period';
-    //   }
-    //   if (value === '埤塘') {
-    //     this.engName = 'Pool';
-    //   }
-    // }
+    canalLength (value) {
+      this.$store.commit('SET_CANAL_LENGTH', value);
+    },
+    canalNameX (value) {
+      this.$store.commit('SET_CANAL_INFO', value);
+    },
+    clearStatus (value) {
+      if (value === true) {
+        this.clearAllHandler();
+        this.$store.commit('CLEAR_CANAL_BOX', false);
+      }
+    }
   }
 };
 </script>
