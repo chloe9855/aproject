@@ -133,6 +133,7 @@
                 v-else-if="tableType(text)&&typeof text === 'object' && text.type === 'btn'"
                 :name="'button-primary'"
                 :text="text.title"
+                @click="sendEvent('btnEvent', item, index)"
               />
               <Input
                 v-else-if="tableType(text)&&typeof text === 'object' && text.type === 'input'"
@@ -167,7 +168,7 @@
                   :href="originInput[text.key] !== undefined ? originInput[text.key] : ''"
                   class="temp_bt"
                 >
-                  LINK
+                  檔案連結
                 </a>
                 <!-- {{ originInput[text.key] !== undefined ? originInput[text.key] : '' }} -->
               </span>

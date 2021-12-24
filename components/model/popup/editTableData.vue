@@ -56,7 +56,7 @@ import Button from '~/components/tools/Buttons.vue';
 import Table from '~/components/model/TableForBulletin.vue';
 // import { bulletinInputDataName, bulletinInputData } from '~/publish/bulletinData';
 // import { addBulletin, editBulletin, uploadBulletinFile } from '~/api/bulletin';
-import { addBulletin } from '~/api/bulletin';
+import { editBulletin, uploadBulletinFile } from '~/api/bulletin';
 export default {
   components: {
     InputVertical,
@@ -87,19 +87,23 @@ export default {
       originDataLinkList: {},
       originDataSlogan: '',
       originDataContent: '',
+      originDataName: [],
+      originDataData: [],
       delBtn: false,
       delList: [],
       num: 0,
       bulletinName: '',
       bulletinContent: '',
       InputData: [],
-      dataname: [],
+      // dataname: [],
       data: [],
       isEdit: false,
       formName: '',
       param: null,
       formData: new FormData(),
-      dataName: []
+      dataName: [],
+      arr1: [],
+      fileNum: 0
     };
   },
   name: 'EditTableData',
@@ -121,6 +125,11 @@ export default {
       console.log(e);
       if (e.event === 'btnEvent') {
         this.$refs.file.click();
+      } else if (e.event === 'isDel') {
+        const num = 'tb' + e.myIndex;
+        this.tableList.body = this.tableList.body.filter(item => item.val !== num);
+        this.dataName = this.originDataName.filter((item, i) => i !== e.myIndex);
+        this.originDataData = this.originDataData.filter((item, i) => i !== e.myIndex);
       }
     },
     getInputData (e) {
@@ -143,6 +152,7 @@ export default {
       console.log(e);
       for (let i = 0; i < e.target.files.length; i++) {
         this.formData.append('file', e.target.files[i]); // 用迴圈抓出多少筆再append回來
+        this.fileNum += i;
       }
       console.log(this.formData);
     },
@@ -173,29 +183,42 @@ export default {
       //   dataname: ['檔案A', '檔案B']
       // };
       const data = {
-        bulletinsno: [this.originData.ID],
+        bulletinsno: [this.originData.bulletinsno],
         name: this.bulletinName,
         content: this.bulletinContent,
-        dataname: this.dataname
+        dataname: this.dataName,
+        data: this.originDataData
       };
-      addBulletin(data).then(r => {
-        uploadBulletinFile(r.data[0].bulletinsno, r.data[0].datasno, this.formData).then(r => {
-          this.formData = new FormData();
-          this.$store.commit('TOGGLE_POPUP_STATUS');
-          this.$emit('popupEvent', { icon: 'success', title: '已成功新增文件' });
+      if (e) {
+        editBulletin(data).then(r => {
+          console.log(this.fileNum);
+          console.log(this.fileNum > 0);
+          if (this.fileNum > 0) {
+            uploadBulletinFile(r.data[0].bulletinsno, r.data[0].datasno, this.formData).then(r => {
+              this.formData = new FormData();
+              this.$store.commit('TOGGLE_POPUP_STATUS');
+              this.$emit('popupEvent', { icon: 'success', title: '已成功編輯文件' });
+            }).catch(e => {
+              console.log(e);
+            });
+          } else {
+            console.log('goggo1111');
+            // this.$store.commit('TOGGLE_POPUP_STATUS');
+            this.$store.commit('SET_POPUP_STATUS', { status: true });
+          }
         }).catch(e => {
           console.log(e);
         });
-      }).catch(e => {
-        console.log(e);
-      });
+      }
     },
     originData (e) {
       this.originDataLinkList = e.link;
       this.originDataSlogan = e.slogan;
       this.originDataContent = e.content;
+      this.originDataName = e.name;
+      this.originDataData = e.data;
       console.log(e);
-      if (e.ID !== '') {
+      if (e.bulletinsno !== '') {
         this.isEdit = true;
       }
       console.log(e);

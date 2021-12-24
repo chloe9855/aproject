@@ -245,6 +245,8 @@ export default {
             slogan: data[0].name,
             content: data[0].content,
             link: {},
+            name: [],
+            data: [],
             rows: []
           };
           // result.rows = data[num].dataname;
@@ -253,9 +255,11 @@ export default {
           });
           data[0].datacontent.forEach((item, index) => {
             result.link[`a${index}`] = item.dataname;
+            result.name.push(item.dataname);
           });
           data[0].datacontent.forEach((item, index) => {
             result.link[`b${index}`] = item.data;
+            result.data.push(item.data);
           });
           console.log(result);
           this.$store.commit('SET_FORM_DATA', result);
@@ -403,8 +407,23 @@ export default {
         });
       }, 1000);
     }
+  },
+  computed: {
+    callPopup () {
+      return this.$store.state.popupAlert;
+    }
+  },
+  watch: {
+    callPopup (e) {
+      if (e.status) {
+        this.$store.commit('TOGGLE_POPUP_STATUS');
+        this.showAlert = true;
+        this.boxIcon = 'success';
+        this.alertTitle = '已成功';
+      }
+      console.log(e);
+    }
   }
-
 };
 </script>
 <style lang="scss">

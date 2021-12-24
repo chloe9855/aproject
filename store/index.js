@@ -16,7 +16,8 @@ export const state = () => ({
   oriFormData: { slogan: '', content: '', link: '', rows: '' },
 
   // 這看起來很糟糕，但現在的popup架構也沒辦法直接 emit 事件
-  refetchCounter: 0
+  refetchCounter: 0,
+  popupAlert: {}
 });
 
 // * ==========================================================================
@@ -63,6 +64,9 @@ export const mutations = {
   },
   SET_COMPENSATE_EVENT_ID (state, payload) {
     state.editCompensateEventID = payload;
+  },
+  SET_POPUP_STATUS (state, payload) {
+    state.popupAlert = { status: payload.status };
   },
   // SET_LOGOUT_MIN (state, payload) {
   //   state.setMin = payload.setMin;

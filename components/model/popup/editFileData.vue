@@ -114,6 +114,9 @@ export default {
       console.log(e);
       if (e.event === 'btnEvent') {
         this.$refs.file.click();
+      } else if (e === 'isDel') {
+        console.log(e);
+        console.log(this.tableList.body);
       }
     },
     getInputData (e) {
