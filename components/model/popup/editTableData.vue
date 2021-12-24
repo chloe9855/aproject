@@ -102,7 +102,6 @@ export default {
       param: null,
       formData: new FormData(),
       dataName: [],
-      arr1: [],
       fileNum: 0
     };
   },
@@ -152,8 +151,8 @@ export default {
       console.log(e);
       for (let i = 0; i < e.target.files.length; i++) {
         this.formData.append('file', e.target.files[i]); // 用迴圈抓出多少筆再append回來
-        this.fileNum += i;
       }
+      this.fileNum = e.target.files.length;
       console.log(this.formData);
     },
     getFormName (e) {
@@ -177,33 +176,36 @@ export default {
   watch: {
     isSubmit: function (e) {
       console.log(e);
-      // const data = {
-      //   name: '公告1221',
-      //   content: '',
-      //   dataname: ['檔案A', '檔案B']
-      // };
+      console.log(this.originDataName);
+      console.log(this.dataName);
+      const result = this.dataName.filter(item => this.originDataName.indexOf(item) === -1);
+      console.log(result);
       const data = {
         bulletinsno: [this.originData.bulletinsno],
         name: this.bulletinName,
         content: this.bulletinContent,
-        dataname: this.dataName,
-        data: this.originDataData
+        dataname: this.originDataName,
+        data: this.originDataData,
+        upload: {
+          num: this.fileNum,
+          newdataname: result
+        }
       };
       if (e) {
         editBulletin(data).then(r => {
           console.log(this.fileNum);
           console.log(this.fileNum > 0);
           if (this.fileNum > 0) {
+            console.log(r);
+            // console.log(r.bulletinsno);
             uploadBulletinFile(r.data[0].bulletinsno, r.data[0].datasno, this.formData).then(r => {
               this.formData = new FormData();
-              this.$store.commit('TOGGLE_POPUP_STATUS');
-              this.$emit('popupEvent', { icon: 'success', title: '已成功編輯文件' });
+              this.$store.commit('SET_POPUP_STATUS', { status: true });
+              // this.$emit('popupEvent', { icon: 'success', title: '已成功編輯文件' });
             }).catch(e => {
               console.log(e);
             });
           } else {
-            console.log('goggo1111');
-            // this.$store.commit('TOGGLE_POPUP_STATUS');
             this.$store.commit('SET_POPUP_STATUS', { status: true });
           }
         }).catch(e => {
@@ -220,8 +222,10 @@ export default {
       console.log(e);
       if (e.bulletinsno !== '') {
         this.isEdit = true;
+        // this.tableList.body = [];
       }
       console.log(e);
+
       e.rows.forEach((item) => {
         console.log(item);
         this.tableList.body.push({ val: `tb${this.num}`, title: [{ type: 'input', key: `a${this.num}` }, { type: 'text', key: `b${this.num}` }] });

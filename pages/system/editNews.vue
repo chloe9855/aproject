@@ -302,6 +302,8 @@ export default {
             bulletinsno: data[0].bulletinsno,
             slogan: data[0].name,
             content: data[0].content,
+            name: [],
+            data: [],
             link: {},
             rows: []
           };
@@ -311,9 +313,11 @@ export default {
           });
           data[0].datacontent.forEach((item, index) => {
             result.link[`a${index}`] = item.dataname;
+            result.name.push(item.dataname);
           });
           data[0].datacontent.forEach((item, index) => {
             result.link[`b${index}`] = item.data;
+            result.data.push(item.data);
           });
           console.log('resultRRRRR');
           console.log(result);
@@ -425,7 +429,7 @@ export default {
           console.log(data);
           this.tableList.bulletin.body = tableData(data.data, 0);
           this.tableList.tableData.body = tableData(data.data, 1);
-          this.tableList.FileData.body = tableData(data.data, 2);
+          this.tableList.fileData.body = tableData(data.data, 2);
         }).catch(e => {
           console.log(e);
         });

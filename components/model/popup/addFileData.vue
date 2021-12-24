@@ -158,7 +158,7 @@ export default {
         addBulletin(data).then(r => {
           uploadBulletinFile(r.data[0].bulletinsno, r.data[0].datasno, this.formData).then(r => {
             this.formData = new FormData();
-            this.$store.commit('TOGGLE_POPUP_STATUS');
+            this.$store.commit('SET_POPUP_STATUS', { status: true });
             this.$emit('popupEvent', { icon: 'success', title: '已成功新增文件' });
           }).catch(e => {
             console.log(e);
