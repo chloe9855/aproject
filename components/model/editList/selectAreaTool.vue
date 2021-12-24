@@ -1,6 +1,5 @@
 <template>
   <div class="selectArea flexBox w-90">
-    {{ isClear }}
     <DropdownVertical
       title="管理處"
       :options="member.Ia"

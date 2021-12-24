@@ -93,7 +93,6 @@ export default {
       }
     },
     getTableEvent (e) {
-      console.log(e);
       if (e.event === 'btnEvent') {
         this.$refs.file.click();
       }
@@ -113,35 +112,27 @@ export default {
       }
     },
     update (e) {
-      console.log(e);
       const file = e.target.files[0];
       const param = new FormData(); // 建立form物件
       param.append('file', file);// 通過append向form物件新增資料
-      console.log(param);
       this.param = param;
-      console.log(this.param);
     },
     fileChange (e) {
-      console.log(e);
       for (let i = 0; i < e.target.files.length; i++) {
         this.formData.append('file', e.target.files[i]); // 用迴圈抓出多少筆再append回來
       }
-      console.log(this.formData);
     },
-    upload () {
-      // axios.post('http://localhost:11084/api/value/', this.formData);
-      uploadBulletinFile(this.formData).then(r => {
-        console.log(r);
-      }).catch(e => {
-        console.log(e);
-      });
-    },
+    // upload () {
+    //   axios.post('http://localhost:11084/api/value/', this.formData);
+    //   uploadBulletinFile(this.formData).then(r => {
+    //     console.log(r);
+    //   }).catch(e => {
+    //     console.log(e);
+    //   });
+    // },
     delLink () {
       const delList = this.delList;
-      console.log(this.tableList.body);
-      console.log(delList);
       this.tableList.body = this.tableList.body.filter(function (v) { return delList.indexOf(v.val) === -1; });
-      console.log(this.tableList.body);
       this.delBtn = false;
     }
   },

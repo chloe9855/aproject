@@ -106,9 +106,7 @@ export default {
     };
   },
   name: 'EditFileData',
-  mounted () {
-    console.log(this.originData);
-  },
+  mounted () {},
   methods: {
     getTableCheck (e) {
       this.delList = e;
@@ -124,7 +122,6 @@ export default {
       }
     },
     getTableEvent (e) {
-      console.log(e);
       if (e.event === 'btnEvent') {
         this.$refs.file.click();
       } else if (e.event === 'isDel') {
@@ -146,18 +143,15 @@ export default {
     },
     getBulletinContent (e) {
       if (e) {
-        console.log(e);
         this.bulletinContent = e;
       }
     },
     fileChange (e) {
-      console.log(e);
       for (let i = 0; i < e.target.files.length; i++) {
         this.formData.append('file', e.target.files[i]); // 用迴圈抓出多少筆再append回來
         this.fileNum += i;
       }
       this.fileNum = e.target.files.length;
-      console.log(this.formData);
     },
     getFormName (e) {
       if (e) {
@@ -179,7 +173,6 @@ export default {
   },
   watch: {
     isSubmit: function (e) {
-      console.log(e);
       const result = this.dataName.filter(item => this.originDataName.indexOf(item) === -1);
       const data = {
         bulletinsno: [this.originData.bulletinsno],
@@ -192,16 +185,12 @@ export default {
           newdataname: result
         }
       };
-      console.log(data);
       if (e) {
         editBulletin(data).then(r => {
-          console.log(this.fileNum);
-          console.log(this.fileNum > 0);
           if (this.fileNum > 0) {
             uploadBulletinFile(r.data[0].bulletinsno, r.data[0].datasno, this.formData).then(r => {
               this.formData = new FormData();
-              this.$store.commit('TOGGLE_POPUP_STATUS');
-              this.$emit('popupEvent', { icon: 'success', title: '已成功編輯文件' });
+              this.$store.commit('SET_POPUP_STATUS', { status: true });
             }).catch(e => {
               console.log(e);
             });
@@ -219,11 +208,9 @@ export default {
       this.originDataContent = e.content;
       this.originDataName = e.name;
       this.originDataData = e.data;
-      console.log(e);
       if (e.bulletinsno !== '') {
         this.isEdit = true;
       }
-      console.log(e);
       e.rows.forEach((item) => {
         // console.log(item);
         // this.tableList.body.push({ val: `tb${this.num}`, title: [{ type: 'input', key: `a${this.num}` }, { type: 'text', key: `b${this.num}` }] });
@@ -233,8 +220,6 @@ export default {
           this.num += 1;
         }
       });
-
-      console.log(this.tableList.body);
     }
   }
 };

@@ -138,10 +138,7 @@ export default {
     },
     delLink () {
       const delList = this.delList;
-      console.log(this.tableList.body);
-      console.log(delList);
       this.tableList.body = this.tableList.body.filter(function (v) { return delList.indexOf(v.val) === -1; });
-      console.log(this.tableList.body);
       this.delBtn = false;
     }
   },

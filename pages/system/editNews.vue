@@ -180,7 +180,6 @@ export default {
   },
   methods: {
     addNews (e) {
-      console.log(e);
       this.$store.commit('SET_FORM_DATA', {
         ID: '',
         slogan: '',
@@ -228,7 +227,6 @@ export default {
     },
     changeTable (e) {
       if (e.event === 'isEdit') {
-        console.log(e.item.info);
         this.$store.commit('TOGGLE_POPUP_STATUS');
         this.$store.commit('TOGGLE_POPUP_TYPE', { type: 'editTableData', title: '編輯表單' });
         fetch(`/AERC/rest/Bulletin?ID=${e.item.info}`, {
@@ -239,7 +237,6 @@ export default {
         }).then((response) => {
           return response.json();
         }).then((data) => {
-          console.log(data);
           const result = {
             bulletinsno: data[0].bulletinsno,
             slogan: data[0].name,
@@ -261,7 +258,6 @@ export default {
             result.link[`b${index}`] = item.data;
             result.data.push(item.data);
           });
-          console.log(result);
           this.$store.commit('SET_FORM_DATA', result);
         }).catch(e => {
           console.log(e);
@@ -286,7 +282,6 @@ export default {
     },
     changeFile (e) {
       if (e.event === 'isEdit') {
-        console.log(e.item.info);
         this.$store.commit('TOGGLE_POPUP_STATUS');
         this.$store.commit('TOGGLE_POPUP_TYPE', { type: 'editFileData', title: '編輯文件A' });
         fetch(`/AERC/rest/Bulletin?ID=${e.item.info}`, {
@@ -297,7 +292,6 @@ export default {
         }).then((response) => {
           return response.json();
         }).then((data) => {
-          console.log(data);
           const result = {
             bulletinsno: data[0].bulletinsno,
             slogan: data[0].name,
@@ -319,8 +313,6 @@ export default {
             result.link[`b${index}`] = item.data;
             result.data.push(item.data);
           });
-          console.log('resultRRRRR');
-          console.log(result);
           this.$store.commit('SET_FORM_DATA', result);
         }).catch(e => {
           console.log(e);
@@ -380,7 +372,6 @@ export default {
         }).then((response) => {
           return response.json();
         }).then((data) => {
-          console.log(data);
           const result = {
             ID: myId.info,
             slogan: data[num].name,
@@ -426,7 +417,6 @@ export default {
         this.alertTitle = '已成功';
         // const _this = this;
         getBulletin().then(data => {
-          console.log(data);
           this.tableList.bulletin.body = tableData(data.data, 0);
           this.tableList.tableData.body = tableData(data.data, 1);
           this.tableList.fileData.body = tableData(data.data, 2);

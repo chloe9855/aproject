@@ -450,8 +450,6 @@ export default {
     } else {
       this.tableColumnBody = this.tableColumn.body;
     }
-    console.log('table');
-    console.log(this.tableColumn);
   },
   methods: {
     inputVal (e) { // 取得INPUT內容

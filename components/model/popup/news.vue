@@ -108,7 +108,6 @@ export default {
     },
     getBulletinContent (e) {
       if (e) {
-        console.log(e);
         this.bulletinContent = e;
       }
     },
@@ -124,16 +123,11 @@ export default {
     },
     addLink () {
       this.num += 1;
-      console.log(this.tableList.body);
       this.tableList.body.push({ val: `news${this.num}`, title: [{ type: 'input', key: `a${this.num}` }, { type: 'input', key: `b${this.num}` }] });
-      console.log(this.tableList.body);
     },
     delLink () {
       const delList = this.delList;
-      console.log(this.tableList.body);
-      console.log(delList);
       this.tableList.body = this.tableList.body.filter(function (v) { return delList.indexOf(v.val) === -1; });
-      console.log(this.tableList.body);
     },
     delLinkList (e) {
       if (e) {
@@ -146,12 +140,12 @@ export default {
     isSubmit (n) {
       if (n) {
         if (this.isEdit) {
-          console.log('isEdit');
-          console.log(this.originData);
-          console.log(this.bulletinName);
-          console.log(this.bulletinContent);
-          console.log(this.data);
-          console.log(this.dataname);
+          // console.log('isEdit');
+          // console.log(this.originData);
+          // console.log(this.bulletinName);
+          // console.log(this.bulletinContent);
+          // console.log(this.data);
+          // console.log(this.dataname);
           // const datasno = [1];
 
           const data = {
@@ -161,10 +155,9 @@ export default {
             dataname: this.dataname,
             data: this.data
           };
-          console.log('EDITDATA');
-          console.log(data);
+          // console.log('EDITDATA');
+          // console.log(data);
           editBulletin(data).then(r => {
-            console.log(r);
             this.$store.commit('SET_POPUP_STATUS', { status: true });
           }).catch(e => {
             console.log(e);
@@ -178,7 +171,6 @@ export default {
             data: this.data,
             category: 0
           };
-          console.log(data);
           addBulletin(data).then(r => {
             console.log(r);
             this.$store.commit('SET_POPUP_STATUS', { status: true });

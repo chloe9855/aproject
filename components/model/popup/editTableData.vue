@@ -121,7 +121,6 @@ export default {
       }
     },
     getTableEvent (e) {
-      console.log(e);
       if (e.event === 'btnEvent') {
         this.$refs.file.click();
       } else if (e.event === 'isDel') {
@@ -143,17 +142,14 @@ export default {
     },
     getBulletinContent (e) {
       if (e) {
-        console.log(e);
         this.bulletinContent = e;
       }
     },
     fileChange (e) {
-      console.log(e);
       for (let i = 0; i < e.target.files.length; i++) {
         this.formData.append('file', e.target.files[i]); // 用迴圈抓出多少筆再append回來
       }
       this.fileNum = e.target.files.length;
-      console.log(this.formData);
     },
     getFormName (e) {
       if (e) {
@@ -175,11 +171,7 @@ export default {
   },
   watch: {
     isSubmit: function (e) {
-      console.log(e);
-      console.log(this.originDataName);
-      console.log(this.dataName);
       const result = this.dataName.filter(item => this.originDataName.indexOf(item) === -1);
-      console.log(result);
       const data = {
         bulletinsno: [this.originData.bulletinsno],
         name: this.bulletinName,
@@ -193,11 +185,7 @@ export default {
       };
       if (e) {
         editBulletin(data).then(r => {
-          console.log(this.fileNum);
-          console.log(this.fileNum > 0);
           if (this.fileNum > 0) {
-            console.log(r);
-            // console.log(r.bulletinsno);
             uploadBulletinFile(r.data[0].bulletinsno, r.data[0].datasno, this.formData).then(r => {
               this.formData = new FormData();
               this.$store.commit('SET_POPUP_STATUS', { status: true });
@@ -219,12 +207,10 @@ export default {
       this.originDataContent = e.content;
       this.originDataName = e.name;
       this.originDataData = e.data;
-      console.log(e);
       if (e.bulletinsno !== '') {
         this.isEdit = true;
         // this.tableList.body = [];
       }
-      console.log(e);
 
       e.rows.forEach((item) => {
         // console.log(item);
@@ -235,7 +221,6 @@ export default {
           this.num += 1;
         }
       });
-      console.log(this.tableList.body);
     }
   }
 };
