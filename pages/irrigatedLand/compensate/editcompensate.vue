@@ -116,9 +116,9 @@ import { getAccount } from '~/api/account';
 import { addApplyEvent, editApplyEvent } from '~/api/apply';
 import { mapState } from 'vuex';
 
-import Vue from 'vue';
-import VueCryptojs from 'vue-cryptojs';
-Vue.use(VueCryptojs);
+// import Vue from 'vue';
+// import VueCryptojs from 'vue-cryptojs';
+// Vue.use(VueCryptojs);
 
 export default {
   components: {
@@ -365,8 +365,8 @@ export default {
     },
     getuserInfo (e) {
       this.userInfo.name = e.name;
-      this.userInfo.id = this.$CryptoJS.AES.encrypt(e.id, '農田水利灌溉管理整合雲系統').toString();
-      // this.userInfo.id = e.id;
+      // this.userInfo.id = this.$CryptoJS.AES.encrypt(e.id, '農田水利灌溉管理整合雲系統').toString();
+      this.userInfo.id = e.id;
       this.userInfo.birth = e.birth;
       this.userInfo.address = e.address;
       this.userInfo.phone = e.phone;
