@@ -114,6 +114,7 @@ import AlertBox from '~/components/tools/AlertBox.vue';
 import { getBankList } from '~/api/bank';
 import { getAccount } from '~/api/account';
 import { addApplyEvent, editApplyEvent } from '~/api/apply';
+import { ecode, dcode } from '~/publish/cryptoData';
 import { mapState } from 'vuex';
 
 // import Vue from 'vue';
@@ -282,7 +283,7 @@ export default {
 
         this.userInfo1 = {
           name: r.applyer_name,
-          id: r.applyer_id,
+          id: dcode(r.applyer_id),
           birth: r.applyer_birth,
           address: r.applyer_address,
           phone: r.applyer_phone,
@@ -291,7 +292,7 @@ export default {
         };
         this.agentInfo1 = {
           name: r.agent_name,
-          id: r.agent_id,
+          id: dcode(r.agent_id),
           address: r.agent_address,
           phone: r.agent_phone
         };
@@ -366,7 +367,7 @@ export default {
     getuserInfo (e) {
       this.userInfo.name = e.name;
       // this.userInfo.id = this.$CryptoJS.AES.encrypt(e.id, '農田水利灌溉管理整合雲系統').toString();
-      this.userInfo.id = e.id;
+      this.userInfo.id = ecode(e.id);
       this.userInfo.birth = e.birth;
       this.userInfo.address = e.address;
       this.userInfo.phone = e.phone;
@@ -379,7 +380,7 @@ export default {
     },
     getagentInfo (e) {
       this.agentInfo.name = e.name;
-      this.agentInfo.id = e.id;
+      this.agentInfo.id = ecode(e.id);
       this.agentInfo.address = e.address;
       this.agentInfo.phone = e.phone;
     },

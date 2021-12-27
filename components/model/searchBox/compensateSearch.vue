@@ -38,6 +38,7 @@
 import InputVertical from '~/components/tools/InputVertical.vue';
 import DropdownVertical from '~/components/tools/DropdownVertical.vue';
 import { getCounties, getTowns, getSections, getSecNo, getSecNoList } from '~/publish/Irrigation.js';
+import { ecode } from '~/publish/cryptoData';
 // import Vue from 'vue';
 // import VueCryptojs from 'vue-cryptojs';
 // Vue.use(VueCryptojs);
@@ -93,7 +94,7 @@ export default {
   methods: {
     getUserID (e) {
       if (e) {
-        this.userId = e;
+        this.userId = ecode(e);
         // console.log(e);
         // this.userId = this.$CryptoJS.AES.encrypt(e, '農田水利灌溉管理整合雲系統').toString();
         // console.log(this.$CryptoJS.SHA256(this.userId).toString());
