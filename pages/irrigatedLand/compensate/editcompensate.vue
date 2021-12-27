@@ -227,7 +227,8 @@ export default {
       this.thisIa = d.data[0].groupname;
     });
     getBankList().then(r => {
-      this.bankList = r.data.map(item => item.Bank_sno + ' ' + item.Name);
+      console.log(r);
+      this.bankList = r.data.map(item => item.Code + ' ' + item.Name);
     });
     if (this.compensateData.event === 'isEdit') {
       const a = this.compensateData.item.data;
@@ -366,7 +367,6 @@ export default {
     },
     getuserInfo (e) {
       this.userInfo.name = e.name;
-      // this.userInfo.id = this.$CryptoJS.AES.encrypt(e.id, '農田水利灌溉管理整合雲系統').toString();
       this.userInfo.id = ecode(e.id);
       this.userInfo.birth = e.birth;
       this.userInfo.address = e.address;
@@ -375,8 +375,6 @@ export default {
       if (e.bank.val) {
         this.userInfo.bank = e.bank.val.split(' ')[0];
       }
-      // const encryptedText = this.$CryptoJS.AES.encrypt(e.id, '農田水利灌溉管理整合雲系統').toString();
-      // const decryptedText = this.$CryptoJS.AES.decrypt(this.userInfo.id, '農田水利灌溉管理整合雲系統').toString(this.CryptoJS.enc.Utf8);
     },
     getagentInfo (e) {
       this.agentInfo.name = e.name;
