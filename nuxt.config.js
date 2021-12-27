@@ -232,7 +232,17 @@ export default {
       {
         src: '/test008/scripts/setMap.js',
         async: true
+      },
+      // 加密套件 //
+      {
+        src: '/AERC/Scripts/components/core-min.js',
+        async: true
+      },
+      {
+        src: '/AERC/Scripts/rollups/aes.js',
+        async: true
       }
+      // 加密套件 //
     ],
     link: [
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }

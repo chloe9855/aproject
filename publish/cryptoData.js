@@ -1,3 +1,4 @@
+// 轉換DATA加密
 export function ecode (value) {
   // const value = document.getElementById('ecode').value;
   const KEY = '農田水利灌溉管理';// <-128位元加密只允許8個中文字或16個英數, 加解密要相同
@@ -14,7 +15,7 @@ export function ecode (value) {
   // alert(encrypted.ciphertext.toString().toUpperCase());
   return encrypted.ciphertext.toString().toUpperCase();
 }
-
+// 轉換DATA解密
 export function dcode (value) {
   // var value = document.getElementById("dcode").value;
   const KEY = '農田水利灌溉管理';// <-128位元加密只允許8個中文字或16個英數, 加解密要相同
