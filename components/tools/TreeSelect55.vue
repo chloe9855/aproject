@@ -79,8 +79,6 @@ export default {
       this.$emit('getMng', e);
     },
     getStn (e) {
-      console.log('stn');
-      console.log(e);
       this.$emit('getQuery', e);
     }
   }

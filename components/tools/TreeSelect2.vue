@@ -10,6 +10,7 @@
       <div class="theme_checkbox">
         <input
           :id="indexNo+'_'+sItem.no"
+          v-model="isAll"
           type="checkbox"
           @change="$emit('changeMng', {isCheck:$event.target.checked,no:sItem.no,type:indexNo})"
         >
@@ -35,6 +36,7 @@
           <input
             :id="indexNo+'_'+sItem.no+gItem.no"
             type="checkbox"
+            :checked="isAll"
             @change="$emit('changeStn', {isCheck:$event.target.checked,no:sItem.no+'_'+gItem.no,arr:[sItem.no,gItem.no],type:indexNo})"
           >
           <label
@@ -68,8 +70,8 @@ export default {
   },
   data () {
     return {
-      picSrc2: require('~/assets/img/up-arrow.svg')
-
+      picSrc2: require('~/assets/img/up-arrow.svg'),
+      isAll: false
     };
   },
   methods: {
@@ -84,6 +86,24 @@ export default {
     }
   },
   computed: {
+  },
+  watch: {
+    isAll (n) {
+      console.log(this.sItem);
+      if (n) {
+        if (this.sItem.stn) {
+          this.sItem.stn.forEach(gItem => {
+            this.$emit('changeStn', { isCheck: n, no: this.sItem.no + '_' + gItem.no, arr: [this.sItem.no, gItem.no], type: this.indexNo });
+          });
+        }
+      } else {
+        if (this.sItem.stn) {
+          this.sItem.stn.forEach(gItem => {
+            this.$emit('changeStn', { isCheck: n, no: this.sItem.no + '_' + gItem.no, arr: [this.sItem.no, gItem.no], type: this.indexNo });
+          });
+        }
+      }
+    }
   }
 };
 </script>

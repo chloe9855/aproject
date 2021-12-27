@@ -66,7 +66,6 @@ export default {
       console.log(e);
     },
     getQuery (e) {
-      console.log(e.no);
       if (e.isCheck) {
         this.query.push(e.no);
       } else {
@@ -81,13 +80,11 @@ export default {
       } else if (e.type === 'B') {
         this.queryB = this.query.map(x => x.split('_'));
         this.$emit('query', { data: this.queryB, type: 'B' });
+      } else if (e.type === 'C') {
+        this.$emit('query', { type: 'B' });
       }
-      console.log(this.query);
-      console.log(this.queryA);
-      console.log(this.queryB);
     },
     getMng (e) {
-      console.log(e);
       if (e.isCheck) {
         this.query1.push(e.no);
       } else {
@@ -106,10 +103,7 @@ export default {
       }
     },
     getFile () {
-      console.log(this.link);
-      if (this.link !== '') {
-        window.location = this.link;
-      }
+      this.$emit('getFile', this.indexNo);
     }
   }
 };

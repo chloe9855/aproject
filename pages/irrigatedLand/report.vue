@@ -30,7 +30,7 @@
             title="停灌補償核定統計表"
             :options="treeData"
             index-no="A"
-            :link="areaA_File"
+            @getFile="linkFile"
             @query="getQuery"
           />
           <TreeSelectBox
@@ -38,13 +38,14 @@
             title="停灌補償申報統計表(日報)"
             :options="treeData"
             index-no="B"
-            :link="areaB_File"
+            @getFile="linkFile"
             @query="getQuery"
           />
           <TreeSelectBox
             class="flex-1"
             title="補償(撥款)清冊"
-            :link="areaC_File"
+            index-no="C"
+            @getFile="linkFile"
           />
         </div>
       </div>
@@ -67,6 +68,7 @@
             index-no="D"
             :link="areaD_File"
             @query1="getMng"
+            @getFile="linkFile"
           />
           <TreeSelectBox
             class="flex-1"
@@ -75,6 +77,7 @@
             :link="areaE_File"
             title="停灌補償申報統計表(日報)"
             @query1="getMng"
+            @getFile="linkFile"
           />
         </div>
       </div>
@@ -125,14 +128,13 @@ export default {
       queryB: [],
       queryD: [],
       queryE: [],
-      areaA_File: '',
-      areaB_File: '',
       areaC_File: '',
       areaD_File: '',
       areaE_File: '',
       yy: '',
       mm: '',
-      dd: ''
+      dd: '',
+      fileData: {}
     };
   },
   name: 'Report',
@@ -142,11 +144,9 @@ export default {
     this.mm = new Date().getMonth() + 1;
     this.dd = new Date().getDate();
     getIas().then(r => {
-      console.log(r);
       r.data.forEach(element => {
         this.iaData[0].mng.push({ title: element.Ia_cns, no: element.Ia });
       });
-      console.log(this.iaData);
     }).catch(e => {
       console.log(e);
     });
@@ -171,8 +171,6 @@ export default {
           });
         });
       });
-      console.log('this.treeData');
-      console.log(this.treeData);
     }).catch(e => {
       console.log(e);
     });
@@ -181,36 +179,10 @@ export default {
     getApplySno (e) {
       console.log(e);
       this.apply_sno = e.value;
-      if (this.date !== '') {
-        const data = {
-          Ia: this.thisIa,
-          date: this.date,
-          Apply_sno: this.apply_sno
-        };
-        getIaApply(data).then(r => {
-          console.log(r);
-          this.areaC_File = r.data;
-        }).catch(e => {
-          console.log(e);
-        });
-      }
     },
     getDate (e) {
       console.log(e);
       this.date = e.val;
-      if (this.apply_sno !== '') {
-        const data = {
-          Ia: this.thisIa,
-          date: this.date,
-          Apply_sno: this.apply_sno
-        };
-        getIaApply(data).then(r => {
-          console.log(r);
-          this.areaC_File = r.data;
-        }).catch(e => {
-          console.log(e);
-        });
-      }
     },
     getQuery (e) {
       if (e.type === 'A' && this.Apply_sno !== '') {
@@ -220,12 +192,7 @@ export default {
           query: this.queryA,
           Apply_sno: this.apply_sno
         };
-        getIaCheckReport(data).then(r => {
-          console.log(r);
-          this.areaA_File = r.data;
-        }).catch(e => {
-          console.log(e);
-        });
+        this.fileData = data;
       } else if (e.type === 'B' && this.Apply_sno !== '' && this.date !== '') {
         this.queryB = e.data;
         const data = {
@@ -234,12 +201,7 @@ export default {
           Apply_sno: this.apply_sno,
           date: this.date
         };
-        getIaApplyReport(data).then(r => {
-          this.areaB_File = r.data;
-          console.log(r);
-        }).catch(e => {
-          console.log(e);
-        });
+        this.fileData = data;
       }
     },
     getMng (e) {
@@ -249,26 +211,52 @@ export default {
         this.queryD = e.data;
         const data = {
           query: this.queryD,
-          Apply_sno: this.apply_sno
+          apply_sno: this.apply_sno
         };
-        getIRCheckReport(data).then(r => {
-          this.areaD_File = r.data;
-          console.log(r);
-        }).catch(e => {
-          console.log(e);
-        });
-        console.log(e);
+        this.fileData = data;
       } else if (e.type === 'E' && this.Apply_sno !== '' && this.date !== '') {
-        console.log(e);
         this.queryE = e.data;
         const data = {
           query: this.queryE,
-          Apply_sno: this.apply_sno,
-          date: this.date
+          date: this.date,
+          apply_sno: this.apply_sno
         };
-        getIRApplyReport(data).then(r => {
-          this.areaE_File = r.data;
-          console.log(r);
+        this.fileData = data;
+      }
+    },
+    linkFile (e) {
+      if (e === 'A') {
+        getIaCheckReport(this.fileData).then(r => {
+          window.location = r.data;
+        }).catch(e => {
+          console.log(e);
+        });
+      } else if (e === 'B') {
+        getIaApplyReport(this.fileData).then(r => {
+          window.location = r.data;
+        }).catch(e => {
+          console.log(e);
+        });
+      } else if (e === 'C') {
+        const data = {
+          Ia: this.thisIa,
+          date: this.date,
+          Apply_sno: this.apply_sno
+        };
+        getIaApply(data).then(r => {
+          window.location = r.data;
+        }).catch(e => {
+          console.log(e);
+        });
+      } else if (e === 'D') {
+        getIRCheckReport(this.fileData).then(r => {
+          window.location = r.data;
+        }).catch(e => {
+          console.log(e);
+        });
+      } else if (e === 'E') {
+        getIRApplyReport(this.fileData).then(r => {
+          window.location = r.data;
         }).catch(e => {
           console.log(e);
         });
