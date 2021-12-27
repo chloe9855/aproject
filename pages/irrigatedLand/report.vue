@@ -148,7 +148,9 @@ export default {
         this.iaData[0].mng.push({ title: element.Ia_cns, no: element.Ia });
       });
     }).catch(e => {
-      console.log(e);
+      if ((e.response.status === 401)) {
+        this.$router.push('/login');
+      }
     });
     getAccount(userId).then(d => {
       this.isIA = d.data[0].permit.indexOf('C_05') > -1;
@@ -172,17 +174,21 @@ export default {
         });
       });
     }).catch(e => {
-      console.log(e);
+      if ((e.response.status === 401)) {
+        this.$router.push('/login');
+      }
     });
   },
   methods: {
     getApplySno (e) {
-      console.log(e);
-      this.apply_sno = e.value;
+      if (e) {
+        this.apply_sno = e.value;
+      }
     },
     getDate (e) {
-      console.log(e);
-      this.date = e.val;
+      if (e) {
+        this.date = e.val;
+      }
     },
     getQuery (e) {
       if (e.type === 'A' && this.Apply_sno !== '') {
@@ -205,8 +211,6 @@ export default {
       }
     },
     getMng (e) {
-      console.log('query_mng');
-      console.log(e);
       if (e.type === 'D' && this.Apply_sno !== '') {
         this.queryD = e.data;
         const data = {
@@ -229,13 +233,17 @@ export default {
         getIaCheckReport(this.fileData).then(r => {
           window.location = r.data;
         }).catch(e => {
-          console.log(e);
+          if ((e.response.status === 401)) {
+            this.$router.push('/login');
+          }
         });
       } else if (e === 'B') {
         getIaApplyReport(this.fileData).then(r => {
           window.location = r.data;
         }).catch(e => {
-          console.log(e);
+          if ((e.response.status === 401)) {
+            this.$router.push('/login');
+          }
         });
       } else if (e === 'C') {
         const data = {
@@ -246,19 +254,25 @@ export default {
         getIaApply(data).then(r => {
           window.location = r.data;
         }).catch(e => {
-          console.log(e);
+          if ((e.response.status === 401)) {
+            this.$router.push('/login');
+          }
         });
       } else if (e === 'D') {
         getIRCheckReport(this.fileData).then(r => {
           window.location = r.data;
         }).catch(e => {
-          console.log(e);
+          if ((e.response.status === 401)) {
+            this.$router.push('/login');
+          }
         });
       } else if (e === 'E') {
         getIRApplyReport(this.fileData).then(r => {
           window.location = r.data;
         }).catch(e => {
-          console.log(e);
+          if ((e.response.status === 401)) {
+            this.$router.push('/login');
+          }
         });
       }
     }
