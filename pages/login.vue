@@ -124,10 +124,15 @@ export default {
           console.log('驗證碼錯誤');
         }
       }).catch((e) => {
-        console.log(e);
-        this.loginErrorTitle = '登入錯誤';
-        this.loginErrorText = '請確認帳號密碼是否正確';
-        this.loginError = true;
+        if ((e.response.status === 404)) {
+          this.loginErrorTitle = '登入錯誤';
+          this.loginErrorText = '請確認帳號密碼是否正確';
+          this.loginError = true;
+        } else if ((e.response.status === 400)) {
+          this.loginErrorTitle = '登入錯誤';
+          this.loginErrorText = '請確認驗證碼是否正確';
+          this.loginError = true;
+        }
       });
     },
     closeForgetPassWord (e) {
