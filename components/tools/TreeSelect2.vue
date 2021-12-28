@@ -12,6 +12,7 @@
           :id="indexNo+'_'+sItem.no"
           v-model="isAll"
           type="checkbox"
+          :indeterminate.prop="isIndeterminate"
           @change="$emit('changeMng', {isCheck:$event.target.checked,no:sItem.no,type:indexNo})"
         >
         <label
@@ -35,8 +36,9 @@
         <div class="theme_checkbox">
           <input
             :id="indexNo+'_'+sItem.no+gItem.no"
+            v-model="dataArr"
+            :value="sItem.no+'_'+gItem.no"
             type="checkbox"
-            :checked="isAll"
             @change="$emit('changeStn', {isCheck:$event.target.checked,no:sItem.no+'_'+gItem.no,arr:[sItem.no,gItem.no],type:indexNo})"
           >
           <label
@@ -71,7 +73,9 @@ export default {
   data () {
     return {
       picSrc2: require('~/assets/img/up-arrow.svg'),
-      isAll: false
+      isAll: false,
+      isIndeterminate: false,
+      dataArr: []
     };
   },
   methods: {
@@ -90,9 +94,11 @@ export default {
   watch: {
     isAll (n) {
       console.log(this.sItem);
+      this.dataArr = [];
       if (n) {
         if (this.sItem.stn) {
           this.sItem.stn.forEach(gItem => {
+            this.dataArr.push(this.sItem.no + '_' + gItem.no);
             this.$emit('changeStn', { isCheck: n, no: this.sItem.no + '_' + gItem.no, arr: [this.sItem.no, gItem.no], type: this.indexNo });
           });
         }
@@ -103,12 +109,34 @@ export default {
           });
         }
       }
+    },
+    dataArr (e) {
+      if (e) {
+        if (this.sItem.stn.length > e.length && e.length !== 0) {
+          this.isIndeterminate = true;
+        } else if (e.length === this.sItem.stn.length) {
+          this.isAll = true;
+          this.isIndeterminate = false;
+        } else if (e.length === 0) {
+          this.isAll = false;
+          this.isIndeterminate = false;
+        } else {
+          this.isIndeterminate = false;
+        }
+      }
     }
   }
 };
 </script>
 
 <style lang="scss" scoped>
+
+  .theme_checkbox{
+    input[type="checkbox"]:indeterminate + label
+    {
+      min-width: 150px;
+    }
+  }
 
   .block11 {
     display: none;
